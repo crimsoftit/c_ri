@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "911608691249",
+    "project_id": "crimsoftri-53fb6",
+    "storage_bucket": "crimsoftri-53fb6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:911608691249:android:55a6797d04624d1fbcf310",
+        "android_client_info": {
+          "package_name": "com.example.cri"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcA1Am0ChywqR7_mLMS-L3iFc56m1POp4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
