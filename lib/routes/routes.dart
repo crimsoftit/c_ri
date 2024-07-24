@@ -4,6 +4,7 @@ class CRoutes {
   static const sales = '/sales';
   static const settings = '/settings';
   static const userProfile = '/user_profile';
+  static const searchResults = '/search';
 
   static const signup = '/signup';
   static const signupSuccess = '/signup_success';
@@ -12,7 +13,6 @@ class CRoutes {
   static const resetPassword = '/reset_password';
   static const forgotPassword = '/forgot_password';
   static const onBoarding = '/on_boarding';
-  static const search = '/search';
 
   static const subCategories = '/sub_categories';
   static const productReviews = '/product_reviews';

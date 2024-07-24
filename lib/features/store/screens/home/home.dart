@@ -1,3 +1,9 @@
+import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
+import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
+import 'package:c_ri/features/store/screens/home/widgets/home_appbar.dart';
+import 'package:c_ri/utils/constants/colors.dart';
+import 'package:c_ri/utils/constants/sizes.dart';
+import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -5,6 +11,59 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    final isDarkTheme = CHelperFunctions.isDarkMode(context);
+
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            CPrimaryHeaderContainer(
+              child: Column(
+                children: [
+                  // -- ## HOME PAGE APP BAR ## --
+                  const CHomeAppBarWidget(),
+
+                  const SizedBox(
+                    height: CSizes.spaceBtnSections,
+                  ),
+
+                  // -- ## SEARCH BAR ## --
+
+                  const SizedBox(
+                    height: CSizes.spaceBtnSections,
+                  ),
+
+                  // -- ## ALL ABOUT CATEGORIES ## --
+                  const Padding(
+                    padding: EdgeInsets.only(
+                      left: CSizes.defaultSpace,
+                    ),
+                    child: Column(
+                      children: [
+                        // -- category heading --
+                        CSectionHeading(
+                          showActionBtn: false,
+                          title: 'popular categories',
+                          txtColor: CColors.white,
+                          btnTitle: 'view all',
+                          btnTxtColor: CColors.grey,
+                          editFontSize: true,
+                        ),
+                        SizedBox(
+                          height: CSizes.spaceBtnItems,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: CSizes.spaceBtnSections,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

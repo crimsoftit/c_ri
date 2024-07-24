@@ -6,7 +6,8 @@ import 'package:c_ri/features/authentication/screens/signup/verify_email.dart';
 import 'package:c_ri/features/personalization/screens/profile/profile.dart';
 import 'package:c_ri/features/personalization/screens/settings/user_settings.dart';
 import 'package:c_ri/features/store/screens/home/home.dart';
-import 'package:c_ri/features/store/screens/inventory/inventory.dart';
+import 'package:c_ri/features/store/screens/inventory/inventory_screen.dart';
+import 'package:c_ri/features/store/screens/search/search_results.dart';
 import 'package:get/get.dart';
 
 import 'routes.dart';
@@ -48,6 +49,10 @@ class CAppRoutes {
     GetPage(
       name: CRoutes.onBoarding,
       page: () => const OnboardingScreen(),
+    ),
+    GetPage(
+      name: CRoutes.searchResults,
+      page: () => const SearchResultsScreen(),
     ),
   ];
 }
