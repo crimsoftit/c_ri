@@ -1,13 +1,11 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/icon_buttons/search_icon_btn.dart';
-import 'package:c_ri/features/store/controllers/inventory_controller.dart';
 import 'package:c_ri/features/store/models/inventory_model.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/add_item_dialog.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class InventoryScreen extends StatelessWidget {
   const InventoryScreen({super.key});
@@ -16,9 +14,6 @@ class InventoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     AddItemDialog dialog = AddItemDialog();
-
-    final invController = Get.put(CInventoryController());
-    invController.fetchInventoryItems();
 
     return Scaffold(
       /// -- app bar --
@@ -44,39 +39,51 @@ class InventoryScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(CSizes.defaultSpace),
-          child: Obx(
-            () => ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.vertical,
-              itemCount: (invController.inventoryItems.isNotEmpty)
-                  ? invController.inventoryItems.length
-                  : 0,
-              itemBuilder: (context, index) {
-                return Card(
-                  color: Colors.white,
-                  elevation: 1.0,
-                  child: ListTile(
-                    title: Text(invController.inventoryItems[index].name),
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.brown[300],
-                      child: Text('0'),
-                      //const Icon(Icons.keyboard_arrow_right),
-                    ),
-                    subtitle: Text(
-                      '14th Feb 2022',
-                    ),
-                    onTap: () {},
-                    trailing: IconButton(
-                      icon: const Icon(
-                        Icons.delete,
-                        color: Color.fromARGB(255, 153, 113, 98),
+          child: Column(
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.vertical,
+                itemCount: 4,
+                itemBuilder: (BuildContext context, int index) {
+                  return Dismissible(
+                    key: Key('omo'),
+                    onDismissed: (direction) {
+                      String strName = 'omo';
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("$strName deleted"),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      color: Colors.white,
+                      elevation: 1.0,
+                      child: ListTile(
+                        title: Text('omo'),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.brown[300],
+                          child: Text('0'),
+                          //const Icon(Icons.keyboard_arrow_right),
+                        ),
+                        subtitle: Text(
+                          '14th Feb 2022',
+                        ),
+                        onTap: () {},
+                        trailing: IconButton(
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Color.fromARGB(255, 153, 113, 98),
+                          ),
+                          onPressed: () {},
+                        ),
                       ),
-                      onPressed: () {},
                     ),
-                  ),
-                );
-              },
-            ),
+                  );
+                },
+              ),
+            ],
           ),
         ),
       ),

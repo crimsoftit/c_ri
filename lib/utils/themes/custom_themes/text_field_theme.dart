@@ -1,8 +1,8 @@
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
-class RTextFormFieldTheme {
-  RTextFormFieldTheme._();
+class CTextFormFieldTheme {
+  CTextFormFieldTheme._();
 
   // -- light theme (mode) settings
   static InputDecorationTheme lightInputDecorationTheme = InputDecorationTheme(
@@ -12,12 +12,12 @@ class RTextFormFieldTheme {
     labelStyle: const TextStyle().copyWith(
       fontSize: 11.0,
       color: CColors.rBrown,
-      fontWeight: FontWeight.normal,
+      // fontWeight: FontWeight.normal,
     ),
     hintStyle: const TextStyle().copyWith(
       fontSize: 11.0,
       color: CColors.rBrown,
-      fontWeight: FontWeight.normal,
+      // fontWeight: FontWeight.normal,
     ),
     errorStyle: const TextStyle().copyWith(
       fontStyle: FontStyle.italic,
@@ -70,12 +70,12 @@ class RTextFormFieldTheme {
     labelStyle: const TextStyle().copyWith(
       fontSize: 11.0,
       color: CColors.white,
-      fontWeight: FontWeight.normal,
+      // fontWeight: FontWeight.normal,
     ),
     hintStyle: const TextStyle().copyWith(
       fontSize: 11.0,
       color: CColors.white,
-      fontWeight: FontWeight.normal,
+      // fontWeight: FontWeight.normal,
     ),
     errorStyle: const TextStyle().copyWith(
       fontStyle: FontStyle.italic,

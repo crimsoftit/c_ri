@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 //import 'package:google_fonts/google_fonts.dart';
 
-class RTextTheme {
-  RTextTheme._();
+class CTextTheme {
+  CTextTheme._();
 
   static TextTheme ligtTextTheme = TextTheme(
     headlineLarge: const TextStyle().copyWith(

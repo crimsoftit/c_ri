@@ -17,7 +17,7 @@ class CAppTheme {
     fontFamily: 'Poppins',
     brightness: Brightness.light,
     primaryColor: CColors.rBrown,
-    textTheme: RTextTheme.ligtTextTheme,
+    textTheme: CTextTheme.ligtTextTheme,
     chipTheme: RChipTheme.lightChipTheme,
     scaffoldBackgroundColor: CColors.white,
     appBarTheme: RAppBarTheme.lightAppBarTheme,
@@ -25,7 +25,7 @@ class CAppTheme {
     bottomSheetTheme: RBottomSheetTheme.lightBottomSheetTheme,
     elevatedButtonTheme: RElevatedButtonTheme.elevatedBtnLightTheme,
     outlinedButtonTheme: ROutlinedButtonTheme.outlinedBtnLightTheme,
-    inputDecorationTheme: RTextFormFieldTheme.lightInputDecorationTheme,
+    inputDecorationTheme: CTextFormFieldTheme.lightInputDecorationTheme,
   );
 
   static ThemeData darkTheme = ThemeData(
@@ -33,7 +33,7 @@ class CAppTheme {
     fontFamily: 'Poppins',
     brightness: Brightness.dark,
     primaryColor: CColors.rBrown,
-    textTheme: RTextTheme.darkTextTheme,
+    textTheme: CTextTheme.darkTextTheme,
     chipTheme: RChipTheme.darkChipTheme,
     scaffoldBackgroundColor: Colors.black,
     appBarTheme: RAppBarTheme.darkAppBarTheme,
@@ -41,6 +41,6 @@ class CAppTheme {
     bottomSheetTheme: RBottomSheetTheme.darkBottomSheetTheme,
     elevatedButtonTheme: RElevatedButtonTheme.elevatedBtnDarkTheme,
     outlinedButtonTheme: ROutlinedButtonTheme.outlinedBtnDarkTheme,
-    inputDecorationTheme: RTextFormFieldTheme.darkInputDecorationTheme,
+    inputDecorationTheme: CTextFormFieldTheme.darkInputDecorationTheme,
   );
 }

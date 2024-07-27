@@ -41,7 +41,11 @@ class CPopupSnackBar {
     );
   }
 
-  static successSnackBar({required title, message = '', duration = 5}) {
+  static successSnackBar({
+    required title,
+    message = '',
+    duration = 5,
+  }) {
     Get.snackbar(
       title,
       message,
@@ -49,6 +53,24 @@ class CPopupSnackBar {
       shouldIconPulse: true,
       colorText: CColors.white,
       backgroundColor: Colors.green,
+      snackPosition: SnackPosition.BOTTOM,
+      duration: Duration(seconds: duration),
+      margin: const EdgeInsets.all(10.0),
+      icon: const Icon(
+        Iconsax.check,
+        color: CColors.white,
+      ),
+    );
+  }
+
+  static successSnackBar1({required title, message = '', duration = 5}) {
+    Get.snackbar(
+      title,
+      message,
+      isDismissible: true,
+      shouldIconPulse: true,
+      colorText: CColors.white,
+      backgroundColor: Color.fromARGB(255, 235, 108, 108),
       snackPosition: SnackPosition.BOTTOM,
       duration: Duration(seconds: duration),
       margin: const EdgeInsets.all(10.0),

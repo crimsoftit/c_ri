@@ -84,4 +84,10 @@ class CImages {
       "assets/images/animations/sammy-line-travel-backpack-with-passport-and-air-ticket.gif";
   static String successfulRegAnimation =
       "assets/images/lottie_anime/72462-check-register.json";
+  static String pencilAnimation =
+      "assets/images/lottie_anime/140429-pencil-drawing.json";
+
+  // -- no data screen images --
+  static const String noDataLottie = "assets/images/no_data.json";
+  static const String errorDataLottie = "assets/images/data_error.json";
 }
