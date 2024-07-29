@@ -152,6 +152,34 @@ class CInventoryController extends GetxController {
     }
   }
 
+  /// -- delete inventory item entry --
+  Future<void> deleteInventoryItem(CInventoryModel inventoryItem) async {
+    try {
+      // -- start loader
+      isLoading.value = true;
+
+      // -- update entry
+      await dbHelper.deleteInventoryItem(inventoryItem);
+
+      // -- stop loader
+      isLoading.value = false;
+
+      // -- refresh inventory list
+      fetchInventoryItems();
+
+      // -- success message
+      CPopupSnackBar.successSnackBar(
+        title: 'delete success',
+        message: '${inventoryItem.name} deleted successfully...',
+      );
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'error deleting data',
+        message: e.toString(),
+      );
+    }
+  }
+
   /// -- barcode scanner --
   void scanBarcodeNormal() async {
     try {

@@ -3,7 +3,6 @@ import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/store/screens/home/widgets/home_appbar.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
-import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -11,7 +10,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    //final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     return const Scaffold(
       body: SingleChildScrollView(

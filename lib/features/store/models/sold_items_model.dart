@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_getters_setters
+
 class SoldItemsModel {
   int? _id;
   String _productCode = "";

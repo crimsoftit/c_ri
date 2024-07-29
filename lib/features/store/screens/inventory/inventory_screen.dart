@@ -52,29 +52,42 @@ class InventoryScreen extends StatelessWidget {
                   ? invController.inventoryItems.length
                   : 0,
               itemBuilder: (context, index) {
-                return Card(
-                  color: Colors.white,
-                  elevation: 1.0,
-                  child: ListTile(
-                    title: Text(invController.inventoryItems[index].name),
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.brown[300],
-                      child: Text(
-                        invController.inventoryItems[index].name[0]
-                            .toUpperCase(),
+                return Dismissible(
+                  key: Key(invController.inventoryItems[index].pCode),
+                  onDismissed: (direction) {
+                    String pName = invController.inventoryItems[index].name;
+                    invController.deleteInventoryItem(
+                        invController.inventoryItems[index]);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("$pName deleted"),
                       ),
-                      //const Icon(Icons.keyboard_arrow_right),
-                    ),
-                    subtitle: Text(
-                      invController.inventoryItems[index].date,
-                    ),
-                    onTap: () {},
-                    trailing: IconButton(
-                      icon: const Icon(
-                        Icons.delete,
-                        color: Color.fromARGB(255, 153, 113, 98),
+                    );
+                  },
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 1.0,
+                    child: ListTile(
+                      title: Text(invController.inventoryItems[index].name),
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.brown[300],
+                        child: Text(
+                          invController.inventoryItems[index].name[0]
+                              .toUpperCase(),
+                        ),
+                        //const Icon(Icons.keyboard_arrow_right),
                       ),
-                      onPressed: () {},
+                      subtitle: Text(
+                        invController.inventoryItems[index].date,
+                      ),
+                      onTap: () {},
+                      trailing: IconButton(
+                        icon: const Icon(
+                          Icons.delete,
+                          color: Color.fromARGB(255, 153, 113, 98),
+                        ),
+                        onPressed: () {},
+                      ),
                     ),
                   ),
                 );

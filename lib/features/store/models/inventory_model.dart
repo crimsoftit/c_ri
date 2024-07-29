@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_getters_setters
+
 class CInventoryModel {
   int? _id;
   String _pCode = "";
