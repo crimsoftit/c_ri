@@ -70,7 +70,7 @@ class CPopupSnackBar {
       isDismissible: true,
       shouldIconPulse: true,
       colorText: CColors.white,
-      backgroundColor: Color.fromARGB(255, 235, 108, 108),
+      backgroundColor: const Color.fromARGB(255, 235, 108, 108),
       snackPosition: SnackPosition.BOTTOM,
       duration: Duration(seconds: duration),
       margin: const EdgeInsets.all(10.0),

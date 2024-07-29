@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
-    return Scaffold(
+    return const Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -21,20 +21,20 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 children: [
                   // -- ## HOME PAGE APP BAR ## --
-                  const CHomeAppBarWidget(),
+                  CHomeAppBarWidget(),
 
-                  const SizedBox(
+                  SizedBox(
                     height: CSizes.spaceBtnSections,
                   ),
 
                   // -- ## SEARCH BAR ## --
 
-                  const SizedBox(
+                  SizedBox(
                     height: CSizes.spaceBtnSections,
                   ),
 
                   // -- ## ALL ABOUT CATEGORIES ## --
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.only(
                       left: CSizes.defaultSpace,
                     ),
@@ -42,7 +42,7 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         // -- category heading --
                         CSectionHeading(
-                          showActionBtn: false,
+                          showActionBtn: true,
                           title: 'popular categories',
                           txtColor: CColors.white,
                           btnTitle: 'view all',
@@ -55,7 +55,7 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const SizedBox(
+                  SizedBox(
                     height: CSizes.spaceBtnSections,
                   ),
                 ],

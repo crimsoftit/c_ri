@@ -3,41 +3,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class CHelperFunctions {
-  static Color? getColor(String value) {
-    // -- define products' specific colors and it will match the attribute colors and show specific colors
-    if (value == 'red' || value == 'Red') {
-      return Colors.red;
-    } else if (value == 'green' || value == 'Green') {
-      return Colors.green;
-    } else if (value == 'green' || value == 'Green') {
-      return Colors.green;
-    } else if (value == 'blue' || value == 'Blue') {
-      return Colors.blue;
-    } else if (value == 'pink' || value == 'Pink') {
-      return Colors.pink;
-    } else if (value == 'grey' || value == 'Grey') {
-      return Colors.grey;
-    } else if (value == 'purple' || value == 'Purple') {
-      return Colors.purple;
-    } else if (value == 'black' || value == 'Black') {
-      return Colors.black;
-    } else if (value == 'white' || value == 'White') {
-      return Colors.white;
-    } else if (value == 'brown' || value == 'Brown') {
-      return Colors.brown;
-    } else if (value == 'teal' || value == 'Teal') {
-      return Colors.teal;
-    } else if (value == 'indigo' || value == 'Indigo') {
-      return Colors.indigo;
-    } else if (value == 'orange' || value == 'Orange') {
-      return Colors.orange;
-    } else if (value == 'yellow' || value == 'Yellow') {
-      return Colors.yellow;
-    } else {
-      return null;
-    }
-  }
-
   static void showSnackBar(String message) {
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       SnackBar(content: Text(message)),

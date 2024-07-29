@@ -59,11 +59,14 @@ class InventoryScreen extends StatelessWidget {
                     title: Text(invController.inventoryItems[index].name),
                     leading: CircleAvatar(
                       backgroundColor: Colors.brown[300],
-                      child: Text('0'),
+                      child: Text(
+                        invController.inventoryItems[index].name[0]
+                            .toUpperCase(),
+                      ),
                       //const Icon(Icons.keyboard_arrow_right),
                     ),
                     subtitle: Text(
-                      '14th Feb 2022',
+                      invController.inventoryItems[index].date,
                     ),
                     onTap: () {},
                     trailing: IconButton(
