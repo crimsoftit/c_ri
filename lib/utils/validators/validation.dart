@@ -1,3 +1,5 @@
+import 'package:c_ri/data/repos/user/user_repo.dart';
+
 class CValidator {
   /* ========== empty text validation ========== */
   static String? validateEmptyText(String? fieldName, String? value) {
@@ -36,7 +38,7 @@ class CValidator {
   }
 
   /* ========== validate phone number ========== */
-  static String? validatePhoneNumber(String? value) {
+  static Future<String?> validatePhoneNumber(String? value) async {
     if (value == null || value.isEmpty) {
       return 'phone number is required!';
     }

@@ -16,6 +16,7 @@ class SignupController extends GetxController {
   // -- variables --
   final hidePswdTxt = true.obs;
   RxString countryCode = ''.obs;
+  RxString completePhoneNo = ''.obs;
   final checkPrivacyPolicy = false.obs;
 
   final hideConfirmPswdTxt = true.obs;
@@ -23,7 +24,9 @@ class SignupController extends GetxController {
   final email = TextEditingController();
   final phoneNumber = TextEditingController();
   final password = TextEditingController();
-  final confirmPasswordd = TextEditingController();
+  final confirmPassword = TextEditingController();
+
+  final fullNo = TextEditingController();
 
   GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
 
@@ -64,6 +67,18 @@ class SignupController extends GetxController {
         return;
       }
 
+      // -- check if phone number exists --
+      final phoneNoExists =
+          await CUserRepo.instance.checkIfPhoneNoExists(completePhoneNo.value);
+      if (phoneNoExists) {
+        CFullScreenLoader.stopLoading();
+        CPopupSnackBar.warningSnackBar(
+          title: 'phone no. exists!',
+          message: 'the supplied phone no. is already in use!',
+        );
+        return;
+      }
+
       // -- register user implementing Firebase Authentication & save user data in the Firebase database
       final userCredentials =
           await AuthRepo.instance.signupWithEmailAndPassword(
@@ -77,7 +92,8 @@ class SignupController extends GetxController {
         fullName: fullName.text,
         email: email.text.trim(),
         countryCode: countryCode.value,
-        phoneNo: phoneNumber.text.trim(),
+        // phoneNo: phoneNumber.text.trim(),
+        phoneNo: completePhoneNo.value,
         profPic: '',
       );
 

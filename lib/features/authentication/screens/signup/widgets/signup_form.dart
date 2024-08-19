@@ -88,7 +88,10 @@ class RSignupForm extends StatelessWidget {
             keyboardType: TextInputType.phone,
             languageCode: "en",
             onChanged: (phone) {
+              signupController.completePhoneNo.value = phone.completeNumber;
               //print(controller.cell_no.value);
+
+              //signupController.fullNo.text = phone.completeNumber;
             },
             onCountryChanged: (country) {
               signupController.countryCode.value = country.code;
@@ -97,9 +100,20 @@ class RSignupForm extends StatelessWidget {
                 message: 'country code: ${signupController.countryCode.value}',
               );
             },
-            validator: (phone) =>
-                CValidator.validatePhoneNumber(phone.toString()),
+            validator: (value) =>
+                CValidator.validatePhoneNumber(value.toString()),
           ),
+
+          // TextFormField(
+          //   controller: signupController.fullNo,
+          //   style: const TextStyle(
+          //     height: 0.7,
+          //   ),
+          //   decoration: const InputDecoration(
+          //     prefixIcon: Icon(Iconsax.direct),
+          //     labelText: 'full No',
+          //   ),
+          // ),
 
           const SizedBox(
             height: CSizes.spaceBtnInputFields,
@@ -142,7 +156,7 @@ class RSignupForm extends StatelessWidget {
           // -- confirm password field --
           Obx(
             () => TextFormField(
-              controller: signupController.confirmPasswordd,
+              controller: signupController.confirmPassword,
               obscureText: signupController.hideConfirmPswdTxt.value,
               style: const TextStyle(
                 height: 0.7,

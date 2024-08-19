@@ -102,6 +102,32 @@ class CUserRepo extends GetxController {
     }
   }
 
+  /* == check if phone no. already exists == */
+  Future<bool> checkIfPhoneNoExists(String phoneNo) async {
+    try {
+      final QuerySnapshot result = await _db
+          .collection('users')
+          .where('PhoneNo', isEqualTo: phoneNo)
+          .limit(1)
+          .get();
+
+      final List<DocumentSnapshot> docs = result.docs;
+      return docs.length == 1;
+    } on FirebaseException catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: "firebase exception error",
+        message: e.code.toString(),
+      );
+      throw CFirebaseAuthExceptions(e.code).message;
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: "An error occurred",
+        message: e.toString(),
+      );
+      throw 'something went wrong! please try again!';
+    }
+  }
+
   /* == update user data in firestore == */
   Future<void> updateUserDetails(CUserModel updatedUser) async {
     try {

@@ -37,7 +37,7 @@ class AddItemDialog {
         child: Column(
           children: <Widget>[
             const SizedBox(
-              height: CSizes.spaceBtnInputFields,
+              height: CSizes.spaceBtnInputFields / 2,
             ),
             // form to handle input data
             Form(
@@ -85,7 +85,7 @@ class AddItemDialog {
                   //   },
                   // ),
                   const SizedBox(
-                    height: CSizes.spaceBtnInputFields,
+                    height: CSizes.spaceBtnInputFields / 2,
                   ),
                   TextFormField(
                     controller: invController.txtCode,
@@ -103,7 +103,7 @@ class AddItemDialog {
                     },
                   ),
                   const SizedBox(
-                    height: CSizes.spaceBtnInputFields,
+                    height: CSizes.spaceBtnInputFields / 2,
                   ),
                   TextFormField(
                     controller: invController.txtQty,
@@ -127,7 +127,7 @@ class AddItemDialog {
                     },
                   ),
                   const SizedBox(
-                    height: CSizes.spaceBtnInputFields,
+                    height: CSizes.spaceBtnInputFields / 2,
                   ),
                   TextFormField(
                     controller: invController.txtBP,
@@ -151,7 +151,7 @@ class AddItemDialog {
                     },
                   ),
                   const SizedBox(
-                    height: CSizes.spaceBtnInputFields,
+                    height: CSizes.spaceBtnInputFields / 2,
                   ),
                   TextFormField(
                     controller: invController.txtUnitSP,
@@ -172,7 +172,7 @@ class AddItemDialog {
                     },
                   ),
                   const SizedBox(
-                    height: CSizes.spaceBtnInputFields,
+                    height: CSizes.spaceBtnInputFields / 2,
                   ),
                   IconButton(
                     icon: const Icon(
