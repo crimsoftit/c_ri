@@ -36,7 +36,7 @@ class CValidator {
   }
 
   /* ========== validate phone number ========== */
-  static Future<String?> validatePhoneNumber(String? value) async {
+  static String? validatePhoneNumber(String? value) {
     if (value == null || value.isEmpty) {
       return 'phone number is required!';
     }

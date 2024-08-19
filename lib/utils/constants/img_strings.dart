@@ -50,6 +50,7 @@ class CImages {
   //     "assets/images/animations/140429-pencil-drawing.json";
   static String docerAnimation =
       "assets/images/lottie_anime/141594-animation-of-docer.json";
+
   // static String searchAnimation =
   //     "assets/images/animations/72785-searching.json";
   // static String emptyAnimation =
@@ -88,6 +89,6 @@ class CImages {
       "assets/images/lottie_anime/140429-pencil-drawing.json";
 
   // -- no data screen images --
-  static const String noDataLottie = "assets/images/no_data.json";
+  static const String noDataLottie = "assets/images/lottie_anime/no_data.json";
   static const String errorDataLottie = "assets/images/data_error.json";
 }

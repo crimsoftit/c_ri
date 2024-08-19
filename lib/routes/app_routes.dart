@@ -24,7 +24,7 @@ class CAppRoutes {
     ),
     GetPage(
       name: CRoutes.settings,
-      page: () => const UserSettingsScreen(),
+      page: () => const SettingsScreen(),
     ),
     GetPage(
       name: CRoutes.userProfile,

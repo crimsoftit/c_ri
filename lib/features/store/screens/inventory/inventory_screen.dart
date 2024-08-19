@@ -1,9 +1,11 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/icon_buttons/search_icon_btn.dart';
+import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inventory_controller.dart';
 import 'package:c_ri/features/store/models/inventory_model.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/add_item_dialog.dart';
 import 'package:c_ri/utils/constants/colors.dart';
+import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -44,8 +46,17 @@ class InventoryScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(CSizes.defaultSpace),
-          child: Obx(
-            () => ListView.builder(
+          child: Obx(() {
+            if (invController.inventoryItems.isEmpty) {
+              return const Center(
+                child: NoDataScreen(
+                  lottieImage: CImages.noDataLottie,
+                  txt: 'No data found!',
+                ),
+              );
+            }
+
+            return ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               itemCount: (invController.inventoryItems.isNotEmpty)
@@ -92,8 +103,8 @@ class InventoryScreen extends StatelessWidget {
                   ),
                 );
               },
-            ),
-          ),
+            );
+          }),
         ),
       ),
 

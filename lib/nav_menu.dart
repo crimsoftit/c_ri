@@ -71,7 +71,7 @@ class NavMenuController extends GetxController {
     const HomeScreen(),
     const InventoryScreen(),
     const SalesScreen(),
-    const UserSettingsScreen(),
+    const SettingsScreen(),
     const ProfileScreen(),
 
     // const DataErrorScreen(
