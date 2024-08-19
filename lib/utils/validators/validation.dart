@@ -1,5 +1,3 @@
-import 'package:c_ri/data/repos/user/user_repo.dart';
-
 class CValidator {
   /* ========== empty text validation ========== */
   static String? validateEmptyText(String? fieldName, String? value) {
