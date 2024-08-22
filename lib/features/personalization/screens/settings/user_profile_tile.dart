@@ -29,6 +29,7 @@ class CUserProfileTile extends StatelessWidget {
           img: userController.user.value.profPic,
           width: 47.0,
           height: 47.0,
+          isNetworkImg: true,
           //padding: 10.0,
         ),
       ),
@@ -48,22 +49,24 @@ class CUserProfileTile extends StatelessWidget {
           );
         }
       }),
-      subtitle: Obx(() {
-        if (userController.profileLoading.value) {
-          return const CShimmerEffect(
-            width: 80.0,
-            height: 15.0,
-          );
-        } else {
-          return Text(
-            userController.user.value.email,
-            style: Theme.of(context).textTheme.headlineSmall!.apply(
-                  color: CColors.white,
-                  fontSizeFactor: 0.6,
-                ),
-          );
-        }
-      }),
+      subtitle: Obx(
+        () {
+          if (userController.profileLoading.value) {
+            return const CShimmerEffect(
+              width: 80.0,
+              height: 15.0,
+            );
+          } else {
+            return Text(
+              userController.user.value.email,
+              style: Theme.of(context).textTheme.headlineSmall!.apply(
+                    color: CColors.white,
+                    fontSizeFactor: 0.6,
+                  ),
+            );
+          }
+        },
+      ),
       trailing: IconButton(
         onPressed: onPressed,
         icon: const Icon(

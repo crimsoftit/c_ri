@@ -1,18 +1,22 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
-import 'package:c_ri/common/widgets/icon_buttons/search_icon_btn.dart';
+import 'package:c_ri/common/widgets/icon_buttons/trailing_icon_btn.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inventory_controller.dart';
 import 'package:c_ri/features/store/models/inventory_model.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/add_item_dialog.dart';
+import 'package:c_ri/features/store/screens/inventory_details/inventory_details.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 
 class InventoryScreen extends StatelessWidget {
-  const InventoryScreen({super.key});
+  const InventoryScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +39,9 @@ class InventoryScreen extends StatelessWidget {
         ),
         actions: [
           // -- search button
-          CCustomIconBtn(
+          CTrailingIconBtn(
             iconColor: CColors.white,
+            iconData: Iconsax.search_favorite,
             onPressed: () {},
           ),
         ],
@@ -79,19 +84,40 @@ class InventoryScreen extends StatelessWidget {
                     color: Colors.white,
                     elevation: 1.0,
                     child: ListTile(
-                      title: Text(invController.inventoryItems[index].name),
+                      title: Text(
+                        invController.inventoryItems[index].name,
+                        style: Theme.of(context).textTheme.labelMedium!.apply(
+                              color: CColors.rBrown,
+                            ),
+                      ),
                       leading: CircleAvatar(
                         backgroundColor: Colors.brown[300],
                         child: Text(
                           invController.inventoryItems[index].name[0]
                               .toUpperCase(),
+                          style: Theme.of(context).textTheme.labelLarge!.apply(
+                                color: CColors.white,
+                              ),
                         ),
-                        //const Icon(Icons.keyboard_arrow_right),
                       ),
-                      subtitle: Text(
-                        invController.inventoryItems[index].date,
+                      subtitle: Column(
+                        children: [
+                          Text(
+                            invController.inventoryItems[index].date,
+                            style:
+                                Theme.of(context).textTheme.labelSmall!.apply(
+                                      color: CColors.grey,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                          ),
+                        ],
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        Get.to(() => CInventoryDetailsScreen(
+                              inventoryItem:
+                                  invController.inventoryItems[index],
+                            ));
+                      },
                       trailing: IconButton(
                         icon: const Icon(
                           Icons.delete,

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 
-class CCustomIconBtn extends StatelessWidget {
-  const CCustomIconBtn({
+class CTrailingIconBtn extends StatelessWidget {
+  const CTrailingIconBtn({
     super.key,
     this.iconColor,
     this.onPressed,
+    required this.iconData,
   });
 
   final Color? iconColor;
+  final IconData iconData;
   final VoidCallback? onPressed;
 
   @override
@@ -16,7 +17,7 @@ class CCustomIconBtn extends StatelessWidget {
     return SizedBox(
       child: IconButton(
         icon: Icon(
-          Iconsax.search_favorite,
+          iconData,
           color: iconColor,
         ),
         onPressed: onPressed,

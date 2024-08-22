@@ -2,24 +2,23 @@ import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/list_tiles/menu_tile.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
-import 'package:c_ri/data/repos/auth/auth_repo.dart';
-import 'package:c_ri/features/personalization/screens/profile/profile.dart';
-import 'package:c_ri/features/personalization/screens/settings/user_profile_tile.dart';
+import 'package:c_ri/features/store/models/inventory_model.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
-import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+class CInventoryDetailsScreen extends StatelessWidget {
+  const CInventoryDetailsScreen({
+    super.key,
+    required this.inventoryItem,
+  });
+
+  final CInventoryModel inventoryItem;
 
   @override
   Widget build(BuildContext context) {
-    final isDarkTheme = CHelperFunctions.isDarkMode(context);
-
-    //Get.put(CProductsRepo());
+    //final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -32,7 +31,7 @@ class SettingsScreen extends StatelessWidget {
                   // app bar
                   CAppBar(
                     title: Text(
-                      'my account',
+                      'product details',
                       style: Theme.of(context).textTheme.headlineSmall!.apply(
                             color: CColors.white,
                           ),
@@ -42,11 +41,37 @@ class SettingsScreen extends StatelessWidget {
                     height: CSizes.spaceBtnSections / 2,
                   ),
 
-                  // user profile card
-                  CUserProfileTile(
-                    onPressed: () {
-                      Get.to(const ProfileScreen());
-                    },
+                  // product profile card
+                  ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.brown[300],
+                      child: Text(
+                        inventoryItem.name[0].toUpperCase(),
+                        style: Theme.of(context).textTheme.labelLarge!.apply(
+                              color: CColors.white,
+                            ),
+                      ),
+                    ),
+                    title: Text(
+                      inventoryItem.name,
+                      style: Theme.of(context).textTheme.labelMedium!.apply(
+                            color: CColors.grey,
+                          ),
+                    ),
+                    subtitle: Text(
+                      inventoryItem.date,
+                      style: Theme.of(context).textTheme.headlineSmall!.apply(
+                            color: CColors.white,
+                            fontSizeFactor: 0.6,
+                          ),
+                    ),
+                    trailing: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Iconsax.edit,
+                        color: CColors.white,
+                      ),
+                    ),
                   ),
                   const SizedBox(
                     height: CSizes.spaceBtnSections,
@@ -175,28 +200,16 @@ class SettingsScreen extends StatelessWidget {
                     height: CSizes.spaceBtnItems,
                   ),
 
-                  Center(
+                  const Center(
                     child: Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Iconsax.logout,
                           size: 28.0,
                           color: CColors.primaryBrown,
                         ),
-                        const SizedBox(
+                        SizedBox(
                           width: CSizes.spaceBtnInputFields,
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            AuthRepo.instance.logout();
-                          },
-                          child: Text(
-                            'log out',
-                            style: TextStyle(
-                              color:
-                                  isDarkTheme ? CColors.grey : CColors.darkGrey,
-                            ),
-                          ),
                         ),
                       ],
                     ),

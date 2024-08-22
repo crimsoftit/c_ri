@@ -1,8 +1,8 @@
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 
-class CSettingsMenuTile extends StatelessWidget {
-  const CSettingsMenuTile({
+class CMenuTile extends StatelessWidget {
+  const CMenuTile({
     super.key,
     required this.icon,
     required this.title,

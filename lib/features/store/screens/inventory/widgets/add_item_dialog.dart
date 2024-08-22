@@ -1,11 +1,13 @@
 import 'package:c_ri/features/store/controllers/inventory_controller.dart';
 import 'package:c_ri/features/store/models/inventory_model.dart';
+import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/validators/validation.dart';
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 
 class AddItemDialog {
@@ -93,6 +95,15 @@ class AddItemDialog {
                     decoration: InputDecoration(
                       labelText: 'barcode value',
                       labelStyle: textStyle,
+                      suffixIcon: IconButton(
+                        icon: const Icon(
+                          Iconsax.scan,
+                        ),
+                        color: CColors.rBrown,
+                        onPressed: () {
+                          invController.scanBarcodeNormal();
+                        },
+                      ),
                     ),
                     style: const TextStyle(
                       fontWeight: FontWeight.normal,
@@ -169,17 +180,6 @@ class AddItemDialog {
                     validator: (value) {
                       return CValidator.validateEmptyText(
                           'unit selling price', value);
-                    },
-                  ),
-                  const SizedBox(
-                    height: CSizes.spaceBtnInputFields / 2,
-                  ),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.adf_scanner_outlined,
-                    ),
-                    onPressed: () {
-                      invController.scanBarcodeNormal();
                     },
                   ),
                   const SizedBox(
