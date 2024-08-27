@@ -209,7 +209,7 @@ class AddUpdateItemDialog {
 
                           if (invController.itemExists.value) {
                             invController.updateInventoryItem(invModel);
-                            invController.fetchItemByCode(invModel.pCode);
+                            //invController.fetchItemByCode(invModel.pCode);
                             //invController.fetchInventoryItems;
                           } else {
                             invController.addInventoryItem(invModel);
