@@ -3,7 +3,7 @@ import 'package:c_ri/common/widgets/icon_buttons/trailing_icon_btn.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inventory_controller.dart';
 import 'package:c_ri/features/store/models/inventory_model.dart';
-import 'package:c_ri/features/store/screens/inventory/widgets/add_item_dialog.dart';
+import 'package:c_ri/features/store/screens/inventory/widgets/add_update_inventory_item_dialog.dart';
 import 'package:c_ri/features/store/screens/inventory_details/inventory_details.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
@@ -21,7 +21,7 @@ class InventoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    AddItemDialog dialog = AddItemDialog();
+    AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
     final invController = Get.put(CInventoryController());
     invController.fetchInventoryItems();
@@ -136,6 +136,9 @@ class InventoryScreen extends StatelessWidget {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          // update current page
+          invController.currentScreen.value = "invListScreen";
+
           showDialog(
             context: context,
             builder: (BuildContext context) => dialog.buildDialog(
@@ -148,7 +151,7 @@ class InventoryScreen extends StatelessWidget {
         backgroundColor: Colors.brown,
         foregroundColor: Colors.white,
         child: const Icon(
-          Icons.add,
+          Iconsax.additem,
         ),
       ),
     );

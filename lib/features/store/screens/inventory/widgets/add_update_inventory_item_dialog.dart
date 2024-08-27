@@ -1,5 +1,7 @@
 import 'package:c_ri/features/store/controllers/inventory_controller.dart';
 import 'package:c_ri/features/store/models/inventory_model.dart';
+import 'package:c_ri/features/store/screens/inventory/inventory_screen.dart';
+import 'package:c_ri/features/store/screens/inventory_details/inventory_details.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/validators/validation.dart';
@@ -10,7 +12,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 
-class AddItemDialog {
+class AddUpdateItemDialog {
   Widget buildDialog(
       BuildContext context, CInventoryModel invModel, bool isNew) {
     var textStyle = Theme.of(context).textTheme.bodySmall;
@@ -188,7 +190,7 @@ class AddItemDialog {
                   Obx(
                     () => ElevatedButton(
                       child: Text(
-                        invController.itemExists.value ? 'update' : 'add entry',
+                        invController.itemExists.value ? 'update' : 'save',
                       ),
                       onPressed: () {
                         // Validate returns true if the form is valid, or false otherwise.
@@ -207,15 +209,40 @@ class AddItemDialog {
 
                           if (invController.itemExists.value) {
                             invController.updateInventoryItem(invModel);
+                            invController.fetchItemByCode(invModel.pCode);
+                            //invController.fetchInventoryItems;
                           } else {
                             invController.addInventoryItem(invModel);
+                            invController.fetchInventoryItems;
                           }
 
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Processing Data')),
                           );
+                          //Navigator.of(context).pop(true);
+                          //Navigator.pop(context, true);
 
-                          Navigator.pop(context, true);
+                          if (invController.currentScreen.value ==
+                              "invListScreen") {
+                            Navigator.push(
+                              context,
+                              // Create the SelectionScreen in the next step.
+
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const InventoryScreen()),
+                            );
+                          } else {
+                            Navigator.push(
+                              context,
+                              // Create the SelectionScreen in the next step.
+
+                              MaterialPageRoute(
+                                  builder: (context) => CInventoryDetailsScreen(
+                                        inventoryItem: invModel,
+                                      )),
+                            );
+                          }
                         }
                       },
                     ),

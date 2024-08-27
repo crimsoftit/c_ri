@@ -17,6 +17,8 @@ class CInventoryController extends GetxController {
 
   final RxString scanResults = ''.obs;
 
+  final RxString currentScreen = ''.obs;
+
   final RxBool itemExists = false.obs;
 
   final txtName = TextEditingController();

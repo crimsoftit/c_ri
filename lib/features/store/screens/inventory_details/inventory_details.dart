@@ -2,10 +2,13 @@ import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/list_tiles/menu_tile.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
+import 'package:c_ri/features/store/controllers/inventory_controller.dart';
 import 'package:c_ri/features/store/models/inventory_model.dart';
+import 'package:c_ri/features/store/screens/inventory/widgets/add_update_inventory_item_dialog.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 class CInventoryDetailsScreen extends StatelessWidget {
@@ -19,6 +22,11 @@ class CInventoryDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //final isDarkTheme = CHelperFunctions.isDarkMode(context);
+
+    AddUpdateItemDialog dialog = AddUpdateItemDialog();
+
+    final invController = Get.put(CInventoryController());
+    invController.fetchItemByCode(inventoryItem.pCode);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -37,9 +45,6 @@ class CInventoryDetailsScreen extends StatelessWidget {
                           ),
                     ),
                   ),
-                  const SizedBox(
-                    height: CSizes.spaceBtnSections / 2,
-                  ),
 
                   // product profile card
                   ListTile(
@@ -54,6 +59,7 @@ class CInventoryDetailsScreen extends StatelessWidget {
                     ),
                     title: Text(
                       inventoryItem.name,
+                      //invDetails[0].name,
                       style: Theme.of(context).textTheme.labelMedium!.apply(
                             color: CColors.grey,
                           ),
@@ -66,7 +72,27 @@ class CInventoryDetailsScreen extends StatelessWidget {
                           ),
                     ),
                     trailing: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // update current page
+                        invController.currentScreen.value = "invDetailsScreen";
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) => dialog.buildDialog(
+                            context,
+                            CInventoryModel(
+                              inventoryItem.id,
+                              inventoryItem.pCode,
+                              inventoryItem.name,
+                              inventoryItem.quantity,
+                              //invController.itemQty.value,
+                              inventoryItem.buyingPrice,
+                              inventoryItem.unitSellingPrice,
+                              inventoryItem.date,
+                            ),
+                            false,
+                          ),
+                        );
+                      },
                       icon: const Icon(
                         Iconsax.edit,
                         color: CColors.white,
@@ -74,7 +100,7 @@ class CInventoryDetailsScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(
-                    height: CSizes.spaceBtnSections,
+                    height: CSizes.spaceBtnSections / 4,
                   ),
                 ],
               ),
@@ -88,45 +114,51 @@ class CInventoryDetailsScreen extends StatelessWidget {
                   // --- account settings
                   const CSectionHeading(
                     showActionBtn: false,
-                    title: 'account settings',
+                    title: 'details',
                     btnTitle: '',
                     editFontSize: false,
                   ),
-                  const SizedBox(
-                    height: CSizes.spaceBtnItems,
+
+                  CMenuTile(
+                    icon: Iconsax.barcode,
+                    title: inventoryItem.pCode,
+                    subTitle: 'sku/code',
+                    onTap: () {},
                   ),
                   CMenuTile(
-                    icon: Iconsax.safe_home,
-                    title: 'my addresses',
-                    subTitle: 'set shopping delivery address',
+                    icon: Iconsax.shopping_cart,
+                    title: '${(inventoryItem.quantity)}',
+                    subTitle: 'Qty/units available',
+                    onTap: () {},
+                  ),
+
+                  CMenuTile(
+                    icon: Iconsax.bitcoin_card,
+                    title: 'Ksh. ${(inventoryItem.buyingPrice)}',
+                    subTitle: 'buying price',
                     onTap: () {
                       //Get.to(() => const UserAddressesScreen());
                     },
                   ),
+
                   CMenuTile(
-                    icon: Iconsax.shopping_cart,
-                    title: 'my cart',
-                    subTitle: 'add, remove products, and proceed to checkout',
-                    onTap: () {},
-                  ),
-                  CMenuTile(
-                    icon: Iconsax.bag_tick,
-                    title: 'my orders',
-                    subTitle: 'in-progress and completed orders',
+                    icon: Iconsax.card_pos,
+                    title: 'Ksh. ${(inventoryItem.unitSellingPrice)}',
+                    subTitle: 'unit selling price',
                     onTap: () {
                       //Get.to(() => const OrdersScreen());
                     },
                   ),
                   CMenuTile(
-                    icon: Iconsax.bank,
-                    title: 'bank account',
-                    subTitle: 'withdraw balance to a registered bank account',
+                    icon: Iconsax.calendar,
+                    title: inventoryItem.date,
+                    subTitle: 'last modified',
                     onTap: () {},
                   ),
                   CMenuTile(
-                    icon: Iconsax.discount_shape,
-                    title: 'my coupons',
-                    subTitle: 'list of all the discounted coupons',
+                    icon: Iconsax.card_tick,
+                    title: '',
+                    subTitle: 'total sales',
                     onTap: () {},
                   ),
                   CMenuTile(
