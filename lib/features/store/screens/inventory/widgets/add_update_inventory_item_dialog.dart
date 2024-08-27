@@ -219,7 +219,7 @@ class AddUpdateItemDialog {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Processing Data')),
                           );
-                          //Navigator.of(context).pop(true);
+
                           //Navigator.pop(context, true);
 
                           if (invController.currentScreen.value ==
@@ -243,6 +243,8 @@ class AddUpdateItemDialog {
                                       )),
                             );
                           }
+
+                          Navigator.of(context).pop(true);
                         }
                       },
                     ),
