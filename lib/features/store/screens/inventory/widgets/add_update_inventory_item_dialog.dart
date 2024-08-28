@@ -1,7 +1,6 @@
 import 'package:c_ri/features/store/controllers/inventory_controller.dart';
 import 'package:c_ri/features/store/models/inventory_model.dart';
 import 'package:c_ri/features/store/screens/inventory/inventory_screen.dart';
-import 'package:c_ri/features/store/screens/inventory_details/inventory_details.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/validators/validation.dart';
@@ -213,38 +212,42 @@ class AddUpdateItemDialog {
                             //invController.fetchInventoryItems;
                           } else {
                             invController.addInventoryItem(invModel);
-                            invController.fetchInventoryItems;
+                            //invController.fetchInventoryItems;
                           }
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Processing Data')),
+                          //print(invController.currentScreen.value);
+
+                          Navigator.push(
+                            context,
+                            // Create the SelectionScreen in the next step.
+
+                            MaterialPageRoute(
+                                builder: (context) => const InventoryScreen()),
                           );
 
-                          //Navigator.pop(context, true);
+                          // if (invController.currentScreen.value ==
+                          //     "invListScreen") {
+                          //   Navigator.push(
+                          //     context,
+                          //     // Create the SelectionScreen in the next step.
 
-                          if (invController.currentScreen.value ==
-                              "invListScreen") {
-                            Navigator.push(
-                              context,
-                              // Create the SelectionScreen in the next step.
+                          //     MaterialPageRoute(
+                          //         builder: (context) =>
+                          //             const InventoryScreen()),
+                          //   );
+                          // } else {
+                          //   Navigator.push(
+                          //     context,
+                          //     // Create the SelectionScreen in the next step.
 
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const InventoryScreen()),
-                            );
-                          } else {
-                            Navigator.push(
-                              context,
-                              // Create the SelectionScreen in the next step.
+                          //     MaterialPageRoute(
+                          //         builder: (context) => CInventoryDetailsScreen(
+                          //               inventoryItem: invModel,
+                          //             )),
+                          //   );
+                          // }
 
-                              MaterialPageRoute(
-                                  builder: (context) => CInventoryDetailsScreen(
-                                        inventoryItem: invModel,
-                                      )),
-                            );
-                          }
-
-                          Navigator.of(context).pop(true);
+                          //Navigator.of(context).pop(true);
                         }
                       },
                     ),

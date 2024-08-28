@@ -138,6 +138,7 @@ class InventoryScreen extends StatelessWidget {
         onPressed: () {
           // update current page
           invController.currentScreen.value = "invListScreen";
+          //print(invController.currentScreen.value);
 
           showDialog(
             context: context,
