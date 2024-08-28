@@ -37,6 +37,9 @@ class SettingsScreen extends StatelessWidget {
                             color: CColors.white,
                           ),
                     ),
+                    backIconAction: () {
+                      Get.back();
+                    },
                   ),
                   const SizedBox(
                     height: CSizes.spaceBtnSections / 2,

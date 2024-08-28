@@ -30,6 +30,9 @@ class ProfileScreen extends StatelessWidget {
           'me profile',
           style: Theme.of(context).textTheme.headlineSmall,
         ),
+        backIconAction: () {
+          Get.back();
+        },
       ),
 
       // -- body --

@@ -1,5 +1,7 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
+import 'package:c_ri/common/widgets/dialogs/confirm_dialog.dart';
 import 'package:c_ri/common/widgets/icon_buttons/trailing_icon_btn.dart';
+import 'package:c_ri/common/widgets/shimmers/horizontal_products_shimmer.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inventory_controller.dart';
 import 'package:c_ri/features/store/models/inventory_model.dart';
@@ -24,27 +26,30 @@ class InventoryScreen extends StatelessWidget {
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
     final invController = Get.put(CInventoryController());
-    invController.fetchInventoryItems();
 
     return Scaffold(
       /// -- app bar --
       appBar: CAppBar(
-        showBackArrow: true,
+        showBackArrow: false,
         backIconColor: isDarkTheme ? CColors.white : CColors.rBrown,
         title: Text(
-          'inventory',
+          'inventory items',
           style: Theme.of(context).textTheme.headlineSmall!.apply(
-                fontSizeFactor: 0.7,
+                fontSizeFactor: 0.85,
               ),
         ),
         actions: [
           // -- search button
           CTrailingIconBtn(
-            iconColor: CColors.white,
+            iconColor: isDarkTheme ? CColors.white : CColors.rBrown,
             iconData: Iconsax.search_favorite,
             onPressed: () {},
           ),
         ],
+        backIconAction: () {
+          // Navigator.pop(context, true);
+          // Get.back();
+        },
       ),
 
       /// -- body --
@@ -52,6 +57,12 @@ class InventoryScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(CSizes.defaultSpace),
           child: Obx(() {
+            // run loader --
+            if (invController.isLoading.value) {
+              return const CHorizontalProductShimmer(itemCount: 4);
+            }
+
+            // -- no data widget --
             if (invController.inventoryItems.isEmpty) {
               return const Center(
                 child: NoDataScreen(
@@ -71,14 +82,9 @@ class InventoryScreen extends StatelessWidget {
                 return Dismissible(
                   key: Key(invController.inventoryItems[index].pCode),
                   onDismissed: (direction) {
-                    String pName = invController.inventoryItems[index].name;
-                    invController.deleteInventoryItem(
+                    // -- confirm before deleting --
+                    invController.deleteInventoryWarningPopup(
                         invController.inventoryItems[index]);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text("$pName deleted"),
-                      ),
-                    );
                   },
                   child: Card(
                     color: Colors.white,
@@ -121,9 +127,14 @@ class InventoryScreen extends StatelessWidget {
                       trailing: IconButton(
                         icon: const Icon(
                           Icons.delete,
-                          color: Color.fromARGB(255, 153, 113, 98),
+                          // color: Color.fromARGB(255, 153, 113, 98),
+                          color: Colors.red,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          // -- confirm before deleting --
+                          invController.deleteInventoryWarningPopup(
+                              invController.inventoryItems[index]);
+                        },
                       ),
                     ),
                   ),

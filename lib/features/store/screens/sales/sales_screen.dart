@@ -4,6 +4,7 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 class SalesScreen extends StatelessWidget {
@@ -31,6 +32,10 @@ class SalesScreen extends StatelessWidget {
             iconData: Iconsax.search_favorite,
           ),
         ],
+        backIconAction: () {
+          Navigator.pop(context, true);
+          Get.back();
+        },
       ),
 
       /// -- body --

@@ -1,5 +1,5 @@
 /* === a utility class to handle a full-screen loading dialog === */
-import 'package:c_ri/common/widgets/loaders/animation_loader.dart';
+import 'package:c_ri/common/widgets/loaders/animated_loader.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -33,7 +33,7 @@ class CFullScreenLoader {
               const SizedBox(
                 height: 250.0,
               ),
-              CAnimationLoaderWidget(
+              CAnimatedLoaderWidget(
                 text: txt,
                 animation: animator,
               ),

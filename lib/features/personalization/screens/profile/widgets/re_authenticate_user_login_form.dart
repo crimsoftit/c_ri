@@ -26,6 +26,9 @@ class CReAuthLoginForm extends StatelessWidget {
           'Re-Authenticate Login',
           style: Theme.of(context).textTheme.headlineSmall,
         ),
+        backIconAction: () {
+          Get.back();
+        },
       ),
       body: SingleChildScrollView(
         child: Padding(

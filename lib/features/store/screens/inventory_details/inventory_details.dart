@@ -7,6 +7,7 @@ import 'package:c_ri/features/store/models/inventory_model.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/add_update_inventory_item_dialog.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
+import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -21,12 +22,12 @@ class CInventoryDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
-    final invController = Get.put(CInventoryController());
-    invController.fetchItemByCode(inventoryItem.pCode);
+    Get.put(CInventoryController());
+    //invController.fetchItemByCode(inventoryItem.pCode);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -44,6 +45,12 @@ class CInventoryDetailsScreen extends StatelessWidget {
                             color: CColors.white,
                           ),
                     ),
+                    backIconAction: () {
+                      //Navigator.pop(context, true);
+                      Get.back();
+                    },
+                    showBackArrow: true,
+                    backIconColor: isDarkTheme ? CColors.white : CColors.rBrown,
                   ),
 
                   // product profile card
@@ -74,7 +81,7 @@ class CInventoryDetailsScreen extends StatelessWidget {
                     trailing: IconButton(
                       onPressed: () {
                         // update current page
-                        invController.currentScreen.value = "invDetailsScreen";
+                        //invController.currentScreen.value = "invDetailsScreen";
                         //print(invController.currentScreen.value);
                         showDialog(
                           context: context,

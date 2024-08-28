@@ -25,6 +25,9 @@ class CUpdateName extends StatelessWidget {
           'change your name',
           style: Theme.of(context).textTheme.headlineSmall,
         ),
+        backIconAction: () {
+          Get.back();
+        },
       ),
 
       body: Padding(

@@ -186,70 +186,42 @@ class AddUpdateItemDialog {
                   const SizedBox(
                     height: CSizes.spaceBtnInputFields,
                   ),
-                  Obx(
-                    () => ElevatedButton(
-                      child: Text(
-                        invController.itemExists.value ? 'update' : 'save',
-                      ),
-                      onPressed: () {
-                        // Validate returns true if the form is valid, or false otherwise.
-                        if (invController.addInvItemFormKey.currentState!
-                            .validate()) {
-                          invModel.name = invController.txtName.text;
-                          invModel.pCode = invController.txtCode.text;
-                          invModel.quantity =
-                              int.parse(invController.txtQty.text);
-                          invModel.buyingPrice =
-                              int.parse(invController.txtBP.text);
-                          invModel.unitSellingPrice =
-                              int.parse(invController.txtUnitSP.text);
-                          invModel.date = DateFormat('yyyy-MM-dd - kk:mm')
-                              .format(clock.now());
+                  ElevatedButton(
+                    onPressed: () {
+                      // Validate returns true if the form is valid, or false otherwise.
+                      if (invController.addInvItemFormKey.currentState!
+                          .validate()) {
+                        invModel.name = invController.txtName.text;
+                        invModel.pCode = invController.txtCode.text;
+                        invModel.quantity =
+                            int.parse(invController.txtQty.text);
+                        invModel.buyingPrice =
+                            int.parse(invController.txtBP.text);
+                        invModel.unitSellingPrice =
+                            int.parse(invController.txtUnitSP.text);
+                        invModel.date = DateFormat('yyyy-MM-dd - kk:mm')
+                            .format(clock.now());
 
-                          if (invController.itemExists.value) {
-                            invController.updateInventoryItem(invModel);
-                            //invController.fetchItemByCode(invModel.pCode);
-                            //invController.fetchInventoryItems;
-                          } else {
-                            invController.addInventoryItem(invModel);
-                            //invController.fetchInventoryItems;
-                          }
-
-                          //print(invController.currentScreen.value);
-
-                          Navigator.push(
-                            context,
-                            // Create the SelectionScreen in the next step.
-
-                            MaterialPageRoute(
-                                builder: (context) => const InventoryScreen()),
-                          );
-
-                          // if (invController.currentScreen.value ==
-                          //     "invListScreen") {
-                          //   Navigator.push(
-                          //     context,
-                          //     // Create the SelectionScreen in the next step.
-
-                          //     MaterialPageRoute(
-                          //         builder: (context) =>
-                          //             const InventoryScreen()),
-                          //   );
-                          // } else {
-                          //   Navigator.push(
-                          //     context,
-                          //     // Create the SelectionScreen in the next step.
-
-                          //     MaterialPageRoute(
-                          //         builder: (context) => CInventoryDetailsScreen(
-                          //               inventoryItem: invModel,
-                          //             )),
-                          //   );
-                          // }
-
-                          //Navigator.of(context).pop(true);
+                        if ((invController.itemExists.value || !isNew)) {
+                          invController.updateInventoryItem(invModel);
+                        } else {
+                          invController.addInventoryItem(invModel);
                         }
-                      },
+
+                        //Navigator.of(context).pop(true);
+
+                        Navigator.push(
+                          context,
+                          // Create the SelectionScreen in the next step.
+
+                          MaterialPageRoute(
+                              builder: (context) => const InventoryScreen()),
+                        );
+                      }
+                    },
+                    child: Text(
+                      // invController.itemExists.value ? 'update' : 'add entry',
+                      isNew ? 'add entry' : 'update',
                     ),
                   ),
                 ],

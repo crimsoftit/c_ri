@@ -1,4 +1,5 @@
 import 'package:c_ri/features/store/models/inventory_model.dart';
+import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +52,9 @@ class CInventoryController extends GetxController {
       // assign inventory items
       inventoryItems.assignAll(fetchedItems);
 
+      // stop loader
+      isLoading.value = false;
+
       return fetchedItems;
     } catch (e) {
       isLoading.value = false;
@@ -58,9 +62,10 @@ class CInventoryController extends GetxController {
         title: 'Oh Snap!',
         message: e.toString(),
       );
-    } finally {
-      isLoading.value = false;
     }
+    // finally {
+    //   isLoading.value = false;
+    // }
   }
 
   /// -- add inventory item to sqflite database --
@@ -163,11 +168,11 @@ class CInventoryController extends GetxController {
       // -- update entry
       await dbHelper.deleteInventoryItem(inventoryItem);
 
-      // -- stop loader
-      isLoading.value = false;
-
       // -- refresh inventory list
       fetchInventoryItems();
+
+      // -- stop loader
+      isLoading.value = false;
 
       // -- success message
       CPopupSnackBar.successSnackBar(
@@ -198,5 +203,41 @@ class CInventoryController extends GetxController {
         message: e.toString(),
       );
     }
+  }
+
+  /// -- delete account warning popup snackbar --
+  void deleteInventoryWarningPopup(CInventoryModel inventoryItem) {
+    Get.defaultDialog(
+      contentPadding: const EdgeInsets.all(CSizes.md),
+      title: 'Delete ${inventoryItem.name}?',
+      middleText:
+          'Are you certain you want to permanently delete this item? This action can\'t be undone!',
+      confirm: ElevatedButton(
+        onPressed: () async {
+          deleteInventoryItem(inventoryItem);
+          fetchInventoryItems();
+          Navigator.of(Get.overlayContext!).pop();
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red,
+          side: const BorderSide(
+            color: Colors.red,
+          ),
+        ),
+        child: const Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: CSizes.lg,
+          ),
+          child: Text('delete'),
+        ),
+      ),
+      cancel: OutlinedButton(
+        onPressed: () {
+          fetchInventoryItems();
+          Navigator.of(Get.overlayContext!).pop();
+        },
+        child: const Text('cancel'),
+      ),
+    );
   }
 }

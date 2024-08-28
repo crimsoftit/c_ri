@@ -1,7 +1,6 @@
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/device/device_utilities.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 class CAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -13,6 +12,7 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.leadingOnPressed,
     this.showBackArrow = true,
     this.backIconColor,
+    required this.backIconAction,
   });
 
   final Widget? title;
@@ -21,6 +21,7 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color? backIconColor;
   final List<Widget>? actions;
   final VoidCallback? leadingOnPressed;
+  final VoidCallback backIconAction;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +33,7 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
         automaticallyImplyLeading: false,
         leading: showBackArrow
             ? IconButton(
-                onPressed: () {
-                  Get.back();
-                },
+                onPressed: backIconAction,
                 icon: Icon(
                   Iconsax.arrow_left,
                   color: backIconColor,

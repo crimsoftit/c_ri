@@ -60,6 +60,9 @@ class CHomeAppBarWidget extends StatelessWidget {
         //   iconColor: Colors.white,
         // ),
       ],
+      backIconAction: () {
+        Get.back();
+      },
     );
   }
 }

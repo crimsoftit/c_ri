@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 /// -- a widget for displaying an animated loading indicator with optional text & action button --
-class CAnimationLoaderWidget extends StatelessWidget {
+class CAnimatedLoaderWidget extends StatelessWidget {
   /// === parameters ===
   ///   - text: text to be displayed below the animation --
   ///   - animation: path to the lottie animation file --
@@ -14,7 +14,7 @@ class CAnimationLoaderWidget extends StatelessWidget {
   ///
   /// === default constructor for the CAnimationLoaderWidget
 
-  const CAnimationLoaderWidget({
+  const CAnimatedLoaderWidget({
     super.key,
     required this.text,
     required this.animation,
