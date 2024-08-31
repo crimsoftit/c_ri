@@ -85,6 +85,7 @@ class CInventoryDetailsScreen extends StatelessWidget {
                         //print(invController.currentScreen.value);
                         showDialog(
                           context: context,
+                          useRootNavigator: false,
                           builder: (BuildContext context) => dialog.buildDialog(
                             context,
                             CInventoryModel(

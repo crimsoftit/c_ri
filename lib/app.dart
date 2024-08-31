@@ -22,7 +22,6 @@ class App extends StatelessWidget {
 
       // -- show loader or circular progress indicator as AuthRepo decides on the relevant screen to load --
 
-      //home: const OnboardingScreen(),
       home: const Scaffold(
         backgroundColor: CColors.rBrown,
         body: Center(

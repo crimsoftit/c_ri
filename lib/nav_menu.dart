@@ -17,9 +17,12 @@ class NavMenu extends StatelessWidget {
     final navController = Get.put(NavMenuController());
     final isDark = CHelperFunctions.isDarkMode(context);
 
+    GlobalKey navBarGlobalKey = GlobalKey(debugLabel: 'bottomAppBar');
+
     return Scaffold(
       bottomNavigationBar: Obx(
         () => NavigationBar(
+          key: navBarGlobalKey,
           height: 80.0,
           elevation: 0,
           selectedIndex: navController.selectedIndex.value,

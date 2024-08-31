@@ -1,5 +1,4 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
-import 'package:c_ri/common/widgets/dialogs/confirm_dialog.dart';
 import 'package:c_ri/common/widgets/icon_buttons/trailing_icon_btn.dart';
 import 'package:c_ri/common/widgets/shimmers/horizontal_products_shimmer.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
@@ -153,6 +152,7 @@ class InventoryScreen extends StatelessWidget {
 
           showDialog(
             context: context,
+            useRootNavigator: false,
             builder: (BuildContext context) => dialog.buildDialog(
               context,
               CInventoryModel(0, '', '', 0, 0, 0, ''),

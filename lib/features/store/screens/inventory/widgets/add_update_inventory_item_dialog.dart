@@ -187,7 +187,7 @@ class AddUpdateItemDialog {
                     height: CSizes.spaceBtnInputFields,
                   ),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (invController.addInvItemFormKey.currentState!
                           .validate()) {
@@ -208,15 +208,16 @@ class AddUpdateItemDialog {
                           invController.addInventoryItem(invModel);
                         }
 
-                        //Navigator.of(context).pop(true);
+                        // Navigator.push(
+                        //   context,
+                        //   // Create the SelectionScreen in the next step.
 
-                        Navigator.push(
-                          context,
-                          // Create the SelectionScreen in the next step.
+                        //   MaterialPageRoute(
+                        //       builder: (context) => const InventoryScreen()),
+                        // );
+                        // Navigator.push(context, "/inventory" as Route<Object?>);
 
-                          MaterialPageRoute(
-                              builder: (context) => const InventoryScreen()),
-                        );
+                        Navigator.popAndPushNamed(context, "/inventory");
                       }
                     },
                     child: Text(
