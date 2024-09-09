@@ -1,11 +1,13 @@
-import 'package:c_ri/features/store/models/inventory_model.dart';
+import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
+import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class CInventoryController extends GetxController {
   static CInventoryController get instance {
@@ -17,8 +19,6 @@ class CInventoryController extends GetxController {
   final RxList<CInventoryModel> inventoryItems = <CInventoryModel>[].obs;
 
   final RxString scanResults = ''.obs;
-
-  final RxString currentScreen = ''.obs;
 
   final RxBool itemExists = false.obs;
 
@@ -184,6 +184,26 @@ class CInventoryController extends GetxController {
         title: 'error deleting data',
         message: e.toString(),
       );
+    }
+  }
+
+  /// -- add or update inventory item using sqflite
+  Future<void> addOrUpdateInventoryItem(CInventoryModel inventoryItem) async {
+    // Validate returns true if the form is valid, or false otherwise.
+    if (addInvItemFormKey.currentState!.validate()) {
+      inventoryItem.name = txtName.text;
+      inventoryItem.pCode = txtCode.text;
+      inventoryItem.quantity = int.parse(txtQty.text);
+      inventoryItem.buyingPrice = int.parse(txtBP.text);
+      inventoryItem.unitSellingPrice = int.parse(txtUnitSP.text);
+      inventoryItem.date = DateFormat('yyyy-MM-dd - kk:mm').format(clock.now());
+
+      if (itemExists.value) {
+        updateInventoryItem(inventoryItem);
+        fetchInventoryItems();
+      } else {
+        addInventoryItem(inventoryItem);
+      }
     }
   }
 

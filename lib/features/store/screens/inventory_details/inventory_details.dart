@@ -3,7 +3,7 @@ import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_cont
 import 'package:c_ri/common/widgets/list_tiles/menu_tile.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/store/controllers/inventory_controller.dart';
-import 'package:c_ri/features/store/models/inventory_model.dart';
+import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/add_update_inventory_item_dialog.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -89,7 +89,7 @@ class CInventoryDetailsScreen extends StatelessWidget {
                           builder: (BuildContext context) => dialog.buildDialog(
                             context,
                             CInventoryModel(
-                              inventoryItem.id,
+                              //inventoryItem.id,
                               inventoryItem.pCode,
                               inventoryItem.name,
                               inventoryItem.quantity,

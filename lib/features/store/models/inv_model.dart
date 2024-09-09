@@ -10,6 +10,16 @@ class CInventoryModel {
   String _date = "";
 
   CInventoryModel(
+    //this._id,
+    this._pCode,
+    this._name,
+    this._quantity,
+    this._buyingPrice,
+    this._unitSellingPrice,
+    this._date,
+  );
+
+  CInventoryModel.withID(
     this._id,
     this._pCode,
     this._name,

@@ -8,6 +8,28 @@ class CValidator {
     return null;
   }
 
+  /* ========== barcode field validation ========== */
+  static String? validateBarcode(String? fieldName, String? value) {
+    if (value == null || value.isEmpty) {
+      return '$fieldName field is required!';
+    } else if (value == '-1' || value.length < 2) {
+      return 'invalid barcode';
+    }
+
+    return null;
+  }
+
+  /* ========== barcode field validation ========== */
+  static String? validateNumber(String? fieldName, String? value) {
+    if (value == null || value.isEmpty) {
+      return '$fieldName field is required!';
+    } else if (int.parse(value) < 1) {
+      return 'invalid barcode';
+    }
+
+    return null;
+  }
+
   /* ========== full name field validation ========== */
   static String? validateFullName(String? fieldName, String? value) {
     if (value == null || value.isEmpty) {

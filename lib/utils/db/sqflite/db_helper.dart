@@ -1,4 +1,4 @@
-import 'package:c_ri/features/store/models/inventory_model.dart';
+import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -33,8 +33,8 @@ class DbHelper {
         onCreate: (database, version) {
       database.execute('''
           CREATE TABLE $invTable (
-            id INTEGER,
-            pCode CHAR(30) NOT NULL PRIMARY KEY,
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            pCode CHAR(30) NOT NULL,
             name CHAR(30) NOT NULL,
             quantity INTEGER NOT NULL,
             buyingPrice INTEGER NOT NULL,
@@ -51,7 +51,7 @@ class DbHelper {
             quantity INTEGER,
             price INTEGER,
             date TEXT,
-            FOREIGN KEY(productCode) REFERENCES inventory(pCode)
+            FOREIGN KEY(id) REFERENCES inventory(id)
             )          
           ''');
     }, version: version);
@@ -105,7 +105,7 @@ class DbHelper {
       whereArgs: [pCode],
     );
     return List.generate(maps.length, (i) {
-      return CInventoryModel(
+      return CInventoryModel.withID(
         maps[i]['id'],
         maps[i]['pCode'],
         maps[i]['name'],

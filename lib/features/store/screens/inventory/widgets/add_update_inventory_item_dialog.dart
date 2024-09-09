@@ -1,15 +1,8 @@
 import 'package:c_ri/features/store/controllers/inventory_controller.dart';
-import 'package:c_ri/features/store/models/inventory_model.dart';
-import 'package:c_ri/features/store/screens/inventory/inventory_screen.dart';
-import 'package:c_ri/utils/constants/colors.dart';
-import 'package:c_ri/utils/constants/sizes.dart';
-import 'package:c_ri/utils/validators/validation.dart';
-import 'package:clock/clock.dart';
+import 'package:c_ri/features/store/models/inv_model.dart';
+import 'package:c_ri/features/store/screens/inventory/widgets/inv_dialog_form.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:intl/intl.dart';
 
 class AddUpdateItemDialog {
   Widget buildDialog(
@@ -33,202 +26,23 @@ class AddUpdateItemDialog {
       invController.scanBarcodeNormal();
     }
 
-    return AlertDialog(
-      title: Text((isNew) ? 'new entry...' : 'update ${invModel.name}'),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-      content: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            const SizedBox(
-              height: CSizes.spaceBtnInputFields / 2,
-            ),
-            // form to handle input data
-            Form(
-              key: invController.addInvItemFormKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFormField(
-                    controller: invController.txtName,
-                    //readOnly: true,
-                    decoration: InputDecoration(
-                      labelText: 'product name',
-                      labelStyle: textStyle,
-                    ),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                    ),
-                    validator: (value) {
-                      return CValidator.validateEmptyText(
-                          'product name', value);
-                    },
-                  ),
-                  // TextFormField(
-                  //   controller: invController.,
-                  //   decoration: InputDecoration(
-                  //     labelText: '',
-                  //     labelStyle: textStyle,
-                  //     focusedBorder: const UnderlineInputBorder(
-                  //       borderSide: BorderSide(color: Colors.green),
-                  //     ),
-                  //     enabledBorder: const UnderlineInputBorder(
-                  //       borderSide: BorderSide(
-                  //         color: Colors.green,
-                  //       ),
-                  //     ),
-                  //   ),
-                  //   style: const TextStyle(
-                  //     fontWeight: FontWeight.normal,
-                  //   ),
-                  //   validator: (value) {
-                  //     if (value == null || value.isEmpty) {
-                  //       return 'Please enter some text';
-                  //     }
-                  //     return null;
-                  //   },
-                  // ),
-                  const SizedBox(
-                    height: CSizes.spaceBtnInputFields / 2,
-                  ),
-                  TextFormField(
-                    controller: invController.txtCode,
-                    //readOnly: true,
-                    decoration: InputDecoration(
-                      labelText: 'barcode value',
-                      labelStyle: textStyle,
-                      suffixIcon: IconButton(
-                        icon: const Icon(
-                          Iconsax.scan,
-                        ),
-                        color: CColors.rBrown,
-                        onPressed: () {
-                          invController.scanBarcodeNormal();
-                        },
-                      ),
-                    ),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                    ),
-                    validator: (value) {
-                      return CValidator.validateEmptyText(
-                          'barcode value', value);
-                    },
-                  ),
-                  const SizedBox(
-                    height: CSizes.spaceBtnInputFields / 2,
-                  ),
-                  TextFormField(
-                    controller: invController.txtQty,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: false,
-                      signed: false,
-                    ),
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                    ),
-                    decoration: InputDecoration(
-                      labelText: 'quantity/no. of units',
-                      labelStyle: textStyle,
-                    ),
-                    validator: (value) {
-                      return CValidator.validateEmptyText(
-                          'quantity/no. of units', value);
-                    },
-                  ),
-                  const SizedBox(
-                    height: CSizes.spaceBtnInputFields / 2,
-                  ),
-                  TextFormField(
-                    controller: invController.txtBP,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                      signed: false,
-                    ),
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    decoration: InputDecoration(
-                      labelText: 'buying price',
-                      labelStyle: textStyle,
-                    ),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                    ),
-                    validator: (value) {
-                      return CValidator.validateEmptyText(
-                          'buying price', value);
-                    },
-                  ),
-                  const SizedBox(
-                    height: CSizes.spaceBtnInputFields / 2,
-                  ),
-                  TextFormField(
-                    controller: invController.txtUnitSP,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                      signed: false,
-                    ),
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    decoration: InputDecoration(
-                      labelText: 'unit selling price',
-                      labelStyle: textStyle,
-                    ),
-                    validator: (value) {
-                      return CValidator.validateEmptyText(
-                          'unit selling price', value);
-                    },
-                  ),
-                  const SizedBox(
-                    height: CSizes.spaceBtnInputFields,
-                  ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      // Validate returns true if the form is valid, or false otherwise.
-                      if (invController.addInvItemFormKey.currentState!
-                          .validate()) {
-                        invModel.name = invController.txtName.text;
-                        invModel.pCode = invController.txtCode.text;
-                        invModel.quantity =
-                            int.parse(invController.txtQty.text);
-                        invModel.buyingPrice =
-                            int.parse(invController.txtBP.text);
-                        invModel.unitSellingPrice =
-                            int.parse(invController.txtUnitSP.text);
-                        invModel.date = DateFormat('yyyy-MM-dd - kk:mm')
-                            .format(clock.now());
-
-                        if ((invController.itemExists.value || !isNew)) {
-                          invController.updateInventoryItem(invModel);
-                        } else {
-                          invController.addInventoryItem(invModel);
-                        }
-
-                        // Navigator.push(
-                        //   context,
-                        //   // Create the SelectionScreen in the next step.
-
-                        //   MaterialPageRoute(
-                        //       builder: (context) => const InventoryScreen()),
-                        // );
-                        // Navigator.push(context, "/inventory" as Route<Object?>);
-
-                        Navigator.popAndPushNamed(context, "/inventory");
-                      }
-                    },
-                    child: Text(
-                      // invController.itemExists.value ? 'update' : 'add entry',
-                      isNew ? 'add entry' : 'update',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+    return PopScope(
+      canPop: false,
+      child: AlertDialog(
+        title: Text(
+          (invController.itemExists.value)
+              ? 'update ${invController.txtName.text}'
+              : 'new entry...',
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        content: SingleChildScrollView(
+          child: AddUpdateInventoryForm(
+            invController: invController,
+            textStyle: textStyle,
+            inventoryItem: invModel,
+          ),
         ),
       ),
     );

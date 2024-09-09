@@ -3,7 +3,7 @@ import 'package:c_ri/common/widgets/icon_buttons/trailing_icon_btn.dart';
 import 'package:c_ri/common/widgets/shimmers/horizontal_products_shimmer.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inventory_controller.dart';
-import 'package:c_ri/features/store/models/inventory_model.dart';
+import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/add_update_inventory_item_dialog.dart';
 import 'package:c_ri/features/store/screens/inventory_details/inventory_details.dart';
 import 'package:c_ri/utils/constants/colors.dart';
@@ -146,8 +146,6 @@ class InventoryScreen extends StatelessWidget {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // update current page
-          invController.currentScreen.value = "invListScreen";
           //print(invController.currentScreen.value);
 
           showDialog(
@@ -155,7 +153,7 @@ class InventoryScreen extends StatelessWidget {
             useRootNavigator: false,
             builder: (BuildContext context) => dialog.buildDialog(
               context,
-              CInventoryModel(0, '', '', 0, 0, 0, ''),
+              CInventoryModel('', '', 0, 0, 0, ''),
               true,
             ),
           );
