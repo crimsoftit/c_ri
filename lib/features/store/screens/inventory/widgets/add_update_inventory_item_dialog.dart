@@ -1,4 +1,4 @@
-import 'package:c_ri/features/store/controllers/inventory_controller.dart';
+import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/inv_dialog_form.dart';
 import 'package:flutter/material.dart';
@@ -28,22 +28,28 @@ class AddUpdateItemDialog {
 
     return PopScope(
       canPop: false,
-      child: AlertDialog(
-        title: Text(
-          (invController.itemExists.value)
-              ? 'update ${invController.txtName.text}'
-              : 'new entry...',
-          style: Theme.of(context).textTheme.labelLarge,
-        ),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        content: SingleChildScrollView(
-          child: AddUpdateInventoryForm(
-            invController: invController,
-            textStyle: textStyle,
-            inventoryItem: invModel,
-          ),
-        ),
+      child: StatefulBuilder(
+        builder: (BuildContext context, setState) {
+          return AlertDialog(
+            title: Obx(
+              () => Text(
+                (invController.itemExists.value)
+                    ? 'update ${invController.txtName.text}'
+                    : 'new entry...',
+                style: Theme.of(context).textTheme.labelLarge,
+              ),
+            ),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0)),
+            content: SingleChildScrollView(
+              child: AddUpdateInventoryForm(
+                invController: invController,
+                textStyle: textStyle,
+                inventoryItem: invModel,
+              ),
+            ),
+          );
+        },
       ),
     );
   }

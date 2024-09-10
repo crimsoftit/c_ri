@@ -12,7 +12,7 @@ class CValidator {
   static String? validateBarcode(String? fieldName, String? value) {
     if (value == null || value.isEmpty) {
       return '$fieldName field is required!';
-    } else if (value == '-1' || value.length < 2) {
+    } else if (value == '-1' || int.parse(value) < 100) {
       return 'invalid barcode';
     }
 

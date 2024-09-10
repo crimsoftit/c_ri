@@ -32,6 +32,8 @@ class CInventoryController extends GetxController {
 
   final isLoading = false.obs;
 
+  final RxInt invQty = 0.obs;
+
   @override
   void onInit() {
     fetchInventoryItems();
@@ -109,6 +111,8 @@ class CInventoryController extends GetxController {
         txtQty.text = (fetchedItems.first.quantity).toString();
         txtBP.text = (fetchedItems.first.buyingPrice).toString();
         txtUnitSP.text = (fetchedItems.first.unitSellingPrice).toString();
+
+        invQty.value = fetchedItems.first.quantity;
       } else {
         itemExists.value = false;
         txtName.text = '';
@@ -136,11 +140,11 @@ class CInventoryController extends GetxController {
       // -- update entry
       await dbHelper.updateInventoryItem(inventoryItem);
 
-      // -- stop loader
-      isLoading.value = false;
-
       // -- refresh inventory list
       fetchInventoryItems();
+
+      // -- stop loader
+      isLoading.value = false;
 
       // -- success message
       CPopupSnackBar.successSnackBar(

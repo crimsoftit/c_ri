@@ -2,10 +2,9 @@ import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/icon_buttons/trailing_icon_btn.dart';
 import 'package:c_ri/common/widgets/shimmers/horizontal_products_shimmer.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
-import 'package:c_ri/features/store/controllers/inventory_controller.dart';
+import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/add_update_inventory_item_dialog.dart';
-import 'package:c_ri/features/store/screens/inventory_details/inventory_details.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -90,7 +89,7 @@ class InventoryScreen extends StatelessWidget {
                     elevation: 1.0,
                     child: ListTile(
                       title: Text(
-                        invController.inventoryItems[index].name,
+                        '${invController.inventoryItems[index].name} (${invController.inventoryItems[index].date})',
                         style: Theme.of(context).textTheme.labelMedium!.apply(
                               color: CColors.rBrown,
                             ),
@@ -106,22 +105,39 @@ class InventoryScreen extends StatelessWidget {
                         ),
                       ),
                       subtitle: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(
-                            invController.inventoryItems[index].date,
-                            style:
-                                Theme.of(context).textTheme.labelSmall!.apply(
+                          Row(
+                            children: [
+                              Text(
+                                "qty: ${invController.inventoryItems[index].quantity}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall!
+                                    .apply(
                                       color: CColors.grey,
                                       fontStyle: FontStyle.italic,
                                     ),
+                              ),
+                              Text(
+                                " BP: Ksh.${invController.inventoryItems[index].buyingPrice}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelSmall!
+                                    .apply(
+                                      color: CColors.grey,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                       onTap: () {
-                        Get.to(() => CInventoryDetailsScreen(
-                              inventoryItem:
-                                  invController.inventoryItems[index],
-                            ));
+                        Get.toNamed(
+                          '/inventory/item_details/',
+                          arguments: invController.inventoryItems[index].pCode,
+                        );
                       },
                       trailing: IconButton(
                         icon: const Icon(

@@ -1,4 +1,4 @@
-import 'package:c_ri/features/store/controllers/inventory_controller.dart';
+import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -166,9 +166,15 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             CColors.white, // foreground (text) color
                         backgroundColor: CColors.rBrown, // background color
                       ),
-                      onPressed: () {
-                        invController.addOrUpdateInventoryItem(inventoryItem);
+                      onPressed: () async {
+                        await invController
+                            .addOrUpdateInventoryItem(inventoryItem);
                         Navigator.pop(context, true);
+                        // Navigator.popAndPushNamed(
+                        //   context,
+                        //   '/inventory/item_details/',
+                        //   arguments: invItem.pCode,
+                        // );
                       },
                     ),
                   ),

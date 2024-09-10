@@ -23,11 +23,10 @@ class CAppRoutes {
       name: CRoutes.inventory,
       page: () => const InventoryScreen(),
     ),
-
-    // GetPage(
-    //   name: CRoutes.inventoryDetails,
-    //   page: () => CInventoryDetailsScreen(),
-    // ),
+    GetPage(
+      name: CRoutes.inventoryDetails,
+      page: () => const CInventoryDetailsScreen(),
+    ),
     GetPage(
       name: CRoutes.settings,
       page: () => const SettingsScreen(),
