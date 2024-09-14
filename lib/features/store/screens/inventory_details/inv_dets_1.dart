@@ -4,24 +4,18 @@ import 'package:c_ri/common/widgets/list_tiles/menu_tile.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
-import 'package:c_ri/features/store/screens/inventory/widgets/add_update_inventory_item_dialog.dart';
+import 'package:c_ri/features/store/screens/inventory/widgets/inv_dialog.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class CInventoryDetailsScreen1 extends StatefulWidget {
+class CInventoryDetailsScreen1 extends StatelessWidget {
   const CInventoryDetailsScreen1({
     super.key,
   });
 
-  @override
-  State<CInventoryDetailsScreen1> createState() =>
-      _CInventoryDetailsScreenState();
-}
-
-class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen1> {
   @override
   Widget build(BuildContext context) {
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
@@ -30,7 +24,8 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen1> {
 
     final invList = invController.inventoryItems;
 
-    final invItem = invList.firstWhere((item) => item.pCode == Get.arguments);
+    final invItem =
+        invList.firstWhere((item) => item.productId == Get.arguments);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -89,6 +84,9 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen1> {
                           builder: (BuildContext context) => dialog.buildDialog(
                             context,
                             CInventoryModel(
+                              invItem.userId,
+                              invItem.userEmail,
+                              invItem.userName,
                               invItem.pCode,
                               invItem.name,
                               invItem.quantity,
@@ -115,150 +113,152 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen1> {
             ),
 
             // -- body --
-            Padding(
-              padding: const EdgeInsets.all(CSizes.defaultSpace),
-              child: Column(
-                children: [
-                  // --- account settings
-                  const CSectionHeading(
-                    showActionBtn: false,
-                    title: 'details',
-                    btnTitle: '',
-                    editFontSize: false,
-                  ),
-
-                  CMenuTile(
-                    icon: Iconsax.barcode,
-                    title: invItem.id.toString(),
-                    subTitle: 'product/item id',
-                    onTap: () {},
-                  ),
-
-                  CMenuTile(
-                    icon: Iconsax.barcode,
-                    title: invItem.pCode,
-                    subTitle: 'sku/code',
-                    onTap: () {},
-                  ),
-                  CMenuTile(
-                    icon: Iconsax.shopping_cart,
-                    title: '${(invItem.quantity)}',
-                    subTitle: 'Qty/units available',
-                    onTap: () {},
-                  ),
-
-                  CMenuTile(
-                    icon: Iconsax.bitcoin_card,
-                    //title: '',
-                    title: 'Ksh. ${(invItem.buyingPrice)}',
-                    subTitle: 'buying price',
-                    onTap: () {
-                      //Get.to(() => const UserAddressesScreen());
-                    },
-                  ),
-
-                  CMenuTile(
-                    icon: Iconsax.card_pos,
-                    //title: '',
-                    title: 'Ksh. ${(invItem.unitSellingPrice)}',
-                    subTitle: 'unit selling price',
-                    onTap: () {
-                      //Get.to(() => const OrdersScreen());
-                    },
-                  ),
-                  CMenuTile(
-                    icon: Iconsax.calendar,
-                    title: 'comming soon',
-                    subTitle: 'last modified',
-                    onTap: () {},
-                  ),
-                  CMenuTile(
-                    icon: Iconsax.card_tick,
-                    title: 'coming soon',
-                    subTitle: 'total sales',
-                    onTap: () {},
-                  ),
-                  CMenuTile(
-                    icon: Iconsax.notification,
-                    title: 'notifications',
-                    subTitle: 'customize notification messages',
-                    onTap: () {},
-                  ),
-
-                  const SizedBox(
-                    height: CSizes.spaceBtnSections,
-                  ),
-
-                  // -- app settings
-                  const CSectionHeading(
-                    showActionBtn: false,
-                    title: 'app settings',
-                    btnTitle: '',
-                    editFontSize: false,
-                  ),
-                  const SizedBox(
-                    height: CSizes.spaceBtnItems,
-                  ),
-                  CMenuTile(
-                    icon: Iconsax.document_upload,
-                    title: 'upload data',
-                    subTitle: 'upload data to your cloud firebase',
-                    trailing: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Iconsax.arrow_right),
+            Obx(
+              () => Padding(
+                padding: const EdgeInsets.all(CSizes.defaultSpace),
+                child: Column(
+                  children: [
+                    // --- account settings
+                    const CSectionHeading(
+                      showActionBtn: false,
+                      title: 'details',
+                      btnTitle: '',
+                      editFontSize: false,
                     ),
-                    onTap: () {},
-                  ),
-                  CMenuTile(
-                    icon: Iconsax.location,
-                    title: 'geolocation',
-                    subTitle: 'set recommendation based on location',
-                    trailing: Switch(
-                      value: true,
-                      activeColor: CColors.rBrown,
-                      onChanged: (value) {},
-                    ),
-                  ),
-                  CMenuTile(
-                    icon: Iconsax.security_user,
-                    title: 'safe mode',
-                    subTitle: 'search result is safe for people of all ages',
-                    trailing: Switch(
-                      value: false,
-                      activeColor: CColors.rBrown,
-                      onChanged: (value) {},
-                    ),
-                  ),
-                  CMenuTile(
-                    icon: Iconsax.security_user,
-                    title: 'HD image quality',
-                    subTitle: 'set image quality to be seen',
-                    trailing: Switch(
-                      value: false,
-                      activeColor: CColors.rBrown,
-                      onChanged: (value) {},
-                    ),
-                  ),
-                  const Divider(),
-                  const SizedBox(
-                    height: CSizes.spaceBtnItems,
-                  ),
 
-                  const Center(
-                    child: Row(
-                      children: [
-                        Icon(
-                          Iconsax.logout,
-                          size: 28.0,
-                          color: CColors.primaryBrown,
-                        ),
-                        SizedBox(
-                          width: CSizes.spaceBtnInputFields,
-                        ),
-                      ],
+                    CMenuTile(
+                      icon: Iconsax.barcode,
+                      title: invItem.productId.toString(),
+                      subTitle: 'product/item id',
+                      onTap: () {},
                     ),
-                  ),
-                ],
+
+                    CMenuTile(
+                      icon: Iconsax.barcode,
+                      title: invItem.pCode,
+                      subTitle: 'sku/code',
+                      onTap: () {},
+                    ),
+                    CMenuTile(
+                      icon: Iconsax.shopping_cart,
+                      title: '${(invItem.quantity)}',
+                      subTitle: 'Qty/units available',
+                      onTap: () {},
+                    ),
+
+                    CMenuTile(
+                      icon: Iconsax.bitcoin_card,
+                      //title: '',
+                      title: 'Ksh. ${(invItem.buyingPrice)}',
+                      subTitle: 'buying price',
+                      onTap: () {
+                        //Get.to(() => const UserAddressesScreen());
+                      },
+                    ),
+
+                    CMenuTile(
+                      icon: Iconsax.card_pos,
+                      //title: '',
+                      title: 'Ksh. ${(invItem.unitSellingPrice)}',
+                      subTitle: 'unit selling price',
+                      onTap: () {
+                        //Get.to(() => const OrdersScreen());
+                      },
+                    ),
+                    CMenuTile(
+                      icon: Iconsax.calendar,
+                      title: 'comming soon',
+                      subTitle: 'last modified',
+                      onTap: () {},
+                    ),
+                    CMenuTile(
+                      icon: Iconsax.card_tick,
+                      title: 'coming soon',
+                      subTitle: 'total sales',
+                      onTap: () {},
+                    ),
+                    CMenuTile(
+                      icon: Iconsax.notification,
+                      title: 'notifications',
+                      subTitle: 'customize notification messages',
+                      onTap: () {},
+                    ),
+
+                    const SizedBox(
+                      height: CSizes.spaceBtnSections,
+                    ),
+
+                    // -- app settings
+                    const CSectionHeading(
+                      showActionBtn: false,
+                      title: 'app settings',
+                      btnTitle: '',
+                      editFontSize: false,
+                    ),
+                    const SizedBox(
+                      height: CSizes.spaceBtnItems,
+                    ),
+                    CMenuTile(
+                      icon: Iconsax.document_upload,
+                      title: 'upload data',
+                      subTitle: 'upload data to your cloud firebase',
+                      trailing: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Iconsax.arrow_right),
+                      ),
+                      onTap: () {},
+                    ),
+                    CMenuTile(
+                      icon: Iconsax.location,
+                      title: 'geolocation',
+                      subTitle: 'set recommendation based on location',
+                      trailing: Switch(
+                        value: true,
+                        activeColor: CColors.rBrown,
+                        onChanged: (value) {},
+                      ),
+                    ),
+                    CMenuTile(
+                      icon: Iconsax.security_user,
+                      title: 'safe mode',
+                      subTitle: 'search result is safe for people of all ages',
+                      trailing: Switch(
+                        value: false,
+                        activeColor: CColors.rBrown,
+                        onChanged: (value) {},
+                      ),
+                    ),
+                    CMenuTile(
+                      icon: Iconsax.security_user,
+                      title: 'HD image quality',
+                      subTitle: 'set image quality to be seen',
+                      trailing: Switch(
+                        value: false,
+                        activeColor: CColors.rBrown,
+                        onChanged: (value) {},
+                      ),
+                    ),
+                    const Divider(),
+                    const SizedBox(
+                      height: CSizes.spaceBtnItems,
+                    ),
+
+                    const Center(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Iconsax.logout,
+                            size: 28.0,
+                            color: CColors.primaryBrown,
+                          ),
+                          SizedBox(
+                            width: CSizes.spaceBtnInputFields,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

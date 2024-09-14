@@ -1,3 +1,4 @@
+import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
@@ -21,7 +22,9 @@ class CInventoryController extends GetxController {
   final RxString scanResults = ''.obs;
 
   final RxBool itemExists = false.obs;
+  final RxInt currentItemId = 0.obs;
 
+  final txtId = TextEditingController();
   final txtName = TextEditingController();
   final txtCode = TextEditingController();
   final txtQty = TextEditingController();
@@ -32,7 +35,7 @@ class CInventoryController extends GetxController {
 
   final isLoading = false.obs;
 
-  final RxInt invQty = 0.obs;
+  final userController = Get.put(CUserController());
 
   @override
   void onInit() {
@@ -49,7 +52,8 @@ class CInventoryController extends GetxController {
       await dbHelper.openDb();
 
       // fetch items from sqflite db
-      final fetchedItems = await dbHelper.fetchInventoryItems();
+      final fetchedItems =
+          await dbHelper.fetchInventoryItems(userController.user.value.email);
 
       // assign inventory items
       inventoryItems.assignAll(fetchedItems);
@@ -103,25 +107,30 @@ class CInventoryController extends GetxController {
       isLoading.value = true;
 
       // fetch scanned item from sqflite db
-      final fetchedItems = await dbHelper.getScannedInvItem(code);
+      final fetchedItem = await dbHelper.getScannedInvItem(
+          code, userController.user.value.email);
 
-      if (fetchedItems.isNotEmpty) {
+      //fetchInventoryItems();
+
+      if (fetchedItem.isNotEmpty) {
+        currentItemId.value = fetchedItem.first.productId!;
+
         itemExists.value = true;
-        txtName.text = fetchedItems.first.name;
-        txtQty.text = (fetchedItems.first.quantity).toString();
-        txtBP.text = (fetchedItems.first.buyingPrice).toString();
-        txtUnitSP.text = (fetchedItems.first.unitSellingPrice).toString();
-
-        invQty.value = fetchedItems.first.quantity;
+        txtId.text = currentItemId.value.toString();
+        txtName.text = fetchedItem.first.name;
+        txtQty.text = (fetchedItem.first.quantity).toString();
+        txtBP.text = (fetchedItem.first.buyingPrice).toString();
+        txtUnitSP.text = (fetchedItem.first.unitSellingPrice).toString();
       } else {
         itemExists.value = false;
+        txtId.text = '';
         txtName.text = '';
         txtQty.text = '';
         txtBP.text = '';
         txtUnitSP.text = '';
       }
 
-      return fetchedItems;
+      return fetchedItem;
     } catch (e) {
       isLoading.value = false;
       return CPopupSnackBar.errorSnackBar(
@@ -138,13 +147,13 @@ class CInventoryController extends GetxController {
       isLoading.value = true;
 
       // -- update entry
-      await dbHelper.updateInventoryItem(inventoryItem);
-
-      // -- refresh inventory list
-      fetchInventoryItems();
+      await dbHelper.updateInventoryItem(inventoryItem, int.parse(txtId.text));
 
       // -- stop loader
       isLoading.value = false;
+
+      // -- refresh inventory list
+      fetchInventoryItems();
 
       // -- success message
       CPopupSnackBar.successSnackBar(
@@ -158,9 +167,10 @@ class CInventoryController extends GetxController {
         title: 'Oh Snap!',
         message: e.toString(),
       );
-    } finally {
-      isLoading.value = false;
     }
+    // finally {
+    //   isLoading.value = false;
+    // }
   }
 
   /// -- delete inventory item entry --
@@ -195,16 +205,20 @@ class CInventoryController extends GetxController {
   Future<void> addOrUpdateInventoryItem(CInventoryModel inventoryItem) async {
     // Validate returns true if the form is valid, or false otherwise.
     if (addInvItemFormKey.currentState!.validate()) {
+      inventoryItem.userId = userController.user.value.id;
+      inventoryItem.userEmail = userController.user.value.email;
+      inventoryItem.userName = userController.user.value.fullName;
+
       inventoryItem.name = txtName.text;
       inventoryItem.pCode = txtCode.text;
       inventoryItem.quantity = int.parse(txtQty.text);
-      inventoryItem.buyingPrice = int.parse(txtBP.text);
-      inventoryItem.unitSellingPrice = int.parse(txtUnitSP.text);
+      inventoryItem.buyingPrice = double.parse(txtBP.text);
+      inventoryItem.unitSellingPrice = double.parse(txtUnitSP.text);
       inventoryItem.date = DateFormat('yyyy-MM-dd - kk:mm').format(clock.now());
 
       if (itemExists.value) {
         updateInventoryItem(inventoryItem);
-        fetchInventoryItems();
+        //fetchInventoryItems();
       } else {
         addInventoryItem(inventoryItem);
       }

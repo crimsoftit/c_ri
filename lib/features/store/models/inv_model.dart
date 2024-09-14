@@ -1,16 +1,24 @@
 // ignore_for_file: unnecessary_getters_setters
 
 class CInventoryModel {
-  int? _id;
+  int? _productId;
+
+  String _userId = "";
+  String _userEmail = "";
+  String _userName = "";
+
   String _pCode = "";
   String _name = "";
   int _quantity = 0;
-  int _buyingPrice = 0;
-  int _unitSellingPrice = 0;
+  double _buyingPrice = 0.0;
+  double _unitSellingPrice = 0.0;
   String _date = "";
 
   CInventoryModel(
-    //this._id,
+    //this._productId,
+    this._userId,
+    this._userEmail,
+    this._userName,
     this._pCode,
     this._name,
     this._quantity,
@@ -20,7 +28,10 @@ class CInventoryModel {
   );
 
   CInventoryModel.withID(
-    this._id,
+    this._productId,
+    this._userId,
+    this._userEmail,
+    this._userName,
     this._pCode,
     this._name,
     this._quantity,
@@ -29,13 +40,29 @@ class CInventoryModel {
     this._date,
   );
 
-  int? get id => _id;
+  int? get productId => _productId;
+  String get userId => _userId;
+  String get userEmail => _userEmail;
+  String get userName => _userName;
+
   String get pCode => _pCode;
   String get name => _name;
   int get quantity => _quantity;
-  int get buyingPrice => _buyingPrice;
-  int get unitSellingPrice => _unitSellingPrice;
+  double get buyingPrice => _buyingPrice;
+  double get unitSellingPrice => _unitSellingPrice;
   String get date => _date;
+
+  set userId(String newUid) {
+    _userId = newUid;
+  }
+
+  set userEmail(String newUEmail) {
+    _userEmail = newUEmail;
+  }
+
+  set userName(String newUName) {
+    _userName = newUName;
+  }
 
   set pCode(String newPcode) {
     _pCode = newPcode;
@@ -53,14 +80,14 @@ class CInventoryModel {
     }
   }
 
-  set buyingPrice(int newBP) {
-    if (newBP >= 5) {
+  set buyingPrice(double newBP) {
+    if (newBP >= 1.0) {
       _buyingPrice = newBP;
     }
   }
 
-  set unitSellingPrice(int newUSP) {
-    if (newUSP >= 5) {
+  set unitSellingPrice(double newUSP) {
+    if (newUSP >= 1.0) {
       _unitSellingPrice = newUSP;
     }
   }
@@ -72,10 +99,13 @@ class CInventoryModel {
   // convert an InventoryModel object into a Map object
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{};
-
-    if (id != null) {
-      map['id'] = _id;
+    if (productId != null) {
+      map['productId'] = _productId;
     }
+    map['userId'] = _userId;
+    map['userEmail'] = _userEmail;
+    map['userName'] = _userName;
+
     map['pCode'] = _pCode;
     map['name'] = _name;
     map['quantity'] = _quantity;
@@ -88,7 +118,11 @@ class CInventoryModel {
 
   // extract a InventoryModel object from a Map object
   CInventoryModel.fromMapObject(Map<String, dynamic> map) {
-    _id = map['id'];
+    _productId = map['productId'];
+    _userId = map['userId'];
+    _userEmail = map['userEmail'];
+    _userName = map['userName'];
+
     _name = map['name'];
     _pCode = map['pCode'];
     _quantity = map['quantity'];

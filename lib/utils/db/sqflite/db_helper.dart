@@ -1,5 +1,7 @@
+import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
+import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -9,7 +11,8 @@ class DbHelper {
   /// -- variables --
   Database? _db;
   final invTable = 'inventory';
-  static const String colId = 'id';
+  final userController = Get.put(CUserController());
+
   static const String colPcode = 'pCode';
 
   final salesTable = 'sales';
@@ -33,25 +36,31 @@ class DbHelper {
         onCreate: (database, version) {
       database.execute('''
           CREATE TABLE $invTable (
-            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            pCode CHAR(30) NOT NULL,
-            name CHAR(30) NOT NULL,
+            productId INTEGER PRIMARY KEY AUTOINCREMENT,
+            userId TEXT NOT NULL,
+            userEmail TEXT NOT NULL,
+            userName TEXT NOT NULL,
+            pCode TEXT NOT NULL,
+            name TEXT NOT NULL,
             quantity INTEGER NOT NULL,
-            buyingPrice INTEGER NOT NULL,
-            unitSellingPrice INTEGER NOT NULL,
+            buyingPrice REAL NOT NULL,
+            unitSellingPrice REAL NOT NULL,
             date CHAR(30) NOT NULL
             )
           ''');
 
       database.execute('''
           CREATE TABLE $salesTable(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            productId INTEGER PRIMARY KEY AUTOINCREMENT,
+            userId TEXT NOT NULL,
+            userEmail TEXT NOT NULL,
+            userName TEXT NOT NULL,
             productCode TEXT,
             name TEXT,
             quantity INTEGER,
-            price INTEGER,
+            price REAL,
             date TEXT,
-            FOREIGN KEY(id) REFERENCES inventory(id)
+            FOREIGN KEY(productId) REFERENCES inventory(productId)
             )          
           ''');
     }, version: version);
@@ -62,9 +71,9 @@ class DbHelper {
     _db = await openDb();
 
     await _db!.execute(
-        'INSERT INTO $invTable VALUES (0, "12", "fruit", 2, 200, 10, "3/2/2021")');
+        'INSERT INTO $invTable VALUES (0, "manu245", "sindani254@gmail.com", "Manu, "12", "fruit", 2, 200, 10, "3/2/2021")');
     await _db!.execute(
-        'INSERT INTO $salesTable VALUES (0, "143d", "apples", 13, 15,  "2/1/2022")');
+        'INSERT INTO $salesTable VALUES (0, "manu", "143d", "apples", 13, 15,  "2/1/2022")');
     //List inventory = await db!.rawQuery('select * from inventory');
     //List sales = await db!.rawQuery('select * from sales');
     //print(inventory[0].toString());
@@ -73,12 +82,18 @@ class DbHelper {
 
   /// -- fetch operation: get all inventory objects from the database --
   /// --  A method that retrieves all the notes from the Notes table. --
-  Future<List<CInventoryModel>> fetchInventoryItems() async {
+  Future<List<CInventoryModel>> fetchInventoryItems(String email) async {
     // Get a reference to the database.
     final db = _db;
 
-    // Query the table for all The Notes. {SELECT * FROM Notes ORDER BY Id ASC}
-    final result = await db!.query(invTable, orderBy: 'id ASC');
+    //var userId = userController.user.value.id;
+
+    // Query the table for inventory list
+    final result = await db!.rawQuery(
+        'SELECT * FROM $invTable WHERE userEmail = ? ORDER BY date DESC',
+        [email]);
+
+    //final result = await db!.query(invTable, orderBy: 'productId ASC');
 
     // Convert the List<Map<String, dynamic> into a List<Note>.
     return result.map((json) => CInventoryModel.fromMapObject(json)).toList();
@@ -98,15 +113,19 @@ class DbHelper {
   }
 
   // fetch operation: get barcode-scanned inventory object from the database
-  Future<List<CInventoryModel>> getScannedInvItem(String pCode) async {
+  Future<List<CInventoryModel>> getScannedInvItem(
+      String code, String email) async {
     final List<Map<String, dynamic>> maps = await _db!.query(
       invTable,
-      where: 'pCode = ?',
-      whereArgs: [pCode],
+      where: 'pCode = ? and userEmail = ?',
+      whereArgs: [code, email],
     );
     return List.generate(maps.length, (i) {
       return CInventoryModel.withID(
-        maps[i]['id'],
+        maps[i]['productId'],
+        maps[i]['userId'],
+        maps[i]['userEmail'],
+        maps[i]['userName'],
         maps[i]['pCode'],
         maps[i]['name'],
         maps[i]['quantity'],
@@ -118,19 +137,16 @@ class DbHelper {
   }
 
   /// -- defines a function to update an inventory item --
-  Future<int> updateInventoryItem(CInventoryModel invItem) async {
-    // Get a reference to the database.
-    //final db = await _db;
-
+  Future<int> updateInventoryItem(CInventoryModel invItem, int pID) async {
     try {
       // Update the given inventory item.
       var updateResult = await _db!.update(invTable, invItem.toMap(),
 
-          // ensure that the inventory item has a matching product code.
-          where: '$colPcode = ?',
+          // ensure that the inventory item has a matching product id.
+          where: 'productId = ?',
 
           // pass the item's pCode as a whereArg to prevent SQL injection
-          whereArgs: [invItem.pCode]);
+          whereArgs: [pID]);
       return updateResult;
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
@@ -144,8 +160,8 @@ class DbHelper {
   Future<int> deleteInventoryItem(CInventoryModel inventory) async {
     int result = await _db!.delete(
       'inventory',
-      where: '$colPcode = ?',
-      whereArgs: [inventory.pCode],
+      where: 'productId = ?',
+      whereArgs: [inventory.productId],
     );
 
     return result;

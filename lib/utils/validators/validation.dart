@@ -23,8 +23,15 @@ class CValidator {
   static String? validateNumber(String? fieldName, String? value) {
     if (value == null || value.isEmpty) {
       return '$fieldName field is required!';
-    } else if (int.parse(value) < 1) {
-      return 'invalid barcode';
+    }
+    if (fieldName == 'buying price' || fieldName == 'unit selling price') {
+      if (double.parse(value) < 1.0) {
+        return 'invalid value for $fieldName';
+      }
+    } else {
+      if (int.parse(value) < 1) {
+        return 'invalid value for $fieldName';
+      }
     }
 
     return null;

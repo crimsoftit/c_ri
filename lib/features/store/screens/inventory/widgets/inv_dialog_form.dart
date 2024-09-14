@@ -33,6 +33,18 @@ class AddUpdateInventoryForm extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Visibility(
+                maintainState: true,
+                visible: false,
+                child: TextFormField(
+                  controller: invController.txtId,
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: 'product id',
+                    labelStyle: textStyle,
+                  ),
+                ),
+              ),
               TextFormField(
                 controller: invController.txtName,
                 //readOnly: true,
@@ -107,7 +119,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   signed: false,
                 ),
                 inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
+                  //FilteringTextInputFormatter.digitsOnly
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d+(\.\d*)?')),
                 ],
                 decoration: InputDecoration(
                   labelText: 'buying price',
@@ -130,11 +143,15 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   signed: false,
                 ),
                 inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d+(\.\d*)?')),
+                  //FilteringTextInputFormatter.digitsOnly
                 ],
                 decoration: InputDecoration(
                   labelText: 'unit selling price',
                   labelStyle: textStyle,
+                ),
+                style: const TextStyle(
+                  fontWeight: FontWeight.normal,
                 ),
                 validator: (value) {
                   return CValidator.validateNumber('unit selling price', value);
@@ -148,9 +165,11 @@ class AddUpdateInventoryForm extends StatelessWidget {
                 //crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
+                    flex: 4,
                     child: TextButton.icon(
                       icon: const Icon(
                         Iconsax.save_add,
+                        size: CSizes.iconSm,
                       ),
                       label: Obx(
                         () => Text(
@@ -166,9 +185,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             CColors.white, // foreground (text) color
                         backgroundColor: CColors.rBrown, // background color
                       ),
-                      onPressed: () async {
-                        await invController
-                            .addOrUpdateInventoryItem(inventoryItem);
+                      onPressed: () {
+                        invController.addOrUpdateInventoryItem(inventoryItem);
                         Navigator.pop(context, true);
                         // Navigator.popAndPushNamed(
                         //   context,
@@ -179,12 +197,14 @@ class AddUpdateInventoryForm extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(
-                    width: CSizes.spaceBtnSections / 2,
+                    width: CSizes.spaceBtnSections / 4,
                   ),
                   Expanded(
+                    flex: 4,
                     child: TextButton.icon(
                       icon: const Icon(
                         Iconsax.undo,
+                        size: CSizes.iconSm,
                       ),
                       label: Text(
                         'back',

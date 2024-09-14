@@ -17,6 +17,7 @@ class CHomeAppBarWidget extends StatelessWidget {
     final userController = Get.put(CUserController());
 
     return CAppBar(
+      showBackArrow: false,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
