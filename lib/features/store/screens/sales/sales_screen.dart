@@ -36,6 +36,7 @@ class SalesScreen extends StatelessWidget {
           Navigator.pop(context, true);
           Get.back();
         },
+        showSubTitle: false,
       ),
 
       /// -- body --

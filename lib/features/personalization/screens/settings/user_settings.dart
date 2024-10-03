@@ -1,4 +1,3 @@
-import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/list_tiles/menu_tile.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
@@ -30,17 +29,18 @@ class SettingsScreen extends StatelessWidget {
               child: Column(
                 children: [
                   // app bar
-                  CAppBar(
-                    title: Text(
-                      'my account',
-                      style: Theme.of(context).textTheme.headlineSmall!.apply(
-                            color: CColors.white,
-                          ),
-                    ),
-                    backIconAction: () {
-                      Get.back();
-                    },
-                  ),
+                  // CAppBar(
+                  //   showBackArrow: false,
+                  //   title: Text(
+                  //     'my account',
+                  //     style: Theme.of(context).textTheme.headlineSmall!.apply(
+                  //           color: CColors.white,
+                  //         ),
+                  //   ),
+                  //   backIconAction: () {
+                  //     //Get.back();
+                  //   },
+                  // ),
                   const SizedBox(
                     height: CSizes.spaceBtnSections / 2,
                   ),

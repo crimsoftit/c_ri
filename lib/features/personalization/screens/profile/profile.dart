@@ -24,7 +24,7 @@ class ProfileScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: CAppBar(
-        showBackArrow: true,
+        showBackArrow: false,
         backIconColor: isDarkTheme ? CColors.white : CColors.rBrown,
         title: Text(
           'me profile',

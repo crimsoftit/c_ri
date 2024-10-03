@@ -68,6 +68,7 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                     },
                     showBackArrow: true,
                     backIconColor: CColors.white,
+                    showSubTitle: true,
                   ),
 
                   // product profile card

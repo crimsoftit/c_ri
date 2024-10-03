@@ -49,6 +49,7 @@ class CInventoryDetailsScreen1 extends StatelessWidget {
                     },
                     showBackArrow: true,
                     backIconColor: CColors.white,
+                    showSubTitle: false,
                   ),
 
                   // product profile card

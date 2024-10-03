@@ -2,6 +2,7 @@ import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
+import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/constants/txt_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +19,7 @@ class CHomeAppBarWidget extends StatelessWidget {
 
     return CAppBar(
       showBackArrow: false,
+      horizontalPadding: CSizes.md,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
