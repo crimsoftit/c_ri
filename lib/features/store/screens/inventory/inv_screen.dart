@@ -1,5 +1,5 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
-import 'package:c_ri/common/widgets/search_bar/search_bar.dart';
+import 'package:c_ri/common/widgets/icon_buttons/trailing_icon_btn.dart';
 import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
@@ -13,8 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class InventoryScreen extends StatelessWidget {
-  const InventoryScreen({
+class InvScreen extends StatelessWidget {
+  const InvScreen({
     super.key,
   });
 
@@ -30,7 +30,20 @@ class InventoryScreen extends StatelessWidget {
       appBar: CAppBar(
         showBackArrow: false,
         backIconColor: isDarkTheme ? CColors.white : CColors.rBrown,
-        title: const CAnimatedSearchBar(hintTxt: 'inventory'),
+        title: Text(
+          'inventory items',
+          style: Theme.of(context).textTheme.headlineSmall!.apply(
+                fontSizeFactor: 0.85,
+              ),
+        ),
+        actions: [
+          // -- search button
+          CTrailingIconBtn(
+            iconColor: isDarkTheme ? CColors.white : CColors.rBrown,
+            iconData: Iconsax.search_favorite,
+            onPressed: () {},
+          ),
+        ],
         backIconAction: () {
           // Navigator.pop(context, true);
           // Get.back();
