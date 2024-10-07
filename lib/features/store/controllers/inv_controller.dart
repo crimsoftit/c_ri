@@ -82,9 +82,9 @@ class CInventoryController extends GetxController {
 
       // fetch items from sqflite db
       dbHelper.addInventoryItem(inventoryItem);
-
-      isLoading.value = false;
       fetchInventoryItems();
+      isLoading.value = false;
+
       CPopupSnackBar.successSnackBar(
         title: 'item added successfully',
         message: '${inventoryItem.name} added successfully...',
@@ -140,6 +140,16 @@ class CInventoryController extends GetxController {
     }
   }
 
+  void runInvScanner() {
+    txtId.text = "";
+    txtName.text = "";
+    txtCode.text = "";
+    txtQty.text = "";
+    txtBP.text = "";
+    txtUnitSP.text = "";
+    scanBarcodeNormal();
+  }
+
   /// -- update inventory item --
   updateInventoryItem(CInventoryModel inventoryItem) async {
     try {
@@ -147,19 +157,23 @@ class CInventoryController extends GetxController {
       isLoading.value = true;
 
       // -- update entry
+      // await dbHelper.updateInventoryItem(inventoryItem, int.parse(txtId.text));
       await dbHelper.updateInventoryItem(inventoryItem, int.parse(txtId.text));
-
-      // -- stop loader
-      isLoading.value = false;
 
       // -- refresh inventory list
       fetchInventoryItems();
+
+      // -- stop loader
+      isLoading.value = false;
 
       // -- success message
       CPopupSnackBar.successSnackBar(
         title: 'update success',
         message: '${inventoryItem.name} updated successfully...',
       );
+
+      // -- stop loader
+      //isLoading.value = false;
     } catch (e) {
       // -- stop loader
       isLoading.value = false;
@@ -231,7 +245,7 @@ class CInventoryController extends GetxController {
       scanResults.value = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'cancel', true, ScanMode.BARCODE);
       txtCode.text = scanResults.value;
-      fetchItemByCode(scanResults.value);
+      fetchItemByCode(txtCode.text);
     } on PlatformException {
       scanResults.value = "ERROR!! failed to get platform version";
     } catch (e) {

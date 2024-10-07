@@ -56,7 +56,7 @@ class CAnimatedSearchBar extends StatelessWidget {
                           ),
                           decoration: InputDecoration(
                             prefixIcon: Padding(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                 top: 7,
                               ),
                               child: Icon(

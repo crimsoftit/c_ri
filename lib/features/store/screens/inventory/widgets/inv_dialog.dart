@@ -12,20 +12,14 @@ class AddUpdateItemDialog {
     final invController = Get.put(CInventoryController());
 
     if (!isNew) {
-      //invController.txtId.text = invModel.productId.toString();
+      invController.txtId.text = invModel.productId.toString();
       invController.txtName.text = invModel.name;
       invController.txtCode.text = invModel.pCode.toString();
       invController.txtQty.text = invModel.quantity.toString();
       invController.txtBP.text = invModel.buyingPrice.toString();
       invController.txtUnitSP.text = invModel.unitSellingPrice.toString();
     } else {
-      invController.txtId.text = "";
-      invController.txtName.text = "";
-      invController.txtCode.text = "";
-      invController.txtQty.text = "";
-      invController.txtBP.text = "";
-      invController.txtUnitSP.text = "";
-      invController.scanBarcodeNormal();
+      //invController.scanBarcodeNormal();
     }
 
     return PopScope(

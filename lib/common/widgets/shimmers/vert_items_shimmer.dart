@@ -1,6 +1,7 @@
 import 'package:c_ri/common/widgets/layouts/list_layout.dart';
 import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
+import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 
 class CVerticalProductShimmer extends StatelessWidget {
@@ -16,18 +17,18 @@ class CVerticalProductShimmer extends StatelessWidget {
     return CListViewLayout(
       itemCount: itemCount,
       itemBuilder: (_, __) {
-        return const SizedBox(
+        return SizedBox(
           width: double.infinity,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // -- product initials section --
-              CShimmerEffect(
+              const CShimmerEffect(
                 width: 40.0,
                 height: 40.0,
                 radius: 40.0,
               ),
-              SizedBox(
+              const SizedBox(
                 width: CSizes.spaceBtnItems,
               ),
 
@@ -36,31 +37,32 @@ class CVerticalProductShimmer extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CShimmerEffect(
-                    width: 170.0,
+                    width: CHelperFunctions.screenWidth() * 0.7,
+                    //width: 170.0,
                     height: 15.0,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: CSizes.spaceBtnItems / 2,
                   ),
-                  CShimmerEffect(
+                  const CShimmerEffect(
                     width: 150.0,
                     height: 15.0,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: CSizes.spaceBtnItems / 2,
                   ),
-                  CShimmerEffect(
+                  const CShimmerEffect(
                     width: 140.0,
                     height: 15.0,
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 width: CSizes.spaceBtnItems,
               ),
 
               // -- trailing icon section
-              CShimmerEffect(
+              const CShimmerEffect(
                 width: 15.0,
                 height: 26.0,
                 radius: 5.0,

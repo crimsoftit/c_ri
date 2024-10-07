@@ -327,7 +327,8 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
 
               return dialog.buildDialog(
                 context,
-                CInventoryModel(
+                CInventoryModel.withID(
+                  itemId,
                   userController.user.value.id,
                   userController.user.value.email,
                   userController.user.value.fullName,

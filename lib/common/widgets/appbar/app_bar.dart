@@ -40,7 +40,9 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
       child: AppBar(
         automaticallyImplyLeading: false,
         //leadingWidth: 280.0,
-        leadingWidth: CHelperFunctions.screenWidth() * 0.799,
+        leadingWidth: showBackArrow
+            ? CHelperFunctions.screenWidth() * 0.1
+            : CHelperFunctions.screenWidth() * 0.799,
 
         leading: showBackArrow
             ? IconButton(

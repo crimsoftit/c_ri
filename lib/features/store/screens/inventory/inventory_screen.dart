@@ -73,6 +73,7 @@ class InventoryScreen extends StatelessWidget {
                                     ),
                                     IconButton(
                                       onPressed: () {
+                                        invController.runInvScanner();
                                         showDialog(
                                           context: context,
                                           useRootNavigator: false,
@@ -86,7 +87,7 @@ class InventoryScreen extends StatelessWidget {
                                         );
                                       },
                                       icon: const Icon(
-                                        Iconsax.add_square,
+                                        Iconsax.scan,
                                       ),
                                     ),
                                   ],
@@ -100,7 +101,7 @@ class InventoryScreen extends StatelessWidget {
                           hintTxt: 'inventory',
                           boxColor: searchController.showSearchField.value
                               ? CColors.white
-                              : CColors.white.withOpacity(0.6),
+                              : Colors.transparent,
                         ),
                         backIconAction: () {
                           // Navigator.pop(context, true);
@@ -261,6 +262,7 @@ class InventoryScreen extends StatelessWidget {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          invController.runInvScanner();
           showDialog(
             context: context,
             useRootNavigator: false,

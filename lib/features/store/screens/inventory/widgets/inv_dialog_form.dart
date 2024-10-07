@@ -35,7 +35,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
             children: [
               Visibility(
                 maintainState: true,
-                visible: false,
+                visible: true,
                 child: TextFormField(
                   controller: invController.txtId,
                   readOnly: true,
@@ -186,6 +186,13 @@ class AddUpdateInventoryForm extends StatelessWidget {
                         backgroundColor: CColors.rBrown, // background color
                       ),
                       onPressed: () {
+                        // -- form validation
+                        if (!invController.addInvItemFormKey.currentState!
+                            .validate()) {
+                          // -- remove loader
+                          //invController.isLoading.value = false;
+                          return;
+                        }
                         invController.addOrUpdateInventoryItem(inventoryItem);
                         Navigator.pop(context, true);
                         // Navigator.popAndPushNamed(

@@ -84,7 +84,8 @@ class CInventoryDetailsScreen1 extends StatelessWidget {
                           useRootNavigator: false,
                           builder: (BuildContext context) => dialog.buildDialog(
                             context,
-                            CInventoryModel(
+                            CInventoryModel.withID(
+                              invItem.productId,
                               invItem.userId,
                               invItem.userEmail,
                               invItem.userName,
