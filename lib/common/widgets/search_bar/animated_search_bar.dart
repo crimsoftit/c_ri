@@ -78,30 +78,47 @@ class CAnimatedSearchBar extends StatelessWidget {
                         ),
                       ),
                     ),
-                    InkWell(
-                      //radius: 20.0,
-                      onTap: () {
-                        searchController.onCloseIconTap();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Icon(
-                          Icons.close,
-                          color: CColors.rBrown.withOpacity(0.6),
-                          size: CSizes.iconSm,
+                    Material(
+                      type: MaterialType.transparency,
+                      child: InkWell(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(0),
+                          topRight: Radius.circular(32),
+                          bottomLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(32),
+                        ),
+                        onTap: () {
+                          searchController.onCloseIconTap();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Icon(
+                            Icons.close,
+                            color: CColors.rBrown.withOpacity(0.6),
+                            size: CSizes.iconSm,
+                          ),
                         ),
                       ),
                     ),
                   ],
                 )
-              : InkWell(
-                  onTap: () {
-                    searchController.onCloseIconTap();
-                  },
-                  child: const Icon(
-                    Iconsax.search_favorite,
-                    color: CColors.white,
-                    size: CSizes.iconMd,
+              : Material(
+                  type: MaterialType.transparency,
+                  child: InkWell(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(0),
+                      topRight: Radius.circular(32),
+                      bottomLeft: Radius.circular(0),
+                      bottomRight: Radius.circular(32),
+                    ),
+                    onTap: () {
+                      searchController.onCloseIconTap();
+                    },
+                    child: const Icon(
+                      Iconsax.search_favorite,
+                      color: CColors.white,
+                      size: CSizes.iconMd,
+                    ),
                   ),
                 ),
         );

@@ -189,8 +189,6 @@ class AddUpdateInventoryForm extends StatelessWidget {
                         // -- form validation
                         if (!invController.addInvItemFormKey.currentState!
                             .validate()) {
-                          // -- remove loader
-                          //invController.isLoading.value = false;
                           return;
                         }
                         invController.addOrUpdateInventoryItem(inventoryItem);
