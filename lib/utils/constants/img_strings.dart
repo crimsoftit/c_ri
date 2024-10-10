@@ -33,7 +33,7 @@ class CImages {
   static const rBannerImg1 = "assets/images/dashboard/banner_1.jpeg";
 
   // -- profile screen images
-  static const user = "assets/images/profile/user.jpg";
+  static const user = "assets/images/profile/user.png";
 
   // -- lottie animations
   // static String cartAnimation =

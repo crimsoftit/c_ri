@@ -3,6 +3,7 @@ import 'package:c_ri/common/widgets/img_widgets/c_circular_img.dart';
 import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
+import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -25,12 +26,24 @@ class CUserProfileTile extends StatelessWidget {
         showBorder: true,
         radius: 120,
         borderColor: CColors.rBrown.withOpacity(0.3),
-        child: CCircularImg(
-          img: userController.user.value.profPic,
-          width: 47.0,
-          height: 47.0,
-          isNetworkImg: true,
-          //padding: 10.0,
+        child: Stack(
+          children: [
+            Obx(
+              () {
+                final networkImg = userController.user.value.profPic;
+
+                final dpImg = networkImg.isNotEmpty ? networkImg : CImages.user;
+
+                return CCircularImg(
+                  img: dpImg,
+                  width: 47.0,
+                  height: 47.0,
+                  isNetworkImg: networkImg.isNotEmpty,
+                  //padding: 10.0,
+                );
+              },
+            ),
+          ],
         ),
       ),
       title: Obx(() {
