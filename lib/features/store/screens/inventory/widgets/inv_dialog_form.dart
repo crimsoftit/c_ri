@@ -35,7 +35,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
             children: [
               Visibility(
                 maintainState: true,
-                visible: true,
+                visible: false,
                 child: TextFormField(
                   controller: invController.txtId,
                   readOnly: true,

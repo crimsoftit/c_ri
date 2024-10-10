@@ -1,3 +1,4 @@
+import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -18,6 +19,8 @@ class CAnimatedSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final searchController = Get.put(CSearchBarController());
+
+    final invController = Get.put(CInventoryController());
 
     return Obx(
       () {
@@ -46,8 +49,18 @@ class CAnimatedSearchBar extends StatelessWidget {
                           bottom: 10.0,
                         ),
                         child: TextFormField(
+                          controller: searchController.txtSearchField,
+                          autofocus: true,
+                          onChanged: (value) {
+                            if (hintTxt == 'inventory') {
+                              invController.onSearchInventory(value);
+                            }
+                          },
                           onFieldSubmitted: (value) {
-                            searchController.onSearchBtnPressed();
+                            //searchController.onSearchBtnPressed();
+                            if (hintTxt == 'inventory') {
+                              invController.onSearchInventory(value);
+                            }
                           },
                           style: TextStyle(
                             color: CColors.rBrown.withOpacity(0.6),

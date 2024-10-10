@@ -128,6 +128,30 @@ class InventoryScreen extends StatelessWidget {
 
                 invController.fetchInventoryItems();
 
+                if (searchController.txtSearchField.text.isNotEmpty &&
+                    invController.foundInventoryItems.isEmpty) {
+                  return Center(
+                    child: Column(
+                      children: [
+                        const Icon(
+                          Icons.search_off_outlined,
+                          size: CSizes.iconLg * 3,
+                          color: CColors.rBrown,
+                        ),
+                        const SizedBox(
+                          height: CSizes.spaceBtnSections,
+                        ),
+                        Text(
+                          'search results not found!',
+                          style: Theme.of(context).textTheme.labelLarge!.apply(
+                              //fontWeightDelta: 1,
+                              ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
+
                 // -- no data widget --
                 if (invController.inventoryItems.isEmpty) {
                   return const Center(
@@ -142,17 +166,24 @@ class InventoryScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(2.0),
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
-                  itemCount: (invController.inventoryItems.isNotEmpty)
-                      ? invController.inventoryItems.length
-                      : 0,
+                  itemCount: searchController.txtSearchField.text.isNotEmpty
+                      ? invController.foundInventoryItems.length
+                      : (invController.inventoryItems.isNotEmpty)
+                          ? invController.inventoryItems.length
+                          : 0,
                   itemBuilder: (context, index) {
                     return Dismissible(
-                      key: Key(invController.inventoryItems[index].productId
-                          .toString()),
+                      key: Key(searchController.txtSearchField.text.isNotEmpty
+                          ? invController.foundInventoryItems[index].productId
+                              .toString()
+                          : invController.inventoryItems[index].productId
+                              .toString()),
                       onDismissed: (direction) {
                         // -- confirm before deleting --
                         invController.deleteInventoryWarningPopup(
-                            invController.inventoryItems[index]);
+                            searchController.txtSearchField.text.isNotEmpty
+                                ? invController.foundInventoryItems[index]
+                                : invController.inventoryItems[index]);
                       },
                       child: Card(
                         //color: Colors.white,
@@ -167,7 +198,9 @@ class InventoryScreen extends StatelessWidget {
                           titleAlignment: ListTileTitleAlignment.center,
                           //minLeadingWidth: 30.0,
                           title: Text(
-                            '${invController.inventoryItems[index].name} (#${invController.inventoryItems[index].productId})',
+                            searchController.txtSearchField.text.isNotEmpty
+                                ? invController.foundInventoryItems[index].name
+                                : '${invController.inventoryItems[index].name} (#${invController.inventoryItems[index].productId})',
                             style:
                                 Theme.of(context).textTheme.labelMedium!.apply(
                                       color: CColors.rBrown,
@@ -177,8 +210,11 @@ class InventoryScreen extends StatelessWidget {
                             backgroundColor: Colors.brown[300],
                             radius: 16,
                             child: Text(
-                              invController.inventoryItems[index].name[0]
-                                  .toUpperCase(),
+                              searchController.txtSearchField.text.isNotEmpty
+                                  ? invController
+                                      .foundInventoryItems[index].name[0]
+                                  : invController.inventoryItems[index].name[0]
+                                      .toUpperCase(),
                               style:
                                   Theme.of(context).textTheme.labelLarge!.apply(
                                         color: CColors.white,
@@ -191,7 +227,7 @@ class InventoryScreen extends StatelessWidget {
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               Text(
-                                "modified: ${invController.inventoryItems[index].date}",
+                                "modified: ${searchController.txtSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].date : invController.inventoryItems[index].date}",
                                 style: Theme.of(context)
                                     .textTheme
                                     .labelSmall!
@@ -204,7 +240,7 @@ class InventoryScreen extends StatelessWidget {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    "qty: ${invController.inventoryItems[index].quantity}",
+                                    "qty: ${searchController.txtSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].quantity : invController.inventoryItems[index].quantity}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelSmall!
@@ -215,7 +251,7 @@ class InventoryScreen extends StatelessWidget {
                                         ),
                                   ),
                                   Text(
-                                    " BP: Ksh.${invController.inventoryItems[index].buyingPrice}",
+                                    " BP: Ksh.${searchController.txtSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].buyingPrice : invController.inventoryItems[index].buyingPrice}",
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelSmall!
@@ -232,8 +268,12 @@ class InventoryScreen extends StatelessWidget {
                           onTap: () {
                             Get.toNamed(
                               '/inventory/item_details/',
-                              arguments:
-                                  invController.inventoryItems[index].productId,
+                              arguments: searchController
+                                      .txtSearchField.text.isNotEmpty
+                                  ? invController
+                                      .foundInventoryItems[index].productId
+                                  : invController
+                                      .inventoryItems[index].productId,
                             );
                           },
                           trailing: IconButton(
@@ -245,8 +285,12 @@ class InventoryScreen extends StatelessWidget {
                             ),
                             onPressed: () {
                               // -- confirm before deleting --
+
                               invController.deleteInventoryWarningPopup(
-                                  invController.inventoryItems[index]);
+                                  searchController
+                                          .txtSearchField.text.isNotEmpty
+                                      ? invController.foundInventoryItems[index]
+                                      : invController.inventoryItems[index]);
                             },
                           ),
                         ),

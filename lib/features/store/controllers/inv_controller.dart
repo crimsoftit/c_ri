@@ -1,4 +1,5 @@
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
+import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
@@ -19,6 +20,8 @@ class CInventoryController extends GetxController {
   DbHelper dbHelper = DbHelper.instance;
   final RxList<CInventoryModel> inventoryItems = <CInventoryModel>[].obs;
 
+  final RxList<CInventoryModel> foundInventoryItems = <CInventoryModel>[].obs;
+
   final RxString scanResults = ''.obs;
 
   final RxBool itemExists = false.obs;
@@ -36,6 +39,7 @@ class CInventoryController extends GetxController {
   final isLoading = false.obs;
 
   final userController = Get.put(CUserController());
+  final searchController = Get.put(CSearchBarController());
 
   @override
   void onInit() {
@@ -150,6 +154,15 @@ class CInventoryController extends GetxController {
     scanBarcodeNormal();
   }
 
+  onSearchInventory(String value) {
+    //fetchInventoryItems();
+
+    foundInventoryItems.value = inventoryItems
+        .where((element) =>
+            element.name.toLowerCase().contains(value.toLowerCase()))
+        .toList();
+  }
+
   /// -- update inventory item --
   updateInventoryItem(CInventoryModel inventoryItem) async {
     try {
@@ -198,6 +211,8 @@ class CInventoryController extends GetxController {
 
       // -- refresh inventory list
       fetchInventoryItems();
+
+      searchController.txtSearchField.text = '';
 
       // -- stop loader
       isLoading.value = false;
@@ -268,6 +283,7 @@ class CInventoryController extends GetxController {
         onPressed: () async {
           deleteInventoryItem(inventoryItem);
           fetchInventoryItems();
+
           Navigator.of(Get.overlayContext!).pop();
         },
         style: ElevatedButton.styleFrom(

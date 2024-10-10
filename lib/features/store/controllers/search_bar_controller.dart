@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CSearchBarController extends GetxController {
@@ -7,6 +8,8 @@ class CSearchBarController extends GetxController {
 
   /// -- variables --
   RxBool showSearchField = false.obs;
+
+  final txtSearchField = TextEditingController();
 
   @override
   void onInit() {
@@ -19,6 +22,7 @@ class CSearchBarController extends GetxController {
   }
 
   onCloseIconTap() {
+    txtSearchField.text = '';
     showSearchField.value = !showSearchField.value;
   }
 }
