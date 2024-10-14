@@ -30,19 +30,9 @@ class InventoryScreen extends StatelessWidget {
     final searchController = Get.put(CSearchBarController());
 
     return Scaffold(
-      /// -- app bar --
-      // appBar: CAppBar(
-      //   showBackArrow: false,
-      //   backIconColor: isDarkTheme ? CColors.white : CColors.rBrown,
-      //   title: const CAnimatedSearchBar(hintTxt: 'inventory'),
-      //   backIconAction: () {
-      //     // Navigator.pop(context, true);
-      //     // Get.back();
-      //   },
-      // ),
-
       /// -- body --
       body: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
         child: Column(
           children: [
             CPrimaryHeaderContainer(
@@ -162,144 +152,157 @@ class InventoryScreen extends StatelessWidget {
                   );
                 }
 
-                return ListView.builder(
-                  padding: const EdgeInsets.all(2.0),
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  itemCount: searchController.txtSearchField.text.isNotEmpty
-                      ? invController.foundInventoryItems.length
-                      : (invController.inventoryItems.isNotEmpty)
-                          ? invController.inventoryItems.length
-                          : 0,
-                  itemBuilder: (context, index) {
-                    return Dismissible(
-                      key: Key(searchController.txtSearchField.text.isNotEmpty
-                          ? invController.foundInventoryItems[index].productId
-                              .toString()
-                          : invController.inventoryItems[index].productId
-                              .toString()),
-                      onDismissed: (direction) {
-                        // -- confirm before deleting --
-                        invController.deleteInventoryWarningPopup(
-                            searchController.txtSearchField.text.isNotEmpty
-                                ? invController.foundInventoryItems[index]
-                                : invController.inventoryItems[index]);
-                      },
-                      child: Card(
-                        //color: Colors.white,
-                        // color: isDarkTheme
-                        //     ? CColors.white
-                        //     : CColors.white.withOpacity(0.8),
-                        color: CColors.white,
-                        elevation: 0.3,
-                        child: ListTile(
-                          horizontalTitleGap: 10,
-                          contentPadding: const EdgeInsets.all(10.0),
-                          titleAlignment: ListTileTitleAlignment.center,
-                          //minLeadingWidth: 30.0,
-                          title: Text(
-                            searchController.txtSearchField.text.isNotEmpty
-                                ? invController.foundInventoryItems[index].name
-                                : '${invController.inventoryItems[index].name} (#${invController.inventoryItems[index].productId})',
-                            style:
-                                Theme.of(context).textTheme.labelMedium!.apply(
-                                      color: CColors.rBrown,
-                                    ),
-                          ),
-                          leading: CircleAvatar(
-                            backgroundColor: Colors.brown[300],
-                            radius: 16,
-                            child: Text(
+                return SizedBox(
+                  height: CHelperFunctions.screenHeight() * 0.7,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(2.0),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: searchController.txtSearchField.text.isNotEmpty
+                        ? invController.foundInventoryItems.length
+                        : (invController.inventoryItems.isNotEmpty)
+                            ? invController.inventoryItems.length
+                            : 0,
+                    itemBuilder: (context, index) {
+                      return Dismissible(
+                        key: Key(searchController.txtSearchField.text.isNotEmpty
+                            ? invController.foundInventoryItems[index].productId
+                                .toString()
+                            : invController.inventoryItems[index].productId
+                                .toString()),
+                        onDismissed: (direction) {
+                          // -- confirm before deleting --
+                          invController.deleteInventoryWarningPopup(
+                              searchController.txtSearchField.text.isNotEmpty
+                                  ? invController.foundInventoryItems[index]
+                                  : invController.inventoryItems[index]);
+                        },
+                        child: Card(
+                          //color: Colors.white,
+                          // color: isDarkTheme
+                          //     ? CColors.white
+                          //     : CColors.white.withOpacity(0.8),
+                          color: CColors.white,
+                          elevation: 0.3,
+                          child: ListTile(
+                            horizontalTitleGap: 10,
+                            contentPadding: const EdgeInsets.all(10.0),
+                            titleAlignment: ListTileTitleAlignment.center,
+                            //minLeadingWidth: 30.0,
+                            title: Text(
                               searchController.txtSearchField.text.isNotEmpty
                                   ? invController
-                                      .foundInventoryItems[index].name[0]
-                                  : invController.inventoryItems[index].name[0]
-                                      .toUpperCase(),
-                              style:
-                                  Theme.of(context).textTheme.labelLarge!.apply(
-                                        color: CColors.white,
-                                      ),
+                                      .foundInventoryItems[index].name
+                                  : '${invController.inventoryItems[index].name} (#${invController.inventoryItems[index].productId})',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .apply(
+                                    color: CColors.rBrown,
+                                  ),
                             ),
-                          ),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              Text(
-                                "modified: ${searchController.txtSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].date : invController.inventoryItems[index].date}",
+                            leading: CircleAvatar(
+                              backgroundColor: Colors.brown[300],
+                              radius: 16,
+                              child: Text(
+                                searchController.txtSearchField.text.isNotEmpty
+                                    ? invController
+                                        .foundInventoryItems[index].name[0]
+                                    : invController
+                                        .inventoryItems[index].name[0]
+                                        .toUpperCase(),
                                 style: Theme.of(context)
                                     .textTheme
-                                    .labelSmall!
+                                    .labelLarge!
                                     .apply(
-                                      color: CColors.rBrown.withOpacity(0.7),
-                                      //fontStyle: FontStyle.italic,
+                                      color: CColors.white,
                                     ),
                               ),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Text(
-                                    "qty: ${searchController.txtSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].quantity : invController.inventoryItems[index].quantity}",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelSmall!
-                                        .apply(
-                                          color:
-                                              CColors.rBrown.withOpacity(0.6),
-                                          fontStyle: FontStyle.italic,
-                                        ),
-                                  ),
-                                  Text(
-                                    " BP: Ksh.${searchController.txtSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].buyingPrice : invController.inventoryItems[index].buyingPrice}",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelSmall!
-                                        .apply(
-                                          color:
-                                              CColors.rBrown.withOpacity(0.6),
-                                          fontStyle: FontStyle.italic,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          onTap: () {
-                            Get.toNamed(
-                              '/inventory/item_details/',
-                              arguments: searchController
-                                      .txtSearchField.text.isNotEmpty
-                                  ? invController
-                                      .foundInventoryItems[index].productId
-                                  : invController
-                                      .inventoryItems[index].productId,
-                            );
-                          },
-                          trailing: IconButton(
-                            iconSize: 20.0,
-                            icon: const Icon(
-                              Icons.delete,
-                              // color: Color.fromARGB(255, 153, 113, 98),
-                              color: Colors.red,
                             ),
-                            onPressed: () {
-                              // -- confirm before deleting --
-
-                              invController.deleteInventoryWarningPopup(
-                                  searchController
-                                          .txtSearchField.text.isNotEmpty
-                                      ? invController.foundInventoryItems[index]
-                                      : invController.inventoryItems[index]);
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.max,
+                              children: [
+                                Text(
+                                  "modified: ${searchController.txtSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].date : invController.inventoryItems[index].date}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall!
+                                      .apply(
+                                        color: CColors.rBrown.withOpacity(0.7),
+                                        //fontStyle: FontStyle.italic,
+                                      ),
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      "qty: ${searchController.txtSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].quantity : invController.inventoryItems[index].quantity}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall!
+                                          .apply(
+                                            color:
+                                                CColors.rBrown.withOpacity(0.6),
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                    ),
+                                    Text(
+                                      " BP: Ksh.${searchController.txtSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].buyingPrice : invController.inventoryItems[index].buyingPrice}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .labelSmall!
+                                          .apply(
+                                            color:
+                                                CColors.rBrown.withOpacity(0.6),
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            onTap: () {
+                              Get.toNamed(
+                                '/inventory/item_details/',
+                                arguments: searchController
+                                        .txtSearchField.text.isNotEmpty
+                                    ? invController
+                                        .foundInventoryItems[index].productId
+                                    : invController
+                                        .inventoryItems[index].productId,
+                              );
                             },
+                            trailing: IconButton(
+                              iconSize: 20.0,
+                              icon: const Icon(
+                                Icons.delete,
+                                // color: Color.fromARGB(255, 153, 113, 98),
+                                color: Colors.red,
+                              ),
+                              onPressed: () {
+                                // -- confirm before deleting --
+
+                                invController.deleteInventoryWarningPopup(
+                                    searchController
+                                            .txtSearchField.text.isNotEmpty
+                                        ? invController
+                                            .foundInventoryItems[index]
+                                        : invController.inventoryItems[index]);
+                              },
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 );
               },
             ),
+            // const SizedBox(
+            //   height: CSizes.spaceBtnSections * 2,
+            // ),
           ],
         ),
       ),

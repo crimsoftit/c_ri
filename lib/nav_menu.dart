@@ -76,10 +76,5 @@ class NavMenuController extends GetxController {
     const SalesScreen(),
     const SettingsScreen(),
     const ProfileScreen(),
-
-    // const DataErrorScreen(
-    //   lottieImage: CImages.errorDataLottie,
-    //   txt: 'error',
-    // ),
   ];
 }

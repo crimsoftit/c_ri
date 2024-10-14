@@ -1,7 +1,6 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
-import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -10,15 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class SalesScreen extends StatelessWidget {
-  const SalesScreen({super.key});
+class SalesScreen1 extends StatelessWidget {
+  const SalesScreen1({super.key});
 
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-
-    final invController = Get.put(CInventoryController());
-
     final searchController = Get.put(CSearchBarController());
 
     return DefaultTabController(
@@ -80,9 +76,6 @@ class SalesScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    const SizedBox(
-                      height: CSizes.spaceBtnSections,
-                    ),
                   ],
                 ),
               ),
@@ -91,6 +84,5 @@ class SalesScreen extends StatelessWidget {
         ),
       ),
     );
-    ;
   }
 }
