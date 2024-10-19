@@ -7,9 +7,11 @@ class CPrimaryHeaderContainer extends StatelessWidget {
   const CPrimaryHeaderContainer({
     super.key,
     required this.child,
+    this.height,
   });
 
   final Widget child;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +19,7 @@ class CPrimaryHeaderContainer extends StatelessWidget {
       child: Container(
         color: CColors.primaryBrown,
         padding: const EdgeInsets.all(0),
+        height: height,
         child: Stack(
           children: [
             // -- background custom shapes

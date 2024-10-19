@@ -10,10 +10,14 @@ class CSearchBarController extends GetxController {
   RxBool showSearchField = false.obs;
 
   final txtSearchField = TextEditingController();
+  final txtTypeAheadFieldController = TextEditingController();
+
+  //final invController = Get.put(CInventoryController());
 
   @override
   void onInit() {
     showSearchField.value = false;
+    //invController.fetchInventoryItems();
     super.onInit();
   }
 

@@ -51,6 +51,9 @@ class CImages {
   static String docerAnimation =
       "assets/images/lottie_anime/141594-animation-of-docer.json";
 
+  static String loadingAnime =
+      "assets/images/lottie_anime/141397-loading-juggle.json";
+
   // static String searchAnimation =
   //     "assets/images/animations/72785-searching.json";
   // static String emptyAnimation =
@@ -91,4 +94,7 @@ class CImages {
   // -- no data screen images --
   static const String noDataLottie = "assets/images/lottie_anime/no_data.json";
   static const String errorDataLottie = "assets/images/data_error.json";
+
+  // -- loading animated images --
+  static const String loaderGif = "assets/images/lottie_anime/loader_2.gif";
 }
