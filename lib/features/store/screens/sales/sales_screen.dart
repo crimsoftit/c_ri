@@ -79,6 +79,13 @@ class SalesScreen extends StatelessWidget {
                           // ),
                         ],
                       ),
+                      title: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Iconsax.search_favorite,
+                          color: CColors.white,
+                        ),
+                      ),
                       horizontalPadding: 10.0,
                       showBackArrow: false,
                       backIconAction: () {},
