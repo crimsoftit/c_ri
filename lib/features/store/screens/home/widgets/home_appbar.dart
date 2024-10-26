@@ -2,7 +2,6 @@ import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
-import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/constants/txt_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,7 +9,10 @@ import 'package:get/get.dart';
 class CHomeAppBarWidget extends StatelessWidget {
   const CHomeAppBarWidget({
     super.key,
+    required this.actionsSection,
   });
+
+  final Widget actionsSection;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class CHomeAppBarWidget extends StatelessWidget {
 
     return CAppBar(
       showBackArrow: false,
-      horizontalPadding: CSizes.md,
+      horizontalPadding: 10.0,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -57,12 +59,7 @@ class CHomeAppBarWidget extends StatelessWidget {
           // ),
         ],
       ),
-      actions: const [
-        // -- cart counter icon --
-        // CCartCounterIcon(
-        //   iconColor: Colors.white,
-        // ),
-      ],
+      actions: [actionsSection],
       backIconAction: () {
         Get.back();
       },

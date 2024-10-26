@@ -57,7 +57,7 @@ class CAppRoutes {
     ),
     GetPage(
       name: CRoutes.searchResults,
-      page: () => const SearchResultsScreen(),
+      page: () => const CSearchResultsScreen(),
     ),
   ];
 }
