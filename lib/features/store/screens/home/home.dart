@@ -4,6 +4,7 @@ import 'package:c_ri/features/store/screens/home/widgets/home_appbar.dart';
 import 'package:c_ri/features/store/screens/search/search_results.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
+import 'package:c_ri/utils/constants/txt_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -24,6 +25,7 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   // -- ## HOME PAGE APP BAR ## --
                   CHomeAppBarWidget(
+                    appBarTitle: CTexts.homeAppbarTitle,
                     actionsSection: IconButton(
                       onPressed: () {
                         Get.to(
@@ -38,6 +40,8 @@ class HomeScreen extends StatelessWidget {
                         size: CSizes.iconMd,
                       ),
                     ),
+                    screenTitle: '',
+                    isHomeScreen: true,
                   ),
 
                   // -- ## ALL ABOUT CATEGORIES ## --

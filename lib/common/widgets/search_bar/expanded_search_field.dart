@@ -29,7 +29,7 @@ class CExpandedSearchField extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(
               left: 10.0,
-              bottom: 16.0,
+              bottom: 12.0,
             ),
             child: TextFormField(
               controller: controller,

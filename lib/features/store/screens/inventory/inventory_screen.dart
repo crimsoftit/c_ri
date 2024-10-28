@@ -53,7 +53,7 @@ class InventoryScreen extends StatelessWidget {
                                       'inventory',
                                       style: Theme.of(context)
                                           .textTheme
-                                          .bodyMedium!
+                                          .bodyLarge!
                                           .apply(
                                             color: CColors.white,
                                           ),

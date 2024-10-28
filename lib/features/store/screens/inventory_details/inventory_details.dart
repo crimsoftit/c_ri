@@ -101,36 +101,7 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                             ),
                       ),
                       trailing: IconButton(
-                        onPressed: () {
-                          // invController.itemExists.value = true;
-                          // invController.txtId.text = invItem.productId;
-
-                          // setState(() {
-                          //   itemId = invItem.productId;
-                          // });
-                          // showDialog(
-                          //   context: context,
-                          //   useRootNavigator: false,
-                          //   builder: (BuildContext context) =>
-                          //       dialog.buildDialog(
-                          //     context,
-                          //     CInventoryModel(
-                          //       userController.user.value.id,
-                          //       userController.user.value.email,
-                          //       userController.user.value.fullName,
-                          //       invItem.pCode,
-                          //       invItem.name,
-                          //       invItem.quantity,
-                          //       invItem.buyingPrice,
-                          //       invItem.unitSellingPrice,
-                          //       invItem.date,
-                          //     ),
-
-                          //     false,
-                          //   ),
-                          // );
-                          // setState(() {});
-                        },
+                        onPressed: () {},
                         icon: const Icon(
                           Iconsax.notification,
                           color: CColors.white,
