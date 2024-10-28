@@ -8,7 +8,9 @@ import 'package:c_ri/features/personalization/screens/settings/user_settings.dar
 import 'package:c_ri/features/store/screens/home/home.dart';
 import 'package:c_ri/features/store/screens/inventory/inventory_screen.dart';
 import 'package:c_ri/features/store/screens/inventory_details/inventory_details.dart';
+import 'package:c_ri/features/store/screens/sales/sales_screen.dart';
 import 'package:c_ri/features/store/screens/search/search_results.dart';
+import 'package:c_ri/features/store/screens/sell_item_screen/sell_item_screen.dart';
 import 'package:get/get.dart';
 
 import 'routes.dart';
@@ -26,6 +28,14 @@ class CAppRoutes {
     GetPage(
       name: CRoutes.inventoryDetails,
       page: () => const CInventoryDetailsScreen(),
+    ),
+    GetPage(
+      name: CRoutes.sales,
+      page: () => const SalesScreen(),
+    ),
+    GetPage(
+      name: CRoutes.sellItemScreen,
+      page: () => const CSellItemScreen(),
     ),
     GetPage(
       name: CRoutes.settings,

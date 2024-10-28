@@ -47,17 +47,9 @@ class SalesScreen extends StatelessWidget {
                         ),
                         IconButton(
                           onPressed: () {
-                            // invController.runInvScanner();
-                            // showDialog(
-                            //   context: context,
-                            //   useRootNavigator: false,
-                            //   builder: (BuildContext context) =>
-                            //       dialog.buildDialog(
-                            //     context,
-                            //     CInventoryModel('', '', '', '', '', 0, 0, 0, ''),
-                            //     true,
-                            //   ),
-                            // );
+                            Get.toNamed(
+                              '/sales/sell_item/',
+                            );
                           },
                           icon: const Icon(
                             Iconsax.scan,

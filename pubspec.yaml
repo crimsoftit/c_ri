@@ -88,7 +88,13 @@ dependencies:
   intl_phone_field: ^3.2.0
   path: ^1.9.0
   clock: ^1.1.1
-  flutter_barcode_scanner: ^2.0.0
+
+
+  # -- scanners --
+  #barcode_scan2: ^4.3.3
+  barcode_scan2: any
+  #flutter_barcode_scanner: ^2.0.0
+  flutter_barcode_scanner: any
 
 dev_dependencies:
   flutter_test:

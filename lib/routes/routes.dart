@@ -3,6 +3,7 @@ class CRoutes {
   static const inventory = '/inventory';
   static const inventoryDetails = '/inventory/item_details/';
   static const sales = '/sales';
+  static const sellItemScreen = '/sales/sell_item/';
   static const settings = '/settings';
   static const userProfile = '/user_profile';
   static const searchResults = '/search';
@@ -14,14 +15,4 @@ class CRoutes {
   static const resetPassword = '/reset_password';
   static const forgotPassword = '/forgot_password';
   static const onBoarding = '/on_boarding';
-
-  static const subCategories = '/sub_categories';
-  static const productReviews = '/product_reviews';
-  static const productDetails = '/product_details';
-  static const orders = '/orders';
-  static const checkout = '/checkout';
-  static const cart = '/cart';
-  static const brand = '/brand';
-  static const allProducts = '/all_products';
-  static const userAddress = '/user_address';
 }
