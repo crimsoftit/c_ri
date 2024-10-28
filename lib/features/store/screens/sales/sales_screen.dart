@@ -1,11 +1,14 @@
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
+import 'package:c_ri/features/store/controllers/sales_controller.dart';
 import 'package:c_ri/features/store/screens/search/widgets/c_typeahead_field.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import 'package:iconsax/iconsax.dart';
 
 class SalesScreen extends StatelessWidget {
@@ -14,7 +17,7 @@ class SalesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final invController = Get.put(CInventoryController());
-    //final searchController = Get.put(CSearchBarController());
+    final salesController = Get.put(CSalesController());
 
     invController.fetchInventoryItems();
 
@@ -37,7 +40,7 @@ class SalesScreen extends StatelessWidget {
                     child: Row(
                       children: [
                         Text(
-                          'sales',
+                          'transactions',
                           style: Theme.of(context).textTheme.bodyLarge!.apply(
                                 color: CColors.white,
                               ),
@@ -47,6 +50,10 @@ class SalesScreen extends StatelessWidget {
                         ),
                         IconButton(
                           onPressed: () {
+                            salesController.scanItemForSale();
+                            CPopupSnackBar.customToast(
+                                message:
+                                    salesController.sellItemScanResults.value);
                             Get.toNamed(
                               '/sales/sell_item/',
                             );
@@ -61,7 +68,7 @@ class SalesScreen extends StatelessWidget {
                         ),
                         Padding(
                           padding: EdgeInsets.only(
-                            left: CHelperFunctions.screenWidth() * 0.42,
+                            left: CHelperFunctions.screenWidth() * 0.2,
                           ),
                           child: IconButton(
                             onPressed: () {},
