@@ -29,12 +29,54 @@ class CSalesController extends GetxController {
   final txtSaleItemCode = TextEditingController();
   final txtSaleItemQty = TextEditingController();
 
-  Future scanItemForSale() async {
+  final flashOnController = TextEditingController(text: 'Flash on');
+  final flashOffController = TextEditingController(text: 'Flash off');
+  final cancelController = TextEditingController(text: 'Cancel');
+
+  var aspectTolerance = 0.00;
+  var numberOfCameras = 0;
+  var selectedCamera = -1;
+  var useAutoFocus = true;
+  var autoEnableFlash = false;
+
+  /// -- barcode scanner using barcode_scan2 flutter package --
+  Future<void> scanItemForSale() async {
     try {
-      var result = await BarcodeScanner.scan();
+      // var scanOptions = const ScanOptions(
+      //   autoEnableFlash: false,
+      //   strings: {
+      //     'cancel': 'Cancel',
+      //     'flash_on': 'Flash on',
+      //     'flash_off': 'Flash off',
+      //   },
+      //   android: AndroidOptions(
+      //     aspectTolerance: BorderSide.strokeAlignCenter,
+      //     useAutoFocus: true,
+      //   ),
+      // );
+
+      var result = await BarcodeScanner.scan(
+        options: ScanOptions(
+          strings: {
+            'cancel': cancelController.text,
+            'flash_on': flashOnController.text,
+            'flash_off': flashOffController.text,
+          },
+          //restrictFormat: selectedFormats,
+          useCamera: selectedCamera,
+          autoEnableFlash: autoEnableFlash,
+          android: AndroidOptions(
+            aspectTolerance: aspectTolerance,
+            useAutoFocus: useAutoFocus,
+          ),
+        ),
+      );
       var rContent = result.rawContent;
       sellItemScanResults.value = rContent;
-      //CPopupSnackBar.customToast(message: sellItemScanResults.value);
+
+      // -- remove later --
+      setFormFieldValues(sellItemScanResults.value);
+      // -- //
     } on PlatformException catch (platformException) {
       if (platformException.code == BarcodeScanner.cameraAccessDenied) {
         CPopupSnackBar.warningSnackBar(
@@ -57,5 +99,10 @@ class CSalesController extends GetxController {
         message: e.toString(),
       );
     }
+  }
+
+  /// -- set text to form fields --
+  setFormFieldValues(String saleItemBarcode) {
+    txtSaleItemCode.text = saleItemBarcode;
   }
 }
