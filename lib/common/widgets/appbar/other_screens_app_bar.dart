@@ -13,9 +13,10 @@ class OtherScreensAppBar extends StatelessWidget {
     required this.showScanner,
     required this.title,
     required this.trailingIconLeftPadding,
+    required this.showBackActionIcon,
   });
 
-  final bool showScanner;
+  final bool showScanner, showBackActionIcon;
   final String title;
   final double trailingIconLeftPadding;
 
@@ -37,6 +38,17 @@ class OtherScreensAppBar extends StatelessWidget {
             ),
             child: Row(
               children: [
+                showBackActionIcon
+                    ? IconButton(
+                        icon: const Icon(
+                          Iconsax.backward,
+                          color: CColors.white,
+                        ),
+                        onPressed: () {
+                          Get.back();
+                        },
+                      )
+                    : const SizedBox(),
                 Text(
                   title,
                   style: Theme.of(context).textTheme.bodyLarge!.apply(

@@ -438,6 +438,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.1"
+  flutter_scanner_devxhub:
+    dependency: "direct main"
+    description:
+      name: flutter_scanner_devxhub
+      sha256: f25019a45024d38aa735b7227db36d58ba00bdab3ead45776d2f07f0091fa8b2
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   flutter_test:
     dependency: "direct dev"
     description: flutter

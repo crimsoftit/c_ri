@@ -97,4 +97,9 @@ class CImages {
 
   // -- loading animated images --
   static const String loaderGif = "assets/images/lottie_anime/loader_2.gif";
+
+  // -- scanner images --
+  static const String flashOn = "assets/icons/flash_on.jpeg";
+  static const String flashOff = "assets/icons/flash_off.jpg";
+  static const String switchCamera = "assets/icons/switch_camera.png";
 }

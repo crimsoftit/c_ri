@@ -95,6 +95,8 @@ dependencies:
   barcode_scan2: any
   #flutter_barcode_scanner: ^2.0.0
   flutter_barcode_scanner: any
+  flutter_scanner_devxhub: ^1.0.2
+
 
 dev_dependencies:
   flutter_test:
@@ -120,8 +122,11 @@ flutter:
 
   # --- local assets --- #
   assets:
-
+    - assets/icons/
+    - assets/icons/flash_off.jpg
+    - assets/icons/flash_on.jpeg
     - assets/icons/payment_methods/
+    - assets/icons/switch_camera.png
     - assets/images/
     - assets/images/animations/  
     - assets/images/lottie_anime/

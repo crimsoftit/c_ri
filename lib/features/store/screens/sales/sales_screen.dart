@@ -23,6 +23,7 @@ class SalesScreen extends StatelessWidget {
               showScanner: true,
               title: 'transactions',
               trailingIconLeftPadding: CHelperFunctions.screenWidth() * 0.2,
+              showBackActionIcon: false,
             ),
 
             /// -- typeahead search field --

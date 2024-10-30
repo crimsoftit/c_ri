@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'package:barcode_scan2/barcode_scan2.dart';
+import 'package:c_ri/features/personalization/controllers/user_controller.dart';
+import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 
 class CSalesController extends GetxController {
@@ -21,62 +24,31 @@ class CSalesController extends GetxController {
   DbHelper dbHelper = DbHelper.instance;
   final RxString sellItemScanResults = ''.obs;
 
-  final RxBool sellItemExists = false.obs;
+  final RxBool itemExists = false.obs;
+  final isLoading = false.obs;
+
   final RxInt sellItemId = 0.obs;
+  final RxInt qtyAvailable = 0.obs;
 
   final txtSaleItemId = TextEditingController();
   final txtSaleItemName = TextEditingController();
   final txtSaleItemCode = TextEditingController();
   final txtSaleItemQty = TextEditingController();
+  final txtSaleItemBp = TextEditingController();
+  final txtSaleItemUsp = TextEditingController();
 
-  final flashOnController = TextEditingController(text: 'Flash on');
-  final flashOffController = TextEditingController(text: 'Flash off');
-  final cancelController = TextEditingController(text: 'Cancel');
+  final userController = Get.put(CUserController());
 
-  var aspectTolerance = 0.00;
-  var numberOfCameras = 0;
-  var selectedCamera = -1;
-  var useAutoFocus = true;
-  var autoEnableFlash = false;
-
-  /// -- barcode scanner using barcode_scan2 flutter package --
+  /// -- barcode scanner using flutter_barcode_scanner package --
   Future<void> scanItemForSale() async {
     try {
-      // var scanOptions = const ScanOptions(
-      //   autoEnableFlash: false,
-      //   strings: {
-      //     'cancel': 'Cancel',
-      //     'flash_on': 'Flash on',
-      //     'flash_off': 'Flash off',
-      //   },
-      //   android: AndroidOptions(
-      //     aspectTolerance: BorderSide.strokeAlignCenter,
-      //     useAutoFocus: true,
-      //   ),
-      // );
+      String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'cancel', true, ScanMode.BARCODE);
 
-      var result = await BarcodeScanner.scan(
-        options: ScanOptions(
-          strings: {
-            'cancel': cancelController.text,
-            'flash_on': flashOnController.text,
-            'flash_off': flashOffController.text,
-          },
-          //restrictFormat: selectedFormats,
-          useCamera: selectedCamera,
-          autoEnableFlash: autoEnableFlash,
-          android: AndroidOptions(
-            aspectTolerance: aspectTolerance,
-            useAutoFocus: useAutoFocus,
-          ),
-        ),
-      );
-      var rContent = result.rawContent;
-      sellItemScanResults.value = rContent;
+      sellItemScanResults.value = barcodeScanRes;
 
-      // -- remove later --
-      setFormFieldValues(sellItemScanResults.value);
-      // -- //
+      // -- set inventory item details to fields --
+      fetchForSaleItemByCode(sellItemScanResults.value);
     } on PlatformException catch (platformException) {
       if (platformException.code == BarcodeScanner.cameraAccessDenied) {
         CPopupSnackBar.warningSnackBar(
@@ -96,6 +68,46 @@ class CSalesController extends GetxController {
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
         title: 'sell item scan error!',
+        message: e.toString(),
+      );
+    }
+  }
+
+  /// -- fetch inventory item by code --
+  Future<List<CInventoryModel>> fetchForSaleItemByCode(String code) async {
+    try {
+      // start loader while products are fetched
+      isLoading.value = true;
+
+      // fetch scanned item from sqflite db
+      final fetchedItem = await dbHelper.getScannedInvItem(
+          code, userController.user.value.email);
+
+      //fetchInventoryItems();
+
+      if (fetchedItem.isNotEmpty) {
+        sellItemId.value = fetchedItem.first.productId!;
+
+        itemExists.value = true;
+        txtSaleItemId.text = sellItemId.value.toString();
+        txtSaleItemName.text = fetchedItem.first.name;
+        qtyAvailable.value = fetchedItem.first.quantity;
+        txtSaleItemBp.text = (fetchedItem.first.buyingPrice).toString();
+        txtSaleItemUsp.text = (fetchedItem.first.unitSellingPrice).toString();
+      } else {
+        itemExists.value = false;
+        txtSaleItemId.text = '';
+        txtSaleItemName.text = '';
+        txtSaleItemQty.text = '';
+        txtSaleItemBp.text = '';
+        txtSaleItemUsp.text = '';
+      }
+
+      return fetchedItem;
+    } catch (e) {
+      isLoading.value = false;
+      return CPopupSnackBar.errorSnackBar(
+        title: 'Oh Snap!',
         message: e.toString(),
       );
     }
