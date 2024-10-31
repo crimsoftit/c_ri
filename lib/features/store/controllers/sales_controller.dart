@@ -17,18 +17,22 @@ class CSalesController extends GetxController {
   @override
   void onInit() {
     //fetchInventoryItems();
+    if (selectedPaymentMethod.value == 'Cash') {
+      showAmountIssuedField.value = true;
+    } else {
+      showAmountIssuedField.value = false;
+    }
     super.onInit();
   }
 
   /// -- variables --
   DbHelper dbHelper = DbHelper.instance;
   final RxString sellItemScanResults = ''.obs;
+  final RxString selectedPaymentMethod = 'Cash'.obs;
 
   final RxBool itemExists = false.obs;
+  final RxBool showAmountIssuedField = false.obs;
   final isLoading = false.obs;
-
-  final RxInt sellItemId = 0.obs;
-  final RxInt qtyAvailable = 0.obs;
 
   final txtSaleItemId = TextEditingController();
   final txtSaleItemName = TextEditingController();
@@ -36,6 +40,15 @@ class CSalesController extends GetxController {
   final txtSaleItemQty = TextEditingController();
   final txtSaleItemBp = TextEditingController();
   final txtSaleItemUsp = TextEditingController();
+  final txtAmountIssued = TextEditingController();
+
+  final RxInt sellItemId = 0.obs;
+  final RxInt qtyAvailable = 0.obs;
+  final RxString saleItemName = ''.obs;
+  final RxString saleItemCode = ''.obs;
+  final RxDouble saleItemBp = 0.0.obs;
+  final RxDouble saleItemUsp = 0.0.obs;
+  final RxDouble totalAmount = 0.0.obs;
 
   final userController = Get.put(CUserController());
 
@@ -86,9 +99,13 @@ class CSalesController extends GetxController {
       //fetchInventoryItems();
 
       if (fetchedItem.isNotEmpty) {
-        sellItemId.value = fetchedItem.first.productId!;
-
         itemExists.value = true;
+        sellItemId.value = fetchedItem.first.productId!;
+        saleItemCode.value = fetchedItem.first.pCode;
+        saleItemName.value = fetchedItem.first.name;
+        saleItemBp.value = fetchedItem.first.buyingPrice;
+        saleItemUsp.value = fetchedItem.first.unitSellingPrice;
+
         txtSaleItemId.text = sellItemId.value.toString();
         txtSaleItemName.text = fetchedItem.first.name;
         qtyAvailable.value = fetchedItem.first.quantity;
@@ -113,8 +130,36 @@ class CSalesController extends GetxController {
     }
   }
 
+  /// -- when search result item is selected --
+  onSellItemBtnAction(CInventoryModel foundItem) {
+    sellItemId.value = foundItem.productId!;
+    saleItemCode.value = foundItem.pCode;
+    saleItemName.value = foundItem.name;
+    saleItemBp.value = foundItem.buyingPrice;
+    saleItemUsp.value = foundItem.unitSellingPrice;
+    qtyAvailable.value = foundItem.quantity;
+
+    Get.toNamed(
+      '/sales/sell_item/',
+    );
+  }
+
+  /// -- calculate totals --
+  computeTotals(String value, double usp) {
+    if (value.isNotEmpty) {
+      totalAmount.value = int.parse(value) * usp;
+    } else {
+      totalAmount.value = 0.0;
+    }
+  }
+
   /// -- set text to form fields --
-  setFormFieldValues(String saleItemBarcode) {
-    txtSaleItemCode.text = saleItemBarcode;
+  setPaymentMethod(String value) {
+    selectedPaymentMethod.value = value;
+    if (selectedPaymentMethod.value == 'Cash') {
+      showAmountIssuedField.value = true;
+    } else {
+      showAmountIssuedField.value = false;
+    }
   }
 }

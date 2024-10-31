@@ -14,11 +14,16 @@ class OtherScreensAppBar extends StatelessWidget {
     required this.title,
     required this.trailingIconLeftPadding,
     required this.showBackActionIcon,
+    required this.showTrailingIcon,
+    this.subTitle,
+    this.showSubTitle = false,
   });
 
-  final bool showScanner, showBackActionIcon;
+  final bool showScanner, showBackActionIcon, showTrailingIcon;
+  final bool showSubTitle;
   final String title;
   final double trailingIconLeftPadding;
+  final String? subTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -38,23 +43,42 @@ class OtherScreensAppBar extends StatelessWidget {
             ),
             child: Row(
               children: [
-                showBackActionIcon
-                    ? IconButton(
-                        icon: const Icon(
-                          Iconsax.backward,
+                if (showBackActionIcon)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 0.0),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_back_ios,
+                        color: CColors.white,
+                        size: CSizes.iconSm,
+                      ),
+                      onPressed: () {
+                        Get.back();
+                      },
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 0.0),
+                  child: Text(
+                    title,
+                    style: Theme.of(context).textTheme.labelLarge!.apply(
                           color: CColors.white,
                         ),
-                        onPressed: () {
-                          Get.back();
-                        },
-                      )
-                    : const SizedBox(),
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.bodyLarge!.apply(
-                        color: CColors.white,
-                      ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
                 ),
+                if (showSubTitle)
+                  Expanded(
+                    child: Text(
+                      subTitle!,
+                      style: Theme.of(context).textTheme.labelMedium!.apply(
+                            color: CColors.white,
+                          ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                  ),
                 const SizedBox(
                   width: CSizes.spaceBtnSections,
                 ),
@@ -78,18 +102,20 @@ class OtherScreensAppBar extends StatelessWidget {
                 const SizedBox(
                   width: CSizes.spaceBtnSections,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: trailingIconLeftPadding,
-                  ),
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Iconsax.notification,
-                      color: CColors.white,
-                    ),
-                  ),
-                ),
+                showTrailingIcon
+                    ? Padding(
+                        padding: EdgeInsets.only(
+                          left: trailingIconLeftPadding,
+                        ),
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Iconsax.notification,
+                            color: CColors.white,
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
               ],
             ),
           ),

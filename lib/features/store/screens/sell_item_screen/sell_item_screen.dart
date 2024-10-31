@@ -1,4 +1,5 @@
 import 'package:c_ri/common/widgets/appbar/other_screens_app_bar.dart';
+import 'package:c_ri/features/personalization/screens/profile/widgets/c_profile_menu.dart';
 import 'package:c_ri/features/store/controllers/sales_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -21,116 +22,136 @@ class CSellItemScreen extends StatelessWidget {
         return Scaffold(
           body: SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 OtherScreensAppBar(
                   showScanner: false,
-                  title: 'sell',
-                  trailingIconLeftPadding: CHelperFunctions.screenWidth() * 0.2,
+                  title: 'sell item #${salesController.sellItemId.value}',
+                  trailingIconLeftPadding:
+                      CHelperFunctions.screenWidth() * 0.25,
+                  //trailingIconLeftPadding: 70,
                   showBackActionIcon: true,
+                  showTrailingIcon: true,
+                  showSubTitle: false,
+                  subTitle: 'code:',
                 ),
 
-                /// -- typeahead search field --
+                /// -- 4 sale item form fields --
                 Padding(
                   padding: const EdgeInsets.all(
                     CSizes.defaultSpace,
                   ),
                   child: Form(
-                    child: // -- item barcode field --
-                        Column(
+                    child: Column(
                       children: [
-                        TextFormField(
-                          controller: salesController.txtSaleItemId,
-                          style: const TextStyle(
-                            height: 0.7,
-                          ),
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Iconsax.barcode,
-                              color: CColors.rBrown.withOpacity(0.5),
+                        CProfileMenu(
+                          title: 'code',
+                          value: salesController.saleItemCode.value,
+                          verticalPadding: 15.0,
+                          showTrailingIcon: false,
+                          onTap: () {},
+                        ),
+                        CProfileMenu(
+                          title: 'name',
+                          value: salesController.saleItemName.value,
+                          verticalPadding: 15.0,
+                          showTrailingIcon: false,
+                          onTap: () {},
+                        ),
+                        CProfileMenu(
+                          title: 'usp',
+                          value: 'Ksh. ${(salesController.saleItemUsp.value)}',
+                          verticalPadding: 15.0,
+                          showTrailingIcon: false,
+                          onTap: () {},
+                        ),
+                        CProfileMenu(
+                          title: 'total amount',
+                          value: 'Ksh. ${(salesController.totalAmount.value)}',
+                          verticalPadding: 15.0,
+                          showTrailingIcon: false,
+                          onTap: () {},
+                        ),
+                        CProfileMenu(
+                          title: 'pay via:',
+                          valueIsWidget: true,
+                          valueWidget: DropdownButtonFormField(
+                            hint: const Text('Cash'),
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(
+                                Iconsax.sort,
+                              ),
                             ),
-                            labelText: 'product id',
+                            //padding: EdgeInsets.only(left: 2),
+                            items: [
+                              'Cash',
+                              'Mpesa',
+                              'In-house',
+                            ]
+                                .map(
+                                  (option) => DropdownMenuItem(
+                                    value: option,
+                                    enabled: true,
+                                    child: Text(
+                                      option,
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                            value: salesController.selectedPaymentMethod.value,
+                            //style: TextStyle(height: 7.0),
+                            onChanged: (value) {
+                              salesController.setPaymentMethod(value!);
+                            },
+                          ),
+                          verticalPadding: 15.0,
+                          showTrailingIcon: false,
+                          onTap: () {},
+                        ),
+                        const SizedBox(
+                          height: CSizes.spaceBtnInputFields,
+                        ),
+                        Visibility(
+                          visible: salesController.showAmountIssuedField.value,
+                          child: TextFormField(
+                            autofocus: false,
+                            controller: salesController.txtAmountIssued,
+                            style: const TextStyle(
+                              height: 0.7,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(
+                                Iconsax.quote_up_square,
+                                color: CColors.grey,
+                              ),
+                              labelText: 'amount issued by customer',
+                            ),
+                            onChanged: (value) {},
                           ),
                         ),
                         const SizedBox(
                           height: CSizes.spaceBtnInputFields,
                         ),
                         TextFormField(
-                          controller: salesController.txtSaleItemCode,
-                          style: const TextStyle(
-                            height: 0.7,
-                          ),
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Iconsax.barcode,
-                              color: CColors.rBrown.withOpacity(0.5),
-                            ),
-                            labelText: 'product code',
-                          ),
-                        ),
-                        const SizedBox(
-                          height: CSizes.spaceBtnInputFields,
-                        ),
-                        TextFormField(
-                          controller: salesController.txtSaleItemName,
-                          style: const TextStyle(
-                            height: 0.7,
-                          ),
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Iconsax.information,
-                              color: CColors.rBrown.withOpacity(0.5),
-                            ),
-                            labelText: 'product name',
-                          ),
-                        ),
-                        const SizedBox(
-                          height: CSizes.spaceBtnInputFields,
-                        ),
-                        TextFormField(
+                          autofocus: true,
                           controller: salesController.txtSaleItemQty,
                           style: const TextStyle(
                             height: 0.7,
+                            fontWeight: FontWeight.normal,
                           ),
                           decoration: InputDecoration(
-                            prefixIcon: Icon(
+                            prefixIcon: const Icon(
                               Iconsax.quote_up_square,
-                              color: CColors.rBrown.withOpacity(0.5),
+                              color: CColors.grey,
                             ),
                             labelText:
-                                'qty/no.of units (${salesController.qtyAvailable.value})',
+                                'qty/no.of units (${salesController.qtyAvailable.value} in stock)',
                           ),
-                        ),
-                        const SizedBox(
-                          height: CSizes.spaceBtnInputFields,
-                        ),
-                        TextFormField(
-                          controller: salesController.txtSaleItemBp,
-                          style: const TextStyle(
-                            height: 0.7,
-                          ),
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Iconsax.quote_up_square,
-                              color: CColors.rBrown.withOpacity(0.5),
-                            ),
-                            labelText: 'buying price',
-                          ),
-                        ),
-                        const SizedBox(
-                          height: CSizes.spaceBtnInputFields,
-                        ),
-                        TextFormField(
-                          controller: salesController.txtSaleItemUsp,
-                          style: const TextStyle(
-                            height: 0.7,
-                          ),
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(
-                              Iconsax.quote_up_square,
-                              color: CColors.rBrown.withOpacity(0.5),
-                            ),
-                            labelText: 'unit selling price',
-                          ),
+                          onChanged: (value) {
+                            var usp = salesController.saleItemUsp.value;
+                            salesController.computeTotals(value, usp);
+                          },
                         ),
                         const SizedBox(
                           height: CSizes.spaceBtnInputFields,

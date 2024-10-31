@@ -7,27 +7,35 @@ class CProfileMenu extends StatelessWidget {
   const CProfileMenu({
     super.key,
     required this.title,
-    required this.value,
+    this.value,
     required this.onTap,
     this.icon = Iconsax.arrow_right_34,
+    this.verticalPadding = CSizes.spaceBtnItems / 3,
+    this.showTrailingIcon = true,
+    this.valueIsWidget = false,
+    this.valueWidget,
   });
 
   final IconData icon;
-  final String title, value;
+  final String title;
+  final String? value;
+  final double? verticalPadding;
   final VoidCallback onTap;
+  final bool? showTrailingIcon, valueIsWidget;
+  final Widget? valueWidget;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          vertical: CSizes.spaceBtnItems / 1.5,
+        padding: EdgeInsets.symmetric(
+          vertical: verticalPadding!,
         ),
         child: Row(
           children: [
             Expanded(
-              flex: 3,
+              flex: 2,
               child: Text(
                 title,
                 style: Theme.of(context).textTheme.bodySmall!.apply(
@@ -37,26 +45,29 @@ class CProfileMenu extends StatelessWidget {
               ),
             ),
             Expanded(
-              flex: 5,
-              child: Text(
-                value,
-                style: Theme.of(context).textTheme.bodyMedium!.apply(
-                      color: CColors.rBrown,
-                      fontWeightDelta: 1,
+              flex: 6,
+              child: valueIsWidget!
+                  ? valueWidget!
+                  : Text(
+                      value!,
+                      style: Theme.of(context).textTheme.bodyMedium!.apply(
+                            color: CColors.rBrown,
+                            fontWeightDelta: 1,
+                          ),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                overflow: TextOverflow.ellipsis,
-              ),
             ),
-            Expanded(
-              child: IconButton(
-                onPressed: onTap,
-                icon: Icon(
-                  icon,
-                  size: 18.0,
-                  color: CColors.rBrown,
+            if (showTrailingIcon!)
+              Expanded(
+                child: IconButton(
+                  onPressed: onTap,
+                  icon: Icon(
+                    icon,
+                    size: 18.0,
+                    color: CColors.rBrown,
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),
