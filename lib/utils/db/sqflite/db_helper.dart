@@ -1,5 +1,6 @@
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
+import 'package:c_ri/features/store/models/sold_items_model.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart';
@@ -51,15 +52,17 @@ class DbHelper {
 
       database.execute('''
           CREATE TABLE $salesTable(
-            productId INTEGER PRIMARY KEY AUTOINCREMENT,
+            saleId INTEGER PRIMARY KEY AUTOINCREMENT,
             userId TEXT NOT NULL,
             userEmail TEXT NOT NULL,
             userName TEXT NOT NULL,
-            productCode TEXT,
-            name TEXT,
-            quantity INTEGER,
-            price REAL,
-            date TEXT,
+            productId INTEGER NOT NULL,
+            productCode TEXT NOT NULL,
+            productName TEXT NOT NULL,
+            quantity INTEGER NOT NULL,
+            totalAmount  REAL NOT NULL,
+            paymentMethod TEXT NOT NULL,
+            date TEXT NOT NULL,
             FOREIGN KEY(productId) REFERENCES inventory(productId)
             )          
           ''');
@@ -71,35 +74,17 @@ class DbHelper {
     _db = await openDb();
 
     await _db!.execute(
-        'INSERT INTO $invTable VALUES (0, "manu245", "sindani254@gmail.com", "Manu, "12", "fruit", 2, 200, 10, "3/2/2021")');
+        'INSERT INTO $invTable VALUES (0, "as23df45", "sindani254@gmail.com", "Manu", "12w34dds1", "fruit", 2, 200, 10, "3/2/2021")');
     await _db!.execute(
-        'INSERT INTO $salesTable VALUES (0, "manu", "143d", "apples", 13, 15,  "2/1/2022")');
+        'INSERT INTO $salesTable VALUES (0, "as23df45", "sindani254@gmail.com", "Manu", "143d", "apples", 13, 15, "Cash", "2/1/2022")');
     //List inventory = await db!.rawQuery('select * from inventory');
     //List sales = await db!.rawQuery('select * from sales');
     //print(inventory[0].toString());
     //print(sales[0].toString());
   }
 
-  /// -- fetch operation: get all inventory objects from the database --
-  /// --  A method that retrieves all the notes from the Notes table. --
-  Future<List<CInventoryModel>> fetchInventoryItems(String email) async {
-    // Get a reference to the database.
-    final db = _db;
+  /// --- ### CRUD OPERATIONS ON INVENTORY TABLE ### ---
 
-    //var userId = userController.user.value.id;
-
-    // Query the table for inventory list
-    final result = await db!.rawQuery(
-        'SELECT * FROM $invTable WHERE userEmail = ? ORDER BY date DESC',
-        [email]);
-
-    //final result = await db!.query(invTable, orderBy: 'productId ASC');
-
-    // Convert the List<Map<String, dynamic> into a List<Note>.
-    return result.map((json) => CInventoryModel.fromMapObject(json)).toList();
-  }
-
-  // Define a function that inserts notes into the database
   Future<void> addInventoryItem(CInventoryModel inventoryItem) async {
     // Get a reference to the database.
     final db = _db;
@@ -110,6 +95,22 @@ class DbHelper {
     // In this case, replace any previous data.
     await db?.insert(invTable, inventoryItem.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  /// -- fetch operation: get all inventory objects from the database --
+  Future<List<CInventoryModel>> fetchInventoryItems(String email) async {
+    // Get a reference to the database.
+    final db = _db;
+
+    // Query the table for inventory list
+    final result = await db!.rawQuery(
+        'SELECT * FROM $invTable WHERE userEmail = ? ORDER BY date DESC',
+        [email]);
+
+    //final result = await db!.query(invTable, orderBy: 'productId ASC');
+
+    // Convert the List<Map<String, dynamic> into a List<Note>.
+    return result.map((json) => CInventoryModel.fromMapObject(json)).toList();
   }
 
   // fetch operation: get barcode-scanned inventory object from the database
@@ -165,5 +166,39 @@ class DbHelper {
     );
 
     return result;
+  }
+
+  /// --- ### CRUD OPERATIONS ON SALES TABLE ### ---
+  // -- save sale details to the database --
+  Future<void> addSoldItem(CSoldItemsModel soldItem) async {
+    try {
+      // Get a reference to the database.
+      final db = _db;
+      // Insert the Note into the correct table. You might also specify the
+      // `conflictAlgorithm` to use in case the same Inventory item is inserted twice.
+      //
+      // In this case, replace any previous data.
+      await db?.insert(salesTable, soldItem.toMap(),
+          conflictAlgorithm: ConflictAlgorithm.replace);
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'error performing transaction',
+        message: e.toString(),
+      );
+    }
+  }
+
+  /// -- fetch transactions --
+  Future<List<CSoldItemsModel>> fetchTransactions(String email) async {
+    final db = _db;
+
+    final transactions = await db!.rawQuery(
+        'SELECT * from $salesTable where userEmail = ? ORDER BY date DESC',
+        [email]);
+
+    // Convert the List<Map<String, dynamic> into a List<Note>.
+    return transactions
+        .map((json) => CSoldItemsModel.fromMapObject(json))
+        .toList();
   }
 }

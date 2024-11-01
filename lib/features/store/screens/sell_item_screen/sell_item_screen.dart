@@ -5,6 +5,7 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -42,6 +43,7 @@ class CSellItemScreen extends StatelessWidget {
                     CSizes.defaultSpace,
                   ),
                   child: Form(
+                    key: salesController.txnsFormKey,
                     child: Column(
                       children: [
                         CProfileMenu(
@@ -68,6 +70,13 @@ class CSellItemScreen extends StatelessWidget {
                         CProfileMenu(
                           title: 'total amount',
                           value: 'Ksh. ${(salesController.totalAmount.value)}',
+                          verticalPadding: 15.0,
+                          showTrailingIcon: false,
+                          onTap: () {},
+                        ),
+                        CProfileMenu(
+                          title: 'customer balance',
+                          value: 'Ksh. ${(salesController.customerBal.value)}',
                           verticalPadding: 15.0,
                           showTrailingIcon: false,
                           onTap: () {},
@@ -108,9 +117,10 @@ class CSellItemScreen extends StatelessWidget {
                           showTrailingIcon: false,
                           onTap: () {},
                         ),
-                        const SizedBox(
-                          height: CSizes.spaceBtnInputFields,
-                        ),
+                        if (salesController.showAmountIssuedField.value)
+                          const SizedBox(
+                            height: CSizes.spaceBtnInputFields,
+                          ),
                         Visibility(
                           visible: salesController.showAmountIssuedField.value,
                           child: TextFormField(
@@ -120,6 +130,13 @@ class CSellItemScreen extends StatelessWidget {
                               height: 0.7,
                               fontWeight: FontWeight.normal,
                             ),
+                            keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true,
+                              signed: false,
+                            ),
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
                             decoration: const InputDecoration(
                               prefixIcon: Icon(
                                 Iconsax.quote_up_square,
@@ -127,7 +144,11 @@ class CSellItemScreen extends StatelessWidget {
                               ),
                               labelText: 'amount issued by customer',
                             ),
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              salesController.computeCustomerBal(
+                                  double.parse(value),
+                                  salesController.totalAmount.value);
+                            },
                           ),
                         ),
                         const SizedBox(
@@ -148,16 +169,36 @@ class CSellItemScreen extends StatelessWidget {
                             labelText:
                                 'qty/no.of units (${salesController.qtyAvailable.value} in stock)',
                           ),
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: false,
+                            signed: false,
+                          ),
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
                           onChanged: (value) {
                             var usp = salesController.saleItemUsp.value;
                             salesController.computeTotals(value, usp);
+                            salesController.computeCustomerBal(
+                                double.parse(
+                                    salesController.txtAmountIssued.text),
+                                salesController.totalAmount.value);
                           },
                         ),
                         const SizedBox(
                           height: CSizes.spaceBtnInputFields,
                         ),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              salesController.saveTransaction();
+                            },
+                            child: Text('confirm sale'),
+                          ),
+                        ),
                         Text(
-                          salesController.sellItemScanResults.value,
+                          salesController.saleItemCode.value,
                         ),
                       ],
                     ),

@@ -84,7 +84,7 @@ class CInventoryController extends GetxController {
       // start loader while products are fetched
       isLoading.value = true;
 
-      // fetch items from sqflite db
+      // add inventory item into sqflite db
       dbHelper.addInventoryItem(inventoryItem);
       fetchInventoryItems();
       isLoading.value = false;
