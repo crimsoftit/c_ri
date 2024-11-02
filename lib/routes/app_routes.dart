@@ -10,7 +10,7 @@ import 'package:c_ri/features/store/screens/inventory/inventory_screen.dart';
 import 'package:c_ri/features/store/screens/inventory_details/inventory_details.dart';
 import 'package:c_ri/features/store/screens/sales/sales_screen.dart';
 import 'package:c_ri/features/store/screens/search/search_results.dart';
-import 'package:c_ri/features/store/screens/sell_item_screen/sell_item_screen.dart';
+import 'package:c_ri/features/store/screens/sales/sell_item_screen/sell_item_screen.dart';
 import 'package:get/get.dart';
 
 import 'routes.dart';

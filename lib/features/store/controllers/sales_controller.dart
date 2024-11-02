@@ -21,6 +21,7 @@ class CSalesController extends GetxController {
 
   @override
   void onInit() {
+    isLoading.value = false;
     fetchTransactions();
     resetSales();
     if (selectedPaymentMethod.value == 'Cash') {
@@ -45,8 +46,6 @@ class CSalesController extends GetxController {
   final isLoading = false.obs;
 
   final txtSaleItemQty = TextEditingController();
-  final txtSaleItemBp = TextEditingController();
-  final txtSaleItemUsp = TextEditingController();
   final txtAmountIssued = TextEditingController();
 
   final RxInt sellItemId = 0.obs;
@@ -88,27 +87,23 @@ class CSalesController extends GetxController {
           DateFormat('yyyy-MM-dd - kk:mm').format(clock.now()),
         );
 
-        // soldItem.userId = userController.user.value.id;
-        // soldItem.userEmail = userController.user.value.email;
-        // soldItem.userName = userController.user.value.fullName;
-
-        // soldItem.productId = sellItemId.value;
-        // soldItem.productCode = saleItemCode.value;
-        // soldItem.productName = saleItemName.value;
-        // soldItem.quantity = int.parse(txtSaleItemQty.text);
-        // soldItem.totalAmount = totalAmount.value;
-        // soldItem.paymentMethod = selectedPaymentMethod.value;
-        // soldItem.date = DateFormat('yyyy-MM-dd - kk:mm').format(clock.now());
-
         // save txn data into the db
         dbHelper.addSoldItem(newTxn);
+
+        resetSales();
+
+        fetchTransactions();
 
         // stop loader
         CFullScreenLoader.stopLoading();
         isLoading.value = false;
 
         CPopupSnackBar.successSnackBar(
-            title: 'success!', message: 'transaction successful!');
+          title: 'success!',
+          message: 'transaction successful!',
+        );
+
+        Get.back();
       }
     } catch (e) {
       isLoading.value = false;
@@ -117,11 +112,11 @@ class CSalesController extends GetxController {
         title: 'Oh Snap! error saving transaction details',
         message: e.toString(),
       );
+      return;
     } finally {
       isLoading.value = false;
       // -- remove loader --
       CFullScreenLoader.stopLoading();
-      return;
     }
   }
 
@@ -149,6 +144,8 @@ class CSalesController extends GetxController {
         title: 'Oh Snap!',
         message: e.toString(),
       );
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -207,13 +204,9 @@ class CSalesController extends GetxController {
         saleItemUsp.value = fetchedItem.first.unitSellingPrice;
 
         qtyAvailable.value = fetchedItem.first.quantity;
-        txtSaleItemBp.text = (fetchedItem.first.buyingPrice).toString();
-        txtSaleItemUsp.text = (fetchedItem.first.unitSellingPrice).toString();
       } else {
         itemExists.value = false;
         txtSaleItemQty.text = '';
-        txtSaleItemBp.text = '';
-        txtSaleItemUsp.text = '';
       }
 
       return fetchedItem;
@@ -270,14 +263,18 @@ class CSalesController extends GetxController {
 
   /// -- reset sales --
   resetSales() {
-    isLoading.value = false;
-    selectedPaymentMethod.value = 'Cash';
     sellItemScanResults.value = '';
+    selectedPaymentMethod.value = 'Cash';
     itemExists.value = false;
-    txtAmountIssued.text = '';
+    //showAmountIssuedField.value = false;
+    isLoading.value = false;
     txtSaleItemQty.text = '';
-    txtSaleItemBp.text = '';
-    txtSaleItemUsp.text = '';
-    showAmountIssuedField.value = false;
+    txtAmountIssued.text = '';
+    saleItemName.value = '';
+    saleItemCode.value = '';
+    saleItemBp.value = 0.0;
+    saleItemUsp.value = 0.0;
+    totalAmount.value = 0.0;
+    customerBal.value = 0.0;
   }
 }
