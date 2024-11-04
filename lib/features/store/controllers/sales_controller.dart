@@ -47,6 +47,7 @@ class CSalesController extends GetxController {
 
   final txtSaleItemQty = TextEditingController();
   final txtAmountIssued = TextEditingController();
+  final txtSalesSearch = TextEditingController();
 
   final RxInt sellItemId = 0.obs;
   final RxInt qtyAvailable = 0.obs;

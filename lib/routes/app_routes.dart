@@ -7,7 +7,7 @@ import 'package:c_ri/features/personalization/screens/profile/profile.dart';
 import 'package:c_ri/features/personalization/screens/settings/user_settings.dart';
 import 'package:c_ri/features/store/screens/home/home.dart';
 import 'package:c_ri/features/store/screens/inventory/inventory_screen.dart';
-import 'package:c_ri/features/store/screens/inventory_details/inventory_details.dart';
+import 'package:c_ri/features/store/screens/inventory/inventory_details/inventory_details.dart';
 import 'package:c_ri/features/store/screens/sales/sales_screen.dart';
 import 'package:c_ri/features/store/screens/search/search_results.dart';
 import 'package:c_ri/features/store/screens/sales/sell_item_screen/sell_item_screen.dart';

@@ -1,6 +1,7 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
+import 'package:c_ri/features/store/controllers/sales_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -16,6 +17,8 @@ class SalesScreen1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final searchController = Get.put(CSearchBarController());
+
+    final salesController = Get.put(CSalesController());
 
     return DefaultTabController(
       length: 2,
@@ -68,6 +71,7 @@ class SalesScreen1 extends StatelessWidget {
                             boxColor: searchController.showSearchField.value
                                 ? CColors.white
                                 : Colors.transparent,
+                            controller: salesController.txtSalesSearch,
                           ),
                           backIconAction: () {
                             // Navigator.pop(context, true);

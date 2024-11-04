@@ -11,10 +11,12 @@ class CAnimatedSearchBar extends StatelessWidget {
     super.key,
     required this.hintTxt,
     this.boxColor,
+    required this.controller,
   });
 
   final String hintTxt;
   final Color? boxColor;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class CAnimatedSearchBar extends StatelessWidget {
               ? CExpandedSearchField(
                   hintTxt: hintTxt,
                   txtColor: CColors.rBrown,
-                  controller: searchController.txtSearchField,
+                  controller: controller,
                 )
               : Material(
                   type: MaterialType.transparency,

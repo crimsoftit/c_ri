@@ -92,6 +92,7 @@ class InventoryScreen extends StatelessWidget {
                           boxColor: searchController.showSearchField.value
                               ? CColors.white
                               : Colors.transparent,
+                          controller: searchController.txtSearchField,
                         ),
                         backIconAction: () {
                           // Navigator.pop(context, true);
