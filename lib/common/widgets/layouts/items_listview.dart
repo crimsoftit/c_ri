@@ -1,5 +1,8 @@
+import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/sales_controller.dart';
+import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
+import 'package:c_ri/features/store/screens/search/widgets/no_results_screen.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,15 +20,32 @@ class CItemsListView extends StatelessWidget {
     final invController = Get.put(CInventoryController());
     final salesController = Get.put(CSalesController());
 
+    final searchController = Get.put(CSearchBarController());
+
     return Obx(
       () {
+        // run loader --
+        if (invController.isLoading.value) {
+          return const CVerticalProductShimmer(
+            itemCount: 7,
+          );
+        }
+
+        invController.fetchInventoryItems();
+
+        if (searchController.txtSalesSearch.text.isNotEmpty &&
+            invController.foundInventoryItems.isEmpty &&
+            space == 'inventory') {
+          return const NoSearchResultsScreen();
+        }
+
         return ListView.builder(
           padding: const EdgeInsets.all(2.0),
           shrinkWrap: true,
           scrollDirection: Axis.vertical,
           itemCount: space == 'inventory'
-              ? invController.inventoryItems.length
-              : salesController.transactions.length,
+              ? invController.foundInventoryItems.length
+              : salesController.foundTxns.length,
           itemBuilder: (context, index) {
             return Card(
               color: CColors.white,
@@ -47,8 +67,8 @@ class CItemsListView extends StatelessWidget {
                 ),
                 title: Text(
                   space == 'inventory'
-                      ? invController.inventoryItems[index].name
-                      : salesController.transactions[index].productName,
+                      ? invController.foundInventoryItems[index].name
+                      : salesController.foundTxns[index].productName,
                   style: Theme.of(context).textTheme.labelMedium!.apply(
                         color: CColors.rBrown,
                       ),

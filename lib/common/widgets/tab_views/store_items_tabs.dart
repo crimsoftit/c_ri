@@ -1,8 +1,6 @@
 import 'package:c_ri/common/widgets/layouts/items_listview.dart';
-import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class CStoreItemsTabs extends StatelessWidget {
   const CStoreItemsTabs({
@@ -15,7 +13,7 @@ class CStoreItemsTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final invController = Get.put(CInventoryController());
+    //final invController = Get.put(CInventoryController());
 
     return Column(
       children: [

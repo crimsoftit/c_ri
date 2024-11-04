@@ -1,4 +1,5 @@
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
+import 'package:c_ri/features/store/controllers/sales_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -21,8 +22,9 @@ class CExpandedSearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final searchController = Get.put(CSearchBarController());
-
     final invController = Get.put(CInventoryController());
+    final salesController = Get.put(CSalesController());
+
     return Row(
       children: [
         Expanded(
@@ -37,6 +39,9 @@ class CExpandedSearchField extends StatelessWidget {
               onChanged: (value) {
                 if (hintTxt == 'inventory') {
                   invController.onSearchInventory(value);
+                } else if (hintTxt == 'inventory, transactions') {
+                  invController.onSearchInventory(value);
+                  salesController.onSearchTransactions(value);
                 }
               },
               onFieldSubmitted: (value) {
@@ -84,7 +89,9 @@ class CExpandedSearchField extends StatelessWidget {
               bottomRight: Radius.circular(32),
             ),
             onTap: () {
-              searchController.onCloseIconTap(hintTxt);
+              searchController.onSearchIconTap(hintTxt);
+              invController.fetchInventoryItems();
+              salesController.fetchTransactions();
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),

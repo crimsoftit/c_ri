@@ -33,7 +33,7 @@ class CSearchBarController extends GetxController {
     }
   }
 
-  onCloseIconTap(String searchSpace) {
+  onSearchIconTap(String searchSpace) {
     if (searchSpace == 'inventory') {
       txtInvSearchField.text = '';
       invShowSearchField.value = !invShowSearchField.value;

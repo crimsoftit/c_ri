@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
+import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/models/sold_items_model.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
@@ -57,7 +58,10 @@ class CSalesController extends GetxController {
   final RxDouble totalAmount = 0.0.obs;
   final RxDouble customerBal = 0.0.obs;
 
+  final RxList<CSoldItemsModel> foundTxns = <CSoldItemsModel>[].obs;
+
   final userController = Get.put(CUserController());
+  final searchController = Get.put(CSearchBarController());
 
   final txnsFormKey = GlobalKey<FormState>();
 
@@ -133,6 +137,8 @@ class CSalesController extends GetxController {
 
       // assign txns to soldItemsList
       transactions.assignAll(txns);
+
+      foundTxns.value = transactions;
 
       // stop loader
       isLoading.value = false;
@@ -217,6 +223,16 @@ class CSalesController extends GetxController {
         message: e.toString(),
       );
     }
+  }
+
+  onSearchTransactions(String value) {
+    // if (searchController.salesShowSearchField.value && searchController.txtSalesSearch.text == '') {
+
+    // }
+    foundTxns.value = transactions
+        .where((txn) =>
+            txn.productName.toLowerCase().contains(value.toLowerCase()))
+        .toList();
   }
 
   /// -- when search result item is selected --

@@ -1,4 +1,6 @@
 import 'package:c_ri/common/widgets/search_bar/expanded_search_field.dart';
+import 'package:c_ri/features/store/controllers/inv_controller.dart';
+import 'package:c_ri/features/store/controllers/sales_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -21,8 +23,8 @@ class CAnimatedSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final searchController = Get.put(CSearchBarController());
-
-    //final invController = Get.put(CInventoryController());
+    final salesController = Get.put(CSalesController());
+    final invController = Get.put(CInventoryController());
 
     return Obx(
       () {
@@ -67,7 +69,10 @@ class CAnimatedSearchBar extends StatelessWidget {
                           bottomRight: Radius.circular(32),
                         ),
                         onTap: () {
-                          searchController.onCloseIconTap(hintTxt);
+                          searchController.onSearchIconTap(hintTxt);
+                          searchController.onSearchIconTap(hintTxt);
+                          invController.fetchInventoryItems();
+                          salesController.fetchTransactions();
                         },
                         child: const Icon(
                           Iconsax.search_favorite,
@@ -92,10 +97,12 @@ class CAnimatedSearchBar extends StatelessWidget {
                           bottomRight: Radius.circular(32),
                         ),
                         onTap: () {
-                          searchController.onCloseIconTap(hintTxt);
+                          searchController.onSearchIconTap(hintTxt);
+                          invController.fetchInventoryItems();
+                          salesController.fetchTransactions();
                         },
                         child: const Icon(
-                          Iconsax.search_favorite,
+                          Iconsax.search_normal,
                           color: CColors.white,
                           size: CSizes.iconMd,
                         ),

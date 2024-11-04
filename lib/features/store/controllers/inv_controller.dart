@@ -61,6 +61,7 @@ class CInventoryController extends GetxController {
 
       // assign inventory items
       inventoryItems.assignAll(fetchedItems);
+      foundInventoryItems.value = inventoryItems;
 
       // stop loader
       isLoading.value = false;
@@ -155,7 +156,7 @@ class CInventoryController extends GetxController {
   }
 
   onSearchInventory(String value) {
-    //fetchInventoryItems();
+    fetchInventoryItems();
 
     foundInventoryItems.value = inventoryItems
         .where((element) =>

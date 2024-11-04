@@ -7,6 +7,7 @@ import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/inv_dialog.dart';
+import 'package:c_ri/features/store/screens/search/widgets/no_results_screen.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -121,26 +122,7 @@ class InventoryScreen extends StatelessWidget {
 
                 if (searchController.txtInvSearchField.text.isNotEmpty &&
                     invController.foundInventoryItems.isEmpty) {
-                  return Center(
-                    child: Column(
-                      children: [
-                        const Icon(
-                          Icons.search_off_outlined,
-                          size: CSizes.iconLg * 3,
-                          color: CColors.rBrown,
-                        ),
-                        const SizedBox(
-                          height: CSizes.spaceBtnSections,
-                        ),
-                        Text(
-                          'search results not found!',
-                          style: Theme.of(context).textTheme.labelLarge!.apply(
-                              //fontWeightDelta: 1,
-                              ),
-                        ),
-                      ],
-                    ),
-                  );
+                  return const NoSearchResultsScreen();
                 }
 
                 // -- no data widget --
