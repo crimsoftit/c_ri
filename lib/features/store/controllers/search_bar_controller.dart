@@ -7,26 +7,41 @@ class CSearchBarController extends GetxController {
   }
 
   /// -- variables --
-  RxBool showSearchField = false.obs;
+  RxBool invShowSearchField = false.obs;
+  RxBool salesShowSearchField = false.obs;
 
-  final txtSearchField = TextEditingController();
+  final txtInvSearchField = TextEditingController();
+  final txtSalesSearch = TextEditingController();
   final txtTypeAheadFieldController = TextEditingController();
 
   //final invController = Get.put(CInventoryController());
 
   @override
   void onInit() {
-    showSearchField.value = false;
-    //invController.fetchInventoryItems();
+    invShowSearchField.value = false;
+    salesShowSearchField.value = false;
+    txtInvSearchField.text = '';
+    txtSalesSearch.text = '';
     super.onInit();
   }
 
-  onSearchBtnPressed() {
-    showSearchField.value = !showSearchField.value;
+  onSearchBtnPressed(String searchSpace) {
+    if (searchSpace == 'inventory') {
+      invShowSearchField.value = !invShowSearchField.value;
+    } else if (searchSpace == 'inventory, transactions') {
+      salesShowSearchField.value = !salesShowSearchField.value;
+    }
   }
 
-  onCloseIconTap() {
-    txtSearchField.text = '';
-    showSearchField.value = !showSearchField.value;
+  onCloseIconTap(String searchSpace) {
+    if (searchSpace == 'inventory') {
+      txtInvSearchField.text = '';
+      invShowSearchField.value = !invShowSearchField.value;
+    } else if (searchSpace == 'inventory, transactions') {
+      txtSalesSearch.text = '';
+      salesShowSearchField.value = !salesShowSearchField.value;
+    }
+
+    //invShowSearchField.value = !invShowSearchField.value;
   }
 }

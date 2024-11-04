@@ -84,7 +84,7 @@ class CExpandedSearchField extends StatelessWidget {
               bottomRight: Radius.circular(32),
             ),
             onTap: () {
-              searchController.onCloseIconTap();
+              searchController.onCloseIconTap(hintTxt);
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),

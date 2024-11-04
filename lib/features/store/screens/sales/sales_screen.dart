@@ -1,8 +1,6 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
-import 'package:c_ri/features/store/controllers/inv_controller.dart';
-import 'package:c_ri/features/store/controllers/sales_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -16,9 +14,6 @@ class SalesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final invController = Get.put(CInventoryController());
-    final salesController = Get.put(CSalesController());
-
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     final searchController = Get.put(CSearchBarController());
@@ -36,7 +31,8 @@ class SalesScreen extends StatelessWidget {
                   Obx(
                     () {
                       return CAppBar(
-                        leadingWidget: searchController.showSearchField.value
+                        leadingWidget: searchController
+                                .salesShowSearchField.value
                             ? null
                             : Padding(
                                 padding:
@@ -70,10 +66,10 @@ class SalesScreen extends StatelessWidget {
                             isDarkTheme ? CColors.white : CColors.rBrown,
                         title: CAnimatedSearchBar(
                           hintTxt: 'inventory, transactions',
-                          boxColor: searchController.showSearchField.value
+                          boxColor: searchController.salesShowSearchField.value
                               ? CColors.white
                               : Colors.transparent,
-                          controller: salesController.txtSalesSearch,
+                          controller: searchController.txtSalesSearch,
                         ),
                         backIconAction: () {
                           // Navigator.pop(context, true);

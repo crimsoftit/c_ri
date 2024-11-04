@@ -212,7 +212,7 @@ class CInventoryController extends GetxController {
       // -- refresh inventory list
       fetchInventoryItems();
 
-      searchController.txtSearchField.text = '';
+      searchController.txtInvSearchField.text = '';
 
       // -- stop loader
       isLoading.value = false;

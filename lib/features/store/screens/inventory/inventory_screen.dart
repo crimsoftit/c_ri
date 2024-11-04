@@ -42,7 +42,7 @@ class InventoryScreen extends StatelessWidget {
                   Obx(
                     () {
                       return CAppBar(
-                        leadingWidget: searchController.showSearchField.value
+                        leadingWidget: searchController.invShowSearchField.value
                             ? null
                             : Padding(
                                 padding:
@@ -89,10 +89,10 @@ class InventoryScreen extends StatelessWidget {
                             isDarkTheme ? CColors.white : CColors.rBrown,
                         title: CAnimatedSearchBar(
                           hintTxt: 'inventory',
-                          boxColor: searchController.showSearchField.value
+                          boxColor: searchController.invShowSearchField.value
                               ? CColors.white
                               : Colors.transparent,
-                          controller: searchController.txtSearchField,
+                          controller: searchController.txtInvSearchField,
                         ),
                         backIconAction: () {
                           // Navigator.pop(context, true);
@@ -119,7 +119,7 @@ class InventoryScreen extends StatelessWidget {
 
                 invController.fetchInventoryItems();
 
-                if (searchController.txtSearchField.text.isNotEmpty &&
+                if (searchController.txtInvSearchField.text.isNotEmpty &&
                     invController.foundInventoryItems.isEmpty) {
                   return Center(
                     child: Column(
@@ -159,14 +159,16 @@ class InventoryScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(2.0),
                     shrinkWrap: true,
                     scrollDirection: Axis.vertical,
-                    itemCount: searchController.txtSearchField.text.isNotEmpty
-                        ? invController.foundInventoryItems.length
-                        : (invController.inventoryItems.isNotEmpty)
-                            ? invController.inventoryItems.length
-                            : 0,
+                    itemCount:
+                        searchController.txtInvSearchField.text.isNotEmpty
+                            ? invController.foundInventoryItems.length
+                            : (invController.inventoryItems.isNotEmpty)
+                                ? invController.inventoryItems.length
+                                : 0,
                     itemBuilder: (context, index) {
                       return Dismissible(
-                        key: Key(searchController.txtSearchField.text.isNotEmpty
+                        key: Key(searchController
+                                .txtInvSearchField.text.isNotEmpty
                             ? invController.foundInventoryItems[index].productId
                                 .toString()
                             : invController.inventoryItems[index].productId
@@ -174,7 +176,7 @@ class InventoryScreen extends StatelessWidget {
                         onDismissed: (direction) {
                           // -- confirm before deleting --
                           invController.deleteInventoryWarningPopup(
-                              searchController.txtSearchField.text.isNotEmpty
+                              searchController.txtInvSearchField.text.isNotEmpty
                                   ? invController.foundInventoryItems[index]
                                   : invController.inventoryItems[index]);
                         },
@@ -191,7 +193,7 @@ class InventoryScreen extends StatelessWidget {
                             titleAlignment: ListTileTitleAlignment.center,
                             //minLeadingWidth: 30.0,
                             title: Text(
-                              searchController.txtSearchField.text.isNotEmpty
+                              searchController.txtInvSearchField.text.isNotEmpty
                                   ? invController
                                       .foundInventoryItems[index].name
                                   : '${invController.inventoryItems[index].name} (#${invController.inventoryItems[index].productId})',
@@ -206,7 +208,8 @@ class InventoryScreen extends StatelessWidget {
                               backgroundColor: Colors.brown[300],
                               radius: 16,
                               child: Text(
-                                searchController.txtSearchField.text.isNotEmpty
+                                searchController
+                                        .txtInvSearchField.text.isNotEmpty
                                     ? invController
                                         .foundInventoryItems[index].name[0]
                                     : invController
@@ -226,7 +229,7 @@ class InventoryScreen extends StatelessWidget {
                               mainAxisSize: MainAxisSize.max,
                               children: [
                                 Text(
-                                  "modified: ${searchController.txtSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].date : invController.inventoryItems[index].date}",
+                                  "modified: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].date : invController.inventoryItems[index].date}",
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelSmall!
@@ -239,7 +242,7 @@ class InventoryScreen extends StatelessWidget {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Text(
-                                      "qty: ${searchController.txtSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].quantity : invController.inventoryItems[index].quantity}",
+                                      "qty: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].quantity : invController.inventoryItems[index].quantity}",
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelSmall!
@@ -250,7 +253,7 @@ class InventoryScreen extends StatelessWidget {
                                           ),
                                     ),
                                     Text(
-                                      " BP: Ksh.${searchController.txtSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].buyingPrice : invController.inventoryItems[index].buyingPrice}",
+                                      " BP: Ksh.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].buyingPrice : invController.inventoryItems[index].buyingPrice}",
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelSmall!
@@ -268,7 +271,7 @@ class InventoryScreen extends StatelessWidget {
                               Get.toNamed(
                                 '/inventory/item_details/',
                                 arguments: searchController
-                                        .txtSearchField.text.isNotEmpty
+                                        .txtInvSearchField.text.isNotEmpty
                                     ? invController
                                         .foundInventoryItems[index].productId
                                     : invController
@@ -287,7 +290,7 @@ class InventoryScreen extends StatelessWidget {
 
                                 invController.deleteInventoryWarningPopup(
                                     searchController
-                                            .txtSearchField.text.isNotEmpty
+                                            .txtInvSearchField.text.isNotEmpty
                                         ? invController
                                             .foundInventoryItems[index]
                                         : invController.inventoryItems[index]);

@@ -1,7 +1,6 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
-import 'package:c_ri/features/store/controllers/sales_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -18,8 +17,6 @@ class SalesScreen1 extends StatelessWidget {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final searchController = Get.put(CSearchBarController());
 
-    final salesController = Get.put(CSalesController());
-
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -34,44 +31,46 @@ class SalesScreen1 extends StatelessWidget {
                     Obx(
                       () {
                         return CAppBar(
-                          leadingWidget: searchController.showSearchField.value
-                              ? null
-                              : Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 8.0, left: 10.0),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'sales',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium!
-                                            .apply(
-                                              color: CColors.white,
+                          leadingWidget:
+                              searchController.salesShowSearchField.value
+                                  ? null
+                                  : Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8.0, left: 10.0),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'sales',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium!
+                                                .apply(
+                                                  color: CColors.white,
+                                                ),
+                                          ),
+                                          const SizedBox(
+                                            width: CSizes.spaceBtnSections,
+                                          ),
+                                          IconButton(
+                                            onPressed: () {},
+                                            icon: const Icon(
+                                              Iconsax.scan,
                                             ),
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(
-                                        width: CSizes.spaceBtnSections,
-                                      ),
-                                      IconButton(
-                                        onPressed: () {},
-                                        icon: const Icon(
-                                          Iconsax.scan,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                    ),
                           horizontalPadding: 1.0,
                           showBackArrow: false,
                           backIconColor:
                               isDarkTheme ? CColors.white : CColors.rBrown,
                           title: CAnimatedSearchBar(
                             hintTxt: 'sales',
-                            boxColor: searchController.showSearchField.value
-                                ? CColors.white
-                                : Colors.transparent,
-                            controller: salesController.txtSalesSearch,
+                            boxColor:
+                                searchController.salesShowSearchField.value
+                                    ? CColors.white
+                                    : Colors.transparent,
+                            controller: searchController.txtSalesSearch,
                           ),
                           backIconAction: () {
                             // Navigator.pop(context, true);
