@@ -10,9 +10,9 @@ class CValidator {
 
   /* ========== barcode field validation ========== */
   static String? validateBarcode(String? fieldName, String? value) {
-    if (value == null || value.isEmpty) {
+    if (value == '') {
       return '$fieldName field is required!';
-    } else if (value == '-1' || int.parse(value) == -1) {
+    } else if (value == '-1') {
       return 'invalid barcode';
     }
 
@@ -57,7 +57,7 @@ class CValidator {
     // -- regular expression for email validation --
     final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
 
-    if (!emailRegExp.hasMatch(value)) {
+    if (!emailRegExp.hasMatch(value.trim())) {
       return 'invalid e-mail address!';
     }
 

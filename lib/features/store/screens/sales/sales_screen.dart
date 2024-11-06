@@ -11,7 +11,6 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
-import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -68,10 +67,7 @@ class SalesScreen extends StatelessWidget {
                                           IconButton(
                                             onPressed: () {
                                               salesController.scanItemForSale();
-                                              CPopupSnackBar.customToast(
-                                                  message: salesController
-                                                      .sellItemScanResults
-                                                      .value);
+
                                               Get.toNamed(
                                                 '/sales/sell_item/',
                                               );
@@ -121,7 +117,8 @@ class SalesScreen extends StatelessWidget {
                   }
 
                   // run loader --
-                  if (salesController.isLoading.value) {
+                  if (salesController.isLoading.value ||
+                      invController.isLoading.value) {
                     return const CVerticalProductShimmer(
                       itemCount: 7,
                     );
@@ -130,7 +127,8 @@ class SalesScreen extends StatelessWidget {
                   salesController.fetchTransactions();
 
                   // -- no data widget --
-                  if (invController.inventoryItems.isEmpty) {
+                  if (invController.inventoryItems.isEmpty ||
+                      salesController.transactions.isEmpty) {
                     return const Center(
                       child: NoDataScreen(
                         lottieImage: CImages.noDataLottie,
@@ -152,7 +150,7 @@ class SalesScreen extends StatelessWidget {
                           child: ListTile(
                             horizontalTitleGap: 10,
                             contentPadding: const EdgeInsets.all(
-                              10.0,
+                              5.0,
                             ),
                             leading: CircleAvatar(
                               backgroundColor: Colors.brown[300],
@@ -232,13 +230,9 @@ class SalesScreen extends StatelessWidget {
           onPressed: () {
             salesController.scanItemForSale();
 
-            if (salesController.itemExists.value) {
-              Get.toNamed(
-                '/sales/sell_item/',
-              );
-            }
-            CPopupSnackBar.customToast(
-                message: salesController.sellItemScanResults.value);
+            Get.toNamed(
+              '/sales/sell_item/',
+            );
           },
           backgroundColor: Colors.brown,
           foregroundColor: Colors.white,

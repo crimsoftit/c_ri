@@ -174,18 +174,6 @@ class InventoryScreen extends StatelessWidget {
                             contentPadding: const EdgeInsets.all(10.0),
                             titleAlignment: ListTileTitleAlignment.center,
                             //minLeadingWidth: 30.0,
-                            title: Text(
-                              searchController.txtInvSearchField.text.isNotEmpty
-                                  ? invController
-                                      .foundInventoryItems[index].name
-                                  : '${invController.inventoryItems[index].name} (#${invController.inventoryItems[index].productId})',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium!
-                                  .apply(
-                                    color: CColors.rBrown,
-                                  ),
-                            ),
                             leading: CircleAvatar(
                               backgroundColor: Colors.brown[300],
                               radius: 16,
@@ -205,13 +193,62 @@ class InventoryScreen extends StatelessWidget {
                                     ),
                               ),
                             ),
+                            title: Text(
+                              searchController.txtInvSearchField.text.isNotEmpty
+                                  ? invController
+                                      .foundInventoryItems[index].name
+                                      .toUpperCase()
+                                  : '${invController.inventoryItems[index].name.toUpperCase()} (#${invController.inventoryItems[index].productId})',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .apply(
+                                    color: CColors.rBrown,
+                                  ),
+                            ),
+
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               mainAxisSize: MainAxisSize.max,
                               children: [
+                                const SizedBox(
+                                  height: CSizes.spaceBtnInputFields / 4,
+                                ),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        "code: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].pCode : invController.inventoryItems[index].pCode}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall!
+                                            .apply(
+                                              color: CColors.rBrown
+                                                  .withOpacity(0.6),
+                                              fontStyle: FontStyle.italic,
+                                            ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        "stock price: Ksh.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].buyingPrice : invController.inventoryItems[index].buyingPrice}",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelSmall!
+                                            .apply(
+                                              color: CColors.rBrown
+                                                  .withOpacity(0.6),
+                                              fontStyle: FontStyle.italic,
+                                            ),
+                                      ),
+                                    ),
+                                    // Text(
+                                  ],
+                                ),
                                 Text(
-                                  "modified: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].date : invController.inventoryItems[index].date}",
+                                  "USP: Ksh.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].unitSellingPrice : invController.inventoryItems[index].unitSellingPrice}  added by: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].userEmail : invController.inventoryItems[index].userEmail}",
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelSmall!
@@ -220,32 +257,15 @@ class InventoryScreen extends StatelessWidget {
                                         //fontStyle: FontStyle.italic,
                                       ),
                                 ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      "qty: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].quantity : invController.inventoryItems[index].quantity}",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelSmall!
-                                          .apply(
-                                            color:
-                                                CColors.rBrown.withOpacity(0.6),
-                                            fontStyle: FontStyle.italic,
-                                          ),
-                                    ),
-                                    Text(
-                                      " BP: Ksh.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].buyingPrice : invController.inventoryItems[index].buyingPrice}",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelSmall!
-                                          .apply(
-                                            color:
-                                                CColors.rBrown.withOpacity(0.6),
-                                            fontStyle: FontStyle.italic,
-                                          ),
-                                    ),
-                                  ],
+                                Text(
+                                  "qty: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].quantity : invController.inventoryItems[index].quantity}    modified: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].date : invController.inventoryItems[index].date}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall!
+                                      .apply(
+                                        color: CColors.rBrown.withOpacity(0.7),
+                                        //fontStyle: FontStyle.italic,
+                                      ),
                                 ),
                               ],
                             ),

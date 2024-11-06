@@ -70,12 +70,11 @@ class CAnimatedSearchBar extends StatelessWidget {
                         ),
                         onTap: () {
                           searchController.onSearchIconTap(hintTxt);
-                          searchController.onSearchIconTap(hintTxt);
                           invController.fetchInventoryItems();
                           salesController.fetchTransactions();
                         },
                         child: const Icon(
-                          Iconsax.search_favorite,
+                          Iconsax.search_normal,
                           color: CColors.white,
                           size: CSizes.iconMd,
                         ),

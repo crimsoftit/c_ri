@@ -9,24 +9,29 @@ class NoSearchResultsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          const Icon(
-            Icons.search_off_outlined,
-            size: CSizes.iconLg * 3,
-            color: CColors.rBrown,
-          ),
-          const SizedBox(
-            height: CSizes.spaceBtnSections,
-          ),
-          Text(
-            'search results not found!',
-            style: Theme.of(context).textTheme.labelLarge!.apply(
-                //fontWeightDelta: 1,
-                ),
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: CSizes.spaceBtnSections * 2,
+      ),
+      child: Center(
+        child: Column(
+          children: [
+            const Icon(
+              Icons.search_off_outlined,
+              size: CSizes.iconLg * 3,
+              color: CColors.rBrown,
+            ),
+            const SizedBox(
+              height: CSizes.spaceBtnSections,
+            ),
+            Text(
+              'search results not found!',
+              style: Theme.of(context).textTheme.labelLarge!.apply(
+                  //fontWeightDelta: 1,
+                  ),
+            ),
+          ],
+        ),
       ),
     );
   }

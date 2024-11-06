@@ -61,7 +61,7 @@ class CInventoryController extends GetxController {
 
       // assign inventory items
       inventoryItems.assignAll(fetchedItems);
-      foundInventoryItems.value = inventoryItems;
+      //foundInventoryItems.value = inventoryItems;
 
       // stop loader
       isLoading.value = false;
@@ -240,7 +240,7 @@ class CInventoryController extends GetxController {
       inventoryItem.userName = userController.user.value.fullName;
 
       inventoryItem.name = txtName.text;
-      inventoryItem.pCode = txtCode.text;
+      inventoryItem.pCode = txtCode.text.toString();
       inventoryItem.quantity = int.parse(txtQty.text);
       inventoryItem.buyingPrice = double.parse(txtBP.text);
       inventoryItem.unitSellingPrice = double.parse(txtUnitSP.text);
