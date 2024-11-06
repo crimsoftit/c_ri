@@ -12,8 +12,6 @@ import 'package:iconsax/iconsax.dart';
 class CSellItemScreen extends StatelessWidget {
   const CSellItemScreen({super.key});
 
-  //var sellItemId = Get.arguments;
-
   @override
   Widget build(BuildContext context) {
     final salesController = Get.put(CSalesController());
@@ -168,14 +166,30 @@ class CSellItemScreen extends StatelessWidget {
                           TextFormField(
                             autofocus: true,
                             controller: salesController.txtSaleItemQty,
-                            style: const TextStyle(
+                            style: TextStyle(
                               height: 0.7,
                               fontWeight: FontWeight.normal,
+                              color: salesController
+                                          .stockUnavailableErrorMsg.value ==
+                                      'insufficient stock!!'
+                                  ? Colors.red
+                                  : CColors.rBrown,
                             ),
                             decoration: InputDecoration(
-                              prefixIcon: const Icon(
+                              prefixIcon: Icon(
                                 Iconsax.quote_up_square,
-                                color: CColors.grey,
+                                color: salesController
+                                            .stockUnavailableErrorMsg.value ==
+                                        'insufficient stock!!'
+                                    ? Colors.red
+                                    : CColors.grey,
+                              ),
+                              labelStyle: TextStyle(
+                                color: salesController
+                                            .stockUnavailableErrorMsg.value ==
+                                        'insufficient stock!!'
+                                    ? Colors.red
+                                    : CColors.rBrown,
                               ),
                               labelText:
                                   'qty/no.of units (${salesController.qtyAvailable.value} in stock)',
@@ -196,16 +210,57 @@ class CSellItemScreen extends StatelessWidget {
                                   salesController.totalAmount.value);
                             },
                           ),
+
+                          /// -- stock insufficient error message
+
+                          Visibility(
+                            visible: salesController
+                                        .stockUnavailableErrorMsg.value ==
+                                    'insufficient stock!!'
+                                ? true
+                                : false,
+                            child: Text(
+                              salesController.stockUnavailableErrorMsg.value,
+                              style:
+                                  Theme.of(context).textTheme.labelSmall!.apply(
+                                        color: Colors.red,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                            ),
+                          ),
+
                           const SizedBox(
                             height: CSizes.spaceBtnInputFields,
                           ),
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () {
-                                salesController.saveTransaction();
-                              },
-                              child: const Text('Confirm sale'),
+                              onPressed: salesController
+                                          .stockUnavailableErrorMsg.value ==
+                                      'insufficient stock!!'
+                                  ? null
+                                  : () {
+                                      salesController.saveTransaction();
+                                    },
+                              child: Text(
+                                salesController
+                                            .stockUnavailableErrorMsg.value ==
+                                        'insufficient stock!!'
+                                    ? 'insufficient stock!!'
+                                    : 'confirm sale',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium!
+                                    .apply(
+                                      fontWeightDelta: 1,
+                                      color: salesController
+                                                  .stockUnavailableErrorMsg
+                                                  .value ==
+                                              'insufficient stock!!'
+                                          ? Colors.red
+                                          : CColors.white,
+                                    ),
+                              ),
                             ),
                           ),
                           Text(

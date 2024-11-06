@@ -24,6 +24,7 @@ class CSalesController extends GetxController {
   void onInit() {
     isLoading.value = false;
     fetchTransactions();
+
     resetSales();
     if (selectedPaymentMethod.value == 'Cash') {
       showAmountIssuedField.value = true;
@@ -41,6 +42,8 @@ class CSalesController extends GetxController {
 
   final RxString sellItemScanResults = ''.obs;
   final RxString selectedPaymentMethod = 'Cash'.obs;
+
+  final RxString stockUnavailableErrorMsg = ''.obs;
 
   final RxBool itemExists = false.obs;
   final RxBool showAmountIssuedField = false.obs;
@@ -165,6 +168,13 @@ class CSalesController extends GetxController {
 
       // -- set inventory item details to fields --
       fetchForSaleItemByCode(sellItemScanResults.value);
+      if (itemExists.value) {
+        Get.toNamed(
+          '/sales/sell_item/',
+        );
+      } else {
+        CPopupSnackBar.customToast(message: 'item not in stock!!!');
+      }
     } on PlatformException catch (platformException) {
       if (platformException.code == BarcodeScanner.cameraAccessDenied) {
         CPopupSnackBar.warningSnackBar(
@@ -250,17 +260,31 @@ class CSalesController extends GetxController {
   computeTotals(String value, double usp) {
     if (value.isNotEmpty) {
       totalAmount.value = int.parse(value) * usp;
+
+      if (int.parse(value) > qtyAvailable.value) {
+        stockUnavailableErrorMsg.value = 'insufficient stock!!';
+      } else {
+        stockUnavailableErrorMsg.value = '';
+      }
     } else {
       totalAmount.value = 0.0;
     }
   }
 
-  /// -- calculate totals --
+  /// -- calculate customer balance --
   computeCustomerBal(double amountIsued, double totals) {
     if (txtAmountIssued.text.isNotEmpty && txtSaleItemQty.text.isNotEmpty) {
       customerBal.value = amountIsued - totals;
     } else {
       customerBal.value = 0.0;
+    }
+  }
+
+  /// -- check if stock is sufficient
+  checkStockStatus(int stockQuantity, String value) {
+    if (stockQuantity < int.parse(value)) {
+    } else {
+      stockUnavailableErrorMsg.value = '';
     }
   }
 

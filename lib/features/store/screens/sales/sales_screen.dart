@@ -42,43 +42,40 @@ class SalesScreen extends StatelessWidget {
                       () {
                         invController.fetchInventoryItems();
                         return CAppBar(
-                          leadingWidget:
-                              searchController.salesShowSearchField.value
-                                  ? null
-                                  : Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 8.0, left: 10.0),
-                                      child: Row(
-                                        children: [
-                                          Text(
-                                            'transactions',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge!
-                                                .apply(
-                                                  color: CColors.white,
-                                                ),
-                                          ),
-                                          const SizedBox(
-                                            width: CSizes.spaceBtnSections,
-                                          ),
-
-                                          /// -- scan item for sale --
-                                          IconButton(
-                                            onPressed: () {
-                                              salesController.scanItemForSale();
-
-                                              Get.toNamed(
-                                                '/sales/sell_item/',
-                                              );
-                                            },
-                                            icon: const Icon(
-                                              Iconsax.scan,
+                          leadingWidget: searchController
+                                  .salesShowSearchField.value
+                              ? null
+                              : Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 8.0, left: 10.0),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'transactions',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge!
+                                            .apply(
+                                              color: CColors.white,
                                             ),
-                                          ),
-                                        ],
                                       ),
-                                    ),
+                                      const SizedBox(
+                                        width: CSizes.spaceBtnSections,
+                                      ),
+
+                                      /// -- scan item for sale --
+                                      IconButton(
+                                        onPressed: () {
+                                          invController.fetchInventoryItems();
+                                          salesController.scanItemForSale();
+                                        },
+                                        icon: const Icon(
+                                          Iconsax.scan,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                           horizontalPadding: 1.0,
                           showBackArrow: false,
                           backIconColor:
@@ -110,6 +107,7 @@ class SalesScreen extends StatelessWidget {
               Obx(
                 () {
                   if (searchController.salesShowSearchField.value) {
+                    //invController.fetchInventoryItems();
                     return const CStoreItemsTabs(
                       tab1Title: 'inventory',
                       tab2Title: 'transactions',
@@ -228,11 +226,8 @@ class SalesScreen extends StatelessWidget {
         /// -- floating action button to scan item for sale --
         floatingActionButton: FloatingActionButton(
           onPressed: () {
+            invController.fetchInventoryItems();
             salesController.scanItemForSale();
-
-            Get.toNamed(
-              '/sales/sell_item/',
-            );
           },
           backgroundColor: Colors.brown,
           foregroundColor: Colors.white,
