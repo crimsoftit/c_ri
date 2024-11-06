@@ -48,6 +48,9 @@ class CExpandedSearchField extends StatelessWidget {
                 //searchController.onSearchBtnPressed();
                 if (hintTxt == 'inventory') {
                   invController.onSearchInventory(value);
+                } else if (hintTxt == 'inventory, transactions') {
+                  invController.onSearchInventory(value);
+                  salesController.onSearchTransactions(value);
                 }
               },
               style: TextStyle(

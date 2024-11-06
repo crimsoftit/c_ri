@@ -31,7 +31,7 @@ class CItemsListView extends StatelessWidget {
           );
         }
 
-        invController.fetchInventoryItems();
+        //invController.fetchInventoryItems();
 
         if (searchController.txtSalesSearch.text.isNotEmpty &&
             invController.foundInventoryItems.isEmpty &&

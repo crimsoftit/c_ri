@@ -226,9 +226,6 @@ class CSalesController extends GetxController {
   }
 
   onSearchTransactions(String value) {
-    // if (searchController.salesShowSearchField.value && searchController.txtSalesSearch.text == '') {
-
-    // }
     foundTxns.value = transactions
         .where((txn) =>
             txn.productName.toLowerCase().contains(value.toLowerCase()))

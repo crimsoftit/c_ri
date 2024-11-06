@@ -156,7 +156,7 @@ class CInventoryController extends GetxController {
   }
 
   onSearchInventory(String value) {
-    fetchInventoryItems();
+    //fetchInventoryItems();
 
     foundInventoryItems.value = inventoryItems
         .where((element) =>

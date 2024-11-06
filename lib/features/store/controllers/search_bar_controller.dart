@@ -25,13 +25,13 @@ class CSearchBarController extends GetxController {
     super.onInit();
   }
 
-  onSearchBtnPressed(String searchSpace) {
-    if (searchSpace == 'inventory') {
-      invShowSearchField.value = !invShowSearchField.value;
-    } else if (searchSpace == 'inventory, transactions') {
-      salesShowSearchField.value = !salesShowSearchField.value;
-    }
-  }
+  // onSearchBtnPressed(String searchSpace) {
+  //   if (searchSpace == 'inventory') {
+  //     invShowSearchField.value = !invShowSearchField.value;
+  //   } else if (searchSpace == 'inventory, transactions') {
+  //     salesShowSearchField.value = !salesShowSearchField.value;
+  //   }
+  // }
 
   onSearchIconTap(String searchSpace) {
     if (searchSpace == 'inventory') {
