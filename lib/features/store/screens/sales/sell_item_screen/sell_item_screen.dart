@@ -4,6 +4,8 @@ import 'package:c_ri/features/store/controllers/sales_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/popups/snackbars.dart';
+import 'package:c_ri/utils/validators/validation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -11,6 +13,8 @@ import 'package:iconsax/iconsax.dart';
 
 class CSellItemScreen extends StatelessWidget {
   const CSellItemScreen({super.key});
+
+  update stock qty upon sale
 
   @override
   Widget build(BuildContext context) {
@@ -79,13 +83,17 @@ class CSellItemScreen extends StatelessWidget {
                             showTrailingIcon: false,
                             onTap: () {},
                           ),
-                          CProfileMenu(
-                            title: 'customer balance',
-                            value:
-                                'Ksh. ${(salesController.customerBal.value)}',
-                            verticalPadding: 15.0,
-                            showTrailingIcon: false,
-                            onTap: () {},
+                          Visibility(
+                            visible:
+                                salesController.showAmountIssuedField.value,
+                            child: CProfileMenu(
+                              title: 'customer balance',
+                              value:
+                                  'Ksh. ${(salesController.customerBal.value)}',
+                              verticalPadding: 15.0,
+                              showTrailingIcon: false,
+                              onTap: () {},
+                            ),
                           ),
                           CProfileMenu(
                             title: 'pay via:',
@@ -131,33 +139,67 @@ class CSellItemScreen extends StatelessWidget {
                           Visibility(
                             visible:
                                 salesController.showAmountIssuedField.value,
-                            child: TextFormField(
-                              autofocus: false,
-                              controller: salesController.txtAmountIssued,
-                              style: const TextStyle(
-                                height: 0.7,
-                                fontWeight: FontWeight.normal,
-                              ),
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                decimal: true,
-                                signed: false,
-                              ),
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              decoration: const InputDecoration(
-                                prefixIcon: Icon(
-                                  Iconsax.quote_up_square,
-                                  color: CColors.grey,
+                            child: Column(
+                              children: [
+                                TextFormField(
+                                  autofocus: false,
+                                  controller: salesController.txtAmountIssued,
+                                  style: TextStyle(
+                                    height: 0.7,
+                                    fontWeight: FontWeight.normal,
+                                    color: salesController
+                                                .customerBalErrorMsg.value ==
+                                            'the amount issued is not enough!!'
+                                        ? Colors.red
+                                        : CColors.rBrown,
+                                  ),
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                    signed: false,
+                                  ),
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
+                                  decoration: InputDecoration(
+                                    prefixIcon: Icon(
+                                      Iconsax.quote_up_square,
+                                      color: salesController
+                                                  .customerBalErrorMsg.value ==
+                                              'the amount issued is not enough!!'
+                                          ? Colors.red
+                                          : CColors.grey,
+                                    ),
+                                    labelText: 'amount issued by customer',
+                                  ),
+                                  // validator: (value) {
+                                  //   if (salesController.customerBal.value <
+                                  //       salesController.totalAmount.value) {
+                                  //     return 'the amount issued is not enough';
+                                  //   }
+                                  // },
+                                  validator: (value) =>
+                                      CValidator.validateCustomerBal(
+                                          'amount issued',
+                                          value,
+                                          salesController.totalAmount.value),
+                                  onChanged: (value) {
+                                    salesController.computeCustomerBal(
+                                        double.parse(value),
+                                        salesController.totalAmount.value);
+                                  },
                                 ),
-                                labelText: 'amount issued by customer',
-                              ),
-                              onChanged: (value) {
-                                salesController.computeCustomerBal(
-                                    double.parse(value),
-                                    salesController.totalAmount.value);
-                              },
+                                Text(
+                                  salesController.customerBalErrorMsg.value,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall!
+                                      .apply(
+                                        color: Colors.red,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(
@@ -184,7 +226,7 @@ class CSellItemScreen extends StatelessWidget {
                                     ? Colors.red
                                     : CColors.grey,
                               ),
-                              labelStyle: TextStyle(
+                              hintStyle: TextStyle(
                                 color: salesController
                                             .stockUnavailableErrorMsg.value ==
                                         'insufficient stock!!'
@@ -240,7 +282,19 @@ class CSellItemScreen extends StatelessWidget {
                                       'insufficient stock!!'
                                   ? null
                                   : () {
-                                      salesController.saveTransaction();
+                                      if (salesController.customerBal.value <
+                                          0) {
+                                        salesController
+                                                .customerBalErrorMsg.value ==
+                                            'the amount issued is not enough!!';
+                                        CPopupSnackBar.errorSnackBar(
+                                          title: 'customer still owes you!!',
+                                          message:
+                                              'the amount issued is not enough',
+                                        );
+                                      } else {
+                                        salesController.processTransaction();
+                                      }
                                     },
                               child: Text(
                                 salesController

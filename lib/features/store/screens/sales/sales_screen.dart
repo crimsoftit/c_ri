@@ -175,6 +175,8 @@ class SalesScreen extends StatelessWidget {
                                     //fontSizeFactor: 1.2,
                                     //fontWeightDelta: 2,
                                   ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                             ),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,

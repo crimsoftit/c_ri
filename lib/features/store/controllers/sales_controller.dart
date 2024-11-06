@@ -44,6 +44,7 @@ class CSalesController extends GetxController {
   final RxString selectedPaymentMethod = 'Cash'.obs;
 
   final RxString stockUnavailableErrorMsg = ''.obs;
+  final RxString customerBalErrorMsg = ''.obs;
 
   final RxBool itemExists = false.obs;
   final RxBool showAmountIssuedField = false.obs;
@@ -69,48 +70,57 @@ class CSalesController extends GetxController {
   final txnsFormKey = GlobalKey<FormState>();
 
   /// -- add sale transactions data to sqflite db --
-  saveTransaction() {
+  Future processTransaction() async {
     try {
-      // Validate returns true if the form is valid, or false otherwise.
-      if (txnsFormKey.currentState!.validate()) {
-        // start loader while products are fetched
-        isLoading.value = true;
-        // -- start loader
-        CFullScreenLoader.openLoadingDialog(
-          "we're processing your info...",
-          CImages.docerAnimation,
+      if (customerBal.value < 0) {
+        customerBalErrorMsg.value = 'the amount issued is not enough!!';
+        CPopupSnackBar.errorSnackBar(
+          title: 'customer still owes you!!',
+          message: 'the amount issued is not enough',
         );
+      } else {
+        customerBalErrorMsg.value = '';
+        // Validate returns true if the form is valid, or false otherwise.
+        if (txnsFormKey.currentState!.validate()) {
+          // start loader while products are fetched
+          isLoading.value = true;
+          // -- start loader
+          CFullScreenLoader.openLoadingDialog(
+            "we're processing your info...",
+            CImages.docerAnimation,
+          );
 
-        final newTxn = CSoldItemsModel(
-          userController.user.value.id,
-          userController.user.value.email,
-          userController.user.value.fullName,
-          sellItemId.value,
-          saleItemCode.value,
-          saleItemName.value,
-          int.parse(txtSaleItemQty.text),
-          totalAmount.value,
-          selectedPaymentMethod.value,
-          DateFormat('yyyy-MM-dd - kk:mm').format(clock.now()),
-        );
+          final newTxn = CSoldItemsModel(
+            userController.user.value.id,
+            userController.user.value.email,
+            userController.user.value.fullName,
+            sellItemId.value,
+            saleItemCode.value,
+            saleItemName.value,
+            int.parse(txtSaleItemQty.text),
+            totalAmount.value,
+            selectedPaymentMethod.value,
+            DateFormat('yyyy-MM-dd - kk:mm').format(clock.now()),
+          );
 
-        // save txn data into the db
-        dbHelper.addSoldItem(newTxn);
+          // save txn data into the db
+          await dbHelper.addSoldItem(newTxn);
 
-        resetSales();
+          resetSales();
 
-        fetchTransactions();
+          fetchTransactions();
 
-        // stop loader
-        CFullScreenLoader.stopLoading();
-        isLoading.value = false;
+          // stop loader
+          CFullScreenLoader.stopLoading();
+          isLoading.value = false;
 
-        CPopupSnackBar.successSnackBar(
-          title: 'success!',
-          message: 'transaction successful!',
-        );
+          CPopupSnackBar.successSnackBar(
+            title: 'success!',
+            message: 'transaction successful!',
+          );
 
-        Get.back();
+          Get.back();
+        }
       }
     } catch (e) {
       isLoading.value = false;
@@ -174,6 +184,7 @@ class CSalesController extends GetxController {
         );
       } else {
         CPopupSnackBar.customToast(message: 'item not in stock!!!');
+        fetchTransactions();
       }
     } on PlatformException catch (platformException) {
       if (platformException.code == BarcodeScanner.cameraAccessDenied) {
@@ -261,13 +272,23 @@ class CSalesController extends GetxController {
     if (value.isNotEmpty) {
       totalAmount.value = int.parse(value) * usp;
 
-      if (int.parse(value) > qtyAvailable.value) {
-        stockUnavailableErrorMsg.value = 'insufficient stock!!';
-      } else {
-        stockUnavailableErrorMsg.value = '';
-      }
+      // if (int.parse(value) > qtyAvailable.value) {
+      //   stockUnavailableErrorMsg.value = 'insufficient stock!!';
+      // } else {
+      //   stockUnavailableErrorMsg.value = '';
+      // }
+      checkStockStatus(value);
     } else {
       totalAmount.value = 0.0;
+    }
+  }
+
+  /// -- check if stock is available for sale --
+  checkStockStatus(String value) {
+    if (int.parse(value) > qtyAvailable.value) {
+      stockUnavailableErrorMsg.value = 'insufficient stock!!';
+    } else {
+      stockUnavailableErrorMsg.value = '';
     }
   }
 
@@ -277,14 +298,6 @@ class CSalesController extends GetxController {
       customerBal.value = amountIsued - totals;
     } else {
       customerBal.value = 0.0;
-    }
-  }
-
-  /// -- check if stock is sufficient
-  checkStockStatus(int stockQuantity, String value) {
-    if (stockQuantity < int.parse(value)) {
-    } else {
-      stockUnavailableErrorMsg.value = '';
     }
   }
 

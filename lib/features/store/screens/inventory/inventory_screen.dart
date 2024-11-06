@@ -205,6 +205,8 @@ class InventoryScreen extends StatelessWidget {
                                   .apply(
                                     color: CColors.rBrown,
                                   ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
                             ),
 
                             subtitle: Column(
@@ -233,7 +235,7 @@ class InventoryScreen extends StatelessWidget {
                                     ),
                                     Expanded(
                                       child: Text(
-                                        "stock price: Ksh.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].buyingPrice : invController.inventoryItems[index].buyingPrice}",
+                                        "Bp: Ksh.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].buyingPrice : invController.inventoryItems[index].buyingPrice}",
                                         style: Theme.of(context)
                                             .textTheme
                                             .labelSmall!

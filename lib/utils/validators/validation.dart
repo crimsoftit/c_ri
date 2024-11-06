@@ -37,6 +37,16 @@ class CValidator {
     return null;
   }
 
+  /* ========== customer balance field validation ========== */
+  static String? validateCustomerBal(
+      String? fieldName, String? value, double tAmount) {
+    validateEmptyText(fieldName, value);
+    if (double.parse(value!) < tAmount) {
+      return 'customer should pay $tAmount';
+    }
+    return null;
+  }
+
   /* ========== full name field validation ========== */
   static String? validateFullName(String? fieldName, String? value) {
     if (value == null || value.isEmpty) {
