@@ -14,8 +14,6 @@ import 'package:iconsax/iconsax.dart';
 class CSellItemScreen extends StatelessWidget {
   const CSellItemScreen({super.key});
 
-  update stock qty upon sale
-
   @override
   Widget build(BuildContext context) {
     final salesController = Get.put(CSalesController());

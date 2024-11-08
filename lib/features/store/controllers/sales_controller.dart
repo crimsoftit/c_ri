@@ -31,7 +31,6 @@ class CSalesController extends GetxController {
     } else {
       showAmountIssuedField.value = false;
     }
-
     super.onInit();
   }
 
@@ -42,21 +41,22 @@ class CSalesController extends GetxController {
 
   final RxString sellItemScanResults = ''.obs;
   final RxString selectedPaymentMethod = 'Cash'.obs;
-
   final RxString stockUnavailableErrorMsg = ''.obs;
   final RxString customerBalErrorMsg = ''.obs;
 
   final RxBool itemExists = false.obs;
   final RxBool showAmountIssuedField = false.obs;
-  final isLoading = false.obs;
+  final RxBool isLoading = false.obs;
 
   final txtSaleItemQty = TextEditingController();
   final txtAmountIssued = TextEditingController();
 
   final RxInt sellItemId = 0.obs;
   final RxInt qtyAvailable = 0.obs;
+
   final RxString saleItemName = ''.obs;
   final RxString saleItemCode = ''.obs;
+
   final RxDouble saleItemBp = 0.0.obs;
   final RxDouble saleItemUsp = 0.0.obs;
   final RxDouble totalAmount = 0.0.obs;
@@ -106,6 +106,10 @@ class CSalesController extends GetxController {
           // save txn data into the db
           await dbHelper.addSoldItem(newTxn);
 
+          // set the updated stock count
+          qtyAvailable.value -= int.parse(txtSaleItemQty.text);
+          await dbHelper.updateStockCount(qtyAvailable.value, sellItemId.value);
+
           resetSales();
 
           fetchTransactions();
@@ -136,6 +140,27 @@ class CSalesController extends GetxController {
       CFullScreenLoader.stopLoading();
     }
   }
+
+  /// -- update stock count upon successful sale --
+  // Future updateStockCount(int newStockCount, int pId) async {
+  //   try {
+  //     // -- start loader
+  //     isLoading.value = true;
+
+  //     // -- update entry --
+  //     await dbHelper.updateStockCount(newStockCount, pId);
+
+  //     // -- stop loader
+  //     isLoading.value = false;
+  //   } catch (e) {
+  //     // -- stop loader
+  //     isLoading.value = false;
+  //     CPopupSnackBar.errorSnackBar(
+  //       title: 'Oh Snap!',
+  //       message: 'error updating inventory count: $e',
+  //     );
+  //   }
+  // }
 
   /// -- fetch transactions from sqflite db --
   Future<List<CSoldItemsModel>> fetchTransactions() async {
@@ -285,10 +310,13 @@ class CSalesController extends GetxController {
 
   /// -- check if stock is available for sale --
   checkStockStatus(String value) {
-    if (int.parse(value) > qtyAvailable.value) {
-      stockUnavailableErrorMsg.value = 'insufficient stock!!';
-    } else {
-      stockUnavailableErrorMsg.value = '';
+    if (value != '') {
+      if (int.parse(value) > qtyAvailable.value) {
+        stockUnavailableErrorMsg.value = 'insufficient stock!!';
+      } else {
+        //qtyAvailable.value -= int.parse(value);
+        stockUnavailableErrorMsg.value = '';
+      }
     }
   }
 
@@ -322,6 +350,7 @@ class CSalesController extends GetxController {
     txtAmountIssued.text = '';
     saleItemName.value = '';
     saleItemCode.value = '';
+    qtyAvailable.value = 0;
     saleItemBp.value = 0.0;
     saleItemUsp.value = 0.0;
     totalAmount.value = 0.0;

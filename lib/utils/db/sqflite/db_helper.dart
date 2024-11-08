@@ -158,6 +158,7 @@ class DbHelper {
     }
   }
 
+  /// -- delete inventory item --
   Future<int> deleteInventoryItem(CInventoryModel inventory) async {
     int result = await _db!.delete(
       'inventory',
@@ -168,7 +169,27 @@ class DbHelper {
     return result;
   }
 
-  /// --- ### CRUD OPERATIONS ON SALES TABLE ### ---
+  /// -- update inventory upon sale --
+  Future<int> updateStockCount(int newStockCount, int pId) async {
+    try {
+      int updateResult = await _db!.rawUpdate(
+        '''
+          UPDATE $invTable
+          SET quantity = ?
+          WHERE productId = ?
+        ''',
+        [newStockCount, pId],
+      );
+      return updateResult;
+    } catch (e) {
+      return CPopupSnackBar.errorSnackBar(
+        title: 'error updating stock count',
+        message: e.toString(),
+      );
+    }
+  }
+
+  /// ==== ### CRUD OPERATIONS ON SALES TABLE ### ====
   // -- save sale details to the database --
   Future<void> addSoldItem(CSoldItemsModel soldItem) async {
     try {

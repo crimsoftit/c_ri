@@ -166,7 +166,7 @@ class SalesScreen extends StatelessWidget {
                               ),
                             ),
                             title: Text(
-                              '${salesController.transactions[index].productName.toUpperCase()} (txn id: #${salesController.transactions[index].saleId})',
+                              '${salesController.transactions[index].productName.toUpperCase()} ',
                               style: Theme.of(context)
                                   .textTheme
                                   .labelMedium!
@@ -203,7 +203,7 @@ class SalesScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  'modified: ${salesController.transactions[index].date}',
+                                  'modified: ${salesController.transactions[index].date} (txn id: #${salesController.transactions[index].saleId})',
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelSmall!
