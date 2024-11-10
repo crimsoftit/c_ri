@@ -38,6 +38,8 @@ class CSalesController extends GetxController {
   DbHelper dbHelper = DbHelper.instance;
 
   final RxList<CSoldItemsModel> transactions = <CSoldItemsModel>[].obs;
+  final RxList<CSoldItemsModel> foundTxns = <CSoldItemsModel>[].obs;
+  RxList txnDets = [].obs;
 
   final RxString sellItemScanResults = ''.obs;
   final RxString selectedPaymentMethod = 'Cash'.obs;
@@ -62,12 +64,15 @@ class CSalesController extends GetxController {
   final RxDouble totalAmount = 0.0.obs;
   final RxDouble customerBal = 0.0.obs;
 
-  final RxList<CSoldItemsModel> foundTxns = <CSoldItemsModel>[].obs;
-
   final userController = Get.put(CUserController());
   final searchController = Get.put(CSearchBarController());
 
   final txnsFormKey = GlobalKey<FormState>();
+
+  /// -- get to transaction details page --
+  // getToTxnDetails(int txnId) {
+  //   txnDets = transactions.firstWhere((txn) => txn.saleId == txnId);
+  // }
 
   /// -- add sale transactions data to sqflite db --
   Future processTransaction() async {

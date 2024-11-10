@@ -1,10 +1,10 @@
+import 'package:c_ri/common/widgets/layouts/c_expansion_tile.dart';
 import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/sales_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/screens/search/widgets/no_results_screen.dart';
 import 'package:c_ri/utils/constants/colors.dart';
-import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -74,136 +74,52 @@ class CItemsListView extends StatelessWidget {
             return Card(
               color: CColors.white,
               elevation: 0.3,
-              child: ExpansionTile(
-                title: ListTile(
-                  //horizontalTitleGap: 10,
-                  // contentPadding: const EdgeInsets.all(
-                  //   10.0,
-                  // ),
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.brown[300],
-                    radius: 16.0,
-                    child: Text(
-                      space == 'inventory'
-                          ? invController.foundInventoryItems[index].name[0]
-                              .toUpperCase()
-                          : salesController.foundTxns[index].productName[0]
-                              .toUpperCase(),
-                      style: Theme.of(context).textTheme.labelLarge!.apply(
-                            color: CColors.white,
-                          ),
-                    ),
-                  ),
-                  title: Text(
-                    space == 'inventory'
-                        ? '${invController.foundInventoryItems[index].name.toUpperCase()}($id)'
-                        : '${salesController.foundTxns[index].productName.toUpperCase()} ($id)',
-                    style: Theme.of(context).textTheme.labelMedium!.apply(
-                          color: CColors.rBrown,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                    maxLines: 1,
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        '$amount $qty',
-                        style: Theme.of(context).textTheme.labelMedium!.apply(
-                              color: CColors.rBrown.withOpacity(0.8),
-                              //fontStyle: FontStyle.italic,
-                            ),
+              child: CExpansionTile(
+                avatarTxt: space == 'inventory'
+                    ? invController.foundInventoryItems[index].name[0]
+                        .toUpperCase()
+                    : salesController.foundTxns[index].productName[0]
+                        .toUpperCase(),
+                titleTxt: space == 'inventory'
+                    ? '${invController.foundInventoryItems[index].name.toUpperCase()}($id)'
+                    : '${salesController.foundTxns[index].productName.toUpperCase()} ($id)',
+                subTitleTxt1Item1: '$amount ',
+                subTitleTxt1Item2: qty,
+                subTitleTxt2Item1: space == 'inventory'
+                    ? 'usp: ${invController.foundInventoryItems[index].unitSellingPrice}'
+                    : 'payment method: ${salesController.foundTxns[index].paymentMethod}',
+                subTitleTxt2Item2: '',
+                subTitleTxt3Item1: date,
+                subTitleTxt3Item2: id,
+                btn2Txt: space == 'inventory' ? 'sell' : 'update',
+                btn2Icon: space == 'inventory'
+                    ? const Icon(
+                        Iconsax.card_pos,
+                      )
+                    : const Icon(
+                        Iconsax.edit,
                       ),
-                      // Text(
-                      //   'pCode: $pCode    $amount   $qty',
-                      //   style: Theme.of(context).textTheme.labelMedium!.apply(
-                      //         color: CColors.rBrown.withOpacity(0.8),
-                      //         //fontStyle: FontStyle.italic,
-                      //       ),
-                      // ),
-                      Text(
-                        space == 'inventory'
-                            ? 'usp: ${invController.foundInventoryItems[index].unitSellingPrice}'
-                            : 'payment method: ${salesController.foundTxns[index].paymentMethod}  modified: $date',
-                        style: Theme.of(context).textTheme.labelMedium!.apply(
-                              color: CColors.rBrown.withOpacity(0.8),
-                              //fontStyle: FontStyle.italic,
-                            ),
-                      ),
-                      Text(
-                        'modified: $date',
-                        style: Theme.of(context).textTheme.labelSmall!.apply(
-                              color: CColors.rBrown.withOpacity(0.7),
-                              //fontStyle: FontStyle.italic,
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20.0,
-                    ),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          child: TextButton.icon(
-                            label: Text(
-                              'info',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium!
-                                  .apply(
-                                    color: CColors.rBrown,
-                                  ),
-                            ),
-                            icon: const Icon(
-                              Iconsax.info_circle,
-                              color: CColors.rBrown,
-                            ),
-                            onPressed: () {
-                              if (space == 'inventory') {
-                                Get.toNamed('/inventory/item_details/',
-                                    arguments: invController
-                                        .foundInventoryItems[index].productId);
-                              }
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          width: CSizes.spaceBtnInputFields,
-                        ),
-                        SizedBox(
-                          child: TextButton.icon(
-                            label: Text(
-                              space == 'inventory' ? 'sell' : 'update',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium!
-                                  .apply(
-                                    color: CColors.rBrown,
-                                  ),
-                            ),
-                            icon: Icon(
-                              space == 'inventory'
-                                  ? Iconsax.card_pos5
-                                  : Iconsax.edit,
-                              color: CColors.rBrown,
-                            ),
-                            onPressed: () {
-                              if (space == 'inventory') {
-                                salesController.onSellItemBtnAction(
-                                    invController.foundInventoryItems[index]);
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                btn1NavAction: () {
+                  if (space == 'inventory') {
+                    Get.toNamed(
+                      '/inventory/item_details/',
+                      arguments:
+                          invController.foundInventoryItems[index].productId,
+                    );
+                  }
+                  if (space == 'sales') {
+                    Get.toNamed(
+                      '/sales/txn_details',
+                      arguments: salesController.foundTxns[index].saleId,
+                    );
+                  }
+                },
+                btn2NavAction: space == 'inventory'
+                    ? () {
+                        salesController.onSellItemBtnAction(
+                            invController.foundInventoryItems[index]);
+                      }
+                    : null,
               ),
             );
           },

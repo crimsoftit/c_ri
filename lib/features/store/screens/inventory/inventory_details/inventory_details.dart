@@ -57,7 +57,7 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                   // app bar
                   CAppBar(
                     title: Text(
-                      'product details #($itemId)',
+                      'product details (#$itemId)',
                       style: Theme.of(context).textTheme.headlineSmall!.apply(
                             color: CColors.white,
                           ),

@@ -4,6 +4,7 @@ class CRoutes {
   static const inventoryDetails = '/inventory/item_details/';
   static const sales = '/sales';
   static const sellItemScreen = '/sales/sell_item/';
+  static const txnDetailsScreen = '/sales/txn_details';
   static const settings = '/settings';
   static const userProfile = '/user_profile';
   static const searchResults = '/search';
