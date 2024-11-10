@@ -130,10 +130,10 @@ class CSellItemScreen extends StatelessWidget {
                             showTrailingIcon: false,
                             onTap: () {},
                           ),
-                          if (salesController.showAmountIssuedField.value)
-                            const SizedBox(
-                              height: CSizes.spaceBtnInputFields,
-                            ),
+                          // if (salesController.showAmountIssuedField.value)
+                          //   const SizedBox(
+                          //     height: CSizes.spaceBtnInputFields,
+                          //   ),
                           Visibility(
                             visible:
                                 salesController.showAmountIssuedField.value,

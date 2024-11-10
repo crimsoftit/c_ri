@@ -91,11 +91,13 @@ dependencies:
 
 
   # -- scanners --
-  #barcode_scan2: ^4.3.3
   barcode_scan2: any
-  #flutter_barcode_scanner: ^2.0.0
   flutter_barcode_scanner: any
   flutter_scanner_devxhub: ^1.0.2
+
+  # -- charts --
+  syncfusion_flutter_charts: any
+  fl_chart: any
 
 
 dev_dependencies:

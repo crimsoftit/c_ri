@@ -141,27 +141,6 @@ class CSalesController extends GetxController {
     }
   }
 
-  /// -- update stock count upon successful sale --
-  // Future updateStockCount(int newStockCount, int pId) async {
-  //   try {
-  //     // -- start loader
-  //     isLoading.value = true;
-
-  //     // -- update entry --
-  //     await dbHelper.updateStockCount(newStockCount, pId);
-
-  //     // -- stop loader
-  //     isLoading.value = false;
-  //   } catch (e) {
-  //     // -- stop loader
-  //     isLoading.value = false;
-  //     CPopupSnackBar.errorSnackBar(
-  //       title: 'Oh Snap!',
-  //       message: 'error updating inventory count: $e',
-  //     );
-  //   }
-  // }
-
   /// -- fetch transactions from sqflite db --
   Future<List<CSoldItemsModel>> fetchTransactions() async {
     try {
@@ -280,13 +259,7 @@ class CSalesController extends GetxController {
 
   /// -- when search result item is selected --
   onSellItemBtnAction(CInventoryModel foundItem) {
-    sellItemId.value = foundItem.productId!;
-    saleItemCode.value = foundItem.pCode;
-    saleItemName.value = foundItem.name;
-    saleItemBp.value = foundItem.buyingPrice;
-    saleItemUsp.value = foundItem.unitSellingPrice;
-    qtyAvailable.value = foundItem.quantity;
-
+    setTransactionDetails(foundItem);
     Get.toNamed(
       '/sales/sell_item/',
     );
@@ -337,6 +310,16 @@ class CSalesController extends GetxController {
     } else {
       showAmountIssuedField.value = false;
     }
+  }
+
+  /// -- set sale details --
+  setTransactionDetails(CInventoryModel foundItem) {
+    sellItemId.value = foundItem.productId!;
+    saleItemCode.value = foundItem.pCode;
+    saleItemName.value = foundItem.name;
+    saleItemBp.value = foundItem.buyingPrice;
+    saleItemUsp.value = foundItem.unitSellingPrice;
+    qtyAvailable.value = foundItem.quantity;
   }
 
   /// -- reset sales --

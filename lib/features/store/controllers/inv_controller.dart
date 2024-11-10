@@ -317,4 +317,9 @@ class CInventoryController extends GetxController {
       ),
     );
   }
+
+  /// -- set data for sell item screen --
+  // onSellItemBtnPressed(CInventoryModel saleItem) {
+
+  // }
 }
