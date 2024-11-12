@@ -15,8 +15,8 @@ class CExpansionTile extends StatelessWidget {
     required this.subTitleTxt3Item1,
     required this.subTitleTxt3Item2,
     this.btn1NavAction,
-    this.btn1Txt,
-    this.btn2Txt,
+    this.btn1Txt = '',
+    this.btn2Txt = '',
     this.btn1Icon,
     this.btn2Icon,
     this.btn2NavAction,
@@ -30,7 +30,7 @@ class CExpansionTile extends StatelessWidget {
   final String subTitleTxt2Item2;
   final String subTitleTxt3Item1;
   final String subTitleTxt3Item2;
-  final String? btn1Txt, btn2Txt;
+  final String btn1Txt, btn2Txt;
   final VoidCallback? btn1NavAction, btn2NavAction;
   final Icon? btn1Icon, btn2Icon;
 
@@ -67,21 +67,21 @@ class CExpansionTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              'pCode: $subTitleTxt1Item1 t.Amount: Ksh.$subTitleTxt1Item2',
+              '$subTitleTxt1Item1 $subTitleTxt1Item2',
               style: Theme.of(context).textTheme.labelMedium!.apply(
                     color: CColors.rBrown.withOpacity(0.8),
                     //fontStyle: FontStyle.italic,
                   ),
             ),
             Text(
-              'payment method: $subTitleTxt1Item2 qty: $subTitleTxt2Item2',
+              '$subTitleTxt2Item1 $subTitleTxt2Item2',
               style: Theme.of(context).textTheme.labelMedium!.apply(
                     color: CColors.rBrown.withOpacity(0.8),
                     //fontStyle: FontStyle.italic,
                   ),
             ),
             Text(
-              'modified: $subTitleTxt3Item1 (txn id: #$subTitleTxt3Item2)',
+              '$subTitleTxt3Item1 $subTitleTxt3Item2',
               style: Theme.of(context).textTheme.labelSmall!.apply(
                     color: CColors.rBrown.withOpacity(0.7),
                     //fontStyle: FontStyle.italic,
@@ -100,7 +100,7 @@ class CExpansionTile extends StatelessWidget {
               SizedBox(
                 child: TextButton.icon(
                   label: Text(
-                    'info',
+                    btn1Txt,
                     style: Theme.of(context).textTheme.labelMedium!.apply(
                           color: CColors.rBrown,
                         ),
@@ -118,7 +118,7 @@ class CExpansionTile extends StatelessWidget {
               SizedBox(
                 child: TextButton.icon(
                   label: Text(
-                    btn2Txt!,
+                    btn2Txt,
                     style: Theme.of(context).textTheme.labelMedium!.apply(
                           color: CColors.rBrown,
                         ),

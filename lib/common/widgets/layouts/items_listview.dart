@@ -5,6 +5,7 @@ import 'package:c_ri/features/store/controllers/sales_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/screens/search/widgets/no_results_screen.dart';
 import 'package:c_ri/utils/constants/colors.dart';
+import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -95,9 +96,13 @@ class CItemsListView extends StatelessWidget {
                 btn2Icon: space == 'inventory'
                     ? const Icon(
                         Iconsax.card_pos,
+                        color: CColors.rBrown,
+                        size: CSizes.iconSm,
                       )
                     : const Icon(
                         Iconsax.edit,
+                        color: CColors.rBrown,
+                        size: CSizes.iconSm,
                       ),
                 btn1NavAction: () {
                   if (space == 'inventory') {
