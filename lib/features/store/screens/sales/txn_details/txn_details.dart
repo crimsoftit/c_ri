@@ -139,12 +139,9 @@ class _CTxnDetailsScreenState extends State<CTxnDetailsScreen> {
                   ),
                   CMenuTile(
                     icon: Iconsax.card_pos,
-                    //title: '',
-                    title: 'Ksh. txnDetail.unitSellingPrice',
+                    title: 'Ksh. ${txnDetail.unitSellingPrice}',
                     subTitle: 'unit selling price',
-                    onTap: () {
-                      //Get.to(() => const OrdersScreen());
-                    },
+                    onTap: () {},
                   ),
                   CMenuTile(
                     icon: Iconsax.calendar,

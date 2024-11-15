@@ -82,8 +82,10 @@ class CItemsListView extends StatelessWidget {
                     : salesController.foundTxns[index].productName[0]
                         .toUpperCase(),
                 titleTxt: space == 'inventory'
-                    ? '${invController.foundInventoryItems[index].name.toUpperCase()}($id)'
-                    : '${salesController.foundTxns[index].productName.toUpperCase()} ($id)',
+                    ? invController.foundInventoryItems[index].name
+                        .toUpperCase()
+                    : salesController.foundTxns[index].productName
+                        .toUpperCase(),
                 subTitleTxt1Item1: '$amount ',
                 subTitleTxt1Item2: qty,
                 subTitleTxt2Item1: space == 'inventory'
@@ -92,6 +94,7 @@ class CItemsListView extends StatelessWidget {
                 subTitleTxt2Item2: '',
                 subTitleTxt3Item1: date,
                 subTitleTxt3Item2: id,
+                btn1Txt: 'info',
                 btn2Txt: space == 'inventory' ? 'sell' : 'update',
                 btn2Icon: space == 'inventory'
                     ? const Icon(

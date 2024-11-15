@@ -10,6 +10,7 @@ class CSoldItemsModel {
   String _productName = "";
   int _quantity = 0;
   double _totalAmount = 0.0;
+  double _unitSellingPrice = 0.0;
   String _paymentMethod = "";
   String _date = "";
 
@@ -22,6 +23,7 @@ class CSoldItemsModel {
     this._productName,
     this._quantity,
     this._totalAmount,
+    this._unitSellingPrice,
     this._paymentMethod,
     this._date,
   );
@@ -36,6 +38,7 @@ class CSoldItemsModel {
     this._productName,
     this._quantity,
     this._totalAmount,
+    this._unitSellingPrice,
     this._paymentMethod,
     this._date,
   );
@@ -50,6 +53,7 @@ class CSoldItemsModel {
   String get productName => _productName;
   int get quantity => _quantity;
   double get totalAmount => _totalAmount;
+  double get unitSellingPrice => _unitSellingPrice;
   String get paymentMethod => _paymentMethod;
   String get date => _date;
 
@@ -93,6 +97,12 @@ class CSoldItemsModel {
     }
   }
 
+  set unitSellingPrice(double newUsp) {
+    if (newUsp >= 0) {
+      _unitSellingPrice = newUsp;
+    }
+  }
+
   set paymentMethod(String newPaymentMethod) {
     if (newPaymentMethod != '') {
       _paymentMethod = newPaymentMethod;
@@ -119,6 +129,7 @@ class CSoldItemsModel {
     map['productName'] = _productName;
     map['quantity'] = _quantity;
     map['totalAmount'] = _totalAmount;
+    map['unitSellingPrice'] = _unitSellingPrice;
     map['paymentMethod'] = _paymentMethod;
     map['date'] = _date;
 
@@ -136,6 +147,7 @@ class CSoldItemsModel {
     _productName = map['productName'];
     _quantity = map['quantity'];
     _totalAmount = map['totalAmount'];
+    _unitSellingPrice = map['unitSellingPrice'];
     _paymentMethod = map['paymentMethod'];
     _date = map['date'];
   }

@@ -61,6 +61,7 @@ class DbHelper {
             productName TEXT NOT NULL,
             quantity INTEGER NOT NULL,
             totalAmount  REAL NOT NULL,
+            unitSellingPrice REAL NOT NULL,
             paymentMethod TEXT NOT NULL,
             date TEXT NOT NULL,
             FOREIGN KEY(productId) REFERENCES inventory(productId)
@@ -76,7 +77,7 @@ class DbHelper {
     await _db!.execute(
         'INSERT INTO $invTable VALUES (0, "as23df45", "sindani254@gmail.com", "Manu", "12w34dds1", "fruit", 2, 200, 10, "3/2/2021")');
     await _db!.execute(
-        'INSERT INTO $salesTable VALUES (0, "as23df45", "sindani254@gmail.com", "Manu", "143d", "apples", 13, 15, "Cash", "2/1/2022")');
+        'INSERT INTO $salesTable VALUES (0, "as23df45", "sindani254@gmail.com", "Manu", "143d", "apples", 13, 15, 10.0, "Cash", "2/1/2022")');
     //List inventory = await db!.rawQuery('select * from inventory');
     //List sales = await db!.rawQuery('select * from sales');
     //print(inventory[0].toString());

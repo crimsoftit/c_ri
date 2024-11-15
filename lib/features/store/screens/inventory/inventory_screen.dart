@@ -217,12 +217,13 @@ class InventoryScreen extends StatelessWidget {
                                 const SizedBox(
                                   height: CSizes.spaceBtnInputFields / 4,
                                 ),
-                                Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        "code: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].pCode : invController.inventoryItems[index].pCode}",
+                                SizedBox(
+                                  //width: CHelperFunctions.screenWidth() * 0.92,
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        "code: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].pCode : invController.inventoryItems[index].pCode} ",
                                         style: Theme.of(context)
                                             .textTheme
                                             .labelSmall!
@@ -232,9 +233,8 @@ class InventoryScreen extends StatelessWidget {
                                               fontStyle: FontStyle.italic,
                                             ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      child: Text(
+
+                                      Text(
                                         "Bp: Ksh.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].buyingPrice : invController.inventoryItems[index].buyingPrice}",
                                         style: Theme.of(context)
                                             .textTheme
@@ -245,9 +245,9 @@ class InventoryScreen extends StatelessWidget {
                                               fontStyle: FontStyle.italic,
                                             ),
                                       ),
-                                    ),
-                                    // Text(
-                                  ],
+                                      // Text(
+                                    ],
+                                  ),
                                 ),
                                 Text(
                                   "USP: Ksh.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].unitSellingPrice : invController.inventoryItems[index].unitSellingPrice}  added by: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].userEmail : invController.inventoryItems[index].userEmail}",

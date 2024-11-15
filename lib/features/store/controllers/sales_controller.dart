@@ -104,6 +104,7 @@ class CSalesController extends GetxController {
             saleItemName.value,
             int.parse(txtSaleItemQty.text),
             totalAmount.value,
+            saleItemUsp.value,
             selectedPaymentMethod.value,
             DateFormat('yyyy-MM-dd - kk:mm').format(clock.now()),
           );
