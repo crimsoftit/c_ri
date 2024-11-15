@@ -88,6 +88,10 @@ dependencies:
   intl_phone_field: ^3.2.0
   path: ^1.9.0
   clock: ^1.1.1
+  #currency_pickers: any
+  country_code_picker: any
+  flutter_sim_country_code: any
+  country_codes: any
 
 
   # -- scanners --

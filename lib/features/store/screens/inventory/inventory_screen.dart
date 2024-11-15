@@ -250,7 +250,7 @@ class InventoryScreen extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  "USP: Ksh.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].unitSellingPrice : invController.inventoryItems[index].unitSellingPrice}  added by: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].userEmail : invController.inventoryItems[index].userEmail}",
+                                  "USP: Ksh.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].unitSellingPrice : invController.inventoryItems[index].unitSellingPrice}  added by: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].userName.split(" ").elementAt(0) : invController.inventoryItems[index].userName.split(" ").elementAt(0)}",
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelSmall!

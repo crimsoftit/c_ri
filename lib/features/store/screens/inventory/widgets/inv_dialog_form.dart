@@ -2,6 +2,7 @@ import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
+import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:c_ri/utils/validators/validation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -126,11 +127,30 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   labelText: 'buying price',
                   labelStyle: textStyle,
                 ),
+                onChanged: (value) {
+                  invController.formatPrice(value);
+                  // var formattedBp = CHelperFunctions.getFormattedPrice(value);
+                  // invController.txtBP.text = formattedBp.toString();
+                },
                 style: const TextStyle(
                   fontWeight: FontWeight.normal,
                 ),
                 validator: (value) {
                   return CValidator.validateNumber('buying price', value);
+                },
+              ),
+              Obx(
+                () {
+                  return Column(
+                    children: [
+                      Text(
+                        '${invController.formattedBp.value}  ${invController.formattedBp_1.value} ${invController.currencySymbol.value}',
+                      ),
+                      Text(
+                        'country code: ${invController.countryCode.value}',
+                      ),
+                    ],
+                  );
                 },
               ),
               const SizedBox(
@@ -153,6 +173,9 @@ class AddUpdateInventoryForm extends StatelessWidget {
                 style: const TextStyle(
                   fontWeight: FontWeight.normal,
                 ),
+                onChanged: (value) {
+                  //CHelperFunctions.getFormattedPrice(value);
+                },
                 validator: (value) {
                   return CValidator.validateNumber('unit selling price', value);
                 },

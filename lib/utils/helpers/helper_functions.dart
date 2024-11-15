@@ -63,6 +63,11 @@ class CHelperFunctions {
     return DateFormat(format).format(date);
   }
 
+  // static String getFormattedPrice(String value) {
+  //   var formatter = NumberFormat('#,##,000');
+  //   return formatter.format(double.parse(value));
+  // }
+
   static List<T> removeDuplicates<T>(List<T> list) {
     return list.toSet().toList();
   }

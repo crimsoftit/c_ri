@@ -214,6 +214,13 @@ class SalesScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
+                            onTap: () {
+                              Get.toNamed(
+                                '/sales/txn_details',
+                                arguments:
+                                    salesController.transactions[index].saleId,
+                              );
+                            },
                           ),
                         );
                       },

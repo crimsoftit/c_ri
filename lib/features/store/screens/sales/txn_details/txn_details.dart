@@ -45,7 +45,7 @@ class _CTxnDetailsScreenState extends State<CTxnDetailsScreen> {
                   // app bar
                   CAppBar(
                     title: Text(
-                      'transaction details',
+                      'transaction details ${txnDetail.saleId}',
                       style: Theme.of(context).textTheme.headlineSmall!.apply(
                             color: CColors.white,
                           ),

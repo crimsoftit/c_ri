@@ -193,7 +193,8 @@ class CSalesController extends GetxController {
           '/sales/sell_item/',
         );
       } else {
-        CPopupSnackBar.customToast(message: 'item not in stock!!!');
+        CPopupSnackBar.customToast(
+            message: 'item not found! please scan again or search inventory');
         fetchTransactions();
       }
     } on PlatformException catch (platformException) {
