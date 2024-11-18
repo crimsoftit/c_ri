@@ -170,12 +170,6 @@ class CSellItemScreen extends StatelessWidget {
                                     ),
                                     labelText: 'amount issued by customer',
                                   ),
-                                  // validator: (value) {
-                                  //   if (salesController.customerBal.value <
-                                  //       salesController.totalAmount.value) {
-                                  //     return 'the amount issued is not enough';
-                                  //   }
-                                  // },
                                   validator: (value) =>
                                       CValidator.validateCustomerBal(
                                           'amount issued',
@@ -197,12 +191,13 @@ class CSellItemScreen extends StatelessWidget {
                                         fontStyle: FontStyle.italic,
                                       ),
                                 ),
+                                const SizedBox(
+                                  height: CSizes.spaceBtnInputFields,
+                                ),
                               ],
                             ),
                           ),
-                          const SizedBox(
-                            height: CSizes.spaceBtnInputFields,
-                          ),
+
                           TextFormField(
                             autofocus: true,
                             controller: salesController.txtSaleItemQty,
@@ -268,7 +263,23 @@ class CSellItemScreen extends StatelessWidget {
                                       ),
                             ),
                           ),
-
+                          TextFormField(
+                            controller: salesController.txtCustomerName,
+                            style: const TextStyle(
+                              height: 0.7,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: CSizes.spaceBtnInputFields,
+                          ),
+                          TextFormField(
+                            controller: salesController.txtCustomerContacts,
+                            style: const TextStyle(
+                              height: 0.7,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
                           const SizedBox(
                             height: CSizes.spaceBtnInputFields,
                           ),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:c_ri/common/widgets/loaders/loading_dialog.dart';
 import 'package:c_ri/data/repos/auth/auth_repo.dart';
 import 'package:c_ri/data/repos/user/user_repo.dart';
@@ -87,6 +89,8 @@ class SignupController extends GetxController {
       );
 
       // -- save user data in the Firestore database
+      countryCode.value = Platform.localeName.split('_')[1].toLowerCase();
+
       final newUser = CUserModel(
         id: userCredentials.user!.uid,
         fullName: fullName.text,
@@ -105,9 +109,14 @@ class SignupController extends GetxController {
 
       // -- show signup success message
       CPopupSnackBar.successSnackBar(
-          title: 'ngrats!',
-          message:
-              'your account has been created! verify your e-mail address to proceed!');
+        title: 'ngrats!',
+        message:
+            'your account has been created! verify your e-mail address to proceed!',
+      );
+
+      CPopupSnackBar.customToast(
+        message: 'country code: ${countryCode.value}',
+      );
 
       // -- move to verify email screen
       Get.to(() => VerifyEmailScreen(

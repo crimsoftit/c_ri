@@ -12,6 +12,8 @@ class CSoldItemsModel {
   double _totalAmount = 0.0;
   double _unitSellingPrice = 0.0;
   String _paymentMethod = "";
+  String _customerName = "";
+  String _customerContacts = "";
   String _date = "";
 
   CSoldItemsModel(
@@ -25,6 +27,8 @@ class CSoldItemsModel {
     this._totalAmount,
     this._unitSellingPrice,
     this._paymentMethod,
+    this._customerName,
+    this._customerContacts,
     this._date,
   );
 
@@ -40,6 +44,8 @@ class CSoldItemsModel {
     this._totalAmount,
     this._unitSellingPrice,
     this._paymentMethod,
+    this._customerName,
+    this._customerContacts,
     this._date,
   );
 
@@ -55,6 +61,8 @@ class CSoldItemsModel {
   double get totalAmount => _totalAmount;
   double get unitSellingPrice => _unitSellingPrice;
   String get paymentMethod => _paymentMethod;
+  String get customerName => _customerName;
+  String get customerContacts => _customerContacts;
   String get date => _date;
 
   // set saleId(int newSaleId) {
@@ -109,6 +117,14 @@ class CSoldItemsModel {
     }
   }
 
+  set customerName(String newCustomerName) {
+    _customerName = newCustomerName;
+  }
+
+  set customerContacts(String newCustomerContacts) {
+    _customerContacts = newCustomerContacts;
+  }
+
   set date(String newDate) {
     _date = newDate;
   }
@@ -131,6 +147,8 @@ class CSoldItemsModel {
     map['totalAmount'] = _totalAmount;
     map['unitSellingPrice'] = _unitSellingPrice;
     map['paymentMethod'] = _paymentMethod;
+    map['customerName'] = _customerName;
+    map['customerContacts'] = _customerContacts;
     map['date'] = _date;
 
     return map;
@@ -149,6 +167,8 @@ class CSoldItemsModel {
     _totalAmount = map['totalAmount'];
     _unitSellingPrice = map['unitSellingPrice'];
     _paymentMethod = map['paymentMethod'];
+    _customerName = map['customerName'];
+    _customerContacts = map['customerContacts'];
     _date = map['date'];
   }
 }

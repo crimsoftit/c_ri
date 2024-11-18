@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
@@ -7,7 +5,6 @@ import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:clock/clock.dart';
-import 'package:country_codes/country_codes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -326,26 +323,5 @@ class CInventoryController extends GetxController {
   }
 
   /// -- set data for sell item screen --
-  formatPrice(String value) {
-    NumberFormat numberFormat = NumberFormat.decimalPattern('hi');
-
-    NumberFormat currencyFormat = NumberFormat.simpleCurrency(
-        locale: 'hi_KE', name: Intl.defaultLocale, decimalDigits: 2);
-
-    Locale locale = Localizations.localeOf(Get.overlayContext!);
-
-    NumberFormat autoCurrencyFormat = NumberFormat.simpleCurrency(
-        locale: Platform.localeName, decimalDigits: 2);
-
-    //formattedBp.value = numberFormat.format(double.parse(value));
-    formattedBp.value = currencyFormat.format(double.parse(value));
-    formattedBp_1.value = autoCurrencyFormat.format(double.parse(value));
-
-    var formatter = NumberFormat.simpleCurrency(locale: locale.toString());
-    currencySymbol.value = formatter.currencySymbol;
-
-    CountryDetails details = CountryCodes.detailsForLocale(
-        Localizations.localeOf(Get.overlayContext!));
-    countryCode.value = details.alpha2Code!;
-  }
+  formatPrice(String value) {}
 }

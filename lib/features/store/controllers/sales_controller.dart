@@ -52,6 +52,8 @@ class CSalesController extends GetxController {
 
   final txtSaleItemQty = TextEditingController();
   final txtAmountIssued = TextEditingController();
+  final txtCustomerName = TextEditingController();
+  final txtCustomerContacts = TextEditingController();
 
   final RxInt sellItemId = 0.obs;
   final RxInt qtyAvailable = 0.obs;
@@ -106,6 +108,8 @@ class CSalesController extends GetxController {
             totalAmount.value,
             saleItemUsp.value,
             selectedPaymentMethod.value,
+            txtCustomerName.text,
+            txtCustomerContacts.text,
             DateFormat('yyyy-MM-dd - kk:mm').format(clock.now()),
           );
 

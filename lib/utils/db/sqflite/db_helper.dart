@@ -63,6 +63,8 @@ class DbHelper {
             totalAmount  REAL NOT NULL,
             unitSellingPrice REAL NOT NULL,
             paymentMethod TEXT NOT NULL,
+            customerName TEXT,
+            customerContacts TEXT,
             date TEXT NOT NULL,
             FOREIGN KEY(productId) REFERENCES inventory(productId)
             )          
