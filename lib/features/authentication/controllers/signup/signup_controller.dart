@@ -89,6 +89,10 @@ class SignupController extends GetxController {
       );
 
       // -- save user data in the Firestore database
+
+      // ######                    ##### --//
+      START WORK ON CURRENCY INTERNALIZATION
+      // ######                    ##### --//
       countryCode.value = Platform.localeName.split('_')[1].toLowerCase();
 
       final newUser = CUserModel(
