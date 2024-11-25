@@ -1,16 +1,19 @@
-import 'dart:io';
-
 import 'package:c_ri/common/widgets/loaders/loading_dialog.dart';
 import 'package:c_ri/data/repos/auth/auth_repo.dart';
 import 'package:c_ri/data/repos/user/user_repo.dart';
 import 'package:c_ri/features/authentication/screens/signup/verify_email.dart';
+import 'package:c_ri/features/personalization/models/currency_model.dart';
 import 'package:c_ri/features/personalization/models/user_model.dart';
+import 'package:c_ri/utils/constants/file_strings.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/full_screen_loader.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl_phone_field/countries.dart';
 
 class SignupController extends GetxController {
   static SignupController get instance => Get.find();
@@ -19,6 +22,8 @@ class SignupController extends GetxController {
   final hidePswdTxt = true.obs;
   RxString countryCode = ''.obs;
   RxString completePhoneNo = ''.obs;
+  RxString userCountry = ''.obs;
+  RxString userCurrencyCode = ''.obs;
   final checkPrivacyPolicy = false.obs;
 
   final hideConfirmPswdTxt = true.obs;
@@ -27,10 +32,65 @@ class SignupController extends GetxController {
   final phoneNumber = TextEditingController();
   final password = TextEditingController();
   final confirmPassword = TextEditingController();
+  final currencyField = TextEditingController();
 
   final fullNo = TextEditingController();
 
   GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
+
+  final RxList<List<dynamic>> csvContent = <List<dynamic>>[].obs;
+  final RxList<CurrencyModel> foundCsvContent = <CurrencyModel>[].obs;
+  final RxList<CurrencyModel> currencyItemDetails = <CurrencyModel>[].obs;
+
+  List<CurrencyModel> singleItem = [];
+
+  @override
+  void onInit() {
+    loadCSV();
+    super.onInit();
+  }
+
+  void loadCSV() async {
+    final rawData = await rootBundle.loadString(CFiles.currenciesCsv);
+
+    List<List<dynamic>> listData = const CsvToListConverter(
+      fieldDelimiter: ",",
+      textDelimiter: '"',
+      allowInvalid: true,
+      convertEmptyTo: String,
+      eol: '\n',
+    ).convert(rawData);
+
+    csvContent.value = listData;
+
+    for (var element in csvContent) {
+      foundCsvContent.add(CurrencyModel(
+        country: element[0],
+        curCode: element[3],
+      ));
+    }
+
+    /// -- fetch user's currency by country --
+
+    if (foundCsvContent.isNotEmpty) {
+      CPopupSnackBar.successSnackBar(
+        title: 'CSV file loaded',
+      );
+    } else {
+      CPopupSnackBar.errorSnackBar(
+        title: 'FAILED TO LOAD CSV FILE!!!',
+      );
+    }
+  }
+
+  /// -- fetch user's currency code by country --
+  fetchUserCurrency() {
+    currencyItemDetails.value = foundCsvContent
+        .where((item) => item.country == userCountry.value)
+        .toList();
+
+    userCurrencyCode.value = currencyItemDetails.first.curCode.toString();
+  }
 
   // -- firebase signup function --
   void signup() async {
@@ -90,11 +150,6 @@ class SignupController extends GetxController {
 
       // -- save user data in the Firestore database
 
-      // ######                    ##### --//
-      START WORK ON CURRENCY INTERNALIZATION
-      // ######                    ##### --//
-      countryCode.value = Platform.localeName.split('_')[1].toLowerCase();
-
       final newUser = CUserModel(
         id: userCredentials.user!.uid,
         fullName: fullName.text,
@@ -138,5 +193,14 @@ class SignupController extends GetxController {
       CLoadingDialog.hideLoader();
       return;
     }
+  }
+
+  onPhoneInputChanged(Country country) {
+    userCountry.value = country.name;
+    loadCSV();
+    CPopupSnackBar.customToast(
+      message: 'country: ${userCountry.value}',
+    );
+    fetchUserCurrency();
   }
 }

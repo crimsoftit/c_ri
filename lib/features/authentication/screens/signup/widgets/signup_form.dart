@@ -95,25 +95,40 @@ class RSignupForm extends StatelessWidget {
             },
             onCountryChanged: (country) {
               signupController.countryCode.value = country.code;
+
               if (kDebugMode) print('country changed to: ${country.dialCode}');
               CPopupSnackBar.customToast(
                 message: 'country code: ${signupController.countryCode.value}',
               );
+
+              CPopupSnackBar.customToast(
+                message: 'country name: ${country.name}',
+              );
+
+              signupController.onPhoneInputChanged(country);
             },
             validator: (value) =>
                 CValidator.validatePhoneNumber(value.toString()),
           ),
 
-          // TextFormField(
-          //   controller: signupController.fullNo,
-          //   style: const TextStyle(
-          //     height: 0.7,
-          //   ),
-          //   decoration: const InputDecoration(
-          //     prefixIcon: Icon(Iconsax.direct),
-          //     labelText: 'full No',
-          //   ),
-          // ),
+          TextFormField(
+            controller: signupController.currencyField,
+            style: const TextStyle(
+              height: 0.7,
+            ),
+            decoration: const InputDecoration(
+              prefixIcon: Icon(Iconsax.direct),
+              labelText: 'currency',
+            ),
+          ),
+
+          Obx(
+            () {
+              return Text(
+                '${signupController.userCountry.value} currency:${signupController.userCurrencyCode.value}',
+              );
+            },
+          ),
 
           const SizedBox(
             height: CSizes.spaceBtnInputFields,
