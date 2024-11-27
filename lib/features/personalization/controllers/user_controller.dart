@@ -67,6 +67,7 @@ class CUserController extends GetxController {
             email: userCredentials.user!.email ?? '',
             phoneNo: userCredentials.user!.phoneNumber ?? '',
             profPic: userCredentials.user!.photoURL ?? '',
+            currencyCode: signupController.userCurrencyCode.value,
             countryCode: signupController.countryCode.value,
           );
 

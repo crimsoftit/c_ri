@@ -2,6 +2,7 @@ import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
 import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
+import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
@@ -27,6 +28,8 @@ class InventoryScreen extends StatelessWidget {
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
     final invController = Get.put(CInventoryController());
+
+    final userController = Get.put(CUserController());
 
     final searchController = Get.put(CSearchBarController());
 
@@ -235,7 +238,7 @@ class InventoryScreen extends StatelessWidget {
                                       ),
 
                                       Text(
-                                        "Bp: Ksh.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].buyingPrice : invController.inventoryItems[index].buyingPrice}",
+                                        "Bp: ${userController.user.value.currencyCode} ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].buyingPrice : invController.inventoryItems[index].buyingPrice}",
                                         style: Theme.of(context)
                                             .textTheme
                                             .labelSmall!

@@ -31,10 +31,16 @@ dependencies:
   flutter:
     sdk: flutter
 
-  timezone: any
-  csv: any
+  
+
+  ## -- location services -- ##
+  geolocator: any
+  geocoding: any
+  permission_handler: any
 
   # -- utility packages
+  timezone: any
+  csv: any
   http: ^1.1.0
   intl: ^0.19.0
   logger: ^2.0.1

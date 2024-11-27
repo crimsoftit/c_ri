@@ -5,7 +5,9 @@ class CUserModel {
   String fullName;
   final String email;
   String countryCode;
+
   String phoneNo;
+  String currencyCode;
   String profPic;
 
   CUserModel({
@@ -14,6 +16,7 @@ class CUserModel {
     required this.email,
     required this.countryCode,
     required this.phoneNo,
+    required this.currencyCode,
     required this.profPic,
   });
 
@@ -27,6 +30,7 @@ class CUserModel {
         email: '',
         countryCode: '',
         phoneNo: '',
+        currencyCode: '',
         profPic: '',
       );
 
@@ -37,6 +41,7 @@ class CUserModel {
       "Email": email,
       "CountryCode": countryCode,
       "PhoneNo": phoneNo,
+      "CurrencyCode": currencyCode,
       "ProfPic": profPic,
     };
   }
@@ -52,6 +57,7 @@ class CUserModel {
         email: data["Email"] ?? '',
         countryCode: data["CountryCode"] ?? '',
         phoneNo: data["PhoneNo"] ?? '',
+        currencyCode: data["CurrencyCode"] ?? '',
         profPic: data["ProfPic"] ?? '',
       );
     } else {

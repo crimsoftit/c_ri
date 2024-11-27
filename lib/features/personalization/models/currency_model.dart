@@ -1,9 +1,10 @@
 class CurrencyModel {
-  final String country;
+  final String country, countryCode;
   final String curCode;
 
   CurrencyModel({
     required this.country,
+    required this.countryCode,
     required this.curCode,
   });
 

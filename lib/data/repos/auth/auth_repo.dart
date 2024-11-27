@@ -1,7 +1,9 @@
 import 'package:c_ri/data/repos/user/user_repo.dart';
+import 'package:c_ri/features/authentication/controllers/signup/signup_controller.dart';
 import 'package:c_ri/features/authentication/screens/login/login.dart';
 import 'package:c_ri/features/authentication/screens/onboarding/onboarding_screen.dart';
 import 'package:c_ri/features/authentication/screens/signup/verify_email.dart';
+import 'package:c_ri/features/personalization/screens/location_tings/location_settings.dart';
 import 'package:c_ri/nav_menu.dart';
 import 'package:c_ri/utils/exceptions/exceptions.dart';
 import 'package:c_ri/utils/exceptions/firebase_auth_exceptions.dart';
@@ -23,6 +25,7 @@ class AuthRepo extends GetxController {
   // -- variables --
   final deviceStorage = GetStorage();
   final _auth = FirebaseAuth.instance;
+  final signupController = Get.put(SignupController());
 
   // -- get authenticated user data --
   User? get authUser => _auth.currentUser;
@@ -46,7 +49,13 @@ class AuthRepo extends GetxController {
         // initialize user-specific local storage
         await CLocalStorage.init(user.uid);
 
-        Get.offAll(() => const NavMenu());
+        if (signupController.userCurrencyCode.value == '') {
+          CPopupSnackBar.warningSnackBar(title: 'currency not established');
+          Get.offAll(() => const CLocationSettings());
+          //return;
+        } else {
+          Get.offAll(() => const NavMenu());
+        }
       } else {
         Get.offAll(() => VerifyEmailScreen(
               email: _auth.currentUser?.email,

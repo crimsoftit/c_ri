@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:c_ri/common/widgets/success_screen/success_screen.dart';
 import 'package:c_ri/data/repos/auth/auth_repo.dart';
+import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/txt_strings.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
@@ -10,6 +11,8 @@ import 'package:get/get.dart';
 
 class CVerifyEmailController extends GetxController {
   static CVerifyEmailController get instance => Get.find();
+
+  final userController = Get.put(CUserController());
 
   /* === send e-mail whenever verify email screen appears & set timer for auto redirect === */
   @override

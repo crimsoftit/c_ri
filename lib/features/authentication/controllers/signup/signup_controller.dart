@@ -66,6 +66,7 @@ class SignupController extends GetxController {
     for (var element in csvContent) {
       foundCsvContent.add(CurrencyModel(
         country: element[0],
+        countryCode: element[1],
         curCode: element[3],
       ));
     }
@@ -84,7 +85,7 @@ class SignupController extends GetxController {
   }
 
   /// -- fetch user's currency code by country --
-  fetchUserCurrency() {
+  fetchUserCurrencyByCountry() {
     currencyItemDetails.value = foundCsvContent
         .where((item) => item.country == userCountry.value)
         .toList();
@@ -157,10 +158,12 @@ class SignupController extends GetxController {
         countryCode: countryCode.value,
         // phoneNo: phoneNumber.text.trim(),
         phoneNo: completePhoneNo.value,
+        currencyCode: userCurrencyCode.value,
         profPic: '',
       );
 
       final userRepo = Get.put(CUserRepo());
+
       await userRepo.saveUserDetails(newUser);
 
       // -- remove loader
@@ -201,6 +204,6 @@ class SignupController extends GetxController {
     CPopupSnackBar.customToast(
       message: 'country: ${userCountry.value}',
     );
-    fetchUserCurrency();
+    fetchUserCurrencyByCountry();
   }
 }
