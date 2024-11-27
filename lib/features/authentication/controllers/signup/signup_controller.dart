@@ -73,15 +73,15 @@ class SignupController extends GetxController {
 
     /// -- fetch user's currency by country --
 
-    if (foundCsvContent.isNotEmpty) {
-      CPopupSnackBar.successSnackBar(
-        title: 'CSV file loaded',
-      );
-    } else {
-      CPopupSnackBar.errorSnackBar(
-        title: 'FAILED TO LOAD CSV FILE!!!',
-      );
-    }
+    // if (foundCsvContent.isNotEmpty) {
+    //   CPopupSnackBar.successSnackBar(
+    //     title: 'CSV file loaded',
+    //   );
+    // } else {
+    //   CPopupSnackBar.errorSnackBar(
+    //     title: 'FAILED TO LOAD CSV FILE!!!',
+    //   );
+    // }
   }
 
   /// -- fetch user's currency code by country --

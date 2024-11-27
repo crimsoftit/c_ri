@@ -3,7 +3,7 @@ import 'package:c_ri/features/authentication/controllers/signup/signup_controlle
 import 'package:c_ri/features/authentication/screens/login/login.dart';
 import 'package:c_ri/features/authentication/screens/onboarding/onboarding_screen.dart';
 import 'package:c_ri/features/authentication/screens/signup/verify_email.dart';
-import 'package:c_ri/features/personalization/screens/location_tings/location_settings.dart';
+import 'package:c_ri/features/personalization/screens/location_tings/location_settings_screen.dart';
 import 'package:c_ri/nav_menu.dart';
 import 'package:c_ri/utils/exceptions/exceptions.dart';
 import 'package:c_ri/utils/exceptions/firebase_auth_exceptions.dart';
