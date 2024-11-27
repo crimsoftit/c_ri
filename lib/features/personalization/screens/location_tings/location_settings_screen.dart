@@ -11,18 +11,35 @@ class CLocationSettings extends StatelessWidget {
     final locationController = Get.put(CLocationController());
 
     return Scaffold(
+      key
       appBar: AppBar(
         backgroundColor: CColors.rBrown.withOpacity(0.4),
-        title: Text('Location Settings'),
+        title: const Text('Location Settings'),
       ),
       body: Obx(
         () {
+          if (locationController.isLoading.value) {
+            return CircularProgressIndicator.adaptive();
+          }
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  Text(locationController.userCountry.value),
+                  Text(
+                    locationController.userCountry.value,
+                  ),
+                  Text(
+                    locationController.permissionStatus.value,
+                  ),
+                  !locationController.locationServicesEnabled.value
+                      ? ElevatedButton(
+                          onPressed: locationController.openLocationSettings,
+                          child: const Text(
+                            'open location settings',
+                          ),
+                        )
+                      : const SizedBox(),
                 ],
               ),
             ),
