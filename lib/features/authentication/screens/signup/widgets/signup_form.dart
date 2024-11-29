@@ -63,7 +63,7 @@ class RSignupForm extends StatelessWidget {
           // -- phone number field --
           IntlPhoneField(
             controller: signupController.phoneNumber,
-            initialCountryCode: 'KE',
+            initialCountryCode: 'US',
             focusNode: focusNode,
             dropdownTextStyle: const TextStyle(
               fontSize: 10,
@@ -97,13 +97,13 @@ class RSignupForm extends StatelessWidget {
               signupController.countryCode.value = country.code;
 
               if (kDebugMode) print('country changed to: ${country.dialCode}');
-              CPopupSnackBar.customToast(
-                message: 'country code: ${signupController.countryCode.value}',
-              );
+              // CPopupSnackBar.customToast(
+              //   message: 'country code: ${signupController.countryCode.value}',
+              // );
 
-              CPopupSnackBar.customToast(
-                message: 'country name: ${country.name}',
-              );
+              // CPopupSnackBar.customToast(
+              //   message: 'country name: ${country.name}',
+              // );
 
               signupController.onPhoneInputChanged(country);
             },
@@ -123,13 +123,13 @@ class RSignupForm extends StatelessWidget {
             ),
           ),
 
-          Obx(
-            () {
-              return Text(
-                '${signupController.userCountry.value} currency:${signupController.userCurrencyCode.value}',
-              );
-            },
-          ),
+          // Obx(
+          //   () {
+          //     return Text(
+          //       '${signupController.userCountry.value} currency:${signupController.userCurrencyCode.value}',
+          //     );
+          //   },
+          // ),
 
           const SizedBox(
             height: CSizes.spaceBtnInputFields,
@@ -216,6 +216,9 @@ class RSignupForm extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 //Get.to(() => const VerifyEmailScreen());
+                CPopupSnackBar.customToast(
+                  message: 'message',
+                );
                 signupController.signup();
               },
               child: Text(

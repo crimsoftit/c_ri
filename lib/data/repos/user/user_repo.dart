@@ -311,6 +311,48 @@ class CUserRepo extends GetxController {
     }
   }
 
+  /* == update any fields in a Specific user's collection == */
+  Future<void> updateUserCurrency(String curCode) async {
+    try {
+      await _db
+          .collection("users")
+          .doc(AuthRepo.instance.authUser?.uid)
+          .update({
+        'CurrencyCode': curCode,
+      });
+    } on FirebaseAuthException catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: "firebaseAuth exception error",
+        message: e.code.toString(),
+      );
+      throw CFirebaseAuthExceptions(e.code).message;
+    } on FirebaseException catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: "firebase exception error",
+        message: e.code.toString(),
+      );
+      throw CFirebaseAuthExceptions(e.code).message;
+    } on FormatException catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: "platform exception error",
+        message: e.message,
+      );
+      throw CFormatExceptions(e.message);
+    } on PlatformException catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: "platform exception error",
+        message: e.code.toString(),
+      );
+      throw CPlatformExceptions(e.code).message;
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: "An error occurred",
+        message: e.toString(),
+      );
+      throw 'something went wrong! please try again!';
+    }
+  }
+
   /* == remove user data from firestore == */
   Future<void> deleteUserRecord(String userID) async {
     try {

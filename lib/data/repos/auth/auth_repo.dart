@@ -49,11 +49,19 @@ class AuthRepo extends GetxController {
         // initialize user-specific local storage
         await CLocalStorage.init(user.uid);
 
-        if (signupController.userCurrencyCode.value == '') {
-          CPopupSnackBar.warningSnackBar(title: 'currency not established');
+        var userRepo = Get.put(CUserRepo());
+
+        var userDets = await userRepo.fetchUserDetails();
+
+        if (userDets.currencyCode == '') {
           Get.offAll(() => const CLocationSettings());
           //return;
         } else {
+          if (userDets.currencyCode.isEmpty) {
+            CPopupSnackBar.warningSnackBar(title: 'currency not established');
+          }
+          CPopupSnackBar.customToast(
+              message: 'currency: ${userDets.currencyCode}');
           Get.offAll(() => const NavMenu());
         }
       } else {

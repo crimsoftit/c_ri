@@ -1,5 +1,7 @@
 import 'package:android_intent/android_intent.dart';
+import 'package:c_ri/data/repos/user/user_repo.dart';
 import 'package:c_ri/features/authentication/controllers/signup/signup_controller.dart';
+import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
@@ -14,17 +16,28 @@ class CLocationController extends GetxController {
   @override
   void onInit() {
     getCurrentPosition();
+    if (permissionStatus.value == "NO PERMISSION") {
+      userCountry.value = 'Kenya';
+      signupController.fetchUserCurrencyByCountry(userCountry.value);
+
+      uCurCode.value = 'KES';
+    }
+
     super.onInit();
   }
 
   /// -- variables --
   final RxString currentAddress = ''.obs;
   final RxString userCountry = ''.obs;
-  final RxString uCurCode = ''.obs;
+  RxString uCurCode = 'KES'.obs;
   final RxString permissionStatus = ''.obs;
   final RxBool locationServicesEnabled = false.obs;
+  final RxBool locationFetchedSuccessfully = false.obs;
   final RxBool isLoading = false.obs;
   Position? currentPosition;
+
+  final selectCountryFormKey = GlobalKey<FormState>();
+  final countryField = TextEditingController();
 
   final LocationSettings locationSettings = const LocationSettings(
     accuracy: LocationAccuracy.high,
@@ -32,6 +45,8 @@ class CLocationController extends GetxController {
   );
 
   final signupController = Get.put(SignupController());
+  final userController = Get.put(CUserController());
+  final userRepo = Get.put(CUserRepo());
 
   Future<bool> handleLocationPermission() async {
     LocationPermission permission;
@@ -121,7 +136,7 @@ class CLocationController extends GetxController {
       isLoading.value = false;
       ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
         SnackBar(
-          content: Text('error fetching current position: ${e.toString()}'),
+          content: Text('error fetching current position: $e'),
         ),
       );
       debugPrint(e);
@@ -141,15 +156,44 @@ class CLocationController extends GetxController {
         // -- load user's currency code --
         signupController.fetchUserCurrencyByCountry(userCountry.value);
         uCurCode.value = signupController.userCurrencyCode.value;
+        locationFetchedSuccessfully.value = true;
       },
     ).catchError((onError) {
       ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
         const SnackBar(
-          content: Text('error fetching current position'),
+          content: Text('error fetching current position:'),
         ),
       );
+      locationFetchedSuccessfully.value = false;
       debugPrint(onError);
     });
+  }
+
+  onCountryChanged(String value) {
+    userCountry.value = value;
+
+    // -- load user's currency code --
+    signupController.fetchUserCurrencyByCountry(userCountry.value);
+    uCurCode.value = signupController.userCurrencyCode.value;
+    CPopupSnackBar.customToast(
+      message: 'country: $value',
+    );
+  }
+
+  countryPickerOnInit(String value) {
+    userCountry.value = value;
+  }
+
+  Future<void> updateUserCurrency() async {
+    try {
+      userRepo.updateUserCurrency(uCurCode.value);
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: "An error occurred",
+        message: e.toString(),
+      );
+      throw 'something went wrong! please try again!';
+    }
   }
 
   void openLocationSettings() async {

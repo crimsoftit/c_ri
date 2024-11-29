@@ -51,6 +51,7 @@ dependencies:
   flutter_native_splash: ^2.3.2
   image_picker: ^1.1.1
   flutter_typeahead: ^5.2.0
+  country_picker: any
 
   # swipe/slideshow and indicator - onboardng packages
   liquid_swipe: ^3.0.0

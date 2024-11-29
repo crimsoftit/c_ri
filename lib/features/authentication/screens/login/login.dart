@@ -3,6 +3,7 @@ import 'package:c_ri/common/widgets/login_signup/form_divider.dart';
 import 'package:c_ri/common/widgets/login_signup/social_buttons.dart';
 import 'package:c_ri/features/authentication/screens/login/widgets/login_form.dart';
 import 'package:c_ri/features/authentication/screens/login/widgets/login_header.dart';
+import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/constants/txt_strings.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,13 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: CColors.rBrown.withOpacity(0.4),
+        title: Text(
+          'sign in...',
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: CSpacingStyle.paddingWithAppBarHeight,

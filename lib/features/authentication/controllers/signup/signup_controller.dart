@@ -163,9 +163,9 @@ class SignupController extends GetxController {
             'your account has been created! verify your e-mail address to proceed!',
       );
 
-      CPopupSnackBar.customToast(
-        message: 'country code: ${countryCode.value}',
-      );
+      // CPopupSnackBar.customToast(
+      //   message: 'country code: ${countryCode.value}',
+      // );
 
       // -- move to verify email screen
       Get.to(() => VerifyEmailScreen(
@@ -188,9 +188,9 @@ class SignupController extends GetxController {
   onPhoneInputChanged(Country country) {
     userCountry.value = country.name;
     loadCSV();
-    CPopupSnackBar.customToast(
-      message: 'country: ${userCountry.value}',
-    );
+    // CPopupSnackBar.customToast(
+    //   message: 'country: ${userCountry.value}',
+    // );
     fetchUserCurrencyByCountry(userCountry.value);
   }
 }

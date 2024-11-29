@@ -17,7 +17,13 @@ class SignupScreen extends StatelessWidget {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: CColors.rBrown.withOpacity(0.4),
+        title: Text(
+          'create account',
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(CSizes.defaultSpace),
