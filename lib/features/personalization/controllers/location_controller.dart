@@ -1,4 +1,7 @@
 import 'package:android_intent/android_intent.dart';
+import 'package:c_ri/features/authentication/controllers/signup/signup_controller.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
+import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -14,11 +17,10 @@ class CLocationController extends GetxController {
     super.onInit();
   }
 
-  Notification callback when permission has changed
-
   /// -- variables --
   final RxString currentAddress = ''.obs;
   final RxString userCountry = ''.obs;
+  final RxString uCurCode = ''.obs;
   final RxString permissionStatus = ''.obs;
   final RxBool locationServicesEnabled = false.obs;
   final RxBool isLoading = false.obs;
@@ -28,6 +30,8 @@ class CLocationController extends GetxController {
     accuracy: LocationAccuracy.high,
     distanceFilter: 100,
   );
+
+  final signupController = Get.put(SignupController());
 
   Future<bool> handleLocationPermission() async {
     LocationPermission permission;
@@ -85,6 +89,19 @@ class CLocationController extends GetxController {
       isLoading.value = false;
       permissionStatus.value = "NO PERMISSION";
       return;
+    } else {
+      permissionStatus.value = "permission granted";
+    }
+
+    // -- check internet connectivity
+    final isConnected = await CNetworkManager.instance.isConnected();
+    if (!isConnected) {
+      // -- remove loader
+      isLoading.value = false;
+      CPopupSnackBar.customToast(
+        message: 'please check your internet connection',
+      );
+      return;
     }
 
     // await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
@@ -103,8 +120,8 @@ class CLocationController extends GetxController {
     }).catchError((e) {
       isLoading.value = false;
       ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
-        const SnackBar(
-          content: Text('error fetching current position'),
+        SnackBar(
+          content: Text('error fetching current position: ${e.toString()}'),
         ),
       );
       debugPrint(e);
@@ -120,6 +137,10 @@ class CLocationController extends GetxController {
         currentAddress.value =
             '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea} ${place.postalCode}';
         userCountry.value = '${place.country}';
+
+        // -- load user's currency code --
+        signupController.fetchUserCurrencyByCountry(userCountry.value);
+        uCurCode.value = signupController.userCurrencyCode.value;
       },
     ).catchError((onError) {
       ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(

@@ -113,6 +113,7 @@ class RSignupForm extends StatelessWidget {
 
           TextFormField(
             controller: signupController.currencyField,
+            //initialValue: 'KES',
             style: const TextStyle(
               height: 0.7,
             ),

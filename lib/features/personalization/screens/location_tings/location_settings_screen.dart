@@ -11,15 +11,17 @@ class CLocationSettings extends StatelessWidget {
     final locationController = Get.put(CLocationController());
 
     return Scaffold(
-      key
       appBar: AppBar(
         backgroundColor: CColors.rBrown.withOpacity(0.4),
         title: const Text('Location Settings'),
       ),
       body: Obx(
         () {
+          //locationController.handleLocationPermission();
           if (locationController.isLoading.value) {
-            return CircularProgressIndicator.adaptive();
+            return const Center(
+              child: CircularProgressIndicator.adaptive(),
+            );
           }
           return SingleChildScrollView(
             child: Padding(
@@ -30,14 +32,28 @@ class CLocationSettings extends StatelessWidget {
                     locationController.userCountry.value,
                   ),
                   Text(
+                    locationController.uCurCode.value,
+                  ),
+                  Text(
                     locationController.permissionStatus.value,
                   ),
                   !locationController.locationServicesEnabled.value
-                      ? ElevatedButton(
-                          onPressed: locationController.openLocationSettings,
-                          child: const Text(
-                            'open location settings',
-                          ),
+                      ? Row(
+                          children: [
+                            ElevatedButton(
+                              onPressed: locationController.getCurrentPosition,
+                              child: const Text(
+                                'refresh',
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed:
+                                  locationController.openLocationSettings,
+                              child: const Text(
+                                'open location settings',
+                              ),
+                            ),
+                          ],
                         )
                       : const SizedBox(),
                 ],

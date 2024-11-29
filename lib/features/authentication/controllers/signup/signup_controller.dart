@@ -70,25 +70,12 @@ class SignupController extends GetxController {
         curCode: element[3],
       ));
     }
-
-    /// -- fetch user's currency by country --
-
-    // if (foundCsvContent.isNotEmpty) {
-    //   CPopupSnackBar.successSnackBar(
-    //     title: 'CSV file loaded',
-    //   );
-    // } else {
-    //   CPopupSnackBar.errorSnackBar(
-    //     title: 'FAILED TO LOAD CSV FILE!!!',
-    //   );
-    // }
   }
 
   /// -- fetch user's currency code by country --
-  fetchUserCurrencyByCountry() {
-    currencyItemDetails.value = foundCsvContent
-        .where((item) => item.country == userCountry.value)
-        .toList();
+  fetchUserCurrencyByCountry(String uCountry) {
+    currencyItemDetails.value =
+        foundCsvContent.where((item) => item.country == uCountry).toList();
 
     userCurrencyCode.value = currencyItemDetails.first.curCode.toString();
   }
@@ -204,6 +191,6 @@ class SignupController extends GetxController {
     CPopupSnackBar.customToast(
       message: 'country: ${userCountry.value}',
     );
-    fetchUserCurrencyByCountry();
+    fetchUserCurrencyByCountry(userCountry.value);
   }
 }
