@@ -232,8 +232,7 @@ class InventoryScreen extends StatelessWidget {
                                             .labelSmall!
                                             .apply(
                                               color: CColors.rBrown
-                                                  .withOpacity(0.6),
-                                              fontStyle: FontStyle.italic,
+                                                  .withOpacity(0.7),
                                             ),
                                       ),
 

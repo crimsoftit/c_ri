@@ -111,26 +111,6 @@ class RSignupForm extends StatelessWidget {
                 CValidator.validatePhoneNumber(value.toString()),
           ),
 
-          TextFormField(
-            controller: signupController.currencyField,
-            //initialValue: 'KES',
-            style: const TextStyle(
-              height: 0.7,
-            ),
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Iconsax.direct),
-              labelText: 'currency',
-            ),
-          ),
-
-          // Obx(
-          //   () {
-          //     return Text(
-          //       '${signupController.userCountry.value} currency:${signupController.userCurrencyCode.value}',
-          //     );
-          //   },
-          // ),
-
           const SizedBox(
             height: CSizes.spaceBtnInputFields,
           ),

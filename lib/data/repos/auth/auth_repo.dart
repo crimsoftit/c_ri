@@ -55,13 +55,12 @@ class AuthRepo extends GetxController {
 
         if (userDets.currencyCode == '') {
           Get.offAll(() => const CLocationSettings());
-          //return;
         } else {
-          if (userDets.currencyCode.isEmpty) {
-            CPopupSnackBar.warningSnackBar(title: 'currency not established');
-          }
-          CPopupSnackBar.customToast(
-              message: 'currency: ${userDets.currencyCode}');
+          // if (userDets.currencyCode.isEmpty) {
+          //   CPopupSnackBar.warningSnackBar(title: 'currency not established');
+          // }
+          // CPopupSnackBar.customToast(
+          //     message: 'currency: ${userDets.currencyCode}');
           Get.offAll(() => const NavMenu());
         }
       } else {

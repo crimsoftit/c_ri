@@ -204,4 +204,11 @@ class CLocationController extends GetxController {
 
     await intent.launch();
   }
+
+  fetchUserCurrencyByCountry(String uCountry) {
+    // -- load user's currency code --
+    signupController.fetchUserCurrencyByCountry(userCountry.value);
+    uCurCode.value = signupController.userCurrencyCode.value;
+    locationFetchedSuccessfully.value = true;
+  }
 }

@@ -23,8 +23,6 @@ class CInventoryController extends GetxController {
   final RxList<CInventoryModel> foundInventoryItems = <CInventoryModel>[].obs;
 
   final RxString scanResults = ''.obs;
-  final RxString formattedBp = ''.obs;
-  final RxString formattedBp_1 = ''.obs;
   final RxString currencySymbol = ''.obs;
   final RxString countryCode = ''.obs;
 
@@ -86,9 +84,6 @@ class CInventoryController extends GetxController {
         message: e.toString(),
       );
     }
-    // finally {
-    //   isLoading.value = false;
-    // }
   }
 
   /// -- add inventory item to sqflite database --
@@ -183,7 +178,6 @@ class CInventoryController extends GetxController {
       isLoading.value = true;
 
       // -- update entry
-      // await dbHelper.updateInventoryItem(inventoryItem, int.parse(txtId.text));
       await dbHelper.updateInventoryItem(inventoryItem, int.parse(txtId.text));
 
       // -- refresh inventory list
@@ -208,9 +202,6 @@ class CInventoryController extends GetxController {
         message: e.toString(),
       );
     }
-    // finally {
-    //   isLoading.value = false;
-    // }
   }
 
   /// -- delete inventory item entry --

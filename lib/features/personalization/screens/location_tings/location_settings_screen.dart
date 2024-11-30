@@ -1,11 +1,9 @@
 import 'package:c_ri/common/widgets/login_signup/form_divider.dart';
 import 'package:c_ri/data/repos/auth/auth_repo.dart';
-import 'package:c_ri/features/authentication/controllers/signup/signup_controller.dart';
 import 'package:c_ri/features/personalization/controllers/location_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
-import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,7 +20,6 @@ class CLocationSettings extends StatelessWidget {
     //final userController = Get.put(CUserController());
 
     final locationController = Get.put(CLocationController());
-    final signupController = Get.put(SignupController());
 
     return Scaffold(
       appBar: AppBar(
@@ -32,6 +29,7 @@ class CLocationSettings extends StatelessWidget {
       body: Obx(
         () {
           //locationController.handleLocationPermission();
+
           if (locationController.isLoading.value) {
             return const Scaffold(
               backgroundColor: CColors.rBrown,
@@ -46,11 +44,22 @@ class CLocationSettings extends StatelessWidget {
           if (locationController.permissionStatus.value ==
                   'permission granted' &&
               locationController.isLoading.value == false) {
-            CPopupSnackBar.successSnackBar(title: 'rada safi');
-            signupController.fetchUserCurrencyByCountry(
+            //CPopupSnackBar.successSnackBar(title: 'rada safi');
+            locationController.fetchUserCurrencyByCountry(
                 locationController.userCountry.value);
             locationController.updateUserCurrency();
             AuthRepo.instance.screenRedirect();
+          }
+
+          if (locationController.isLoading.value) {
+            return const Scaffold(
+              backgroundColor: CColors.rBrown,
+              body: Center(
+                child: CircularProgressIndicator(
+                  color: CColors.white,
+                ),
+              ),
+            );
           }
 
           return SingleChildScrollView(
