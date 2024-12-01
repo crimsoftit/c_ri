@@ -42,6 +42,12 @@ class CHelperFunctions {
     }
   }
 
+  static String formatCurrency(String s) {
+    return s[0].toUpperCase() +
+        s[1].toUpperCase() +
+        s.substring(2).toLowerCase();
+  }
+
   static bool isDarkMode(BuildContext context) {
     return Theme.of(context).brightness == Brightness.dark;
   }

@@ -1,4 +1,5 @@
 import 'package:android_intent/android_intent.dart';
+import 'package:c_ri/data/repos/auth/auth_repo.dart';
 import 'package:c_ri/data/repos/user/user_repo.dart';
 import 'package:c_ri/features/authentication/controllers/signup/signup_controller.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
@@ -187,6 +188,7 @@ class CLocationController extends GetxController {
   Future<void> updateUserCurrency() async {
     try {
       userRepo.updateUserCurrency(uCurCode.value);
+      AuthRepo.instance.screenRedirect();
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
         title: "An error occurred",

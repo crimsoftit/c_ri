@@ -32,6 +32,8 @@ class InventoryScreen extends StatelessWidget {
     final userController = Get.put(CUserController());
 
     final searchController = Get.put(CSearchBarController());
+    final currency =
+        CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
 
     return Scaffold(
       /// -- body --
@@ -237,14 +239,13 @@ class InventoryScreen extends StatelessWidget {
                                       ),
 
                                       Text(
-                                        "Bp: ${userController.user.value.currencyCode} ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].buyingPrice : invController.inventoryItems[index].buyingPrice}",
+                                        "Bp: $currency.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].buyingPrice : invController.inventoryItems[index].buyingPrice}",
                                         style: Theme.of(context)
                                             .textTheme
                                             .labelSmall!
                                             .apply(
                                               color: CColors.rBrown
-                                                  .withOpacity(0.6),
-                                              fontStyle: FontStyle.italic,
+                                                  .withOpacity(0.7),
                                             ),
                                       ),
                                       // Text(
@@ -252,7 +253,7 @@ class InventoryScreen extends StatelessWidget {
                                   ),
                                 ),
                                 Text(
-                                  "USP: Ksh.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].unitSellingPrice : invController.inventoryItems[index].unitSellingPrice}  added by: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].userName.split(" ").elementAt(0) : invController.inventoryItems[index].userName.split(" ").elementAt(0)}",
+                                  "USP: $currency.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].unitSellingPrice : invController.inventoryItems[index].unitSellingPrice}  added by: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].userName.split(" ").elementAt(0) : invController.inventoryItems[index].userName.split(" ").elementAt(0)}",
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelSmall!
@@ -317,7 +318,7 @@ class InventoryScreen extends StatelessWidget {
         ),
       ),
 
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           invController.runInvScanner();
           showDialog(
@@ -330,9 +331,10 @@ class InventoryScreen extends StatelessWidget {
             ),
           );
         },
+        label: const Text('add item'),
         backgroundColor: Colors.brown,
         foregroundColor: Colors.white,
-        child: const Icon(
+        icon: const Icon(
           Iconsax.additem,
         ),
       ),

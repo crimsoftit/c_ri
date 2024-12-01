@@ -1,11 +1,13 @@
 import 'package:c_ri/common/widgets/layouts/c_expansion_tile.dart';
 import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
+import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/sales_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/screens/search/widgets/no_results_screen.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
+import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -22,8 +24,10 @@ class CItemsListView extends StatelessWidget {
   Widget build(BuildContext context) {
     final invController = Get.put(CInventoryController());
     final salesController = Get.put(CSalesController());
-
+    final userController = Get.put(CUserController());
     final searchController = Get.put(CSearchBarController());
+    final currency =
+        CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
 
     return Obx(
       () {
@@ -61,8 +65,8 @@ class CItemsListView extends StatelessWidget {
             //     : salesController.foundTxns[index].productCode;
 
             var amount = space == 'inventory'
-                ? 'bp: Ksh.${invController.foundInventoryItems[index].buyingPrice}'
-                : 't.Amount: Ksh.${salesController.foundTxns[index].totalAmount}';
+                ? 'bp: $currency.${invController.foundInventoryItems[index].buyingPrice}'
+                : 't.Amount: $currency.${salesController.foundTxns[index].totalAmount}';
 
             var qty = space == 'inventory'
                 ? '(${invController.foundInventoryItems[index].quantity} stocked)'
@@ -89,7 +93,7 @@ class CItemsListView extends StatelessWidget {
                 subTitleTxt1Item1: '$amount ',
                 subTitleTxt1Item2: qty,
                 subTitleTxt2Item1: space == 'inventory'
-                    ? 'usp: ${invController.foundInventoryItems[index].unitSellingPrice}'
+                    ? 'usp: $currency.${invController.foundInventoryItems[index].unitSellingPrice}'
                     : 'payment method: ${salesController.foundTxns[index].paymentMethod}',
                 subTitleTxt2Item2: '',
                 subTitleTxt3Item1: date,

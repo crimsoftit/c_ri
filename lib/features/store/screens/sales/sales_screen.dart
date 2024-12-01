@@ -3,6 +3,7 @@ import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_cont
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
 import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/common/widgets/tab_views/store_items_tabs.dart';
+import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/sales_controller.dart';
@@ -21,7 +22,7 @@ class SalesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-
+    final userController = Get.put(CUserController());
     final searchController = Get.put(CSearchBarController());
     final invController = Get.put(CInventoryController());
     final salesController = Get.put(CSalesController());
@@ -183,7 +184,7 @@ class SalesScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
-                                  'pCode: ${salesController.transactions[index].productCode} t.Amount: Ksh.${salesController.transactions[index].totalAmount}',
+                                  'pCode: ${salesController.transactions[index].productCode} t.Amount: ${userController.user.value.currencyCode}.${salesController.transactions[index].totalAmount}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelMedium!
@@ -233,16 +234,19 @@ class SalesScreen extends StatelessWidget {
         ),
 
         /// -- floating action button to scan item for sale --
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: Colors.brown,
+          foregroundColor: Colors.white,
+          icon: const Icon(
+            Iconsax.additem,
+          ),
+          label: const Text(
+            'transact',
+          ),
           onPressed: () {
             invController.fetchInventoryItems();
             salesController.scanItemForSale();
           },
-          backgroundColor: Colors.brown,
-          foregroundColor: Colors.white,
-          child: const Icon(
-            Iconsax.additem,
-          ),
         ),
       ),
     );

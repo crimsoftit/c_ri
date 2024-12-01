@@ -72,7 +72,7 @@ class CLocationSettings extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Visibility(
-                    visible: true,
+                    visible: false,
                     child: Column(
                       children: [
                         Text(
@@ -107,49 +107,11 @@ class CLocationSettings extends StatelessWidget {
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  // TextFormField(
-                                  //   //autofocus: true,
-                                  //   //initialValue: 'KE',
-                                  //   controller:
-                                  //       locationController.countryField,
-                                  //   decoration: const InputDecoration(
-                                  //     labelText: 'select country',
-                                  //   ),
-                                  //   onTap: () {
-                                  //     showCountryPicker(
-                                  //       context: context,
-                                  //       //showPhoneCode: true,
-                                  //       favorite: <String>['KE', 'UG'],
-                                  //       onSelect: (Country country) {},
-                                  //       countryListTheme:
-                                  //           CountryListThemeData(
-                                  //         borderRadius:
-                                  //             const BorderRadius.only(
-                                  //           topLeft: Radius.circular(20.0),
-                                  //           topRight: Radius.circular(20.0),
-                                  //         ),
-                                  //         bottomSheetHeight:
-                                  //             MediaQuery.of(context)
-                                  //                     .size
-                                  //                     .height *
-                                  //                 0.8,
-                                  //       ),
-                                  //     );
-                                  //   },
-                                  // ),
                                   Container(
                                     padding: const EdgeInsets.all(0),
                                     width: CHelperFunctions.screenWidth() * 0.6,
                                     decoration: BoxDecoration(
                                       color: CColors.rBrown.withOpacity(0.1),
-                                      // border: const Border(
-                                      //   bottom: BorderSide(
-                                      //     color: CColors.rBrown,
-                                      //   ),
-                                      //   // right: BorderSide(
-                                      //   //   color: CColors.rBrown,
-                                      //   // ),
-                                      // ),
                                       borderRadius: BorderRadius.circular(5),
                                     ),
                                     child: CountryCodePicker(
