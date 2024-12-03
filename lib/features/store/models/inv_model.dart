@@ -52,6 +52,21 @@ class CInventoryModel {
   double get unitSellingPrice => _unitSellingPrice;
   String get date => _date;
 
+  static List<String> getHeaders() {
+    return [
+      'productId',
+      'userId',
+      'userEmail',
+      'userName',
+      'pCode',
+      'name',
+      'quantity',
+      'buyingPrice',
+      'unitSellingPrice',
+      'date',
+    ];
+  }
+
   set userId(String newUid) {
     _userId = newUid;
   }

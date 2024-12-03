@@ -16,10 +16,12 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: CColors.rBrown.withOpacity(0.4),
+        backgroundColor: CColors.rBrown,
         title: Text(
           'sign in...',
-          style: Theme.of(context).textTheme.labelLarge,
+          style: Theme.of(context).textTheme.labelLarge!.apply(
+                color: CColors.white,
+              ),
         ),
       ),
       body: SingleChildScrollView(

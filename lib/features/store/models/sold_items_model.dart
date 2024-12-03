@@ -49,6 +49,25 @@ class CSoldItemsModel {
     this._date,
   );
 
+  static List<String> getHeaders() {
+    return [
+      'saleId',
+      'userId',
+      'userEmail',
+      'userName',
+      'productId',
+      'productCode',
+      'productName',
+      'quantity',
+      'totalAmount',
+      'unitSellingPrice',
+      'paymentMethod',
+      'customerName',
+      'customerContacts',
+      'date',
+    ];
+  }
+
   int? get saleId => _saleId;
 
   String get userId => _userId;

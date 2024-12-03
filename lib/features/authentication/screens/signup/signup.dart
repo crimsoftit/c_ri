@@ -19,10 +19,12 @@ class SignupScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: CColors.rBrown.withOpacity(0.2),
       appBar: AppBar(
-        backgroundColor: CColors.rBrown.withOpacity(0.4),
+        backgroundColor: CColors.rBrown,
         title: Text(
-          'create account',
-          style: Theme.of(context).textTheme.labelLarge,
+          'excited to have you!',
+          style: Theme.of(context).textTheme.labelLarge!.apply(
+                color: CColors.white,
+              ),
         ),
       ),
       body: SingleChildScrollView(

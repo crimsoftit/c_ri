@@ -1,3 +1,4 @@
+import 'package:c_ri/api/sheets/store_sheets_api.dart';
 import 'package:c_ri/app.dart';
 import 'package:c_ri/data/repos/auth/auth_repo.dart';
 import 'package:c_ri/firebase_options.dart';
@@ -12,6 +13,9 @@ Future<void> main() async {
   // -- todo: add widgets binding --
   final WidgetsBinding widgetsBinding =
       WidgetsFlutterBinding.ensureInitialized();
+
+  // -- initialize spreadsheets --
+  StoreSheetsApi.init();
 
   tz.initializeTimeZones();
 

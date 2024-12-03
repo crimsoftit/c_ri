@@ -14,18 +14,20 @@ class CLocationSettings extends StatelessWidget {
     super.key,
   });
 
-  //final CountryCodePicker? countryCodePicker;
   @override
   Widget build(BuildContext context) {
-    //final userController = Get.put(CUserController());
-
     final locationController = Get.put(CLocationController());
 
+    CHECK OUT SQUARE POS DEVICE SETTINGS SCREEN
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: CColors.rBrown.withOpacity(0.4),
-        title: const Text('Location Settings'),
-      ),
+      appBar: locationController.isLoading.value
+          ? !locationController.locationFetchedSuccessfully.value
+              ? AppBar(
+                  backgroundColor: CColors.rBrown.withOpacity(0.4),
+                  title: const Text('Location Settings'),
+                )
+              : null
+          : null,
       body: Obx(
         () {
           //locationController.handleLocationPermission();

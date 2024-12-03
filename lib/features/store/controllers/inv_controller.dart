@@ -1,8 +1,10 @@
+import 'package:c_ri/api/sheets/store_sheets_api.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +44,8 @@ class CInventoryController extends GetxController {
 
   final userController = Get.put(CUserController());
   final searchController = Get.put(CSearchBarController());
+
+  final invSheet = StoreSheetsApi.invSheet;
 
   @override
   void onInit() {
@@ -86,8 +90,10 @@ class CInventoryController extends GetxController {
     }
   }
 
+
+  USE MICROSECONDS_SINCE_EPOCH FOR PRODUCT ID
   /// -- add inventory item to sqflite database --
-  addInventoryItem(CInventoryModel inventoryItem) {
+  addInventoryItem(CInventoryModel inventoryItem) async {
     try {
       // start loader while products are fetched
       isLoading.value = true;
@@ -95,6 +101,29 @@ class CInventoryController extends GetxController {
       // add inventory item into sqflite db
       dbHelper.addInventoryItem(inventoryItem);
       fetchInventoryItems();
+
+      // -- check internet connectivity
+      final isConnected = await CNetworkManager.instance.isConnected();
+      if (isConnected) {
+        // -- save data to gsheets --
+        var gSheetsInvData = CInventoryModel(
+          userController.user.value.id,
+          userController.user.value.email,
+          userController.user.value.fullName,
+          txtCode.text.toString(),
+          txtName.text,
+          int.parse(txtQty.text),
+          double.parse(txtBP.text),
+          double.parse(txtUnitSP.text),
+          DateFormat('yyyy-MM-dd - kk:mm').format(
+            clock.now(),
+          ),
+        );
+        StoreSheetsApi.saveToGSheets([gSheetsInvData.toMap()], invSheet!);
+        CPopupSnackBar.customToast(
+          message: 'rada safi',
+        );
+      }
       isLoading.value = false;
 
       CPopupSnackBar.successSnackBar(

@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  android_intent: any
+  android_intent: any # discontinued for security concerns
 
   ## -- location services -- ##
   geolocator: any
@@ -52,6 +52,7 @@ dependencies:
   image_picker: ^1.1.1
   flutter_typeahead: ^5.2.0
   country_picker: any
+  gsheets: any
 
   # swipe/slideshow and indicator - onboardng packages
   liquid_swipe: ^3.0.0
@@ -70,10 +71,10 @@ dependencies:
   firebase_storage: ^12.1.1
 
   # -- state management
-  get: ^4.6.6
-  universal_io: ^2.2.2
-  get_storage: ^2.1.1
-  shimmer: ^3.0.0
+  get: any
+  universal_io: any
+  get_storage: any
+  shimmer: any
   
   # -- sqflite database storage
   sqflite: any

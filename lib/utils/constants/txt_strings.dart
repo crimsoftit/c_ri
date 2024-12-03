@@ -25,7 +25,7 @@ class CTexts {
   static const String loginSubTitle =
       "Make it work, make it right, make it fast.";
   static const String loginTitle = "Welcome back.";
-  static const String signUpTitle = 'Get On Board.';
+  static const String signUpTitle = 'welcome aboard.';
   static const String signUpSubTitle =
       'discover limitless choices & unmatched convenience...';
   static const String forgotPasswordTitle = "reset your password?";
