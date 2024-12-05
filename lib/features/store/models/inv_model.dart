@@ -1,5 +1,7 @@
 // ignore_for_file: unnecessary_getters_setters
 
+import 'dart:convert';
+
 class CInventoryModel {
   int? _productId;
 
@@ -39,6 +41,24 @@ class CInventoryModel {
     this._unitSellingPrice,
     this._date,
   );
+
+  // CInventoryModel copy({
+  //   String? strProductId,
+  //   String? roductId,
+  // }) {
+  //   return CInventoryModel.withID(
+  //     _productId ?? ,
+  //     _userId,
+  //     _userEmail,
+  //     _userName,
+  //     _pCode,
+  //     _name,
+  //     _quantity,
+  //     _buyingPrice,
+  //     _unitSellingPrice,
+  //     _date,
+  //   );
+  // }
 
   int? get productId => _productId;
   String get userId => _userId;
@@ -137,16 +157,16 @@ class CInventoryModel {
 
   // extract a InventoryModel object from a Map object
   CInventoryModel.fromMapObject(Map<String, dynamic> map) {
-    _productId = map['productId'];
+    _productId = jsonDecode(map['productId']);
     _userId = map['userId'];
     _userEmail = map['userEmail'];
     _userName = map['userName'];
 
     _name = map['name'];
     _pCode = map['pCode'];
-    _quantity = map['quantity'];
-    _buyingPrice = map['buyingPrice'];
-    _unitSellingPrice = map['unitSellingPrice'];
+    _quantity = jsonDecode(map['quantity']);
+    _buyingPrice = double.parse(map['buyingPrice']);
+    _unitSellingPrice = double.parse(map['unitSellingPrice']);
     _date = map['date'];
   }
 }

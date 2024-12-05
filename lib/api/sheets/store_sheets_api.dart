@@ -64,4 +64,13 @@ class StoreSheetsApi {
       List<Map<String, dynamic>> rowItems, Worksheet sheetName) async {
     sheetName.values.map.appendRows(rowItems);
   }
+
+  static Future<CInventoryModel?> fetchInvItemById(int id) async {
+    if (invSheet == null) return null;
+
+    final invMap =
+        await invSheet!.values.map.rowByKey(id.toString(), fromColumn: 1);
+
+    return CInventoryModel.fromMapObject(invMap!);
+  }
 }

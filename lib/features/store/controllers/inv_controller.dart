@@ -8,6 +8,7 @@ import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:clock/clock.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -24,6 +25,8 @@ class CInventoryController extends GetxController {
   final RxList<CInventoryModel> inventoryItems = <CInventoryModel>[].obs;
 
   final RxList<CInventoryModel> foundInventoryItems = <CInventoryModel>[].obs;
+
+  //final RxList<CInventoryModel> gSheetData = <CInventoryModel>[].obs;
 
   final RxString scanResults = ''.obs;
   final RxString currencySymbol = ''.obs;
@@ -55,6 +58,7 @@ class CInventoryController extends GetxController {
         searchController.txtSalesSearch.text == '') {
       foundInventoryItems.value = inventoryItems;
     }
+    fetchInvSheetItemsById();
     super.onInit();
   }
 
@@ -361,5 +365,23 @@ class CInventoryController extends GetxController {
         child: const Text('cancel'),
       ),
     );
+  }
+
+  /// -- fetch inventory data from google sheets --
+  Future fetchInvSheetItemsById() async {
+    final invItem = await StoreSheetsApi.fetchInvItemById(1733424766034751);
+
+    var gSheetData = invItem!.toMap();
+    CPopupSnackBar.customToast(message: '${gSheetData.entries}');
+
+    if (kDebugMode) {
+      print("----------");
+    }
+    if (kDebugMode) {
+      print(gSheetData);
+    }
+    if (kDebugMode) {
+      print("----------");
+    }
   }
 }
