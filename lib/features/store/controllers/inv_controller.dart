@@ -4,6 +4,7 @@ import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
+import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:clock/clock.dart';
@@ -90,8 +91,7 @@ class CInventoryController extends GetxController {
     }
   }
 
-
-  USE MICROSECONDS_SINCE_EPOCH FOR PRODUCT ID
+  /// ### -- MICROSECONDS_SINCE_EPOCH FOR PRODUCT ID -- ### ///
   /// -- add inventory item to sqflite database --
   addInventoryItem(CInventoryModel inventoryItem) async {
     try {
@@ -99,31 +99,52 @@ class CInventoryController extends GetxController {
       isLoading.value = true;
 
       // add inventory item into sqflite db
+      inventoryItem.productId = CHelperFunctions.generateId();
+
       dbHelper.addInventoryItem(inventoryItem);
       fetchInventoryItems();
 
+      // fetch this item from sqflite db to get the product id
+      var thisItem = await dbHelper.fetchInvItemByCodeAndEmail(
+          inventoryItem.pCode, userController.user.value.email);
+
       // -- check internet connectivity
       final isConnected = await CNetworkManager.instance.isConnected();
+
       if (isConnected) {
-        // -- save data to gsheets --
-        var gSheetsInvData = CInventoryModel(
-          userController.user.value.id,
-          userController.user.value.email,
-          userController.user.value.fullName,
-          txtCode.text.toString(),
-          txtName.text,
-          int.parse(txtQty.text),
-          double.parse(txtBP.text),
-          double.parse(txtUnitSP.text),
-          DateFormat('yyyy-MM-dd - kk:mm').format(
-            clock.now(),
-          ),
-        );
-        StoreSheetsApi.saveToGSheets([gSheetsInvData.toMap()], invSheet!);
+        if (thisItem.isNotEmpty) {
+          // -- save data to gsheets --
+          var gSheetsInvData = CInventoryModel.withID(
+            thisItem.first.productId,
+            userController.user.value.id,
+            userController.user.value.email,
+            userController.user.value.fullName,
+            txtCode.text.toString(),
+            txtName.text,
+            int.parse(txtQty.text),
+            double.parse(txtBP.text),
+            double.parse(txtUnitSP.text),
+            DateFormat('yyyy-MM-dd - kk:mm').format(
+              clock.now(),
+            ),
+          );
+          StoreSheetsApi.saveToGSheets([gSheetsInvData.toMap()], invSheet!);
+          CPopupSnackBar.customToast(
+            message: 'rada safi',
+          );
+        } else {
+          isLoading.value = false;
+          CPopupSnackBar.errorSnackBar(
+              title: 'ERROR SAVING ITEM ONLINE: DOES NOT EXIST!!! ',
+              message: 'MAKOSA MAKOSA MAKOSA!!! PROBLEMS PROBLEMS PROBLEMS!!!');
+        }
+      } else {
         CPopupSnackBar.customToast(
-          message: 'rada safi',
+          message:
+              'while this works offline, consider using an internet connection to back up your data online!',
         );
       }
+
       isLoading.value = false;
 
       CPopupSnackBar.successSnackBar(
@@ -148,7 +169,7 @@ class CInventoryController extends GetxController {
       isLoading.value = true;
 
       // fetch scanned item from sqflite db
-      final fetchedItem = await dbHelper.getScannedInvItem(
+      final fetchedItem = await dbHelper.fetchInvItemByCodeAndEmail(
           code, userController.user.value.email);
 
       //fetchInventoryItems();
@@ -341,7 +362,4 @@ class CInventoryController extends GetxController {
       ),
     );
   }
-
-  /// -- set data for sell item screen --
-  formatPrice(String value) {}
 }

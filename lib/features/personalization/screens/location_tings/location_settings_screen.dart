@@ -18,7 +18,7 @@ class CLocationSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     final locationController = Get.put(CLocationController());
 
-    CHECK OUT SQUARE POS DEVICE SETTINGS SCREEN
+    /// #### ==== CHECK OUT SQUARE POS DEVICE SETTINGS SCREEN === #### ///
     return Scaffold(
       appBar: locationController.isLoading.value
           ? !locationController.locationFetchedSuccessfully.value

@@ -37,7 +37,7 @@ class DbHelper {
         onCreate: (database, version) {
       database.execute('''
           CREATE TABLE $invTable (
-            productId INTEGER PRIMARY KEY AUTOINCREMENT,
+            productId INTEGER PRIMARY KEY NOT NULL,
             userId TEXT NOT NULL,
             userEmail TEXT NOT NULL,
             userName TEXT NOT NULL,
@@ -117,7 +117,7 @@ class DbHelper {
   }
 
   // fetch operation: get barcode-scanned inventory object from the database
-  Future<List<CInventoryModel>> getScannedInvItem(
+  Future<List<CInventoryModel>> fetchInvItemByCodeAndEmail(
       String code, String email) async {
     final List<Map<String, dynamic>> maps = await _db!.query(
       invTable,

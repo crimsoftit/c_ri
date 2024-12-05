@@ -99,14 +99,14 @@ dependencies:
   clock: any
   #currency_pickers: any
   country_code_picker: any
-  flutter_sim_country_code: any
+  #flutter_sim_country_code: any
   country_codes: any
 
 
   # -- scanners --
   barcode_scan2: any
   flutter_barcode_scanner: any
-  flutter_scanner_devxhub: ^1.0.2
+  #flutter_scanner_devxhub: ^1.0.2
 
   # -- charts --
   syncfusion_flutter_charts: any

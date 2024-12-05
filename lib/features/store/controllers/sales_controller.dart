@@ -198,7 +198,8 @@ class CSalesController extends GetxController {
         );
       } else {
         CPopupSnackBar.customToast(
-            message: 'item not found! please scan again or search inventory');
+          message: 'item not found! please scan again or search inventory',
+        );
         fetchTransactions();
       }
     } on PlatformException catch (platformException) {
@@ -232,7 +233,7 @@ class CSalesController extends GetxController {
       isLoading.value = true;
 
       // fetch scanned item from sqflite db
-      final fetchedItem = await dbHelper.getScannedInvItem(
+      final fetchedItem = await dbHelper.fetchInvItemByCodeAndEmail(
           code, userController.user.value.email);
 
       //fetchInventoryItems();

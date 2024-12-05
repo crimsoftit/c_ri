@@ -80,6 +80,9 @@ class AddUpdateInventoryForm extends StatelessWidget {
                     },
                   ),
                 ),
+                onChanged: (barcodeValue) {
+                  invController.fetchItemByCode(barcodeValue);
+                },
                 style: const TextStyle(
                   fontWeight: FontWeight.normal,
                 ),
@@ -140,20 +143,6 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   return CValidator.validateNumber('buying price', value);
                 },
               ),
-              // Obx(
-              //   () {
-              //     return Column(
-              //       children: [
-              //         Text(
-              //           '${invController.formattedBp.value}  ${invController.formattedBp_1.value} ${invController.currencySymbol.value}',
-              //         ),
-              //         Text(
-              //           'country code: ${invController.countryCode.value}',
-              //         ),
-              //       ],
-              //     );
-              //   },
-              // ),
               const SizedBox(
                 height: CSizes.spaceBtnInputFields / 2,
               ),
@@ -201,7 +190,6 @@ class AddUpdateInventoryForm extends StatelessWidget {
                           style: Theme.of(context).textTheme.labelMedium!.apply(
                                 color: CColors.white,
                               ),
-                          //isNew ? 'add entry' : 'update',
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
@@ -217,11 +205,6 @@ class AddUpdateInventoryForm extends StatelessWidget {
                         }
                         invController.addOrUpdateInventoryItem(inventoryItem);
                         Navigator.pop(context, true);
-                        // Navigator.popAndPushNamed(
-                        //   context,
-                        //   '/inventory/item_details/',
-                        //   arguments: invItem.pCode,
-                        // );
                       },
                     ),
                   ),

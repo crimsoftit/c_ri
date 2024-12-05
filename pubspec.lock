@@ -502,22 +502,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.1"
-  flutter_scanner_devxhub:
-    dependency: "direct main"
-    description:
-      name: flutter_scanner_devxhub
-      sha256: "340ac9bbffbf8dc512813a73700051eed43ad7a8ac3db3ebd9bcf421b1981948"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3"
-  flutter_sim_country_code:
-    dependency: "direct main"
-    description:
-      name: flutter_sim_country_code
-      sha256: fd6233ad01b811f5d2845c5b1c18120488417f2882a84df602daa65324e8371e
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.2"
   flutter_test:
     dependency: "direct dev"
     description: flutter

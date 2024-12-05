@@ -79,6 +79,10 @@ class CInventoryModel {
     _userName = newUName;
   }
 
+  set productId(int? newId) {
+    _productId = newId;
+  }
+
   set pCode(String newPcode) {
     _pCode = newPcode;
   }
