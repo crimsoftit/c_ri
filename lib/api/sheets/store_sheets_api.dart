@@ -65,6 +65,7 @@ class StoreSheetsApi {
     sheetName.values.map.appendRows(rowItems);
   }
 
+  /// -- fetch inventory item by its id from google sheets --
   static Future<CInventoryModel?> fetchInvItemById(int id) async {
     if (invSheet == null) return null;
 

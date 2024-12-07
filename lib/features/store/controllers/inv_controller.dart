@@ -58,7 +58,7 @@ class CInventoryController extends GetxController {
         searchController.txtSalesSearch.text == '') {
       foundInventoryItems.value = inventoryItems;
     }
-    fetchInvSheetItemsById();
+    //fetchInvSheetItemsById();
     super.onInit();
   }
 
