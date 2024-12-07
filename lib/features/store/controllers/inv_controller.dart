@@ -26,7 +26,7 @@ class CInventoryController extends GetxController {
 
   final RxList<CInventoryModel> foundInventoryItems = <CInventoryModel>[].obs;
 
-  //final RxList<CInventoryModel> gSheetData = <CInventoryModel>[].obs;
+  final RxList<CInventoryModel> gSheetData = <CInventoryModel>[].obs;
 
   final RxString scanResults = ''.obs;
   final RxString currencySymbol = ''.obs;
@@ -369,16 +369,16 @@ class CInventoryController extends GetxController {
 
   /// -- fetch inventory data from google sheets --
   Future fetchInvSheetItemById() async {
-    final invItem = await StoreSheetsApi.fetchInvItemById(1733424766034751);
+    final invItem = await StoreSheetsApi.fetchInvItemById(1733610866310164);
 
-    var gSheetData = invItem!.toMap();
-    CPopupSnackBar.customToast(message: '${gSheetData.entries}');
+    var gSheetItemData = invItem!.toMap();
+    CPopupSnackBar.customToast(message: '${gSheetItemData.entries}');
 
     if (kDebugMode) {
       print("----------");
     }
     if (kDebugMode) {
-      print(gSheetData);
+      print(gSheetItemData);
     }
     if (kDebugMode) {
       print("----------");
