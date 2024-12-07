@@ -1,4 +1,5 @@
 import 'package:c_ri/api/sheets/creds/gsheets_creds.dart';
+import 'package:c_ri/features/store/models/gsheet_models/inv_sheet_fields.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/models/sold_items_model.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
@@ -26,12 +27,8 @@ class StoreSheetsApi {
         title: "TxnsSheet",
       );
 
-      final invHeaders = CInventoryModel.getHeaders();
-      invSheet!.values.insertRow(1, invHeaders);
-      CPopupSnackBar.successSnackBar(
-        title: 'rada safi',
-        message: 'INVENTORY SHEET HEADERS SET!!',
-      );
+      final invSheetHeaders = InvSheetFields.getInvSheetHeaders();
+      invSheet!.values.insertRow(1, invSheetHeaders);
 
       final txnsHeaders = CSoldItemsModel.getHeaders();
       if (txnsSheet != null) {
@@ -69,9 +66,8 @@ class StoreSheetsApi {
   static Future<CInventoryModel?> fetchInvItemById(int id) async {
     if (invSheet == null) return null;
 
-    final invMap =
-        await invSheet!.values.map.rowByKey(id.toString(), fromColumn: 1);
+    final invMap = await invSheet!.values.map.rowByKey(id, fromColumn: 1);
 
-    return CInventoryModel.fromMapObject(invMap!);
+    return CInventoryModel.gSheetFromJson(invMap!);
   }
 }

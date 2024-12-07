@@ -1,5 +1,9 @@
 // ignore_for_file: unnecessary_getters_setters
 
+import 'dart:convert';
+
+import 'package:c_ri/features/store/models/gsheet_models/inv_sheet_fields.dart';
+
 class CInventoryModel {
   int? _productId;
 
@@ -40,24 +44,6 @@ class CInventoryModel {
     this._date,
   );
 
-  // CInventoryModel copy({
-  //   String? strProductId,
-  //   String? roductId,
-  // }) {
-  //   return CInventoryModel.withID(
-  //     _productId ?? ,
-  //     _userId,
-  //     _userEmail,
-  //     _userName,
-  //     _pCode,
-  //     _name,
-  //     _quantity,
-  //     _buyingPrice,
-  //     _unitSellingPrice,
-  //     _date,
-  //   );
-  // }
-
   int? get productId => _productId;
   String get userId => _userId;
   String get userEmail => _userEmail;
@@ -69,21 +55,6 @@ class CInventoryModel {
   double get buyingPrice => _buyingPrice;
   double get unitSellingPrice => _unitSellingPrice;
   String get date => _date;
-
-  static List<String> getHeaders() {
-    return [
-      'productId',
-      'userId',
-      'userEmail',
-      'userName',
-      'pCode',
-      'name',
-      'quantity',
-      'buyingPrice',
-      'unitSellingPrice',
-      'date',
-    ];
-  }
 
   set userId(String newUid) {
     _userId = newUid;
@@ -166,5 +137,21 @@ class CInventoryModel {
     _buyingPrice = map['buyingPrice'];
     _unitSellingPrice = map['unitSellingPrice'];
     _date = map['date'];
+  }
+
+  // extract a InventoryModel object from a GSheet Map object
+  static CInventoryModel gSheetFromJson(Map<String, dynamic> json) {
+    return CInventoryModel.withID(
+      jsonDecode(json[InvSheetFields.productId]),
+      json[InvSheetFields.userId],
+      json[InvSheetFields.userEmail],
+      json[InvSheetFields.userName],
+      json[InvSheetFields.pCode],
+      json[InvSheetFields.name],
+      jsonDecode(json[InvSheetFields.quantity]),
+      double.parse(json[InvSheetFields.buyingPrice]),
+      double.parse(json[InvSheetFields.unitSellingPrice]),
+      json[InvSheetFields.date],
+    );
   }
 }

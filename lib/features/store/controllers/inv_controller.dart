@@ -58,7 +58,7 @@ class CInventoryController extends GetxController {
         searchController.txtSalesSearch.text == '') {
       foundInventoryItems.value = inventoryItems;
     }
-    //fetchInvSheetItemsById();
+    fetchInvSheetItemById();
     super.onInit();
   }
 
@@ -368,7 +368,7 @@ class CInventoryController extends GetxController {
   }
 
   /// -- fetch inventory data from google sheets --
-  Future fetchInvSheetItemsById() async {
+  Future fetchInvSheetItemById() async {
     final invItem = await StoreSheetsApi.fetchInvItemById(1733424766034751);
 
     var gSheetData = invItem!.toMap();
