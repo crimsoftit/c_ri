@@ -70,4 +70,21 @@ class StoreSheetsApi {
 
     return CInventoryModel.gSheetFromJson(invMap!);
   }
+
+  static Future<List<CInventoryModel?>?> fetchAllGsheetInvItems() async {
+    if (invSheet == null) return null;
+
+    final invList = await invSheet!.values.map.allRows();
+
+    CPopupSnackBar.customToast(message: invList.toString());
+    if (kDebugMode) {
+      print(invList == null
+          ? <CInventoryModel>[]
+          : invList.map(CInventoryModel.gSheetFromJson).toList());
+    }
+
+    return invList == null
+        ? <CInventoryModel>[]
+        : invList.map(CInventoryModel.gSheetFromJson).toList();
+  }
 }

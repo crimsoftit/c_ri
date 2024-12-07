@@ -54,11 +54,12 @@ class CInventoryController extends GetxController {
   @override
   void onInit() {
     fetchInventoryItems();
+    StoreSheetsApi.fetchAllGsheetInvItems();
     if (searchController.salesShowSearchField.isTrue &&
         searchController.txtSalesSearch.text == '') {
       foundInventoryItems.value = inventoryItems;
     }
-    fetchInvSheetItemById();
+    //fetchInvSheetItemById();
     super.onInit();
   }
 

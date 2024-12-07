@@ -142,7 +142,7 @@ class CInventoryModel {
   // extract a InventoryModel object from a GSheet Map object
   static CInventoryModel gSheetFromJson(Map<String, dynamic> json) {
     return CInventoryModel.withID(
-      jsonDecode(json[InvSheetFields.productId]),
+      jsonDecode(json[InvSheetFields.productId].toString().replaceAll('.', '')),
       json[InvSheetFields.userId],
       json[InvSheetFields.userEmail],
       json[InvSheetFields.userName],
