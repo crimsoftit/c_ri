@@ -43,6 +43,7 @@ class GsheetsInvScreen extends StatelessWidget {
 
   List<DataRow> createRows() {
     final invController = Get.put(CInventoryController());
+    invController.fetchAllInvSheetItems();
     return invController.gSheetData.map(
       (e) {
         return DataRow(

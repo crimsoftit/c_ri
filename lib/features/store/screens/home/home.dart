@@ -1,6 +1,7 @@
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/store/screens/home/widgets/home_appbar.dart';
+import 'package:c_ri/features/store/screens/inventory/gsheets_inv_table_screen.dart';
 import 'package:c_ri/features/store/screens/search/search_results.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -45,8 +46,8 @@ class HomeScreen extends StatelessWidget {
                   ),
 
                   // -- ## ALL ABOUT CATEGORIES ## --
-                  const Padding(
-                    padding: EdgeInsets.only(
+                  Padding(
+                    padding: const EdgeInsets.only(
                       left: CSizes.defaultSpace,
                     ),
                     child: Column(
@@ -56,11 +57,14 @@ class HomeScreen extends StatelessWidget {
                           showActionBtn: true,
                           title: 'popular categories',
                           txtColor: CColors.white,
-                          btnTitle: 'view all',
+                          btnTitle: 'gsheet inventory data',
                           btnTxtColor: CColors.grey,
                           editFontSize: true,
+                          onPressed: () {
+                            Get.to(() => const GsheetsInvScreen());
+                          },
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: CSizes.spaceBtnItems,
                         ),
                       ],

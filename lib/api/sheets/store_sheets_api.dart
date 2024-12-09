@@ -76,7 +76,6 @@ class StoreSheetsApi {
 
     final invList = await invSheet!.values.map.allRows();
 
-    CPopupSnackBar.customToast(message: invList.toString());
     if (kDebugMode) {
       print(invList == null
           ? <CInventoryModel>[]

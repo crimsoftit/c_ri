@@ -54,7 +54,7 @@ class CInventoryController extends GetxController {
   @override
   void onInit() {
     fetchInventoryItems();
-    StoreSheetsApi.fetchAllGsheetInvItems();
+    //fetchAllInvSheetItems();
     if (searchController.salesShowSearchField.isTrue &&
         searchController.txtSalesSearch.text == '') {
       foundInventoryItems.value = inventoryItems;
@@ -63,7 +63,7 @@ class CInventoryController extends GetxController {
     super.onInit();
   }
 
-  /// -- fetch list of inventory items --
+  /// -- fetch list of inventory items from sqflite db --
   Future<List<CInventoryModel>> fetchInventoryItems() async {
     try {
       // start loader while products are fetched
@@ -366,6 +366,26 @@ class CInventoryController extends GetxController {
         child: const Text('cancel'),
       ),
     );
+  }
+
+  /// -- fetch list of inventory items from google sheets --
+  Future fetchAllInvSheetItems() async {
+    try {
+      // fetch items from sqflite db
+      var gsheetItemsList = (await StoreSheetsApi.fetchAllGsheetInvItems())!;
+
+      gSheetData.assignAll(gsheetItemsList as Iterable<CInventoryModel>);
+
+      CPopupSnackBar.customToast(message: gSheetData.first.name);
+
+      return gSheetData;
+    } catch (e) {
+      isLoading.value = false;
+      return CPopupSnackBar.errorSnackBar(
+        title: 'Oh Snap!',
+        message: e.toString(),
+      );
+    }
   }
 
   /// -- fetch inventory data from google sheets --
