@@ -5,7 +5,7 @@ import 'package:c_ri/features/store/models/sold_items_model.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gsheets/gsheets.dart';
-
+CHECK OUT THE GOOGLE APPS SCRIPT APPROACH -- FROM A PUBLISHED SHEET
 class StoreSheetsApi {
   static const gsheetCredentials = GsheetsCreds.credentials;
   static const spreadsheetId = '1iUtgSjdyP3Q3cpdyhOftTAZI8_Bujv69QZpg06oMK_E';
@@ -59,6 +59,7 @@ class StoreSheetsApi {
 
   static Future saveToGSheets(
       List<Map<String, dynamic>> rowItems, Worksheet sheetName) async {
+    if (invSheet == null) return;
     sheetName.values.map.appendRows(rowItems);
   }
 
@@ -71,6 +72,16 @@ class StoreSheetsApi {
     return CInventoryModel.gSheetFromJson(invMap!);
   }
 
+  /// -- fetch inventory item by user's email address from google sheets --
+  static Future<CInventoryModel?> fetchInvItemEmail(String email) async {
+    if (invSheet == null) return null;
+
+    final invMap = await invSheet!.values.map.rowByKey(email, fromColumn: 3);
+
+    return CInventoryModel.gSheetFromJson(invMap!);
+  }
+
+  /// -- fetch all inventory items from google sheets --
   static Future<List<CInventoryModel?>?> fetchAllGsheetInvItems() async {
     if (invSheet == null) return null;
 
@@ -85,5 +96,19 @@ class StoreSheetsApi {
     return invList == null
         ? <CInventoryModel>[]
         : invList.map(CInventoryModel.gSheetFromJson).toList();
+  }
+
+  /// -- update data in google sheets --
+  static Future<bool> updateInvData(
+      int id, Map<String, dynamic> itemModel) async {
+    try {
+      return invSheet!.values.map.insertRowByKey(id, itemModel);
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'error updating sheet data',
+        message: e.toString(),
+      );
+      throw e.toString();
+    }
   }
 }

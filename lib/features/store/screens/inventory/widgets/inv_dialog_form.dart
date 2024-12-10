@@ -37,7 +37,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
             children: [
               Visibility(
                 maintainState: true,
-                visible: false,
+                visible: true,
                 child: TextFormField(
                   controller: invController.txtId,
                   readOnly: true,
@@ -49,7 +49,6 @@ class AddUpdateInventoryForm extends StatelessWidget {
               ),
               TextFormField(
                 controller: invController.txtName,
-                //readOnly: true,
                 decoration: InputDecoration(
                   labelText: 'product name',
                   labelStyle: textStyle,
@@ -81,7 +80,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   ),
                 ),
                 onChanged: (barcodeValue) {
-                  invController.fetchItemByCode(barcodeValue);
+                  invController.fetchItemByCodeAndEmail(barcodeValue);
                 },
                 style: const TextStyle(
                   fontWeight: FontWeight.normal,

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -85,8 +87,15 @@ class CHelperFunctions {
     return wrappedList;
   }
 
+  static int generateRandom3DigitNumber() {
+    Random random = Random();
+    int min = 100;
+    int max = 999;
+    return random.nextInt(max - min) + min;
+  }
+
   static int generateId() {
     final now = DateTime.now();
-    return now.microsecondsSinceEpoch;
+    return now.millisecondsSinceEpoch + generateRandom3DigitNumber();
   }
 }

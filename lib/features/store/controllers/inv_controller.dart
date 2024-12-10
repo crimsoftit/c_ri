@@ -33,6 +33,7 @@ class CInventoryController extends GetxController {
   final RxString countryCode = ''.obs;
 
   final RxBool itemExists = false.obs;
+  final RxBool gSheetInvItemExists = false.obs;
   final RxInt currentItemId = 0.obs;
 
   final txtId = TextEditingController();
@@ -168,7 +169,7 @@ class CInventoryController extends GetxController {
   }
 
   /// -- fetch inventory item by code --
-  Future<List<CInventoryModel>> fetchItemByCode(String code) async {
+  Future<List<CInventoryModel>> fetchItemByCodeAndEmail(String code) async {
     try {
       // start loader while products are fetched
       isLoading.value = true;
@@ -306,7 +307,36 @@ class CInventoryController extends GetxController {
 
       if (itemExists.value) {
         updateInventoryItem(inventoryItem);
-        //fetchInventoryItems();
+        // -- check internet connectivity
+        final isConnected = await CNetworkManager.instance.isConnected();
+
+        if (isConnected) {
+          //fetchInvSheetItemById(int.parse(txtId.text));
+
+          updateInvSheetItem(int.parse(txtId.text), inventoryItem);
+          // -- success message
+          CPopupSnackBar.successSnackBar(
+            title: 'update sync',
+            message: 'UPDATE SYNCRONIZED...',
+          );
+
+          // if (gSheetInvItemExists.value == true) {
+
+          // }
+          // else if (gSheetInvItemExists.value == false) {
+          //   StoreSheetsApi.saveToGSheets([inventoryItem.toMap()], invSheet!);
+          //   // -- success message
+          //   CPopupSnackBar.successSnackBar(
+          //     title: 'add sync',
+          //     message: 'ADDITION SYNCRONIZED...',
+          //   );
+          // }
+        } else {
+          CPopupSnackBar.customToast(
+            message:
+                'while this works offline, consider using an internet connection to back up your data online!',
+          );
+        }
       } else {
         addInventoryItem(inventoryItem);
       }
@@ -319,7 +349,7 @@ class CInventoryController extends GetxController {
       scanResults.value = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'cancel', true, ScanMode.BARCODE);
       txtCode.text = scanResults.value;
-      fetchItemByCode(txtCode.text);
+      fetchItemByCodeAndEmail(txtCode.text);
     } on PlatformException {
       scanResults.value = "ERROR!! failed to get platform version";
     } catch (e) {
@@ -376,7 +406,7 @@ class CInventoryController extends GetxController {
 
       gSheetData.assignAll(gsheetItemsList as Iterable<CInventoryModel>);
 
-      CPopupSnackBar.customToast(message: gSheetData.first.name);
+      //CPopupSnackBar.customToast(message: gSheetData.first.name);
 
       return gSheetData;
     } catch (e) {
@@ -389,20 +419,32 @@ class CInventoryController extends GetxController {
   }
 
   /// -- fetch inventory data from google sheets --
-  Future fetchInvSheetItemById() async {
-    final invItem = await StoreSheetsApi.fetchInvItemById(1733610866310164);
-
+  Future fetchInvSheetItemById(int id) async {
+    final invItem = await StoreSheetsApi.fetchInvItemById(id);
     var gSheetItemData = invItem!.toMap();
-    CPopupSnackBar.customToast(message: '${gSheetItemData.entries}');
+    if (gSheetItemData.isNotEmpty) {
+      gSheetInvItemExists.value = true;
+
+      CPopupSnackBar.customToast(message: '${gSheetItemData.entries}');
+    } else if (gSheetItemData.isEmpty) {
+      gSheetInvItemExists.value = false;
+    }
 
     if (kDebugMode) {
-      print("----------");
+      print("----------\n\n $gSheetItemData \n\n ----------");
     }
-    if (kDebugMode) {
-      print(gSheetItemData);
-    }
-    if (kDebugMode) {
-      print("----------");
+  }
+
+  /// -- update single item data in google sheets --
+  Future updateInvSheetItem(int id, CInventoryModel itemModel) async {
+    try {
+      await StoreSheetsApi.updateInvData(id, itemModel.toMap());
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'error updating sheet data',
+        message: e.toString(),
+      );
+      throw e.toString();
     }
   }
 }

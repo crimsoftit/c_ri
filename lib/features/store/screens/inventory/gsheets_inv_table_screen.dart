@@ -90,18 +90,22 @@ class GsheetsInvScreen extends StatelessWidget {
 
     return Scaffold(
       body: SingleChildScrollView(
-        child: SafeArea(
-          child: SizedBox(
-            width: CHelperFunctions.screenWidth() * 0.97,
-            height: CHelperFunctions.screenHeight() * 0.7,
-            child: Obx(
-              () {
-                //invController.fetchAllInvSheetData();
-                return DataTable(
-                  columns: createColumns(),
-                  rows: createRows(),
-                );
-              },
+        scrollDirection: Axis.horizontal,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: SafeArea(
+            child: SizedBox(
+              width: CHelperFunctions.screenWidth() * 0.97,
+              height: CHelperFunctions.screenHeight() * 0.7,
+              child: Obx(
+                () {
+                  //invController.fetchAllInvSheetData();
+                  return DataTable(
+                    columns: createColumns(),
+                    rows: createRows(),
+                  );
+                },
+              ),
             ),
           ),
         ),
