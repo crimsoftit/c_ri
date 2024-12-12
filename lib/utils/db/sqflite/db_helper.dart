@@ -1,4 +1,5 @@
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
+import 'package:c_ri/features/store/models/dels_model.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/models/sold_items_model.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
@@ -11,12 +12,12 @@ class DbHelper {
 
   /// -- variables --
   Database? _db;
-  final invTable = 'inventory';
+
   final userController = Get.put(CUserController());
 
-  static const String colPcode = 'pCode';
-
+  final invTable = 'inventory';
   final salesTable = 'sales';
+  final delsForSyncTable = 'delsForSync';
 
   static final DbHelper _dbHelper = DbHelper._internal();
   DbHelper._internal();
@@ -69,6 +70,13 @@ class DbHelper {
             FOREIGN KEY(productId) REFERENCES inventory(productId)
             )          
           ''');
+
+      database.execute('''
+          CREATE TABLE $delsForSyncTable (
+            itemId INTEGER NOT NULL,
+            itemCategory TEXT NOT NULL
+          )
+        ''');
     }, version: version);
     return _db!;
   }
@@ -92,8 +100,8 @@ class DbHelper {
     // Get a reference to the database.
     final db = _db;
 
-    // Insert the Note into the correct table. You might also specify the
-    // `conflictAlgorithm` to use in case the same Note is inserted twice.
+    // Insert the inventoryItem into the correct table. You might also specify the
+    // `conflictAlgorithm` to use in case the same inventoryItem is inserted twice.
     //
     // In this case, replace any previous data.
     await db?.insert(invTable, inventoryItem.toMap(),
@@ -224,5 +232,55 @@ class DbHelper {
     return transactions
         .map((json) => CSoldItemsModel.fromMapObject(json))
         .toList();
+  }
+
+  Future<void> saveDelForSync(CDelsModel delItem) async {
+    try {
+      // get a reference to the local database.
+      final db = _db;
+      await db!.insert(
+        delsForSyncTable,
+        delItem.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'error performing transaction',
+        message: e.toString(),
+      );
+      throw e.toString();
+    }
+  }
+
+  /// -- fetch all deletionForSyncItems --
+  Future<List<CDelsModel>> fetchAllDels() async {
+    // get a reference to the database.
+    final db = _db;
+
+    // raw query
+    final dels = await db!.rawQuery('SELECT * FROM delsForSync');
+
+    var iDels = [];
+
+    iDels.assignAll(dels);
+
+    if (iDels.isEmpty) {
+      return CPopupSnackBar.customToast(message: 'IS EMPTY');
+    } else {
+      final result =
+          dels.map((json) => CDelsModel.fromMapObject(json)).toList();
+
+      return result;
+    }
+  }
+
+  Future<int> syncDel(CDelsModel delItem) async {
+    int delRes = await _db!.delete(
+      delsForSyncTable,
+      where: 'itemId = ?',
+      whereArgs: [delItem.itemId],
+    );
+
+    return delRes;
   }
 }

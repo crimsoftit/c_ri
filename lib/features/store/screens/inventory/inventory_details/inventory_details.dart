@@ -8,6 +8,7 @@ import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/inv_dialog.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
+import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -26,6 +27,8 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
   var itemId = Get.arguments;
   var invController = Get.put(CInventoryController());
 
+  final userController = Get.put(CUserController());
+
   // ignore: prefer_typing_uninitialized_variables
   var invItem;
 
@@ -39,6 +42,9 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final userController = Get.put(CUserController());
+
+    final currency =
+        CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
 
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
@@ -166,7 +172,7 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                       CMenuTile(
                         icon: Iconsax.bitcoin_card,
                         //title: '',
-                        title: 'Ksh. ${(invItem.buyingPrice)}',
+                        title: '$currency. ${(invItem.buyingPrice)}',
                         subTitle: 'buying price',
                         onTap: () {
                           //Get.to(() => const UserAddressesScreen());
@@ -176,7 +182,7 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                       CMenuTile(
                         icon: Iconsax.card_pos,
                         //title: '',
-                        title: 'Ksh. ${(invItem.unitSellingPrice)}',
+                        title: '$currency. ${(invItem.unitSellingPrice)}',
                         subTitle: 'unit selling price',
                         onTap: () {
                           //Get.to(() => const OrdersScreen());
@@ -246,16 +252,7 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                           onChanged: (value) {},
                         ),
                       ),
-                      CMenuTile(
-                        icon: Iconsax.security_user,
-                        title: 'HD image quality',
-                        subTitle: 'set image quality to be seen',
-                        trailing: Switch(
-                          value: false,
-                          activeColor: CColors.rBrown,
-                          onChanged: (value) {},
-                        ),
-                      ),
+
                       const Divider(),
                       const SizedBox(
                         height: CSizes.spaceBtnItems,

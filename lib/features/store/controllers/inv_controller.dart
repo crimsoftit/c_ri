@@ -1,6 +1,7 @@
 import 'package:c_ri/api/sheets/store_sheets_api.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
+import 'package:c_ri/features/store/models/dels_model.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
@@ -25,6 +26,8 @@ class CInventoryController extends GetxController {
   final RxList<CInventoryModel> inventoryItems = <CInventoryModel>[].obs;
 
   final RxList<CInventoryModel> foundInventoryItems = <CInventoryModel>[].obs;
+
+  final RxList<CDelsModel> dItems = <CDelsModel>[].obs;
 
   final RxList<CInventoryModel> gSheetData = <CInventoryModel>[].obs;
 
@@ -56,6 +59,8 @@ class CInventoryController extends GetxController {
   void onInit() {
     fetchInventoryItems();
     //fetchAllInvSheetItems();
+    //fetchDels();
+    syncDels();
     if (searchController.salesShowSearchField.isTrue &&
         searchController.txtSalesSearch.text == '') {
       foundInventoryItems.value = inventoryItems;
@@ -370,7 +375,24 @@ class CInventoryController extends GetxController {
           'Are you certain you want to permanently delete this item? This action can\'t be undone!',
       confirm: ElevatedButton(
         onPressed: () async {
+          // -- check internet connectivity
+          final isConnected = await CNetworkManager.instance.isConnected();
+
+          if (isConnected) {
+            fetchInvSheetItemById(inventoryItem.productId!);
+
+            if (gSheetInvItemExists.value) {
+              deleteInvSheetItem(inventoryItem.productId!);
+            }
+          } else {
+            final delItem = CDelsModel(
+              inventoryItem.productId!,
+              'inventory',
+            );
+            dbHelper.saveDelForSync(delItem);
+          }
           deleteInventoryItem(inventoryItem);
+
           fetchInventoryItems();
 
           Navigator.of(Get.overlayContext!).pop();
@@ -444,7 +466,68 @@ class CInventoryController extends GetxController {
         title: 'error updating sheet data',
         message: e.toString(),
       );
+
       throw e.toString();
+    }
+  }
+
+  /// -- delete inventory item from google sheets --
+  Future deleteInvSheetItem(int id) async {
+    try {
+      var sheetName = 'inventory';
+
+      //var invSheetItem = await StoreSheetsApi.fetchInvItemById(id);
+      await StoreSheetsApi.deleteById(id, sheetName);
+    } catch (e) {
+      // CPopupSnackBar.errorSnackBar(
+      //   title: 'delete error',
+      //   message: e.toString(),
+      // );
+      throw e.toString();
+    }
+  }
+
+  Future<List<CDelsModel>> fetchDels() async {
+    await dbHelper.openDb();
+
+    final dels = await dbHelper.fetchAllDels();
+    dItems.assignAll(dels);
+
+    for (var element in dItems) {
+      CPopupSnackBar.customToast(
+        message: '${element.itemId} ${element.category}',
+      );
+    }
+
+    return dels;
+  }
+
+  Future syncDels() async {
+    await dbHelper.openDb();
+    // -- check internet connectivity
+    final isConnected = await CNetworkManager.instance.isConnected();
+    if (isConnected) {
+      final dels = await dbHelper.fetchAllDels();
+      dItems.assignAll(dels);
+
+      if (dItems.isNotEmpty) {
+        for (var element in dItems) {
+          deleteInvSheetItem(element.itemId!);
+
+          final delItem = CDelsModel(
+            element.itemId,
+            'inventory',
+          );
+          dbHelper.syncDel(delItem);
+          CPopupSnackBar.customToast(
+            message: 'DELETION SYNC RADA SAFI',
+          );
+        }
+      } else {
+        CPopupSnackBar.customToast(
+          message: 'no sync',
+        );
+      }
     }
   }
 }

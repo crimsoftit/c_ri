@@ -5,7 +5,8 @@ import 'package:c_ri/features/store/models/sold_items_model.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gsheets/gsheets.dart';
-CHECK OUT THE GOOGLE APPS SCRIPT APPROACH -- FROM A PUBLISHED SHEET
+
+//CHECK OUT THE GOOGLE APPS SCRIPT APPROACH -- FROM A PUBLISHED SHEET
 class StoreSheetsApi {
   static const gsheetCredentials = GsheetsCreds.credentials;
   static const spreadsheetId = '1iUtgSjdyP3Q3cpdyhOftTAZI8_Bujv69QZpg06oMK_E';
@@ -98,14 +99,68 @@ class StoreSheetsApi {
         : invList.map(CInventoryModel.gSheetFromJson).toList();
   }
 
-  /// -- update data in google sheets --
+  /// -- update data (entire row) in google sheets --
   static Future<bool> updateInvData(
       int id, Map<String, dynamic> itemModel) async {
     try {
+      if (invSheet == null) return false;
       return invSheet!.values.map.insertRowByKey(id, itemModel);
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
         title: 'error updating sheet data',
+        message: e.toString(),
+      );
+      throw e.toString();
+    }
+  }
+
+  /// -- update data (a single cell) in google sheets --
+  static Future<bool> updateCell({
+    required int id,
+    required String key,
+    required dynamic value,
+  }) async {
+    try {
+      if (invSheet == null) return false;
+      return invSheet!.values.insertValueByKeys(
+        value,
+        columnKey: key,
+        rowKey: id,
+      );
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'error updating cell data in google sheet',
+        message: e.toString(),
+      );
+      throw e.toString();
+    }
+  }
+
+  /// -- delete data in google sheets by its id --
+  static Future<bool> deleteById(int id, String sheetName) async {
+    try {
+      // ignore: prefer_typing_uninitialized_variables
+      var returnCmd;
+      if (sheetName == 'inventory') {
+        if (invSheet == null) return false;
+
+        final invItemIndex = await invSheet!.values.rowIndexOf(id);
+
+        if (!invItemIndex.isNegative) {
+          returnCmd = invSheet!.deleteRow(invItemIndex);
+        }
+      } else if (sheetName == 'txns') {
+        if (txnsSheet == null) return false;
+
+        final txnItemIndex = await txnsSheet!.values.rowIndexOf(id);
+
+        returnCmd = txnsSheet!.deleteRow(txnItemIndex);
+      }
+
+      return returnCmd;
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'error deleting data in google sheet',
         message: e.toString(),
       );
       throw e.toString();
