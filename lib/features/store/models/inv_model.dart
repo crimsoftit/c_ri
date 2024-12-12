@@ -17,6 +17,7 @@ class CInventoryModel {
   double _buyingPrice = 0.0;
   double _unitSellingPrice = 0.0;
   String _date = "";
+  int _isSynced = 0;
 
   CInventoryModel(
     //this._productId,
@@ -29,6 +30,7 @@ class CInventoryModel {
     this._buyingPrice,
     this._unitSellingPrice,
     this._date,
+    this._isSynced,
   );
 
   CInventoryModel.withID(
@@ -42,6 +44,7 @@ class CInventoryModel {
     this._buyingPrice,
     this._unitSellingPrice,
     this._date,
+    this._isSynced,
   );
 
   int? get productId => _productId;
@@ -55,6 +58,7 @@ class CInventoryModel {
   double get buyingPrice => _buyingPrice;
   double get unitSellingPrice => _unitSellingPrice;
   String get date => _date;
+  int get isSynced => _isSynced;
 
   set userId(String newUid) {
     _userId = newUid;
@@ -104,6 +108,10 @@ class CInventoryModel {
     _date = newDate;
   }
 
+  set isSynced(int syncState) {
+    _isSynced = syncState;
+  }
+
   // convert an InventoryModel object into a Map object
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{};
@@ -120,6 +128,7 @@ class CInventoryModel {
     map['buyingPrice'] = _buyingPrice;
     map['unitSellingPrice'] = _unitSellingPrice;
     map['date'] = _date;
+    map['isSynced'] = _isSynced;
 
     return map;
   }
@@ -137,6 +146,7 @@ class CInventoryModel {
     _buyingPrice = map['buyingPrice'];
     _unitSellingPrice = map['unitSellingPrice'];
     _date = map['date'];
+    _isSynced = map['isSynced'];
   }
 
   // extract a InventoryModel object from a GSheet Map object
@@ -152,6 +162,7 @@ class CInventoryModel {
       double.parse(json[InvSheetFields.buyingPrice]),
       double.parse(json[InvSheetFields.unitSellingPrice]),
       json[InvSheetFields.date],
+      json[InvSheetFields.isSynced],
     );
   }
 }

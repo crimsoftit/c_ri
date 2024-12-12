@@ -9,6 +9,7 @@ class InvSheetFields {
   static const String buyingPrice = 'buyingPrice';
   static const String unitSellingPrice = 'unitSellingPrice';
   static const String date = 'date';
+  static const String isSynced = 'isSynced';
 
   static List<String> getInvSheetHeaders() {
     return [
@@ -22,6 +23,7 @@ class InvSheetFields {
       buyingPrice,
       unitSellingPrice,
       date,
+      isSynced,
     ];
   }
 }

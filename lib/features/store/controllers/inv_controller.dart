@@ -59,7 +59,7 @@ class CInventoryController extends GetxController {
   void onInit() {
     fetchInventoryItems();
     //fetchAllInvSheetItems();
-    //fetchDels();
+    fetchDels();
     syncDels();
     if (searchController.salesShowSearchField.isTrue &&
         searchController.txtSalesSearch.text == '') {
@@ -138,11 +138,14 @@ class CInventoryController extends GetxController {
             DateFormat('yyyy-MM-dd - kk:mm').format(
               clock.now(),
             ),
+            1,
           );
           StoreSheetsApi.saveToGSheets([gSheetsInvData.toMap()], invSheet!);
           CPopupSnackBar.customToast(
             message: 'rada safi',
           );
+
+          /// -- ## UPDATE SYNC STATUS ON INVENTORY TABLE SQFLITE DB ## -- ///
         } else {
           isLoading.value = false;
           CPopupSnackBar.errorSnackBar(
@@ -486,6 +489,8 @@ class CInventoryController extends GetxController {
       throw e.toString();
     }
   }
+
+  DELETING THE WRONG FILES
 
   Future<List<CDelsModel>> fetchDels() async {
     await dbHelper.openDb();

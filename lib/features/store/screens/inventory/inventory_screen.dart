@@ -77,7 +77,7 @@ class InventoryScreen extends StatelessWidget {
                                               dialog.buildDialog(
                                             context,
                                             CInventoryModel('', '', '', '', '',
-                                                0, 0, 0, ''),
+                                                0, 0, 0, '', 0),
                                             true,
                                           ),
                                         );
@@ -326,7 +326,7 @@ class InventoryScreen extends StatelessWidget {
             useRootNavigator: false,
             builder: (BuildContext context) => dialog.buildDialog(
               context,
-              CInventoryModel('', '', '', '', '', 0, 0, 0, ''),
+              CInventoryModel('', '', '', '', '', 0, 0, 0, '', 0),
               true,
             ),
           );

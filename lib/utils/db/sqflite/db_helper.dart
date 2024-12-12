@@ -47,7 +47,8 @@ class DbHelper {
             quantity INTEGER NOT NULL,
             buyingPrice REAL NOT NULL,
             unitSellingPrice REAL NOT NULL,
-            date CHAR(30) NOT NULL
+            date CHAR(30) NOT NULL,
+            isSynced INTEGER NOT NULL
             )
           ''');
 
@@ -144,6 +145,7 @@ class DbHelper {
         maps[i]['buyingPrice'],
         maps[i]['unitSellingPrice'],
         maps[i]['date'],
+        maps[i]['isSynced'],
       );
     });
   }
