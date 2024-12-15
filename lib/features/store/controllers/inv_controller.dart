@@ -57,15 +57,16 @@ class CInventoryController extends GetxController {
 
   @override
   void onInit() {
+    dbHelper.openDb();
     fetchInventoryItems();
     //fetchAllInvSheetItems();
-    fetchDels();
-    syncDels();
+    fetchInvDels();
+    syncInvDels();
     if (searchController.salesShowSearchField.isTrue &&
         searchController.txtSalesSearch.text == '') {
       foundInventoryItems.value = inventoryItems;
     }
-    //fetchInvSheetItemById();
+
     super.onInit();
   }
 
@@ -390,6 +391,7 @@ class CInventoryController extends GetxController {
           } else {
             final delItem = CDelsModel(
               inventoryItem.productId!,
+              inventoryItem.name,
               'inventory',
             );
             dbHelper.saveDelForSync(delItem);
@@ -482,32 +484,45 @@ class CInventoryController extends GetxController {
       //var invSheetItem = await StoreSheetsApi.fetchInvItemById(id);
       await StoreSheetsApi.deleteById(id, sheetName);
     } catch (e) {
-      // CPopupSnackBar.errorSnackBar(
-      //   title: 'delete error',
-      //   message: e.toString(),
-      // );
+      CPopupSnackBar.errorSnackBar(
+        title: 'delete error',
+        message: e.toString(),
+      );
       throw e.toString();
     }
   }
 
-  DELETING THE WRONG FILES
+  Future<List<CDelsModel>> fetchInvDels() async {
+    try {
+      await dbHelper.openDb();
 
-  Future<List<CDelsModel>> fetchDels() async {
-    await dbHelper.openDb();
+      final dels = await dbHelper.fetchAllDels();
+      dItems.assignAll(dels);
 
-    final dels = await dbHelper.fetchAllDels();
-    dItems.assignAll(dels);
+      if (dItems.isEmpty) {
+        CPopupSnackBar.customToast(
+          message: "NO DELS",
+        );
+        return [];
+      } else {
+        // for (var element in dItems) {
+        //   CPopupSnackBar.customToast(
+        //     message: '${element.itemId} ${element.category}',
+        //   );
+        // }
 
-    for (var element in dItems) {
-      CPopupSnackBar.customToast(
-        message: '${element.itemId} ${element.category}',
+        return dItems;
+      }
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'DELS ERROR',
+        message: e.toString(),
       );
+      throw e.toString();
     }
-
-    return dels;
   }
 
-  Future syncDels() async {
+  Future syncInvDels() async {
     await dbHelper.openDb();
     // -- check internet connectivity
     final isConnected = await CNetworkManager.instance.isConnected();
@@ -517,13 +532,15 @@ class CInventoryController extends GetxController {
 
       if (dItems.isNotEmpty) {
         for (var element in dItems) {
-          deleteInvSheetItem(element.itemId!);
+          await deleteInvSheetItem(element.itemId!);
 
           final delItem = CDelsModel(
             element.itemId,
+            element.itemName,
             'inventory',
           );
-          dbHelper.syncDel(delItem);
+
+          //dbHelper.syncDel(delItem);
           CPopupSnackBar.customToast(
             message: 'DELETION SYNC RADA SAFI',
           );

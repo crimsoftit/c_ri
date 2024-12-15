@@ -144,9 +144,13 @@ class StoreSheetsApi {
       if (sheetName == 'inventory') {
         if (invSheet == null) return false;
 
-        final invItemIndex = await invSheet!.values.rowIndexOf(id);
+        final invItemIndex =
+            await invSheet!.values.rowIndexOf(id.toString().toLowerCase());
 
-        if (!invItemIndex.isNegative) {
+        if (invItemIndex.isNegative) {
+          returnCmd = false;
+          return false;
+        } else {
           returnCmd = invSheet!.deleteRow(invItemIndex);
         }
       } else if (sheetName == 'txns') {
@@ -166,4 +170,17 @@ class StoreSheetsApi {
       throw e.toString();
     }
   }
+
+  // static Future<bool> deleteInvItemById(int id) async {
+  //   if (invSheet == null) return false;
+
+  //   final ss = await gsheets.spreadsheet(spreadsheetId);
+
+  //   final sheet = await getWorkSheet(
+  //     ss,
+  //     title: 'InventorySheet',
+  //   );
+
+  //   final range = await sheet!.values.getRange
+  // }
 }

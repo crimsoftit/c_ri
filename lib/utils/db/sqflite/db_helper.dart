@@ -37,7 +37,7 @@ class DbHelper {
     _db = await openDatabase(join(await getDatabasesPath(), 'stock.db'),
         onCreate: (database, version) {
       database.execute('''
-          CREATE TABLE $invTable (
+          CREATE TABLE IF NOT EXISTS $invTable (
             productId INTEGER PRIMARY KEY NOT NULL,
             userId TEXT NOT NULL,
             userEmail TEXT NOT NULL,
@@ -53,7 +53,7 @@ class DbHelper {
           ''');
 
       database.execute('''
-          CREATE TABLE $salesTable(
+          CREATE TABLE IF NOT EXISTS $salesTable(
             saleId INTEGER PRIMARY KEY AUTOINCREMENT,
             userId TEXT NOT NULL,
             userEmail TEXT NOT NULL,
@@ -73,8 +73,9 @@ class DbHelper {
           ''');
 
       database.execute('''
-          CREATE TABLE $delsForSyncTable (
+          CREATE TABLE IF NOT EXISTS $delsForSyncTable (
             itemId INTEGER NOT NULL,
+            itemName TEXT NOT NULL,
             itemCategory TEXT NOT NULL
           )
         ''');
@@ -262,12 +263,13 @@ class DbHelper {
     // raw query
     final dels = await db!.rawQuery('SELECT * FROM delsForSync');
 
-    var iDels = [];
+    // var iDels = [];
 
-    iDels.assignAll(dels);
+    // iDels.assignAll(dels);
 
-    if (iDels.isEmpty) {
-      return CPopupSnackBar.customToast(message: 'IS EMPTY');
+    if (dels.isEmpty) {
+      CPopupSnackBar.customToast(message: 'IS EMPTY');
+      return [];
     } else {
       final result =
           dels.map((json) => CDelsModel.fromMapObject(json)).toList();
@@ -276,13 +278,13 @@ class DbHelper {
     }
   }
 
-  Future<int> syncDel(CDelsModel delItem) async {
-    int delRes = await _db!.delete(
-      delsForSyncTable,
-      where: 'itemId = ?',
-      whereArgs: [delItem.itemId],
-    );
+  // Future<int> syncDel(CDelsModel delItem) async {
+  //   int delRes = await _db!.delete(
+  //     delsForSyncTable,
+  //     where: 'itemId = ?',
+  //     whereArgs: [delItem.itemId],
+  //   );
 
-    return delRes;
-  }
+  //   return delRes;
+  // }
 }
