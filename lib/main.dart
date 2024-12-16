@@ -10,24 +10,26 @@ import 'package:get_storage/get_storage.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
 Future<void> main() async {
-  // -- todo: add widgets binding --
+  /// -- todo: add widgets binding --
   final WidgetsBinding widgetsBinding =
       WidgetsFlutterBinding.ensureInitialized();
 
-  // -- initialize spreadsheets --
+  /// -- initialize spreadsheets --
   StoreSheetsApi.init();
 
   tz.initializeTimeZones();
 
-  // -- todo: init local storage (GetX Local Storage) --
+  /// -- todo: init local storage (GetX Local Storage) --
   await GetStorage.init();
 
-  // todo: await native splash
+  /// -- todo: await native splash --
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  // todo: initialize firebase
+  /// -- todo: initialize firebase --
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   ).then((FirebaseApp value) => Get.put(AuthRepo()));
+
+  /// -- todo: load all the material design, themes, localizations, bindings, etc. --
   runApp(const App());
 }

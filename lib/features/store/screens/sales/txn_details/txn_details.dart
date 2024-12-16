@@ -2,7 +2,7 @@ import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/list_tiles/menu_tile.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
-import 'package:c_ri/features/store/controllers/sales_controller.dart';
+import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +26,7 @@ class _CTxnDetailsScreenState extends State<CTxnDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final salesController = Get.put(CSalesController());
+    final salesController = Get.put(CTxnsController());
 
     //salesList = .toList();
 

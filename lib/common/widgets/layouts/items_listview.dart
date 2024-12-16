@@ -2,7 +2,7 @@ import 'package:c_ri/common/widgets/layouts/c_expansion_tile.dart';
 import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
-import 'package:c_ri/features/store/controllers/sales_controller.dart';
+import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/screens/search/widgets/no_results_screen.dart';
 import 'package:c_ri/utils/constants/colors.dart';
@@ -23,7 +23,7 @@ class CItemsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final invController = Get.put(CInventoryController());
-    final salesController = Get.put(CSalesController());
+    final salesController = Get.put(CTxnsController());
     final userController = Get.put(CUserController());
     final searchController = Get.put(CSearchBarController());
     final currency =

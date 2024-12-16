@@ -50,6 +50,10 @@ class CInventoryModel {
     this._syncAction,
   );
 
+  CInventoryModel empty() {
+    return CInventoryModel('', '', '', '', '', 0, 0, 0, '', 0, '');
+  }
+
   int? get productId => _productId;
   String get userId => _userId;
   String get userEmail => _userEmail;

@@ -6,7 +6,7 @@ import 'package:c_ri/common/widgets/tab_views/store_items_tabs.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
-import 'package:c_ri/features/store/controllers/sales_controller.dart';
+import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
@@ -25,7 +25,7 @@ class SalesScreen extends StatelessWidget {
     final userController = Get.put(CUserController());
     final searchController = Get.put(CSearchBarController());
     final invController = Get.put(CInventoryController());
-    final salesController = Get.put(CSalesController());
+    final salesController = Get.put(CTxnsController());
 
     return DefaultTabController(
       length: 2,

@@ -1,6 +1,6 @@
 import 'package:c_ri/common/widgets/appbar/other_screens_app_bar.dart';
 import 'package:c_ri/features/personalization/screens/profile/widgets/c_profile_menu.dart';
-import 'package:c_ri/features/store/controllers/sales_controller.dart';
+import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
@@ -16,7 +16,7 @@ class CSellItemScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final salesController = Get.put(CSalesController());
+    final salesController = Get.put(CTxnsController());
 
     return Obx(
       () {

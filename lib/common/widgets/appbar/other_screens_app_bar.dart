@@ -1,5 +1,5 @@
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
-import 'package:c_ri/features/store/controllers/sales_controller.dart';
+import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
@@ -27,7 +27,7 @@ class OtherScreensAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final salesController = Get.put(CSalesController());
+    final salesController = Get.put(CTxnsController());
 
     return CPrimaryHeaderContainer(
       child: Column(

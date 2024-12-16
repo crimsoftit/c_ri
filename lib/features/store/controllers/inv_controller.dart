@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
 class CInventoryController extends GetxController {
@@ -22,6 +23,8 @@ class CInventoryController extends GetxController {
   }
 
   /// -- variables --
+  final localStorage = GetStorage();
+
   DbHelper dbHelper = DbHelper.instance;
   final RxList<CInventoryModel> inventoryItems = <CInventoryModel>[].obs;
 
@@ -56,18 +59,35 @@ class CInventoryController extends GetxController {
   final invSheet = StoreSheetsApi.invSheet;
 
   @override
-  void onInit() {
+  void onInit() async {
+    /// -- check if cloud sync is needed for inventory items --
+
     dbHelper.openDb();
+
     fetchInventoryItems();
     //fetchUserInvSheetData();
-    fetchInvDels();
-    syncInvDels();
+    //fetchInvDels();
+    //syncInvDels();
     if (searchController.salesShowSearchField.isTrue &&
         searchController.txtSalesSearch.text == '') {
       foundInventoryItems.value = inventoryItems;
     }
-
+    await initSyncStatus();
     super.onInit();
+  }
+
+
+  DO THIS AT AUTHENTICATION LEVEL
+  /// -- initialize cloud sync status --
+  initSyncStatus() async {
+    //localStorage.writeIfNull('SyncInvDataWithCloud', true);
+    if (localStorage.read('SyncInvDataWithCloud') == true) {
+      // CPopupSnackBar.customToast(
+      //   message: 'CLOUD SYNC IS REQUIRED FOR INVENTORY!!!',
+      // );
+      importInvDataFromCloud();
+      fetchInventoryItems();
+    }
   }
 
   /// -- fetch list of inventory items from sqflite db --
@@ -472,32 +492,6 @@ class CInventoryController extends GetxController {
     }
   }
 
-  /// -- fetch inventory data from google sheets by userEmail --
-  Future fetchUserInvSheetData() async {
-    try {
-      // fetch items from sqflite db
-      var gsheetItemsList = (await StoreSheetsApi.fetchAllGsheetInvItems())!;
-
-      allGSheetData.assignAll(gsheetItemsList as Iterable<CInventoryModel>);
-
-      userGSheetData.value = allGSheetData
-          .where((element) => element.userEmail
-              .toLowerCase()
-              .contains(userController.user.value.email.toLowerCase()))
-          .toList();
-
-      //CPopupSnackBar.customToast(message: gSheetData.first.name);
-
-      return allGSheetData;
-    } catch (e) {
-      isLoading.value = false;
-      return CPopupSnackBar.errorSnackBar(
-        title: 'Oh Snap!',
-        message: e.toString(),
-      );
-    }
-  }
-
   /// -- update single item data in google sheets --
   Future updateInvSheetItem(int id, CInventoryModel itemModel) async {
     try {
@@ -555,6 +549,83 @@ class CInventoryController extends GetxController {
         message: e.toString(),
       );
       throw e.toString();
+    }
+  }
+
+  /// -- fetch inventory data from google sheets by userEmail --
+  Future fetchUserInvSheetData() async {
+    try {
+      // fetch items from sqflite db
+      var gsheetItemsList = (await StoreSheetsApi.fetchAllGsheetInvItems())!;
+
+      allGSheetData.assignAll(gsheetItemsList as Iterable<CInventoryModel>);
+
+      userGSheetData.value = allGSheetData
+          .where((element) => element.userEmail
+              .toLowerCase()
+              .contains(userController.user.value.email.toLowerCase()))
+          .toList();
+
+      //CPopupSnackBar.customToast(message: gSheetData.first.name);
+
+      return allGSheetData;
+    } catch (e) {
+      isLoading.value = false;
+      return CPopupSnackBar.errorSnackBar(
+        title: 'Oh Snap!',
+        message: e.toString(),
+      );
+    }
+  }
+
+  /// -- import inventory data from google sheets --
+  Future importInvDataFromCloud() async {
+    try {
+      isLoading.value = true;
+      await fetchUserInvSheetData();
+
+      if (userGSheetData.isNotEmpty) {
+        for (var element in userGSheetData) {
+          var dbData = CInventoryModel.withID(
+            element.productId,
+            element.userId,
+            element.userEmail,
+            element.userName,
+            element.pCode,
+            element.name,
+            element.quantity,
+            element.buyingPrice,
+            element.unitSellingPrice,
+            element.date,
+            element.isSynced,
+            element.syncAction,
+          );
+
+          dbHelper.addInventoryItem(dbData);
+          fetchInventoryItems();
+
+          isLoading.value = false;
+
+          CPopupSnackBar.successSnackBar(
+            title: 'data sync successful',
+            message: 'inventory data synced successfully...',
+          );
+        }
+      } else if (userGSheetData.isEmpty) {
+        isLoading.value = false;
+        CPopupSnackBar.customToast(
+          message: 'no data to import...',
+        );
+      }
+
+      print("----------\n\n $userGSheetData \n\n ----------");
+    } catch (e) {
+      isLoading.value = false;
+      return CPopupSnackBar.errorSnackBar(
+        durationInSeconds: 10,
+        title: 'ERROR IMPORTING USER DATA FROM CLOUD!',
+        message: e.toString(),
+      );
     }
   }
 

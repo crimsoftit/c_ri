@@ -13,16 +13,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
-class CSalesController extends GetxController {
-  static CSalesController get instance {
+class CTxnsController extends GetxController {
+  static CTxnsController get instance {
     return Get.find();
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     isLoading.value = false;
+
     fetchTransactions();
 
     resetSales();
@@ -31,10 +33,13 @@ class CSalesController extends GetxController {
     } else {
       showAmountIssuedField.value = false;
     }
+    await initSyncStatus();
     super.onInit();
   }
 
   /// -- variables --
+  final localStorage = GetStorage();
+
   DbHelper dbHelper = DbHelper.instance;
 
   final RxList<CSoldItemsModel> transactions = <CSoldItemsModel>[].obs;
@@ -71,10 +76,15 @@ class CSalesController extends GetxController {
 
   final txnsFormKey = GlobalKey<FormState>();
 
-  /// -- get to transaction details page --
-  // getToTxnDetails(int txnId) {
-  //   txnDets = transactions.firstWhere((txn) => txn.saleId == txnId);
-  // }
+  /// -- initialize cloud sync status --
+  initSyncStatus() async {
+    //localStorage.writeIfNull('SyncTxnsDataWithCloud', true);
+    if (localStorage.read('SyncTxnsDataWithCloud') == true) {
+      CPopupSnackBar.customToast(
+        message: 'CLOUD SYNC IS REQUIRED FOR TXNS!!!',
+      );
+    }
+  }
 
   /// -- add sale transactions data to sqflite db --
   Future processTransaction() async {

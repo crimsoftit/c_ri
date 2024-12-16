@@ -1,5 +1,5 @@
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
-import 'package:c_ri/features/store/controllers/sales_controller.dart';
+import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/constants/colors.dart';
@@ -19,7 +19,7 @@ class CTypeAheadSearchField extends StatelessWidget {
   Widget build(BuildContext context) {
     final invController = Get.put(CInventoryController());
     final searchController = Get.put(CSearchBarController());
-    final salesController = Get.put(CSalesController());
+    final salesController = Get.put(CTxnsController());
 
     return TypeAheadField<CInventoryModel>(
       builder: (context, controller, focusNode) {

@@ -1,6 +1,6 @@
 import 'package:c_ri/common/widgets/search_bar/expanded_search_field.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
-import 'package:c_ri/features/store/controllers/sales_controller.dart';
+import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -23,7 +23,7 @@ class CAnimatedSearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final searchController = Get.put(CSearchBarController());
-    final salesController = Get.put(CSalesController());
+    final salesController = Get.put(CTxnsController());
     final invController = Get.put(CInventoryController());
 
     return Obx(
