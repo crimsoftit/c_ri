@@ -48,7 +48,8 @@ class DbHelper {
             buyingPrice REAL NOT NULL,
             unitSellingPrice REAL NOT NULL,
             date CHAR(30) NOT NULL,
-            isSynced INTEGER NOT NULL
+            isSynced INTEGER NOT NULL,
+            syncAction TEXT NOT NULL
             )
           ''');
 
@@ -76,7 +77,8 @@ class DbHelper {
           CREATE TABLE IF NOT EXISTS $delsForSyncTable (
             itemId INTEGER NOT NULL,
             itemName TEXT NOT NULL,
-            itemCategory TEXT NOT NULL
+            itemCategory TEXT NOT NULL,
+            isSynced INTEGER NOT NULL
           )
         ''');
     }, version: version);
@@ -147,6 +149,7 @@ class DbHelper {
         maps[i]['unitSellingPrice'],
         maps[i]['date'],
         maps[i]['isSynced'],
+        maps[i]['syncAction'],
       );
     });
   }
@@ -278,13 +281,14 @@ class DbHelper {
     }
   }
 
-  // Future<int> syncDel(CDelsModel delItem) async {
-  //   int delRes = await _db!.delete(
-  //     delsForSyncTable,
-  //     where: 'itemId = ?',
-  //     whereArgs: [delItem.itemId],
-  //   );
+  Future<int> updateDel(CDelsModel delItem) async {
+    int delRes = await _db!.update(
+      delsForSyncTable,
+      delItem.toMap(),
+      where: 'itemId = ?',
+      whereArgs: [delItem.itemId],
+    );
 
-  //   return delRes;
-  // }
+    return delRes;
+  }
 }

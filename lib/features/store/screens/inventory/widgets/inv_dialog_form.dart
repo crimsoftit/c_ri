@@ -37,14 +37,26 @@ class AddUpdateInventoryForm extends StatelessWidget {
             children: [
               Visibility(
                 maintainState: true,
-                visible: false,
-                child: TextFormField(
-                  controller: invController.txtId,
-                  readOnly: true,
-                  decoration: InputDecoration(
-                    labelText: 'product id',
-                    labelStyle: textStyle,
-                  ),
+                visible: true,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: invController.txtId,
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        labelText: 'product id',
+                        labelStyle: textStyle,
+                      ),
+                    ),
+                    TextFormField(
+                      controller: invController.txtSyncAction,
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        labelText: 'sync action',
+                        labelStyle: textStyle,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               TextFormField(

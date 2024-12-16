@@ -77,7 +77,7 @@ class InventoryScreen extends StatelessWidget {
                                               dialog.buildDialog(
                                             context,
                                             CInventoryModel('', '', '', '', '',
-                                                0, 0, 0, '', 0),
+                                                0, 0, 0, '', 0, ''),
                                             true,
                                           ),
                                         );
@@ -263,7 +263,17 @@ class InventoryScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  "qty: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].quantity : invController.inventoryItems[index].quantity}    modified: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].date : invController.inventoryItems[index].date}",
+                                  "qty: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].quantity : invController.inventoryItems[index].quantity}  modified: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].date : invController.inventoryItems[index].date}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall!
+                                      .apply(
+                                        color: CColors.rBrown.withOpacity(0.7),
+                                        //fontStyle: FontStyle.italic,
+                                      ),
+                                ),
+                                Text(
+                                  "isSynced: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].isSynced : invController.inventoryItems[index].isSynced} syncAction: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].syncAction : invController.inventoryItems[index].syncAction}",
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelSmall!
@@ -326,7 +336,7 @@ class InventoryScreen extends StatelessWidget {
             useRootNavigator: false,
             builder: (BuildContext context) => dialog.buildDialog(
               context,
-              CInventoryModel('', '', '', '', '', 0, 0, 0, '', 0),
+              CInventoryModel('', '', '', '', '', 0, 0, 0, '', 0, ''),
               true,
             ),
           );

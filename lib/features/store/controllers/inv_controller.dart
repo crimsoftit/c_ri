@@ -46,6 +46,8 @@ class CInventoryController extends GetxController {
   final txtBP = TextEditingController();
   final txtUnitSP = TextEditingController();
 
+  final txtSyncAction = TextEditingController();
+
   final addInvItemFormKey = GlobalKey<FormState>();
 
   final isLoading = false.obs;
@@ -125,6 +127,8 @@ class CInventoryController extends GetxController {
 
       if (isConnected) {
         if (thisItem.isNotEmpty) {
+          thisItem.first.isSynced = 1;
+          thisItem.first.syncAction = "none";
           // -- save data to gsheets --
           var gSheetsInvData = CInventoryModel.withID(
             thisItem.first.productId,
@@ -139,14 +143,20 @@ class CInventoryController extends GetxController {
             DateFormat('yyyy-MM-dd - kk:mm').format(
               clock.now(),
             ),
-            1,
+            thisItem.first.isSynced,
+            thisItem.first.syncAction,
           );
           StoreSheetsApi.saveToGSheets([gSheetsInvData.toMap()], invSheet!);
+
           CPopupSnackBar.customToast(
             message: 'rada safi',
           );
 
-          /// -- ## UPDATE SYNC STATUS ON INVENTORY TABLE SQFLITE DB ## -- ///
+          /// -- update sync status
+          inventoryItem.isSynced = thisItem.first.isSynced;
+          inventoryItem.syncAction = 'none';
+          await dbHelper.updateInventoryItem(
+              inventoryItem, thisItem.first.productId!);
         } else {
           isLoading.value = false;
           CPopupSnackBar.errorSnackBar(
@@ -198,6 +208,8 @@ class CInventoryController extends GetxController {
         txtQty.text = (fetchedItem.first.quantity).toString();
         txtBP.text = (fetchedItem.first.buyingPrice).toString();
         txtUnitSP.text = (fetchedItem.first.unitSellingPrice).toString();
+
+        txtSyncAction.text = 'update';
       } else {
         itemExists.value = false;
         txtId.text = '';
@@ -205,6 +217,8 @@ class CInventoryController extends GetxController {
         txtQty.text = '';
         txtBP.text = '';
         txtUnitSP.text = '';
+
+        txtSyncAction.text = 'append';
       }
 
       return fetchedItem;
@@ -307,45 +321,38 @@ class CInventoryController extends GetxController {
       inventoryItem.userEmail = userController.user.value.email;
       inventoryItem.userName = userController.user.value.fullName;
 
-      inventoryItem.name = txtName.text;
-      inventoryItem.pCode = txtCode.text.toString();
-      inventoryItem.quantity = int.parse(txtQty.text);
-      inventoryItem.buyingPrice = double.parse(txtBP.text);
-      inventoryItem.unitSellingPrice = double.parse(txtUnitSP.text);
+      inventoryItem.name = txtName.text.trim();
+      inventoryItem.pCode = txtCode.text.toString().trim();
+      inventoryItem.quantity = int.parse(txtQty.text.trim());
+      inventoryItem.buyingPrice = double.parse(txtBP.text.trim());
+      inventoryItem.unitSellingPrice = double.parse(txtUnitSP.text.trim());
       inventoryItem.date = DateFormat('yyyy-MM-dd - kk:mm').format(clock.now());
 
+      inventoryItem.syncAction = txtSyncAction.text.trim();
+
       if (itemExists.value) {
-        updateInventoryItem(inventoryItem);
         // -- check internet connectivity
         final isConnected = await CNetworkManager.instance.isConnected();
 
         if (isConnected) {
           //fetchInvSheetItemById(int.parse(txtId.text));
-
+          inventoryItem.isSynced = 1;
+          inventoryItem.syncAction = 'none';
           updateInvSheetItem(int.parse(txtId.text), inventoryItem);
           // -- success message
           CPopupSnackBar.successSnackBar(
             title: 'update sync',
             message: 'UPDATE SYNCRONIZED...',
           );
-
-          // if (gSheetInvItemExists.value == true) {
-
-          // }
-          // else if (gSheetInvItemExists.value == false) {
-          //   StoreSheetsApi.saveToGSheets([inventoryItem.toMap()], invSheet!);
-          //   // -- success message
-          //   CPopupSnackBar.successSnackBar(
-          //     title: 'add sync',
-          //     message: 'ADDITION SYNCRONIZED...',
-          //   );
-          // }
         } else {
+          inventoryItem.isSynced = 0;
+          inventoryItem.syncAction = txtSyncAction.text.trim();
           CPopupSnackBar.customToast(
             message:
                 'while this works offline, consider using an internet connection to back up your data online!',
           );
         }
+        updateInventoryItem(inventoryItem);
       } else {
         addInventoryItem(inventoryItem);
       }
@@ -383,7 +390,10 @@ class CInventoryController extends GetxController {
           final isConnected = await CNetworkManager.instance.isConnected();
 
           if (isConnected) {
-            fetchInvSheetItemById(inventoryItem.productId!);
+            await fetchInvSheetItemById(inventoryItem.productId!);
+
+            // final invItem = await StoreSheetsApi.fetchInvItemById(inventoryItem.productId!);
+            // var gSheetItemData = invItem!.toMap();
 
             if (gSheetInvItemExists.value) {
               deleteInvSheetItem(inventoryItem.productId!);
@@ -393,6 +403,7 @@ class CInventoryController extends GetxController {
               inventoryItem.productId!,
               inventoryItem.name,
               'inventory',
+              0,
             );
             dbHelper.saveDelForSync(delItem);
           }
@@ -455,6 +466,10 @@ class CInventoryController extends GetxController {
       CPopupSnackBar.customToast(message: '${gSheetItemData.entries}');
     } else if (gSheetItemData.isEmpty) {
       gSheetInvItemExists.value = false;
+      CPopupSnackBar.errorSnackBar(
+        title: 'item not found',
+        message: "item with ID $id NOT FOUND!!",
+      );
     }
 
     if (kDebugMode) {
@@ -538,9 +553,10 @@ class CInventoryController extends GetxController {
             element.itemId,
             element.itemName,
             'inventory',
+            1,
           );
 
-          //dbHelper.syncDel(delItem);
+          await dbHelper.updateDel(delItem);
           CPopupSnackBar.customToast(
             message: 'DELETION SYNC RADA SAFI',
           );

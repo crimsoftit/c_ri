@@ -4,6 +4,7 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 
 class CDels extends StatelessWidget {
   const CDels({super.key});
@@ -42,9 +43,18 @@ class CDels extends StatelessWidget {
                         leading: CircleAvatar(
                           backgroundColor: CColors.rBrown[300],
                           radius: 16,
-                          child: Text(
-                            invController.dItems[index].itemName[0],
-                          ),
+                          child: invController.dItems[index].isSynced == 1
+                              ? const Icon(Iconsax.cloud_add)
+                              : const Icon(Iconsax.cloud_cross),
+                          // Text(
+                          //     invController.dItems[index].itemName[0],
+                          //     style: Theme.of(context)
+                          //         .textTheme
+                          //         .bodyLarge!
+                          //         .apply(
+                          //           color: CColors.white,
+                          //         ),
+                          //   ),
                         ),
                         title: Text(
                           invController.dItems[index].itemName,
