@@ -1,4 +1,5 @@
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
+import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -43,8 +44,8 @@ class GsheetsInvScreen extends StatelessWidget {
 
   List<DataRow> createRows() {
     final invController = Get.put(CInventoryController());
-    invController.fetchAllInvSheetItems();
-    return invController.gSheetData.map(
+    invController.fetchUserInvSheetData();
+    return invController.userGSheetData.map(
       (e) {
         return DataRow(
           cells: [
@@ -89,6 +90,15 @@ class GsheetsInvScreen extends StatelessWidget {
     //final invController = Get.put(CInventoryController());
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: CColors.rBrown,
+        title: Text(
+          'cloud data...',
+          style: Theme.of(context).textTheme.labelLarge!.apply(
+                color: CColors.white,
+              ),
+        ),
+      ),
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: SingleChildScrollView(
@@ -99,6 +109,25 @@ class GsheetsInvScreen extends StatelessWidget {
               height: CHelperFunctions.screenHeight() * 0.7,
               child: Obx(
                 () {
+                  // run loader --
+                  // if (invController.isLoading.value) {
+                  //   return const CVerticalProductShimmer(
+                  //     itemCount: 4,
+                  //   );
+                  // }
+
+                  //invController.fetchUserInvSheetData();
+
+                  // -- no data widget --
+                  // if (invController.userGSheetData.isEmpty &&
+                  //     !invController.isLoading.value) {
+                  //   return const Center(
+                  //     child: NoDataScreen(
+                  //       lottieImage: CImages.noDataLottie,
+                  //       txt: 'No data found!',
+                  //     ),
+                  //   );
+                  // }
                   //invController.fetchAllInvSheetData();
                   return DataTable(
                     columns: createColumns(),

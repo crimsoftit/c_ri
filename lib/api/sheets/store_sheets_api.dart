@@ -74,13 +74,23 @@ class StoreSheetsApi {
   }
 
   /// -- fetch inventory item by user's email address from google sheets --
-  static Future<CInventoryModel?> fetchInvItemEmail(String email) async {
-    if (invSheet == null) return null;
+  // static Future<CInventoryModel?> fetchGsheetInvItemByEmail(
+  //     String userEmail) async {
+  //   try {
+  //     if (invSheet == null) return null;
 
-    final invMap = await invSheet!.values.map.rowByKey(email, fromColumn: 3);
+  //     final invMap =
+  //         await invSheet!.values.map.rowByKey(userEmail, fromColumn: 3);
 
-    return CInventoryModel.gSheetFromJson(invMap!);
-  }
+  //     return CInventoryModel.gSheetFromJson(invMap!);
+  //   } catch (e) {
+  //     CPopupSnackBar.errorSnackBar(
+  //       title: 'error fetching user data',
+  //       message: e.toString(),
+  //     );
+  //     throw e.toString();
+  //   }
+  // }
 
   /// -- fetch all inventory items from google sheets --
   static Future<List<CInventoryModel?>?> fetchAllGsheetInvItems() async {

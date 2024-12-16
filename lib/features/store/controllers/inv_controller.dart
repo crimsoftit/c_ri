@@ -28,12 +28,10 @@ class CInventoryController extends GetxController {
   final RxList<CInventoryModel> foundInventoryItems = <CInventoryModel>[].obs;
 
   final RxList<CDelsModel> dItems = <CDelsModel>[].obs;
-
-  final RxList<CInventoryModel> gSheetData = <CInventoryModel>[].obs;
+  final RxList<CInventoryModel> allGSheetData = <CInventoryModel>[].obs;
+  final RxList<CInventoryModel> userGSheetData = <CInventoryModel>[].obs;
 
   final RxString scanResults = ''.obs;
-  final RxString currencySymbol = ''.obs;
-  final RxString countryCode = ''.obs;
 
   final RxBool itemExists = false.obs;
   final RxBool gSheetInvItemExists = false.obs;
@@ -61,7 +59,7 @@ class CInventoryController extends GetxController {
   void onInit() {
     dbHelper.openDb();
     fetchInventoryItems();
-    //fetchAllInvSheetItems();
+    //fetchUserInvSheetData();
     fetchInvDels();
     syncInvDels();
     if (searchController.salesShowSearchField.isTrue &&
@@ -392,9 +390,6 @@ class CInventoryController extends GetxController {
           if (isConnected) {
             await fetchInvSheetItemById(inventoryItem.productId!);
 
-            // final invItem = await StoreSheetsApi.fetchInvItemById(inventoryItem.productId!);
-            // var gSheetItemData = invItem!.toMap();
-
             if (gSheetInvItemExists.value) {
               deleteInvSheetItem(inventoryItem.productId!);
             }
@@ -442,11 +437,11 @@ class CInventoryController extends GetxController {
       // fetch items from sqflite db
       var gsheetItemsList = (await StoreSheetsApi.fetchAllGsheetInvItems())!;
 
-      gSheetData.assignAll(gsheetItemsList as Iterable<CInventoryModel>);
+      allGSheetData.assignAll(gsheetItemsList as Iterable<CInventoryModel>);
 
       //CPopupSnackBar.customToast(message: gSheetData.first.name);
 
-      return gSheetData;
+      return allGSheetData;
     } catch (e) {
       isLoading.value = false;
       return CPopupSnackBar.errorSnackBar(
@@ -456,7 +451,7 @@ class CInventoryController extends GetxController {
     }
   }
 
-  /// -- fetch inventory data from google sheets --
+  /// -- fetch inventory data from google sheets by its id --
   Future fetchInvSheetItemById(int id) async {
     final invItem = await StoreSheetsApi.fetchInvItemById(id);
     var gSheetItemData = invItem!.toMap();
@@ -474,6 +469,32 @@ class CInventoryController extends GetxController {
 
     if (kDebugMode) {
       print("----------\n\n $gSheetItemData \n\n ----------");
+    }
+  }
+
+  /// -- fetch inventory data from google sheets by userEmail --
+  Future fetchUserInvSheetData() async {
+    try {
+      // fetch items from sqflite db
+      var gsheetItemsList = (await StoreSheetsApi.fetchAllGsheetInvItems())!;
+
+      allGSheetData.assignAll(gsheetItemsList as Iterable<CInventoryModel>);
+
+      userGSheetData.value = allGSheetData
+          .where((element) => element.userEmail
+              .toLowerCase()
+              .contains(userController.user.value.email.toLowerCase()))
+          .toList();
+
+      //CPopupSnackBar.customToast(message: gSheetData.first.name);
+
+      return allGSheetData;
+    } catch (e) {
+      isLoading.value = false;
+      return CPopupSnackBar.errorSnackBar(
+        title: 'Oh Snap!',
+        message: e.toString(),
+      );
     }
   }
 
@@ -563,7 +584,7 @@ class CInventoryController extends GetxController {
         }
       } else {
         CPopupSnackBar.customToast(
-          message: 'no sync',
+          message: 'no sync needed - rada safi',
         );
       }
     }
