@@ -77,6 +77,8 @@ class CInventoryController extends GetxController {
   }
 
   ### ===DO THIS AT AUTHENTICATION LEVEL
+
+  ### ===WIPE LOCAL STORAGE SYNC DATA UPON LOGOUT ###
   /// -- initialize cloud sync status --
   initInvSync() async {
     //localStorage.writeIfNull('SyncInvDataWithCloud', true);
