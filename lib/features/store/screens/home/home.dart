@@ -16,8 +16,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final isDarkTheme = CHelperFunctions.isDarkMode(context);
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(

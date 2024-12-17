@@ -67,19 +67,18 @@ class CInventoryController extends GetxController {
     fetchInventoryItems();
     //fetchUserInvSheetData();
     //fetchInvDels();
-    //syncInvDels();
+    syncInvDels();
     if (searchController.salesShowSearchField.isTrue &&
         searchController.txtSalesSearch.text == '') {
       foundInventoryItems.value = inventoryItems;
     }
-    await initInvSync();
+    //await initInvSync();
     super.onInit();
   }
 
-  ### ===DO THIS AT AUTHENTICATION LEVEL
+  /// ### === DO THIS AT AUTHENTICATION LEVEL === ### ///
 
-  ### ===WIPE LOCAL STORAGE SYNC DATA UPON LOGOUT ###
-  /// -- initialize cloud sync status --
+  /// -- initialize cloud sync --
   initInvSync() async {
     //localStorage.writeIfNull('SyncInvDataWithCloud', true);
     if (localStorage.read('SyncInvDataWithCloud') == true) {
@@ -168,9 +167,9 @@ class CInventoryController extends GetxController {
           );
           StoreSheetsApi.saveToGSheets([gSheetsInvData.toMap()], invSheet!);
 
-          CPopupSnackBar.customToast(
-            message: 'rada safi',
-          );
+          // CPopupSnackBar.customToast(
+          //   message: 'rada safi',
+          // );
 
           /// -- update sync status
           inventoryItem.isSynced = thisItem.first.isSynced;
@@ -524,36 +523,6 @@ class CInventoryController extends GetxController {
     }
   }
 
-  Future<List<CDelsModel>> fetchInvDels() async {
-    try {
-      await dbHelper.openDb();
-
-      final dels = await dbHelper.fetchAllDels();
-      dItems.assignAll(dels);
-
-      if (dItems.isEmpty) {
-        CPopupSnackBar.customToast(
-          message: "NO DELS",
-        );
-        return [];
-      } else {
-        // for (var element in dItems) {
-        //   CPopupSnackBar.customToast(
-        //     message: '${element.itemId} ${element.category}',
-        //   );
-        // }
-
-        return dItems;
-      }
-    } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'DELS ERROR',
-        message: e.toString(),
-      );
-      throw e.toString();
-    }
-  }
-
   /// -- fetch inventory data from google sheets by userEmail --
   Future fetchUserInvSheetData() async {
     try {
@@ -608,19 +577,21 @@ class CInventoryController extends GetxController {
 
           isLoading.value = false;
 
-          CPopupSnackBar.successSnackBar(
-            title: 'data sync successful',
-            message: 'inventory data synced successfully...',
-          );
+          // CPopupSnackBar.successSnackBar(
+          //   title: 'data sync successful',
+          //   message: 'inventory data synced successfully...',
+          // );
         }
       } else if (userGSheetData.isEmpty) {
         isLoading.value = false;
-        CPopupSnackBar.customToast(
-          message: 'no data to import...',
-        );
+        // CPopupSnackBar.customToast(
+        //   message: 'no data to import...',
+        // );
       }
 
-      print("----------\n\n $userGSheetData \n\n ----------");
+      if (kDebugMode) {
+        print("----------\n\n $userGSheetData \n\n ----------");
+      }
     } catch (e) {
       isLoading.value = false;
       return CPopupSnackBar.errorSnackBar(
@@ -628,6 +599,36 @@ class CInventoryController extends GetxController {
         title: 'ERROR IMPORTING USER DATA FROM CLOUD!',
         message: e.toString(),
       );
+    }
+  }
+
+  Future<List<CDelsModel>> fetchInvDels() async {
+    try {
+      await dbHelper.openDb();
+
+      final dels = await dbHelper.fetchAllDels();
+      dItems.assignAll(dels);
+
+      if (dItems.isEmpty) {
+        // CPopupSnackBar.customToast(
+        //   message: "NO DELS",
+        // );
+        return [];
+      } else {
+        // for (var element in dItems) {
+        //   CPopupSnackBar.customToast(
+        //     message: '${element.itemId} ${element.category}',
+        //   );
+        // }
+
+        return dItems;
+      }
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'DELS ERROR',
+        message: e.toString(),
+      );
+      throw e.toString();
     }
   }
 
@@ -651,15 +652,16 @@ class CInventoryController extends GetxController {
           );
 
           await dbHelper.updateDel(delItem);
-          CPopupSnackBar.customToast(
-            message: 'DELETION SYNC RADA SAFI',
-          );
+          // CPopupSnackBar.customToast(
+          //   message: 'DELETION SYNC RADA SAFI',
+          // );
         }
-      } else {
-        CPopupSnackBar.customToast(
-          message: 'no sync needed - rada safi',
-        );
       }
+      // else {
+      //   CPopupSnackBar.customToast(
+      //     message: 'no sync needed - rada safi',
+      //   );
+      // }
     }
   }
 }

@@ -266,12 +266,8 @@ class DbHelper {
     // raw query
     final dels = await db!.rawQuery('SELECT * FROM delsForSync');
 
-    // var iDels = [];
-
-    // iDels.assignAll(dels);
-
     if (dels.isEmpty) {
-      CPopupSnackBar.customToast(message: 'IS EMPTY');
+      //CPopupSnackBar.customToast(message: 'IS EMPTY');
       return [];
     } else {
       final result =

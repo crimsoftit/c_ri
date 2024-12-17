@@ -4,6 +4,7 @@ import 'package:c_ri/features/authentication/screens/login/login.dart';
 import 'package:c_ri/features/authentication/screens/onboarding/onboarding_screen.dart';
 import 'package:c_ri/features/authentication/screens/signup/verify_email.dart';
 import 'package:c_ri/features/personalization/screens/location_tings/location_settings_screen.dart';
+import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/nav_menu.dart';
 import 'package:c_ri/utils/exceptions/exceptions.dart';
 import 'package:c_ri/utils/exceptions/firebase_auth_exceptions.dart';
@@ -56,9 +57,13 @@ class AuthRepo extends GetxController {
         if (userDets.currencyCode == '') {
           Get.offAll(() => const CLocationSettings());
         } else {
+          //DbHelper dbHelper = DbHelper.instance;
+          final invController = Get.put(CInventoryController());
           // check data sync status
           deviceStorage.writeIfNull('SyncInvDataWithCloud', true);
           deviceStorage.writeIfNull('SyncTxnsDataWithCloud', true);
+
+          invController.initInvSync();
 
           /// --- ### HANDLE IMPORT OF CLOUD DATA ### --- ///
           Get.offAll(() => const NavMenu());
@@ -319,6 +324,14 @@ class AuthRepo extends GetxController {
     try {
       await GoogleSignIn().signOut();
       await _auth.signOut();
+
+      // -- reset cloud sync keys --
+      deviceStorage.remove('SyncInvDataWithCloud');
+      deviceStorage.remove('SyncTxnsDataWithCloud');
+      // CPopupSnackBar.successSnackBar(
+      //   title: 'data sync reset',
+      //   message: 'sync data settings reset...',
+      // );
       Get.offAll(() => const LoginScreen());
     } on FirebaseAuthException catch (e) {
       throw CFirebaseAuthExceptions(e.code).message;
