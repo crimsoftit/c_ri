@@ -72,14 +72,13 @@ class CInventoryController extends GetxController {
         searchController.txtSalesSearch.text == '') {
       foundInventoryItems.value = inventoryItems;
     }
-    await initSyncStatus();
+    await initInvSync();
     super.onInit();
   }
 
-
-  DO THIS AT AUTHENTICATION LEVEL
+  ### ===DO THIS AT AUTHENTICATION LEVEL
   /// -- initialize cloud sync status --
-  initSyncStatus() async {
+  initInvSync() async {
     //localStorage.writeIfNull('SyncInvDataWithCloud', true);
     if (localStorage.read('SyncInvDataWithCloud') == true) {
       // CPopupSnackBar.customToast(
@@ -87,6 +86,7 @@ class CInventoryController extends GetxController {
       // );
       importInvDataFromCloud();
       fetchInventoryItems();
+      localStorage.write('SyncInvDataWithCloud', false);
     }
   }
 
