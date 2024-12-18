@@ -66,7 +66,7 @@ class CInventoryController extends GetxController {
 
     fetchInventoryItems();
     //fetchUserInvSheetData();
-    //fetchInvDels();
+    fetchInvDels();
     syncInvDels();
     if (searchController.salesShowSearchField.isTrue &&
         searchController.txtSalesSearch.text == '') {
@@ -146,15 +146,13 @@ class CInventoryController extends GetxController {
 
       if (isConnected) {
         if (thisItem.isNotEmpty) {
-          thisItem.first.isSynced = 1;
-          thisItem.first.syncAction = "none";
           // -- save data to gsheets --
           var gSheetsInvData = CInventoryModel.withID(
             thisItem.first.productId,
             userController.user.value.id,
             userController.user.value.email,
             userController.user.value.fullName,
-            txtCode.text.toString(),
+            txtCode.text,
             txtName.text,
             int.parse(txtQty.text),
             double.parse(txtBP.text),
@@ -162,8 +160,8 @@ class CInventoryController extends GetxController {
             DateFormat('yyyy-MM-dd - kk:mm').format(
               clock.now(),
             ),
-            thisItem.first.isSynced,
-            thisItem.first.syncAction,
+            1,
+            'none',
           );
           StoreSheetsApi.saveToGSheets([gSheetsInvData.toMap()], invSheet!);
 
@@ -172,7 +170,7 @@ class CInventoryController extends GetxController {
           // );
 
           /// -- update sync status
-          inventoryItem.isSynced = thisItem.first.isSynced;
+          inventoryItem.isSynced = 1;
           inventoryItem.syncAction = 'none';
           await dbHelper.updateInventoryItem(
               inventoryItem, thisItem.first.productId!);
@@ -340,11 +338,11 @@ class CInventoryController extends GetxController {
       inventoryItem.userEmail = userController.user.value.email;
       inventoryItem.userName = userController.user.value.fullName;
 
-      inventoryItem.name = txtName.text.trim();
-      inventoryItem.pCode = txtCode.text.toString().trim();
-      inventoryItem.quantity = int.parse(txtQty.text.trim());
-      inventoryItem.buyingPrice = double.parse(txtBP.text.trim());
-      inventoryItem.unitSellingPrice = double.parse(txtUnitSP.text.trim());
+      inventoryItem.name = txtName.text;
+      inventoryItem.pCode = txtCode.text.toString();
+      inventoryItem.quantity = int.parse(txtQty.text);
+      inventoryItem.buyingPrice = double.parse(txtBP.text);
+      inventoryItem.unitSellingPrice = double.parse(txtUnitSP.text);
       inventoryItem.date = DateFormat('yyyy-MM-dd - kk:mm').format(clock.now());
 
       inventoryItem.syncAction = txtSyncAction.text.trim();
@@ -365,7 +363,7 @@ class CInventoryController extends GetxController {
           );
         } else {
           inventoryItem.isSynced = 0;
-          inventoryItem.syncAction = txtSyncAction.text.trim();
+          inventoryItem.syncAction = 'update';
           CPopupSnackBar.customToast(
             message:
                 'while this works offline, consider using an internet connection to back up your data online!',
@@ -409,9 +407,7 @@ class CInventoryController extends GetxController {
           final isConnected = await CNetworkManager.instance.isConnected();
 
           if (isConnected) {
-            await fetchInvSheetItemById(inventoryItem.productId!);
-
-            if (gSheetInvItemExists.value) {
+            if (inventoryItem.isSynced == 1) {
               deleteInvSheetItem(inventoryItem.productId!);
             }
           } else {
@@ -421,10 +417,9 @@ class CInventoryController extends GetxController {
               'inventory',
               0,
             );
-            dbHelper.saveDelForSync(delItem);
+            await dbHelper.saveDelForSync(delItem);
           }
           deleteInventoryItem(inventoryItem);
-
           fetchInventoryItems();
 
           Navigator.of(Get.overlayContext!).pop();
@@ -473,25 +468,25 @@ class CInventoryController extends GetxController {
   }
 
   /// -- fetch inventory data from google sheets by its id --
-  Future fetchInvSheetItemById(int id) async {
-    final invItem = await StoreSheetsApi.fetchInvItemById(id);
-    var gSheetItemData = invItem!.toMap();
-    if (gSheetItemData.isNotEmpty) {
-      gSheetInvItemExists.value = true;
+  // Future fetchInvSheetItemById(int id) async {
+  //   final invItem = await StoreSheetsApi.fetchInvItemById(id);
+  //   var gSheetItemData = invItem!.toMap();
+  //   if (gSheetItemData.isNotEmpty) {
+  //     gSheetInvItemExists.value = true;
 
-      CPopupSnackBar.customToast(message: '${gSheetItemData.entries}');
-    } else if (gSheetItemData.isEmpty) {
-      gSheetInvItemExists.value = false;
-      CPopupSnackBar.errorSnackBar(
-        title: 'item not found',
-        message: "item with ID $id NOT FOUND!!",
-      );
-    }
+  //     //CPopupSnackBar.customToast(message: '${gSheetItemData.entries}');
+  //   } else if (gSheetItemData.isEmpty) {
+  //     gSheetInvItemExists.value = false;
+  //     CPopupSnackBar.errorSnackBar(
+  //       title: 'item not found',
+  //       message: "item with ID $id NOT FOUND!!",
+  //     );
+  //   }
 
-    if (kDebugMode) {
-      print("----------\n\n $gSheetItemData \n\n ----------");
-    }
-  }
+  //   if (kDebugMode) {
+  //     print("----------\n\n $gSheetItemData \n\n ----------");
+  //   }
+  // }
 
   /// -- update single item data in google sheets --
   Future updateInvSheetItem(int id, CInventoryModel itemModel) async {
@@ -595,7 +590,6 @@ class CInventoryController extends GetxController {
     } catch (e) {
       isLoading.value = false;
       return CPopupSnackBar.errorSnackBar(
-        durationInSeconds: 10,
         title: 'ERROR IMPORTING USER DATA FROM CLOUD!',
         message: e.toString(),
       );

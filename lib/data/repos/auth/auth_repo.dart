@@ -326,8 +326,9 @@ class AuthRepo extends GetxController {
       await _auth.signOut();
 
       // -- reset cloud sync keys --
-      deviceStorage.remove('SyncInvDataWithCloud');
-      deviceStorage.remove('SyncTxnsDataWithCloud');
+      deviceStorage.write('SyncInvDataWithCloud', true);
+
+      deviceStorage.write('SyncTxnsDataWithCloud', true);
       // CPopupSnackBar.successSnackBar(
       //   title: 'data sync reset',
       //   message: 'sync data settings reset...',

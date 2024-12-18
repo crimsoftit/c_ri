@@ -114,7 +114,6 @@ class CPopupSnackBar {
   static errorSnackBar({
     required title,
     message = '',
-    durationInSeconds,
   }) {
     Get.snackbar(
       title,
@@ -124,7 +123,7 @@ class CPopupSnackBar {
       colorText: CColors.white,
       backgroundColor: Colors.red.shade600,
       snackPosition: SnackPosition.BOTTOM,
-      duration: Duration(seconds: durationInSeconds),
+      duration: const Duration(seconds: 4),
       margin: const EdgeInsets.all(20.0),
       icon: const Icon(
         Iconsax.warning_2,

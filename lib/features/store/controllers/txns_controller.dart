@@ -33,7 +33,7 @@ class CTxnsController extends GetxController {
     } else {
       showAmountIssuedField.value = false;
     }
-    await initSyncStatus();
+
     super.onInit();
   }
 
