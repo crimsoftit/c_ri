@@ -58,10 +58,10 @@ class StoreSheetsApi {
     }
   }
 
-  static Future saveToGSheets(
-      List<Map<String, dynamic>> rowItems, Worksheet sheetName) async {
+  static Future saveInvItemsToGSheets(
+      List<Map<String, dynamic>> rowItems) async {
     if (invSheet == null) return;
-    sheetName.values.map.appendRows(rowItems);
+    invSheet!.values.map.appendRows(rowItems);
   }
 
   /// -- fetch inventory item by its id from google sheets --

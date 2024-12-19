@@ -76,11 +76,8 @@ class CInventoryController extends GetxController {
     super.onInit();
   }
 
-  /// ### === DO THIS AT AUTHENTICATION LEVEL === ### ///
-
   /// -- initialize cloud sync --
   initInvSync() async {
-    //localStorage.writeIfNull('SyncInvDataWithCloud', true);
     if (localStorage.read('SyncInvDataWithCloud') == true) {
       // CPopupSnackBar.customToast(
       //   message: 'CLOUD SYNC IS REQUIRED FOR INVENTORY!!!',
@@ -110,6 +107,9 @@ class CInventoryController extends GetxController {
           searchController.txtSalesSearch.text == '') {
         foundInventoryItems.value = inventoryItems;
       }
+
+      // upload unsynced data to the cloud
+      addUnsyncedInvToCloud();
 
       // stop loader
       isLoading.value = false;
@@ -163,7 +163,7 @@ class CInventoryController extends GetxController {
             1,
             'none',
           );
-          StoreSheetsApi.saveToGSheets([gSheetsInvData.toMap()], invSheet!);
+          StoreSheetsApi.saveInvItemsToGSheets([gSheetsInvData.toMap()]);
 
           // CPopupSnackBar.customToast(
           //   message: 'rada safi',
@@ -201,6 +201,70 @@ class CInventoryController extends GetxController {
       );
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  /// -- upload unsynced data to the cloud --
+  Future addUnsyncedInvToCloud() async {
+    try {
+      //await dbHelper.openDb();
+      //fetchInventoryItems();
+      // -- check internet connectivity
+      final isConnected = await CNetworkManager.instance.isConnected();
+
+      if (isConnected) {
+        var unSyncedAppends = inventoryItems
+            .where((item) => item.syncAction.toLowerCase().contains('append'))
+            .toList();
+
+        if (unSyncedAppends.isEmpty) {
+          CPopupSnackBar.warningSnackBar(
+            title: 'upload unnecessary',
+            message: 'sync appends rada safi',
+          );
+        } else if (unSyncedAppends.isNotEmpty) {
+          //CPopupSnackBar.customToast(message: '${unSyncedAppends.iterator}');
+          for (var element in unSyncedAppends) {
+            var invUploadData = CInventoryModel.withID(
+              element.productId,
+              element.userId,
+              element.userEmail,
+              element.userName,
+              element.pCode,
+              element.name,
+              element.quantity,
+              element.buyingPrice,
+              element.unitSellingPrice,
+              element.date,
+              1,
+              'none',
+            );
+
+            StoreSheetsApi.saveInvItemsToGSheets([invUploadData.toMap()]);
+
+            /// -- update sync status
+            invUploadData.isSynced = 1;
+            invUploadData.syncAction = 'none';
+            await dbHelper.updateInventoryItem(
+                invUploadData, element.productId!);
+            if (kDebugMode) {
+              print(element.name);
+            }
+          }
+
+          CPopupSnackBar.successSnackBar(
+            title: 'upload success',
+            message: 'inventory data upload rada safi...',
+          );
+          //fetchInventoryItems();
+        }
+      }
+    } catch (e) {
+      isLoading.value = false;
+      CPopupSnackBar.errorSnackBar(
+        title: 'Oh Snap!',
+        message: e.toString(),
+      );
     }
   }
 

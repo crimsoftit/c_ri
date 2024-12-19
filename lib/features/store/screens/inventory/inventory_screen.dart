@@ -86,6 +86,18 @@ class InventoryScreen extends StatelessWidget {
                                         Iconsax.scan,
                                       ),
                                     ),
+                                    const SizedBox(
+                                      width: CSizes.spaceBtnSections / 4,
+                                    ),
+                                    IconButton(
+                                      onPressed: () async {
+                                        await invController
+                                            .addUnsyncedInvToCloud();
+                                      },
+                                      icon: const Icon(
+                                        Iconsax.cloud_add,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -101,8 +113,7 @@ class InventoryScreen extends StatelessWidget {
                           controller: searchController.txtInvSearchField,
                         ),
                         backIconAction: () {
-                          // Navigator.pop(context, true);
-                          // Get.back();
+                          //invController.addUnsyncedInvToCloud();
                         },
                       );
                     },

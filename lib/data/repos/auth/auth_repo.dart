@@ -329,18 +329,31 @@ class AuthRepo extends GetxController {
       deviceStorage.write('SyncInvDataWithCloud', true);
 
       deviceStorage.write('SyncTxnsDataWithCloud', true);
-      // CPopupSnackBar.successSnackBar(
-      //   title: 'data sync reset',
-      //   message: 'sync data settings reset...',
-      // );
+
       Get.offAll(() => const LoginScreen());
     } on FirebaseAuthException catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'logout error',
+        message: CFirebaseAuthExceptions(e.code).message,
+      );
       throw CFirebaseAuthExceptions(e.code).message;
     } on FirebaseException catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'logout error',
+        message: CFirebaseExceptions(e.code).message,
+      );
       throw CFirebaseExceptions(e.code).message;
     } on FormatException catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'logout format exception error',
+        message: CFormatExceptions(e.message),
+      );
       throw CFormatExceptions(e.message);
     } on PlatformException catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'logout platform exception error',
+        message: CPlatformExceptions(e.code).message,
+      );
       throw CPlatformExceptions(e.code).message;
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
