@@ -33,6 +33,7 @@ class CInventoryController extends GetxController {
   final RxList<CDelsModel> dItems = <CDelsModel>[].obs;
   final RxList<CInventoryModel> allGSheetData = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> userGSheetData = <CInventoryModel>[].obs;
+  final RxList<CInventoryModel> unSyncedAppends = <CInventoryModel>[].obs;
 
   final RxString scanResults = ''.obs;
 
@@ -66,13 +67,15 @@ class CInventoryController extends GetxController {
 
     fetchInventoryItems();
     //fetchUserInvSheetData();
+    addUnsyncedInvToCloud();
     fetchInvDels();
     syncInvDels();
     if (searchController.salesShowSearchField.isTrue &&
         searchController.txtSalesSearch.text == '') {
       foundInventoryItems.value = inventoryItems;
     }
-    //await initInvSync();
+    await initInvSync();
+    //await addUnsyncedInvToCloud();
     super.onInit();
   }
 
@@ -109,7 +112,9 @@ class CInventoryController extends GetxController {
       }
 
       // upload unsynced data to the cloud
-      addUnsyncedInvToCloud();
+      unSyncedAppends.value = inventoryItems
+          .where((item) => item.syncAction.toLowerCase().contains('append'))
+          .toList();
 
       // stop loader
       isLoading.value = false;
@@ -163,7 +168,7 @@ class CInventoryController extends GetxController {
             1,
             'none',
           );
-          StoreSheetsApi.saveInvItemsToGSheets([gSheetsInvData.toMap()]);
+          await StoreSheetsApi.saveInvItemsToGSheets([gSheetsInvData.toMap()]);
 
           // CPopupSnackBar.customToast(
           //   message: 'rada safi',
@@ -206,58 +211,73 @@ class CInventoryController extends GetxController {
 
   /// -- upload unsynced data to the cloud --
   Future addUnsyncedInvToCloud() async {
+    fetchInventoryItems();
+
+    var gSheetAppendItems = unSyncedAppends
+        .map((e) => {
+              'productId': e.productId,
+              'userId': e.userId,
+              'userEmail': e.userEmail,
+              'userName': e.userName,
+              'pCode': e.pCode,
+              'name': e.name,
+              'quantity': e.quantity,
+              'buyingPrice': e.buyingPrice,
+              'unitSellingPrice': e.unitSellingPrice,
+              'date': e.date,
+              'isSynced': 1,
+              'syncAction': 'none',
+            })
+        .toList();
+    if (kDebugMode) {
+      print(gSheetAppendItems);
+    }
+    CPopupSnackBar.customToast(message: "$gSheetAppendItems");
+    await StoreSheetsApi.saveInvItemsToGSheets(gSheetAppendItems);
+
+    updateSyncedAppends();
+
+    return gSheetAppendItems;
+  }
+
+  Future updateSyncedAppends() async {
     try {
-      //await dbHelper.openDb();
-      //fetchInventoryItems();
-      // -- check internet connectivity
-      final isConnected = await CNetworkManager.instance.isConnected();
+      unSyncedAppends.value = inventoryItems
+          .where((item) => item.syncAction.toLowerCase().contains('append'))
+          .toList();
 
-      if (isConnected) {
-        var unSyncedAppends = inventoryItems
-            .where((item) => item.syncAction.toLowerCase().contains('append'))
-            .toList();
-
-        if (unSyncedAppends.isEmpty) {
-          CPopupSnackBar.warningSnackBar(
-            title: 'upload unnecessary',
-            message: 'sync appends rada safi',
+      if (unSyncedAppends.isEmpty) {
+        CPopupSnackBar.warningSnackBar(
+          title: 'upload unnecessary',
+          message: 'sync appends rada safi',
+        );
+      } else if (unSyncedAppends.isNotEmpty) {
+        //CPopupSnackBar.customToast(message: '${unSyncedAppends.iterator}');
+        for (var element in unSyncedAppends) {
+          var syncAppendsData = CInventoryModel.withID(
+            element.productId,
+            element.userId,
+            element.userEmail,
+            element.userName,
+            element.pCode,
+            element.name,
+            element.quantity,
+            element.buyingPrice,
+            element.unitSellingPrice,
+            element.date,
+            1,
+            'none',
           );
-        } else if (unSyncedAppends.isNotEmpty) {
-          //CPopupSnackBar.customToast(message: '${unSyncedAppends.iterator}');
-          for (var element in unSyncedAppends) {
-            var invUploadData = CInventoryModel.withID(
-              element.productId,
-              element.userId,
-              element.userEmail,
-              element.userName,
-              element.pCode,
-              element.name,
-              element.quantity,
-              element.buyingPrice,
-              element.unitSellingPrice,
-              element.date,
-              1,
-              'none',
-            );
 
-            StoreSheetsApi.saveInvItemsToGSheets([invUploadData.toMap()]);
-
-            /// -- update sync status
-            invUploadData.isSynced = 1;
-            invUploadData.syncAction = 'none';
-            await dbHelper.updateInventoryItem(
-                invUploadData, element.productId!);
-            if (kDebugMode) {
-              print(element.name);
-            }
-          }
-
-          CPopupSnackBar.successSnackBar(
-            title: 'upload success',
-            message: 'inventory data upload rada safi...',
-          );
-          //fetchInventoryItems();
+          await dbHelper.updateInventoryItem(
+              syncAppendsData, element.productId!);
         }
+
+        CPopupSnackBar.successSnackBar(
+          title: 'upload success',
+          message: 'inventory data upload rada safi...',
+        );
+        //fetchInventoryItems();
       }
     } catch (e) {
       isLoading.value = false;
@@ -514,6 +534,7 @@ class CInventoryController extends GetxController {
   /// -- fetch list of inventory items from google sheets --
   Future fetchAllInvSheetItems() async {
     try {
+      await StoreSheetsApi.initializeSpreadSheets();
       // fetch items from sqflite db
       var gsheetItemsList = (await StoreSheetsApi.fetchAllGsheetInvItems())!;
 
@@ -531,30 +552,10 @@ class CInventoryController extends GetxController {
     }
   }
 
-  /// -- fetch inventory data from google sheets by its id --
-  // Future fetchInvSheetItemById(int id) async {
-  //   final invItem = await StoreSheetsApi.fetchInvItemById(id);
-  //   var gSheetItemData = invItem!.toMap();
-  //   if (gSheetItemData.isNotEmpty) {
-  //     gSheetInvItemExists.value = true;
-
-  //     //CPopupSnackBar.customToast(message: '${gSheetItemData.entries}');
-  //   } else if (gSheetItemData.isEmpty) {
-  //     gSheetInvItemExists.value = false;
-  //     CPopupSnackBar.errorSnackBar(
-  //       title: 'item not found',
-  //       message: "item with ID $id NOT FOUND!!",
-  //     );
-  //   }
-
-  //   if (kDebugMode) {
-  //     print("----------\n\n $gSheetItemData \n\n ----------");
-  //   }
-  // }
-
   /// -- update single item data in google sheets --
   Future updateInvSheetItem(int id, CInventoryModel itemModel) async {
     try {
+      await StoreSheetsApi.initializeSpreadSheets();
       await StoreSheetsApi.updateInvData(id, itemModel.toMap());
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
@@ -569,10 +570,9 @@ class CInventoryController extends GetxController {
   /// -- delete inventory item from google sheets --
   Future deleteInvSheetItem(int id) async {
     try {
-      var sheetName = 'inventory';
+      await StoreSheetsApi.initializeSpreadSheets();
 
-      //var invSheetItem = await StoreSheetsApi.fetchInvItemById(id);
-      await StoreSheetsApi.deleteById(id, sheetName);
+      await StoreSheetsApi.deleteById(id);
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
         title: 'delete error',
@@ -668,17 +668,8 @@ class CInventoryController extends GetxController {
       dItems.assignAll(dels);
 
       if (dItems.isEmpty) {
-        // CPopupSnackBar.customToast(
-        //   message: "NO DELS",
-        // );
         return [];
       } else {
-        // for (var element in dItems) {
-        //   CPopupSnackBar.customToast(
-        //     message: '${element.itemId} ${element.category}',
-        //   );
-        // }
-
         return dItems;
       }
     } catch (e) {

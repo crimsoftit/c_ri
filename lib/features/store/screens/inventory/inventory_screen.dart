@@ -1,3 +1,4 @@
+import 'package:c_ri/api/sheets/store_sheets_api.dart';
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
@@ -13,6 +14,8 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
+import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -89,15 +92,40 @@ class InventoryScreen extends StatelessWidget {
                                     const SizedBox(
                                       width: CSizes.spaceBtnSections / 4,
                                     ),
-                                    IconButton(
-                                      onPressed: () async {
-                                        await invController
-                                            .addUnsyncedInvToCloud();
-                                      },
-                                      icon: const Icon(
-                                        Iconsax.cloud_add,
-                                      ),
-                                    ),
+                                    invController.unSyncedAppends.isEmpty
+                                        ? const Icon(
+                                            Iconsax.cloud_add,
+                                          )
+                                        : IconButton(
+                                            onPressed: () async {
+                                              invController.fetchInvDels();
+                                              invController.syncInvDels();
+                                              // -- check internet connectivity
+                                              final isConnected =
+                                                  await CNetworkManager.instance
+                                                      .isConnected();
+
+                                              if (isConnected) {
+                                                /// -- initialize spreadsheets --
+                                                await StoreSheetsApi
+                                                    .initializeSpreadSheets();
+                                                await invController
+                                                    .addUnsyncedInvToCloud();
+                                                // await invController
+                                                //     .addUnsyncedInvToCloud();
+                                              } else {
+                                                CPopupSnackBar.warningSnackBar(
+                                                  title:
+                                                      'cloud sync requires internet',
+                                                  message:
+                                                      'an internet connection is required for cloud sync...',
+                                                );
+                                              }
+                                            },
+                                            icon: const Icon(
+                                              Iconsax.cloud_cross,
+                                            ),
+                                          ),
                                   ],
                                 ),
                               ),

@@ -14,7 +14,7 @@ class StoreSheetsApi {
   static final gsheets = GSheets(gsheetCredentials);
   static Worksheet? invSheet, txnsSheet;
 
-  static Future init() async {
+  static Future initializeSpreadSheets() async {
     try {
       final spreadsheet = await gsheets.spreadsheet(spreadsheetId);
 
@@ -147,28 +147,22 @@ class StoreSheetsApi {
   }
 
   /// -- delete data in google sheets by its id --
-  static Future<bool> deleteById(int id, String sheetName) async {
+  static Future<bool> deleteById(int id) async {
     try {
+      initializeSpreadSheets();
       // ignore: prefer_typing_uninitialized_variables
       var returnCmd;
-      if (sheetName == 'inventory') {
-        if (invSheet == null) return false;
 
-        final invItemIndex =
-            await invSheet!.values.rowIndexOf(id.toString().toLowerCase());
+      if (invSheet == null) return false;
 
-        if (invItemIndex.isNegative) {
-          returnCmd = false;
-          return false;
-        } else {
-          returnCmd = invSheet!.deleteRow(invItemIndex);
-        }
-      } else if (sheetName == 'txns') {
-        if (txnsSheet == null) return false;
+      final invItemIndex =
+          await invSheet!.values.rowIndexOf(id.toString().toLowerCase());
 
-        final txnItemIndex = await txnsSheet!.values.rowIndexOf(id);
-
-        returnCmd = txnsSheet!.deleteRow(txnItemIndex);
+      if (invItemIndex.isNegative) {
+        returnCmd = false;
+        return false;
+      } else {
+        returnCmd = invSheet!.deleteRow(invItemIndex);
       }
 
       return returnCmd;
