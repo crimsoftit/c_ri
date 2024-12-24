@@ -2,6 +2,7 @@ import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_cont
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/store/screens/home/widgets/home_appbar.dart';
 import 'package:c_ri/features/store/screens/inventory/dels.dart';
+import 'package:c_ri/features/store/screens/inventory/for_updates.dart';
 import 'package:c_ri/features/store/screens/inventory/gsheets_inv_table_screen.dart';
 import 'package:c_ri/features/store/screens/search/search_results.dart';
 import 'package:c_ri/utils/constants/colors.dart';
@@ -75,6 +76,20 @@ class HomeScreen extends StatelessWidget {
                           editFontSize: true,
                           onPressed: () {
                             Get.to(() => const CDels());
+                          },
+                        ),
+                        const SizedBox(
+                          height: CSizes.spaceBtnItems,
+                        ),
+                        CSectionHeading(
+                          showActionBtn: true,
+                          title: 'pending updates',
+                          txtColor: CColors.white,
+                          btnTitle: 'view all',
+                          btnTxtColor: CColors.grey,
+                          editFontSize: true,
+                          onPressed: () {
+                            Get.to(() => const ForUpdates());
                           },
                         ),
                       ],

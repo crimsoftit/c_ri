@@ -14,7 +14,7 @@ class StoreSheetsApi {
   static final gsheets = GSheets(gsheetCredentials);
   static Worksheet? invSheet, txnsSheet;
 
-  static Future initializeSpreadSheets() async {
+  static Future initSpreadSheets() async {
     try {
       final spreadsheet = await gsheets.spreadsheet(spreadsheetId);
 
@@ -149,7 +149,7 @@ class StoreSheetsApi {
   /// -- delete data in google sheets by its id --
   static Future<bool> deleteById(int id) async {
     try {
-      initializeSpreadSheets();
+      //initializeSpreadSheets();
       // ignore: prefer_typing_uninitialized_variables
       var returnCmd;
 

@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class CDels extends StatelessWidget {
-  const CDels({super.key});
+class ForUpdates extends StatelessWidget {
+  const ForUpdates({super.key});
 
   @override
   Widget build(BuildContext context) {
     final invController = Get.put(CInventoryController());
-    invController.fetchInvDels();
+    invController.fetchInvUpdates();
     return Scaffold(
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -21,7 +21,7 @@ class CDels extends StatelessWidget {
           child: Obx(
             () {
               // -- no data widget --
-              if (invController.dItems.isEmpty) {
+              if (invController.pendingUpdates.isEmpty) {
                 return const Center(
                   child: NoDataScreen(
                     lottieImage: CImages.noDataLottie,
@@ -30,11 +30,11 @@ class CDels extends StatelessWidget {
                 );
               }
 
-              invController.fetchInvDels();
+              invController.fetchInvUpdates();
               return SizedBox(
                 child: ListView.builder(
                   shrinkWrap: true,
-                  itemCount: invController.dItems.length,
+                  itemCount: invController.pendingUpdates.length,
                   itemBuilder: (context, index) {
                     return Card(
                       color: CColors.lightGrey,
@@ -43,30 +43,23 @@ class CDels extends StatelessWidget {
                         leading: CircleAvatar(
                           backgroundColor: CColors.rBrown[300],
                           radius: 16,
-                          child: invController.dItems[index].isSynced == 1
-                              ? const Icon(Iconsax.cloud_add)
-                              : const Icon(Iconsax.cloud_cross),
-                          // Text(
-                          //     invController.dItems[index].itemName[0],
-                          //     style: Theme.of(context)
-                          //         .textTheme
-                          //         .bodyLarge!
-                          //         .apply(
-                          //           color: CColors.white,
-                          //         ),
-                          //   ),
+                          child:
+                              invController.pendingUpdates[index].isSynced == 1
+                                  ? const Icon(Iconsax.cloud_add)
+                                  : const Icon(Iconsax.cloud_cross),
                         ),
                         title: Text(
-                          invController.dItems[index].itemName,
+                          invController.pendingUpdates[index].itemName,
                         ),
                         subtitle: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(
-                              invController.dItems[index].itemCategory,
+                              invController.pendingUpdates[index].itemCategory,
                             ),
                             Text(
-                              invController.dItems[index].itemId.toString(),
+                              invController.pendingUpdates[index].itemId
+                                  .toString(),
                             ),
                           ],
                         ),

@@ -78,7 +78,8 @@ class DbHelper {
             itemId INTEGER NOT NULL,
             itemName TEXT NOT NULL,
             itemCategory TEXT NOT NULL,
-            isSynced INTEGER NOT NULL
+            isSynced INTEGER NOT NULL,
+            syncAction TEXT NOT NULL
           )
         ''');
     }, version: version);
@@ -259,12 +260,14 @@ class DbHelper {
   }
 
   /// -- fetch all deletionForSyncItems --
-  Future<List<CDelsModel>> fetchAllDels() async {
+  Future<List<CDelsModel>> fetchAllInvDels() async {
     // get a reference to the database.
     final db = _db;
 
     // raw query
-    final dels = await db!.rawQuery('SELECT * FROM delsForSync');
+    final dels = await db!.rawQuery(
+        'SELECT * FROM delsForSync where syncAction = ? and itemCategory = ?',
+        ['delete', 'inventory']);
 
     if (dels.isEmpty) {
       //CPopupSnackBar.customToast(message: 'IS EMPTY');
@@ -275,6 +278,22 @@ class DbHelper {
 
       return result;
     }
+  }
+
+  /// -- fetch all updatesForSyncItems --
+  Future<List<CDelsModel>> fetchAllInvUpdates() async {
+    // get a reference to the database.
+    final db = _db;
+
+    // raw query
+    final forUpdates = await db!.rawQuery(
+        'SELECT * FROM delsForSync where syncAction = ? and itemCategory = ?',
+        ['update', 'inventory']);
+
+    final result =
+        forUpdates.map((json) => CDelsModel.fromMapObject(json)).toList();
+
+    return result;
   }
 
   Future<int> updateDel(CDelsModel delItem) async {

@@ -31,9 +31,11 @@ class CInventoryController extends GetxController {
   final RxList<CInventoryModel> foundInventoryItems = <CInventoryModel>[].obs;
 
   final RxList<CDelsModel> dItems = <CDelsModel>[].obs;
+  final RxList<CDelsModel> pendingUpdates = <CDelsModel>[].obs;
   final RxList<CInventoryModel> allGSheetData = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> userGSheetData = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> unSyncedAppends = <CInventoryModel>[].obs;
+  final RxList<CInventoryModel> unSyncedUpdates = <CInventoryModel>[].obs;
 
   final RxString scanResults = ''.obs;
 
@@ -57,8 +59,6 @@ class CInventoryController extends GetxController {
   final userController = Get.put(CUserController());
   final searchController = Get.put(CSearchBarController());
 
-  final invSheet = StoreSheetsApi.invSheet;
-
   @override
   void onInit() async {
     /// -- check if cloud sync is needed for inventory items --
@@ -69,7 +69,9 @@ class CInventoryController extends GetxController {
     //fetchUserInvSheetData();
     addUnsyncedInvToCloud();
     fetchInvDels();
+    fetchInvUpdates();
     syncInvDels();
+    syncInvUpdates();
     if (searchController.salesShowSearchField.isTrue &&
         searchController.txtSalesSearch.text == '') {
       foundInventoryItems.value = inventoryItems;
@@ -111,9 +113,16 @@ class CInventoryController extends GetxController {
         foundInventoryItems.value = inventoryItems;
       }
 
-      // upload unsynced data to the cloud
+      // unsynced appends
       unSyncedAppends.value = inventoryItems
-          .where((item) => item.syncAction.toLowerCase().contains('append'))
+          .where((appendItem) =>
+              appendItem.syncAction.toLowerCase().contains('append'))
+          .toList();
+
+      // unsynced updates
+      unSyncedUpdates.value = inventoryItems
+          .where((updateItem) =>
+              updateItem.syncAction.toLowerCase().contains('update'))
           .toList();
 
       // stop loader
@@ -232,7 +241,7 @@ class CInventoryController extends GetxController {
     if (kDebugMode) {
       print(gSheetAppendItems);
     }
-    CPopupSnackBar.customToast(message: "$gSheetAppendItems");
+    //CPopupSnackBar.customToast(message: "$gSheetAppendItems");
     await StoreSheetsApi.saveInvItemsToGSheets(gSheetAppendItems);
 
     updateSyncedAppends();
@@ -246,12 +255,7 @@ class CInventoryController extends GetxController {
           .where((item) => item.syncAction.toLowerCase().contains('append'))
           .toList();
 
-      if (unSyncedAppends.isEmpty) {
-        CPopupSnackBar.warningSnackBar(
-          title: 'upload unnecessary',
-          message: 'sync appends rada safi',
-        );
-      } else if (unSyncedAppends.isNotEmpty) {
+      if (unSyncedAppends.isNotEmpty) {
         //CPopupSnackBar.customToast(message: '${unSyncedAppends.iterator}');
         for (var element in unSyncedAppends) {
           var syncAppendsData = CInventoryModel.withID(
@@ -273,10 +277,10 @@ class CInventoryController extends GetxController {
               syncAppendsData, element.productId!);
         }
 
-        CPopupSnackBar.successSnackBar(
-          title: 'upload success',
-          message: 'inventory data upload rada safi...',
-        );
+        // CPopupSnackBar.successSnackBar(
+        //   title: 'upload success',
+        //   message: 'inventory data upload rada safi...',
+        // );
         //fetchInventoryItems();
       }
     } catch (e) {
@@ -446,8 +450,18 @@ class CInventoryController extends GetxController {
             message: 'UPDATE SYNCRONIZED...',
           );
         } else {
-          inventoryItem.isSynced = 0;
-          inventoryItem.syncAction = 'update';
+          //inventoryItem.isSynced = 0;
+          inventoryItem.syncAction =
+              inventoryItem.isSynced == 1 ? 'update' : 'append';
+
+          final updateItem = CDelsModel(
+            inventoryItem.productId!,
+            inventoryItem.name,
+            'inventory',
+            inventoryItem.isSynced,
+            inventoryItem.syncAction,
+          );
+          await dbHelper.saveDelForSync(updateItem);
           CPopupSnackBar.customToast(
             message:
                 'while this works offline, consider using an internet connection to back up your data online!',
@@ -500,6 +514,7 @@ class CInventoryController extends GetxController {
               inventoryItem.name,
               'inventory',
               0,
+              'delete',
             );
             await dbHelper.saveDelForSync(delItem);
           }
@@ -534,7 +549,7 @@ class CInventoryController extends GetxController {
   /// -- fetch list of inventory items from google sheets --
   Future fetchAllInvSheetItems() async {
     try {
-      await StoreSheetsApi.initializeSpreadSheets();
+      //await StoreSheetsApi.initializeSpreadSheets();
       // fetch items from sqflite db
       var gsheetItemsList = (await StoreSheetsApi.fetchAllGsheetInvItems())!;
 
@@ -555,7 +570,7 @@ class CInventoryController extends GetxController {
   /// -- update single item data in google sheets --
   Future updateInvSheetItem(int id, CInventoryModel itemModel) async {
     try {
-      await StoreSheetsApi.initializeSpreadSheets();
+      //await StoreSheetsApi.initializeSpreadSheets();
       await StoreSheetsApi.updateInvData(id, itemModel.toMap());
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
@@ -570,7 +585,7 @@ class CInventoryController extends GetxController {
   /// -- delete inventory item from google sheets --
   Future deleteInvSheetItem(int id) async {
     try {
-      await StoreSheetsApi.initializeSpreadSheets();
+      //await StoreSheetsApi.initializeSpreadSheets();
 
       await StoreSheetsApi.deleteById(id);
     } catch (e) {
@@ -664,7 +679,7 @@ class CInventoryController extends GetxController {
     try {
       await dbHelper.openDb();
 
-      final dels = await dbHelper.fetchAllDels();
+      final dels = await dbHelper.fetchAllInvDels();
       dItems.assignAll(dels);
 
       if (dItems.isEmpty) {
@@ -686,7 +701,7 @@ class CInventoryController extends GetxController {
     // -- check internet connectivity
     final isConnected = await CNetworkManager.instance.isConnected();
     if (isConnected) {
-      final dels = await dbHelper.fetchAllDels();
+      final dels = await dbHelper.fetchAllInvDels();
       dItems.assignAll(dels);
 
       if (dItems.isNotEmpty) {
@@ -698,19 +713,107 @@ class CInventoryController extends GetxController {
             element.itemName,
             'inventory',
             1,
+            'none',
           );
 
           await dbHelper.updateDel(delItem);
-          // CPopupSnackBar.customToast(
-          //   message: 'DELETION SYNC RADA SAFI',
-          // );
         }
       }
-      // else {
-      //   CPopupSnackBar.customToast(
-      //     message: 'no sync needed - rada safi',
-      //   );
-      // }
+    }
+  }
+
+  /// -- fetch items with pending updates --
+  Future<List<CDelsModel>> fetchInvUpdates() async {
+    try {
+      await dbHelper.openDb();
+
+      final pUpdates = await dbHelper.fetchAllInvUpdates();
+      pendingUpdates.assignAll(pUpdates);
+
+      return pendingUpdates;
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'DELS ERROR',
+        message: e.toString(),
+      );
+      throw e.toString();
+    }
+  }
+
+  Future syncInvUpdates() async {
+    await fetchInventoryItems();
+    if (unSyncedUpdates.isNotEmpty) {
+      for (var element in unSyncedUpdates) {
+        if (element.isSynced == 1) {
+          await deleteInvSheetItem(element.productId!);
+        }
+        final invUpdateItem = CInventoryModel.withID(
+          element.productId,
+          element.userId,
+          element.userEmail,
+          element.userName,
+          element.pCode,
+          element.name,
+          element.quantity,
+          element.buyingPrice,
+          element.unitSellingPrice,
+          element.date,
+          0,
+          'append',
+        );
+
+        await dbHelper.updateInventoryItem(invUpdateItem, element.productId!);
+
+        final delItem = CDelsModel(
+          element.productId,
+          element.name,
+          'inventory',
+          1,
+          'none',
+        );
+        await dbHelper.updateDel(delItem);
+
+        fetchInventoryItems();
+      }
+    } else {
+      if (kDebugMode) {
+        print('/n/n ----- /n all updates rada safi \n -----');
+        CPopupSnackBar.warningSnackBar(
+          title: 'updates sync unnecessary...',
+          message: 'updates sync rada safi!',
+        );
+      }
+    }
+  }
+
+  //delete items and then replace them here
+  /// -- synchronize updates --
+  Future updateUnsyncedUpdates() async {
+    fetchInventoryItems();
+    if (unSyncedUpdates.isNotEmpty) {
+      for (var element in unSyncedUpdates) {
+        var syncedUpdates = CInventoryModel.withID(
+          element.productId,
+          element.userId,
+          element.userEmail,
+          element.userName,
+          element.pCode,
+          element.name,
+          element.quantity,
+          element.buyingPrice,
+          element.unitSellingPrice,
+          element.date,
+          element.isSynced,
+          'none',
+        );
+        await StoreSheetsApi.updateInvData(
+            element.productId!, syncedUpdates as Map<String, dynamic>);
+
+        await dbHelper.updateInventoryItem(syncedUpdates, element.productId!);
+      }
+    } else {
+      CPopupSnackBar.warningSnackBar(
+          title: 'updates rada safi', message: 'updates sync unnecessary...');
     }
   }
 }

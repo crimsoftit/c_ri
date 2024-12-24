@@ -306,8 +306,8 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                   invItem.buyingPrice,
                   invItem.unitSellingPrice,
                   invItem.date,
-                  0,
-                  '',
+                  invItem.isSynced,
+                  invItem.syncAction,
                 ),
                 false,
               );

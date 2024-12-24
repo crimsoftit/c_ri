@@ -92,7 +92,9 @@ class InventoryScreen extends StatelessWidget {
                                     const SizedBox(
                                       width: CSizes.spaceBtnSections / 4,
                                     ),
-                                    invController.unSyncedAppends.isEmpty
+                                    invController.unSyncedAppends.isEmpty &&
+                                            invController
+                                                .unSyncedUpdates.isEmpty
                                         ? const Icon(
                                             Iconsax.cloud_add,
                                           )
@@ -108,9 +110,11 @@ class InventoryScreen extends StatelessWidget {
                                               if (isConnected) {
                                                 /// -- initialize spreadsheets --
                                                 await StoreSheetsApi
-                                                    .initializeSpreadSheets();
+                                                    .initSpreadSheets();
                                                 await invController
                                                     .addUnsyncedInvToCloud();
+                                                await invController
+                                                    .updateUnsyncedUpdates();
                                                 // await invController
                                                 //     .addUnsyncedInvToCloud();
                                               } else {

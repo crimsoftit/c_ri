@@ -15,7 +15,7 @@ Future<void> main() async {
       WidgetsFlutterBinding.ensureInitialized();
 
   /// -- initialize spreadsheets --
-  StoreSheetsApi.initializeSpreadSheets();
+  StoreSheetsApi.initSpreadSheets();
 
   tz.initializeTimeZones();
 
