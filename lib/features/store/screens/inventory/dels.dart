@@ -68,6 +68,20 @@ class CDels extends StatelessWidget {
                             Text(
                               invController.dItems[index].itemId.toString(),
                             ),
+                            Row(
+                              children: [
+                                Text(
+                                  invController.dItems[index].isSynced
+                                      .toString(),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  invController.dItems[index].syncAction,
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),

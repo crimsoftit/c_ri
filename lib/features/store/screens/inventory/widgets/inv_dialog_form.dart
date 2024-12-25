@@ -135,18 +135,12 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   signed: false,
                 ),
                 inputFormatters: <TextInputFormatter>[
-                  //FilteringTextInputFormatter.digitsOnly
                   FilteringTextInputFormatter.allow(RegExp(r'^\d+(\.\d*)?')),
                 ],
                 decoration: InputDecoration(
                   labelText: 'buying price',
                   labelStyle: textStyle,
                 ),
-                onChanged: (value) {
-                  //invController.formatPrice(value);
-                  // formattedBp = CHelperFunctions.getFormattedPrice(value);
-                  // invController.txtBP.text = formattedBp.toString();
-                },
                 style: const TextStyle(
                   fontWeight: FontWeight.normal,
                 ),
@@ -165,7 +159,6 @@ class AddUpdateInventoryForm extends StatelessWidget {
                 ),
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.allow(RegExp(r'^\d+(\.\d*)?')),
-                  //FilteringTextInputFormatter.digitsOnly
                 ],
                 decoration: InputDecoration(
                   labelText: 'unit selling price',
@@ -174,9 +167,6 @@ class AddUpdateInventoryForm extends StatelessWidget {
                 style: const TextStyle(
                   fontWeight: FontWeight.normal,
                 ),
-                onChanged: (value) {
-                  //CHelperFunctions.getFormattedPrice(value);
-                },
                 validator: (value) {
                   return CValidator.validateNumber('unit selling price', value);
                 },
@@ -186,7 +176,6 @@ class AddUpdateInventoryForm extends StatelessWidget {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
                     flex: 4,

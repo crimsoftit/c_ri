@@ -61,6 +61,21 @@ class ForUpdates extends StatelessWidget {
                               invController.pendingUpdates[index].itemId
                                   .toString(),
                             ),
+                            Row(
+                              children: [
+                                Text(
+                                  invController.pendingUpdates[index].isSynced
+                                      .toString(),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  invController
+                                      .pendingUpdates[index].syncAction,
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),

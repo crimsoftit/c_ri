@@ -114,9 +114,7 @@ class InventoryScreen extends StatelessWidget {
                                                 await invController
                                                     .addUnsyncedInvToCloud();
                                                 await invController
-                                                    .updateUnsyncedUpdates();
-                                                // await invController
-                                                //     .addUnsyncedInvToCloud();
+                                                    .syncInvUpdates();
                                               } else {
                                                 CPopupSnackBar.warningSnackBar(
                                                   title:
