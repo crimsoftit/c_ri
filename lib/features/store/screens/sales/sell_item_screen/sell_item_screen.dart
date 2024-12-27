@@ -54,14 +54,14 @@ class CSellItemScreen extends StatelessWidget {
                           CProfileMenu(
                             title: 'code',
                             value: salesController.saleItemCode.value,
-                            verticalPadding: 15.0,
+                            verticalPadding: 7.0,
                             showTrailingIcon: false,
                             onTap: () {},
                           ),
                           CProfileMenu(
                             title: 'name',
                             value: salesController.saleItemName.value,
-                            verticalPadding: 15.0,
+                            verticalPadding: 7.0,
                             showTrailingIcon: false,
                             onTap: () {},
                           ),
@@ -69,7 +69,7 @@ class CSellItemScreen extends StatelessWidget {
                             title: 'usp',
                             value:
                                 'Ksh. ${(salesController.saleItemUsp.value)}',
-                            verticalPadding: 15.0,
+                            verticalPadding: 7.0,
                             showTrailingIcon: false,
                             onTap: () {},
                           ),
@@ -77,7 +77,7 @@ class CSellItemScreen extends StatelessWidget {
                             title: 'total amount',
                             value:
                                 'Ksh. ${(salesController.totalAmount.value)}',
-                            verticalPadding: 15.0,
+                            verticalPadding: 7.0,
                             showTrailingIcon: false,
                             onTap: () {},
                           ),
@@ -107,7 +107,7 @@ class CSellItemScreen extends StatelessWidget {
                               items: [
                                 'Cash',
                                 'Mpesa',
-                                'In-house',
+                                'on the house',
                               ]
                                   .map(
                                     (option) => DropdownMenuItem(
@@ -263,21 +263,38 @@ class CSellItemScreen extends StatelessWidget {
                                       ),
                             ),
                           ),
+                          const SizedBox(
+                            height: CSizes.spaceBtnInputFields / 2,
+                          ),
                           TextFormField(
                             controller: salesController.txtCustomerName,
                             style: const TextStyle(
                               height: 0.7,
                               fontWeight: FontWeight.normal,
                             ),
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(
+                                Iconsax.quote_up_square,
+                                color: CColors.grey,
+                              ),
+                              labelText: 'customer name',
+                            ),
                           ),
                           const SizedBox(
-                            height: CSizes.spaceBtnInputFields,
+                            height: CSizes.spaceBtnInputFields / 2,
                           ),
                           TextFormField(
                             controller: salesController.txtCustomerContacts,
                             style: const TextStyle(
                               height: 0.7,
                               fontWeight: FontWeight.normal,
+                            ),
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(
+                                Iconsax.quote_up_square,
+                                color: CColors.grey,
+                              ),
+                              labelText: 'customer contacts',
                             ),
                           ),
                           const SizedBox(

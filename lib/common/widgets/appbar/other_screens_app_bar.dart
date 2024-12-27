@@ -57,15 +57,15 @@ class OtherScreensAppBar extends StatelessWidget {
                       },
                     ),
                   ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 0.0),
+                Expanded(
+                  //padding: const EdgeInsets.only(left: 0.0, right: 10.0),
                   child: Text(
                     title,
                     style: Theme.of(context).textTheme.labelLarge!.apply(
                           color: CColors.white,
                         ),
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
+                    maxLines: 1,
                   ),
                 ),
                 if (showSubTitle)

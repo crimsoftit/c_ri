@@ -7,6 +7,7 @@ import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
+import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/inv_dialog.dart';
 import 'package:c_ri/features/store/screens/search/widgets/no_results_screen.dart';
@@ -35,6 +36,9 @@ class InventoryScreen extends StatelessWidget {
     final userController = Get.put(CUserController());
 
     final searchController = Get.put(CSearchBarController());
+
+    final txnsController = Get.put(CTxnsController());
+
     final currency =
         CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
 
@@ -322,6 +326,74 @@ class InventoryScreen extends StatelessWidget {
                                         color: CColors.rBrown.withOpacity(0.7),
                                         //fontStyle: FontStyle.italic,
                                       ),
+                                ),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      child: TextButton.icon(
+                                        label: Text(
+                                          'info',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium!
+                                              .apply(
+                                                color: CColors.rBrown,
+                                              ),
+                                        ),
+                                        icon: const Icon(
+                                          Iconsax.information,
+                                          color: CColors.rBrown,
+                                          size: CSizes.iconSm,
+                                        ),
+                                        onPressed: () {
+                                          Get.toNamed(
+                                            '/inventory/item_details/',
+                                            arguments: searchController
+                                                    .txtInvSearchField
+                                                    .text
+                                                    .isNotEmpty
+                                                ? invController
+                                                    .foundInventoryItems[index]
+                                                    .productId
+                                                : invController
+                                                    .inventoryItems[index]
+                                                    .productId,
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: CSizes.spaceBtnInputFields,
+                                    ),
+                                    SizedBox(
+                                      child: TextButton.icon(
+                                        label: Text(
+                                          'sell',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium!
+                                              .apply(
+                                                color: CColors.rBrown,
+                                              ),
+                                        ),
+                                        icon: const Icon(
+                                          Iconsax.card_pos,
+                                          color: CColors.rBrown,
+                                          size: CSizes.iconSm,
+                                        ),
+                                        onPressed: () {
+                                          txnsController.onSellItemBtnAction(
+                                              searchController.txtInvSearchField
+                                                      .text.isNotEmpty
+                                                  ? invController
+                                                          .foundInventoryItems[
+                                                      index]
+                                                  : invController
+                                                      .inventoryItems[index]);
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
