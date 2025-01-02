@@ -9,6 +9,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
+final globalNavigatorKey = GlobalKey<NavigatorState>();
+
 Future<void> main() async {
   /// -- todo: add widgets binding --
   final WidgetsBinding widgetsBinding =

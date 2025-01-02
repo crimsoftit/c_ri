@@ -64,11 +64,14 @@ class CUserController extends GetxController {
           final user = CUserModel(
             id: userCredentials.user!.uid,
             fullName: userCredentials.user!.displayName ?? '',
+            businessName: signupController.txtBusinessName.text,
             email: userCredentials.user!.email ?? '',
             phoneNo: userCredentials.user!.phoneNumber ?? '',
             profPic: userCredentials.user!.photoURL ?? '',
             currencyCode: signupController.userCurrencyCode.value,
             countryCode: signupController.countryCode.value,
+            locationCoordinates: '',
+            userAddress: '',
           );
 
           // -- save user data

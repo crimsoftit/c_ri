@@ -28,6 +28,7 @@ class SignupController extends GetxController {
 
   final hideConfirmPswdTxt = true.obs;
   final fullName = TextEditingController();
+  final txtBusinessName = TextEditingController();
   final email = TextEditingController();
   final phoneNumber = TextEditingController();
   final password = TextEditingController();
@@ -141,12 +142,15 @@ class SignupController extends GetxController {
       final newUser = CUserModel(
         id: userCredentials.user!.uid,
         fullName: fullName.text,
+        businessName: txtBusinessName.text,
         email: email.text.trim(),
         countryCode: countryCode.value,
         // phoneNo: phoneNumber.text.trim(),
         phoneNo: completePhoneNo.value,
         currencyCode: userCurrencyCode.value,
         profPic: '',
+        locationCoordinates: '',
+        userAddress: '',
       );
 
       final userRepo = Get.put(CUserRepo());
@@ -162,10 +166,6 @@ class SignupController extends GetxController {
         message:
             'your account has been created! verify your e-mail address to proceed!',
       );
-
-      // CPopupSnackBar.customToast(
-      //   message: 'country code: ${countryCode.value}',
-      // );
 
       // -- move to verify email screen
       Get.to(() => VerifyEmailScreen(
@@ -188,9 +188,7 @@ class SignupController extends GetxController {
   onPhoneInputChanged(Country country) {
     userCountry.value = country.name;
     loadCSV();
-    // CPopupSnackBar.customToast(
-    //   message: 'country: ${userCountry.value}',
-    // );
+
     fetchUserCurrencyByCountry(userCountry.value);
   }
 }

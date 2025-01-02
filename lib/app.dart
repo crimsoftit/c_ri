@@ -1,5 +1,6 @@
 import 'package:c_ri/bindings/general_bindings.dart';
-import 'package:c_ri/utils/constants/colors.dart';
+import 'package:c_ri/common/widgets/loaders/default_loader.dart';
+import 'package:c_ri/main.dart';
 import 'package:c_ri/utils/themes/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,18 +19,12 @@ class App extends StatelessWidget {
       theme: CAppTheme.lightTheme,
       darkTheme: CAppTheme.darkTheme,
       initialBinding: CGeneralBindings(),
+      navigatorKey: globalNavigatorKey,
       getPages: CAppRoutes.pages,
 
       // -- show loader or circular progress indicator as AuthRepo decides on the relevant screen to load --
 
-      home: const Scaffold(
-        backgroundColor: CColors.rBrown,
-        body: Center(
-          child: CircularProgressIndicator(
-            color: CColors.white,
-          ),
-        ),
-      ),
+      home: const DefaultLoaderScreen(),
     );
   }
 }

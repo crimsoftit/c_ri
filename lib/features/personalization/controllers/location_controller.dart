@@ -1,216 +1,74 @@
-import 'package:android_intent/android_intent.dart';
-import 'package:c_ri/data/repos/auth/auth_repo.dart';
+import 'dart:async';
+
 import 'package:c_ri/data/repos/user/user_repo.dart';
 import 'package:c_ri/features/authentication/controllers/signup/signup_controller.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
-import 'package:c_ri/utils/helpers/network_manager.dart';
+import 'package:c_ri/features/personalization/models/user_model.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
-import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:location/location.dart';
 
 class CLocationController extends GetxController {
-  static CLocationController get instance => Get.find();
-
-  // -- initialize user data when home screen loads --
-  @override
-  void onInit() {
-    getCurrentPosition();
-    if (permissionStatus.value == "NO PERMISSION") {
-      userCountry.value = 'Kenya';
-      signupController.fetchUserCurrencyByCountry(userCountry.value);
-
-      uCurCode.value = 'KES';
-    }
-
-    super.onInit();
-  }
-
-  /// -- variables --
-  final RxString currentAddress = ''.obs;
-  final RxString userCountry = ''.obs;
-  RxString uCurCode = 'KES'.obs;
-  final RxString permissionStatus = ''.obs;
-  final RxBool locationServicesEnabled = false.obs;
-  final RxBool locationFetchedSuccessfully = false.obs;
-  final RxBool isLoading = false.obs;
-  Position? currentPosition;
-
-  final selectCountryFormKey = GlobalKey<FormState>();
-  final countryField = TextEditingController();
-
-  final LocationSettings locationSettings = const LocationSettings(
-    accuracy: LocationAccuracy.high,
-    distanceFilter: 100,
-  );
+  // -- variables --
+  final RxBool processingLocationAccess = RxBool(false);
+  final RxBool updateLoading = RxBool(false);
+  final RxString errorDesc = ''.obs;
+  final Rx<LocationData?> userLocation = Rx<LocationData?>(null);
+  final RxString uAddress = RxString('');
+  final RxString uCountry = RxString('');
+  final RxString uCurCode = RxString('');
 
   final signupController = Get.put(SignupController());
   final userController = Get.put(CUserController());
   final userRepo = Get.put(CUserRepo());
 
-  Future<bool> handleLocationPermission() async {
-    LocationPermission permission;
+  late StreamSubscription<ServiceStatus> serviceStatusStream;
 
-    //isLoading.value = true;
+  // -- initialize the network manager and set up a stream to continually check the connection status --
 
-    locationServicesEnabled.value = await Geolocator.isLocationServiceEnabled();
-    if (!locationServicesEnabled.value) {
-      ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'location services are disabled! please enable the services.',
-          ),
-        ),
-      );
-      return false;
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-
-      permissionStatus.value = 'denied';
-      if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'location permissions are denied!!',
-            ),
-          ),
-        );
-        return false;
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      permissionStatus.value = 'deniedForever';
-      ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
-        const SnackBar(
-          content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.'),
-        ),
-      );
-      return false;
-    }
-
-    return true;
+  void updateLocationAccess(bool hasAccess) {
+    processingLocationAccess.value = hasAccess;
   }
 
-  Future<void> getCurrentPosition() async {
-    isLoading.value = true;
-    final hasPermission = await handleLocationPermission();
-
-    if (!hasPermission) {
-      isLoading.value = false;
-      permissionStatus.value = "NO PERMISSION";
-      return;
-    } else {
-      permissionStatus.value = "permission granted";
-    }
-
-    // -- check internet connectivity
-    final isConnected = await CNetworkManager.instance.isConnected();
-    if (!isConnected) {
-      // -- remove loader
-      isLoading.value = false;
-      CPopupSnackBar.customToast(
-        message: 'please check your internet connection',
-      );
-      return;
-    }
-
-    // await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-    //     .then((Position position) {
-    //   setState(() => currentPosition = position);
-    // }).catchError((e) {
-    //   debugPrint(e);
-    // });
-
-    await Geolocator.getCurrentPosition(
-      locationSettings: locationSettings,
-    ).then((Position position) {
-      currentPosition = position;
-      getAddressFromLatLng(currentPosition!);
-      isLoading.value = false;
-    }).catchError((e) {
-      isLoading.value = false;
-      ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
-        SnackBar(
-          content: Text('error fetching current position: $e'),
-        ),
-      );
-      debugPrint(e);
-    });
-  }
-
-  Future<void> getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(
-            currentPosition!.latitude, currentPosition!.longitude)
-        .then(
-      (List<Placemark> placemarks) {
-        Placemark place = placemarks[0];
-        currentAddress.value =
-            '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea} ${place.postalCode}';
-        userCountry.value = '${place.country}';
-
-        // -- load user's currency code --
-        signupController.fetchUserCurrencyByCountry(userCountry.value);
-        uCurCode.value = signupController.userCurrencyCode.value;
-        locationFetchedSuccessfully.value = true;
-      },
-    ).catchError((onError) {
-      ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
-        const SnackBar(
-          content: Text('error fetching current position:'),
-        ),
-      );
-      locationFetchedSuccessfully.value = false;
-      debugPrint(onError);
-    });
-  }
-
-  onCountryChanged(String value) {
-    userCountry.value = value;
-
-    // -- load user's currency code --
-    signupController.fetchUserCurrencyByCountry(userCountry.value);
-    uCurCode.value = signupController.userCurrencyCode.value;
-    CPopupSnackBar.customToast(
-      message: 'country: $value',
-    );
-  }
-
-  countryPickerOnInit(String value) {
-    userCountry.value = value;
-  }
-
-  Future<void> updateUserCurrency() async {
-    try {
-      userRepo.updateUserCurrency(uCurCode.value);
-      AuthRepo.instance.screenRedirect();
-    } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: "An error occurred",
-        message: e.toString(),
-      );
-      throw 'something went wrong! please try again!';
-    }
-  }
-
-  void openLocationSettings() async {
-    //AppSettings.openAppSettings();
-    const intent = AndroidIntent(
-      action: 'android.settings.LOCATION_SOURCE_SETTINGS',
-    );
-
-    await intent.launch();
+  void updateUserLocation(LocationData locationData) {
+    userLocation.value = locationData;
   }
 
   fetchUserCurrencyByCountry(String uCountry) {
     // -- load user's currency code --
-    signupController.fetchUserCurrencyByCountry(userCountry.value);
+    signupController.fetchUserCurrencyByCountry(uCountry);
     uCurCode.value = signupController.userCurrencyCode.value;
-    locationFetchedSuccessfully.value = true;
+  }
+
+  Future<void> updateUserSettings() async {
+    try {
+      updateLoading.value = true;
+      var updatedUser = CUserModel(
+        id: userController.user.value.id,
+        fullName: userController.user.value.fullName,
+        businessName: userController.user.value.businessName,
+        email: userController.user.value.email,
+        countryCode: userController.user.value.countryCode,
+        phoneNo: userController.user.value.phoneNo,
+        currencyCode: uCurCode.value,
+        profPic: userController.user.value.profPic,
+        locationCoordinates:
+            'lat: ${userLocation.value!.latitude}, long: ${userLocation.value!.longitude}',
+        userAddress: uAddress.value,
+      );
+
+      userRepo.updateUserDetails(updatedUser);
+      //AuthRepo.instance.screenRedirect();
+    } catch (e) {
+      updateLoading.value = false;
+      CPopupSnackBar.errorSnackBar(
+        title: "An error occurred",
+        message: e.toString(),
+      );
+      throw 'error updating user details! please try again!';
+    } finally {
+      updateLoading.value = false;
+    }
   }
 }

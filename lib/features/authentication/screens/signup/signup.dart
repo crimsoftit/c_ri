@@ -17,7 +17,7 @@ class SignupScreen extends StatelessWidget {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     return Scaffold(
-      backgroundColor: CColors.rBrown.withOpacity(0.2),
+      //backgroundColor: CColors.rBrown.withOpacity(0.2),
       appBar: AppBar(
         backgroundColor: CColors.rBrown,
         title: Text(

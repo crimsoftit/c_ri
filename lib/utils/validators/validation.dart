@@ -48,7 +48,7 @@ class CValidator {
   }
 
   /* ========== full name field validation ========== */
-  static String? validateFullName(String? fieldName, String? value) {
+  static String? validateName(String? fieldName, String? value) {
     if (value == null || value.isEmpty) {
       return '$fieldName field is required!';
     } else if (value.length <= 3) {

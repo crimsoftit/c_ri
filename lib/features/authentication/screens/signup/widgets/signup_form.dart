@@ -35,8 +35,25 @@ class RSignupForm extends StatelessWidget {
               prefixIcon: Icon(Iconsax.user),
               labelText: 'full name',
             ),
+            validator: (value) => CValidator.validateName('full name', value),
+          ),
+
+          const SizedBox(
+            height: CSizes.spaceBtnInputFields,
+          ),
+
+          // -- email field --
+          TextFormField(
+            controller: signupController.txtBusinessName,
+            style: const TextStyle(
+              height: 0.7,
+            ),
+            decoration: const InputDecoration(
+              prefixIcon: Icon(Iconsax.buildings),
+              labelText: 'business name',
+            ),
             validator: (value) =>
-                CValidator.validateFullName('full name', value),
+                CValidator.validateName('business name', value),
           ),
 
           const SizedBox(
@@ -63,7 +80,7 @@ class RSignupForm extends StatelessWidget {
           // -- phone number field --
           IntlPhoneField(
             controller: signupController.phoneNumber,
-            initialCountryCode: 'US',
+            initialCountryCode: 'KE',
             focusNode: focusNode,
             dropdownTextStyle: const TextStyle(
               fontSize: 10,
@@ -89,21 +106,11 @@ class RSignupForm extends StatelessWidget {
             languageCode: "en",
             onChanged: (phone) {
               signupController.completePhoneNo.value = phone.completeNumber;
-              //print(controller.cell_no.value);
-
-              //signupController.fullNo.text = phone.completeNumber;
             },
             onCountryChanged: (country) {
               signupController.countryCode.value = country.code;
 
               if (kDebugMode) print('country changed to: ${country.dialCode}');
-              // CPopupSnackBar.customToast(
-              //   message: 'country code: ${signupController.countryCode.value}',
-              // );
-
-              // CPopupSnackBar.customToast(
-              //   message: 'country name: ${country.name}',
-              // );
 
               signupController.onPhoneInputChanged(country);
             },

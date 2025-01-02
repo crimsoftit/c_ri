@@ -9,9 +9,7 @@ import 'package:c_ri/utils/exceptions/platform_exceptions.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -33,93 +31,93 @@ class CUserRepo extends GetxController {
 
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<bool> handleLocationPermission() async {
-    locationServicesEnabled.value = await Geolocator.isLocationServiceEnabled();
-    if (!locationServicesEnabled.value) {
-      ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'location services are disabled! please enable the services.',
-          ),
-        ),
-      );
-      return false;
-    }
+  // Future<bool> handleLocationPermission() async {
+  //   locationServicesEnabled.value = await Geolocator.isLocationServiceEnabled();
+  //   if (!locationServicesEnabled.value) {
+  //     ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
+  //       const SnackBar(
+  //         content: Text(
+  //           'location services are disabled! please enable the services.',
+  //         ),
+  //       ),
+  //     );
+  //     return false;
+  //   }
 
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'location permissions are denied!!',
-            ),
-          ),
-        );
-        return false;
-      }
-    }
+  //   permission = await Geolocator.checkPermission();
+  //   if (permission == LocationPermission.denied) {
+  //     permission = await Geolocator.requestPermission();
+  //     if (permission == LocationPermission.denied) {
+  //       ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
+  //         const SnackBar(
+  //           content: Text(
+  //             'location permissions are denied!!',
+  //           ),
+  //         ),
+  //       );
+  //       return false;
+  //     }
+  //   }
 
-    if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
-        const SnackBar(
-          content: Text(
-              'Location permissions are permanently denied, we cannot request permissions.'),
-        ),
-      );
-      return false;
-    }
+  //   if (permission == LocationPermission.deniedForever) {
+  //     ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
+  //       const SnackBar(
+  //         content: Text(
+  //             'Location permissions are permanently denied, we cannot request permissions.'),
+  //       ),
+  //     );
+  //     return false;
+  //   }
 
-    return true;
-  }
+  //   return true;
+  // }
 
-  Future<void> getCurrentPosition() async {
-    final hasPermission = await handleLocationPermission();
+  // Future<void> getCurrentPosition() async {
+  //   final hasPermission = await handleLocationPermission();
 
-    if (!hasPermission) return;
+  //   if (!hasPermission) return;
 
-    // await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-    //     .then((Position position) {
-    //   setState(() => currentPosition = position);
-    // }).catchError((e) {
-    //   debugPrint(e);
-    // });
+  //   // await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+  //   //     .then((Position position) {
+  //   //   setState(() => currentPosition = position);
+  //   // }).catchError((e) {
+  //   //   debugPrint(e);
+  //   // });
 
-    await Geolocator.getCurrentPosition(
-      locationSettings: locationSettings,
-    ).then((Position position) {
-      currentPosition = position;
+  //   await Geolocator.getCurrentPosition(
+  //     locationSettings: locationSettings,
+  //   ).then((Position position) {
+  //     currentPosition = position;
 
-      getAddressFromLatLng(currentPosition!);
-    }).catchError((e) {
-      ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
-        const SnackBar(
-          content: Text('error fetching current position'),
-        ),
-      );
-      debugPrint(e);
-    });
-  }
+  //     getAddressFromLatLng(currentPosition!);
+  //   }).catchError((e) {
+  //     ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('error fetching current position'),
+  //       ),
+  //     );
+  //     debugPrint(e);
+  //   });
+  // }
 
-  Future<void> getAddressFromLatLng(Position position) async {
-    await placemarkFromCoordinates(
-            currentPosition!.latitude, currentPosition!.longitude)
-        .then(
-      (List<Placemark> placemarks) {
-        Placemark place = placemarks[0];
-        currentAddress.value =
-            '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea} ${place.postalCode}';
-      },
-    ).catchError((onError) {
-      ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
-        const SnackBar(
-          content: Text('error fetching current position'),
-        ),
-      );
-      debugPrint(onError);
-    });
-  }
+  // Future<void> getAddressFromLatLng(Position position) async {
+  //   await placemarkFromCoordinates(
+  //           currentPosition!.latitude, currentPosition!.longitude)
+  //       .then(
+  //     (List<Placemark> placemarks) {
+  //       Placemark place = placemarks[0];
+  //       currentAddress.value =
+  //           '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea} ${place.postalCode}';
+  //     },
+  //   ).catchError((onError) {
+  //     ScaffoldMessenger.of(Get.overlayContext!).showSnackBar(
+  //       const SnackBar(
+  //         content: Text('error fetching current position'),
+  //       ),
+  //     );
+  //     debugPrint(onError);
+  //   });
+  // }
 
   /* ===== save user data to firestore ===== */
   Future<void> saveUserDetails(CUserModel users) async {

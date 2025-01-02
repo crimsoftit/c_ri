@@ -3,7 +3,7 @@ import 'package:c_ri/features/authentication/controllers/signup/signup_controlle
 import 'package:c_ri/features/authentication/screens/login/login.dart';
 import 'package:c_ri/features/authentication/screens/onboarding/onboarding_screen.dart';
 import 'package:c_ri/features/authentication/screens/signup/verify_email.dart';
-import 'package:c_ri/features/personalization/screens/location_tings/location_settings_screen.dart';
+import 'package:c_ri/features/personalization/screens/location_tings/device_settings_screen.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/nav_menu.dart';
 import 'package:c_ri/utils/exceptions/exceptions.dart';
@@ -54,8 +54,10 @@ class AuthRepo extends GetxController {
 
         var userDets = await userRepo.fetchUserDetails();
 
-        if (userDets.currencyCode == '') {
-          Get.offAll(() => const CLocationSettings());
+        if (userDets.currencyCode == '' ||
+            userDets.locationCoordinates == '' ||
+            userDets.userAddress == '') {
+          Get.offAll(() => const CDeviceSettingsScreen());
         } else {
           //DbHelper dbHelper = DbHelper.instance;
           final invController = Get.put(CInventoryController());

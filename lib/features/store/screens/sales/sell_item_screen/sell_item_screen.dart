@@ -32,7 +32,7 @@ class CSellItemScreen extends StatelessWidget {
                 children: [
                   OtherScreensAppBar(
                     showScanner: false,
-                    title: 'sell item #${salesController.sellItemId.value}',
+                    title: '#${salesController.sellItemId.value}',
                     trailingIconLeftPadding:
                         CHelperFunctions.screenWidth() * 0.25,
                     //trailingIconLeftPadding: 70,
