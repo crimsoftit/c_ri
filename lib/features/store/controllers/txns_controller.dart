@@ -3,7 +3,7 @@ import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
-import 'package:c_ri/features/store/models/sold_items_model.dart';
+import 'package:c_ri/features/store/models/txns_model.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
 import 'package:c_ri/utils/popups/full_screen_loader.dart';
@@ -42,8 +42,8 @@ class CTxnsController extends GetxController {
 
   DbHelper dbHelper = DbHelper.instance;
 
-  final RxList<CSoldItemsModel> transactions = <CSoldItemsModel>[].obs;
-  final RxList<CSoldItemsModel> foundTxns = <CSoldItemsModel>[].obs;
+  final RxList<CTxnsModel> transactions = <CTxnsModel>[].obs;
+  final RxList<CTxnsModel> foundTxns = <CTxnsModel>[].obs;
   RxList txnDets = [].obs;
 
   final RxString sellItemScanResults = ''.obs;
@@ -59,6 +59,7 @@ class CTxnsController extends GetxController {
   final txtAmountIssued = TextEditingController();
   final txtCustomerName = TextEditingController();
   final txtCustomerContacts = TextEditingController();
+  final txtTxnAddress = TextEditingController();
 
   final RxInt sellItemId = 0.obs;
   final RxInt qtyAvailable = 0.obs;
@@ -107,7 +108,7 @@ class CTxnsController extends GetxController {
             CImages.docerAnimation,
           );
 
-          final newTxn = CSoldItemsModel(
+          final newTxn = CTxnsModel(
             userController.user.value.id,
             userController.user.value.email,
             userController.user.value.fullName,
@@ -120,7 +121,11 @@ class CTxnsController extends GetxController {
             selectedPaymentMethod.value,
             txtCustomerName.text,
             txtCustomerContacts.text,
+            txtTxnAddress.text,
+            userController.user.value.locationCoordinates,
             DateFormat('yyyy-MM-dd - kk:mm').format(clock.now()),
+            0,
+            'append',
           );
 
           // save txn data into the db
@@ -162,7 +167,7 @@ class CTxnsController extends GetxController {
   }
 
   /// -- fetch transactions from sqflite db --
-  Future<List<CSoldItemsModel>> fetchTransactions() async {
+  Future<List<CTxnsModel>> fetchTransactions() async {
     try {
       // start loader while txns are fetched
       isLoading.value = true;

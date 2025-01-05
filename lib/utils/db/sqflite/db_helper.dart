@@ -1,7 +1,7 @@
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/models/dels_model.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
-import 'package:c_ri/features/store/models/sold_items_model.dart';
+import 'package:c_ri/features/store/models/txns_model.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart';
@@ -16,7 +16,7 @@ class DbHelper {
   final userController = Get.put(CUserController());
 
   final invTable = 'inventory';
-  final salesTable = 'sales';
+  final txnsTable = 'txns';
   final delsForSyncTable = 'delsForSync';
 
   static final DbHelper _dbHelper = DbHelper._internal();
@@ -54,7 +54,7 @@ class DbHelper {
           ''');
 
       database.execute('''
-          CREATE TABLE IF NOT EXISTS $salesTable(
+          CREATE TABLE IF NOT EXISTS $txnsTable(
             saleId INTEGER PRIMARY KEY AUTOINCREMENT,
             userId TEXT NOT NULL,
             userEmail TEXT NOT NULL,
@@ -68,7 +68,11 @@ class DbHelper {
             paymentMethod TEXT NOT NULL,
             customerName TEXT,
             customerContacts TEXT,
+            txnAddress LONGTEXT,
+            txnAddressCoordinates LONGTEXT,
             date TEXT NOT NULL,
+            isSynced INTEGER NOT NULL,
+            syncAction TEXT NOT NULL,
             FOREIGN KEY(productId) REFERENCES inventory(productId)
             )          
           ''');
@@ -92,11 +96,11 @@ class DbHelper {
     await _db!.execute(
         'INSERT INTO $invTable VALUES (0, "as23df45", "sindani254@gmail.com", "Manu", "12w34dds1", "fruit", 2, 200, 10, "3/2/2021")');
     await _db!.execute(
-        'INSERT INTO $salesTable VALUES (0, "as23df45", "sindani254@gmail.com", "Manu", "143d", "apples", 13, 15, 10.0, "Cash", "2/1/2022")');
-    //List inventory = await db!.rawQuery('select * from inventory');
-    //List sales = await db!.rawQuery('select * from sales');
-    //print(inventory[0].toString());
-    //print(sales[0].toString());
+        'INSERT INTO $txnsTable VALUES (0, "as23df45", "sindani254@gmail.com", "Manu", "143d", "apples", 13, 15, 10.0, "Cash", "2/1/2022")');
+    List inventory = await _db!.rawQuery('select * from inventory');
+    List sales = await _db!.rawQuery('select * from sales');
+    print(inventory[0].toString());
+    print(sales[0].toString());
   }
 
   /// --- ### CRUD OPERATIONS ON INVENTORY TABLE ### ---
@@ -209,7 +213,7 @@ class DbHelper {
 
   /// ==== ### CRUD OPERATIONS ON SALES TABLE ### ====
   // -- save sale details to the database --
-  Future<void> addSoldItem(CSoldItemsModel soldItem) async {
+  Future<void> addSoldItem(CTxnsModel soldItem) async {
     try {
       // Get a reference to the database.
       final db = _db;
@@ -217,7 +221,7 @@ class DbHelper {
       // `conflictAlgorithm` to use in case the same Inventory item is inserted twice.
       //
       // In this case, replace any previous data.
-      await db?.insert(salesTable, soldItem.toMap(),
+      await db?.insert(txnsTable, soldItem.toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace);
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
@@ -228,17 +232,15 @@ class DbHelper {
   }
 
   /// -- fetch transactions --
-  Future<List<CSoldItemsModel>> fetchTransactions(String email) async {
+  Future<List<CTxnsModel>> fetchTransactions(String email) async {
     final db = _db;
 
     final transactions = await db!.rawQuery(
-        'SELECT * from $salesTable where userEmail = ? ORDER BY date DESC',
+        'SELECT * from $txnsTable where userEmail = ? ORDER BY date DESC',
         [email]);
 
     // Convert the List<Map<String, dynamic> into a List<Note>.
-    return transactions
-        .map((json) => CSoldItemsModel.fromMapObject(json))
-        .toList();
+    return transactions.map((json) => CTxnsModel.fromMapObject(json)).toList();
   }
 
   Future<void> saveDelForSync(CDelsModel delItem) async {

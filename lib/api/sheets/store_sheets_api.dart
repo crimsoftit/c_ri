@@ -1,7 +1,7 @@
 import 'package:c_ri/api/sheets/creds/gsheets_creds.dart';
 import 'package:c_ri/features/store/models/gsheet_models/inv_sheet_fields.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
-import 'package:c_ri/features/store/models/sold_items_model.dart';
+import 'package:c_ri/features/store/models/txns_model.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gsheets/gsheets.dart';
@@ -31,7 +31,7 @@ class StoreSheetsApi {
       final invSheetHeaders = InvSheetFields.getInvSheetHeaders();
       invSheet!.values.insertRow(1, invSheetHeaders);
 
-      final txnsHeaders = CSoldItemsModel.getHeaders();
+      final txnsHeaders = CTxnsModel.getHeaders();
       if (txnsSheet != null) {
         txnsSheet!.values.insertRow(
           1,

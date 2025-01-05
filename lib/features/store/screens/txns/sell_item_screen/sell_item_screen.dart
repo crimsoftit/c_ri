@@ -300,6 +300,23 @@ class CSellItemScreen extends StatelessWidget {
                           const SizedBox(
                             height: CSizes.spaceBtnInputFields,
                           ),
+                          TextFormField(
+                            controller: salesController.txtTxnAddress,
+                            style: const TextStyle(
+                              height: 0.7,
+                              fontWeight: FontWeight.normal,
+                            ),
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(
+                                Iconsax.location,
+                                color: CColors.grey,
+                              ),
+                              labelText: 'txn address',
+                            ),
+                          ),
+                          const SizedBox(
+                            height: CSizes.spaceBtnInputFields,
+                          ),
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(

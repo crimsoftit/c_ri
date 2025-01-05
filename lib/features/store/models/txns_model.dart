@@ -1,6 +1,6 @@
 // ignore_for_file: unnecessary_getters_setters
 
-class CSoldItemsModel {
+class CTxnsModel {
   String _userId = "";
   String _userEmail = "";
   String _userName = "";
@@ -14,9 +14,13 @@ class CSoldItemsModel {
   String _paymentMethod = "";
   String _customerName = "";
   String _customerContacts = "";
+  String _txnAddress = "";
+  String _txnAddressCoordinates = "";
   String _date = "";
+  int _isSynced = 0;
+  String _syncAction = "";
 
-  CSoldItemsModel(
+  CTxnsModel(
     this._userId,
     this._userEmail,
     this._userName,
@@ -29,10 +33,14 @@ class CSoldItemsModel {
     this._paymentMethod,
     this._customerName,
     this._customerContacts,
+    this._txnAddress,
+    this._txnAddressCoordinates,
     this._date,
+    this._isSynced,
+    this._syncAction,
   );
 
-  CSoldItemsModel.withId(
+  CTxnsModel.withId(
     this._saleId,
     this._userId,
     this._userEmail,
@@ -46,7 +54,11 @@ class CSoldItemsModel {
     this._paymentMethod,
     this._customerName,
     this._customerContacts,
+    this._txnAddress,
+    this._txnAddressCoordinates,
     this._date,
+    this._isSynced,
+    this._syncAction,
   );
 
   static List<String> getHeaders() {
@@ -64,7 +76,11 @@ class CSoldItemsModel {
       'paymentMethod',
       'customerName',
       'customerContacts',
+      'txnAddress',
+      'txnAddressCoordinates',
       'date',
+      'isSynced',
+      'syncAction',
     ];
   }
 
@@ -82,11 +98,11 @@ class CSoldItemsModel {
   String get paymentMethod => _paymentMethod;
   String get customerName => _customerName;
   String get customerContacts => _customerContacts;
+  String get txnAddress => _txnAddress;
+  String get txnAddressCoordinates => _txnAddressCoordinates;
   String get date => _date;
-
-  // set saleId(int newSaleId) {
-  //   _saleId = newSaleId;
-  // }
+  int get isSynced => _isSynced;
+  String get syncAction => _syncAction;
 
   set userId(String newUid) {
     _userId = newUid;
@@ -144,8 +160,24 @@ class CSoldItemsModel {
     _customerContacts = newCustomerContacts;
   }
 
+  set txnAddress(String newTxnAddress) {
+    _txnAddress = newTxnAddress;
+  }
+
+  set txnAddressCoordinates(String newTxnAddressCoordinates) {
+    _txnAddressCoordinates = newTxnAddressCoordinates;
+  }
+
   set date(String newDate) {
     _date = newDate;
+  }
+
+  set isSynced(int syncStatus) {
+    _isSynced = syncStatus;
+  }
+
+  set syncAction(String newSyncAction) {
+    _syncAction = newSyncAction;
   }
 
   // convert a SoldItemsModel Object into a Map object
@@ -168,13 +200,17 @@ class CSoldItemsModel {
     map['paymentMethod'] = _paymentMethod;
     map['customerName'] = _customerName;
     map['customerContacts'] = _customerContacts;
+    map['txnAddress'] = _txnAddress;
+    map['txnAddressCoordinates'] = _txnAddressCoordinates;
     map['date'] = _date;
+    map['isSynced'] = _isSynced;
+    map['syncAction'] = _syncAction;
 
     return map;
   }
 
   // extract a SoldItemsModel object from a Map object
-  CSoldItemsModel.fromMapObject(Map<String, dynamic> map) {
+  CTxnsModel.fromMapObject(Map<String, dynamic> map) {
     _saleId = map['saleId'];
     _userId = map['userId'];
     _userEmail = map['userEmail'];
@@ -188,6 +224,10 @@ class CSoldItemsModel {
     _paymentMethod = map['paymentMethod'];
     _customerName = map['customerName'];
     _customerContacts = map['customerContacts'];
+    _txnAddress = map['txnAddress'];
+    _txnAddressCoordinates = map['txnAddressCoordinates'];
     _date = map['date'];
+    _isSynced = map['isSynced'];
+    _syncAction = map['syncAction'];
   }
 }
