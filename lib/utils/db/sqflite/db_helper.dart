@@ -56,7 +56,7 @@ class DbHelper {
 
       database.execute('''
           CREATE TABLE IF NOT EXISTS $txnsTable(
-            saleId INTEGER PRIMARY KEY AUTOINCREMENT,
+            txnId INTEGER PRIMARY KEY AUTOINCREMENT,
             userId TEXT NOT NULL,
             userEmail TEXT NOT NULL,
             userName TEXT NOT NULL,
@@ -65,6 +65,7 @@ class DbHelper {
             productName TEXT NOT NULL,
             quantity INTEGER NOT NULL,
             totalAmount  REAL NOT NULL,
+            amountIssued REAL NOT NULL,
             unitSellingPrice REAL NOT NULL,
             paymentMethod TEXT NOT NULL,
             customerName TEXT,
@@ -74,6 +75,7 @@ class DbHelper {
             date TEXT NOT NULL,
             isSynced INTEGER NOT NULL,
             syncAction TEXT NOT NULL,
+            txnStatus TEXT NOT NULL,
             FOREIGN KEY(productId) REFERENCES inventory(productId)
             )          
           ''');
@@ -235,6 +237,72 @@ class DbHelper {
     }
   }
 
+  /// -- fetch all deletionForSyncItems --
+  Future<List<CDelsModel>> fetchAllInvDels() async {
+    // get a reference to the database.
+    final db = _db;
+
+    // raw query
+    final dels = await db!.rawQuery(
+        'SELECT * FROM delsForSync where syncAction = ? and itemCategory = ?',
+        ['delete', 'inventory']);
+
+    if (dels.isEmpty) {
+      //CPopupSnackBar.customToast(message: 'IS EMPTY');
+      return [];
+    } else {
+      final result =
+          dels.map((json) => CDelsModel.fromMapObject(json)).toList();
+
+      return result;
+    }
+  }
+
+  Future<void> saveDelForSync(CDelsModel delItem) async {
+    try {
+      // get a reference to the local database.
+      final db = _db;
+      await db!.insert(
+        delsForSyncTable,
+        delItem.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      );
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'error performing transaction',
+        message: e.toString(),
+      );
+      throw e.toString();
+    }
+  }
+
+  /// -- fetch all updatesForSyncItems --
+  Future<List<CDelsModel>> fetchAllInvUpdates() async {
+    // get a reference to the database.
+    final db = _db;
+
+    // raw query
+    final forUpdates = await db!.rawQuery(
+        'SELECT * FROM delsForSync where syncAction = ? and itemCategory = ?',
+        ['update', 'inventory']);
+
+    final result =
+        forUpdates.map((json) => CDelsModel.fromMapObject(json)).toList();
+
+    return result;
+  }
+
+  Future<int> updateDel(CDelsModel delItem) async {
+    int delRes = await _db!.update(
+      delsForSyncTable,
+      delItem.toMap(),
+      where: 'itemId = ?',
+      whereArgs: [delItem.itemId],
+    );
+
+    return delRes;
+  }
+
   /// ==== ### CRUD OPERATIONS ON SALES TABLE ### ====
   // -- save sale details to the database --
   Future<void> addSoldItem(CTxnsModel soldItem) async {
@@ -267,69 +335,19 @@ class DbHelper {
     return transactions.map((json) => CTxnsModel.fromMapObject(json)).toList();
   }
 
-  Future<void> saveDelForSync(CDelsModel delItem) async {
+  /// -- defines a function to update a transaction's details --
+  Future<int> updateTxnDetails(CTxnsModel txn, int txnId) async {
     try {
-      // get a reference to the local database.
-      final db = _db;
-      await db!.insert(
-        delsForSyncTable,
-        delItem.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace,
-      );
+      var txnUpdateResult = await _db!.update(txnsTable, txn.toMap(),
+          where: 'txnId = ?', whereArgs: [txnId]);
+
+      return txnUpdateResult;
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
-        title: 'error performing transaction',
+        title: 'Oh Snap! error updating txn details!',
         message: e.toString(),
       );
-      throw e.toString();
+      return 0;
     }
-  }
-
-  /// -- fetch all deletionForSyncItems --
-  Future<List<CDelsModel>> fetchAllInvDels() async {
-    // get a reference to the database.
-    final db = _db;
-
-    // raw query
-    final dels = await db!.rawQuery(
-        'SELECT * FROM delsForSync where syncAction = ? and itemCategory = ?',
-        ['delete', 'inventory']);
-
-    if (dels.isEmpty) {
-      //CPopupSnackBar.customToast(message: 'IS EMPTY');
-      return [];
-    } else {
-      final result =
-          dels.map((json) => CDelsModel.fromMapObject(json)).toList();
-
-      return result;
-    }
-  }
-
-  /// -- fetch all updatesForSyncItems --
-  Future<List<CDelsModel>> fetchAllInvUpdates() async {
-    // get a reference to the database.
-    final db = _db;
-
-    // raw query
-    final forUpdates = await db!.rawQuery(
-        'SELECT * FROM delsForSync where syncAction = ? and itemCategory = ?',
-        ['update', 'inventory']);
-
-    final result =
-        forUpdates.map((json) => CDelsModel.fromMapObject(json)).toList();
-
-    return result;
-  }
-
-  Future<int> updateDel(CDelsModel delItem) async {
-    int delRes = await _db!.update(
-      delsForSyncTable,
-      delItem.toMap(),
-      where: 'itemId = ?',
-      whereArgs: [delItem.itemId],
-    );
-
-    return delRes;
   }
 }

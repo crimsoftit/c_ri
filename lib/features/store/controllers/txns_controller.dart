@@ -60,6 +60,7 @@ class CTxnsController extends GetxController {
   final RxBool itemExists = false.obs;
   final RxBool showAmountIssuedField = false.obs;
   final RxBool isLoading = false.obs;
+  final RxBool syncIsLoading = false.obs;
 
   final txtSaleItemQty = TextEditingController();
   final txtAmountIssued = TextEditingController();
@@ -127,6 +128,7 @@ class CTxnsController extends GetxController {
             saleItemName.value,
             int.parse(txtSaleItemQty.text),
             totalAmount.value,
+            double.parse(txtAmountIssued.text.trim()),
             saleItemUsp.value,
             selectedPaymentMethod.value,
             txtCustomerName.text,
@@ -136,6 +138,7 @@ class CTxnsController extends GetxController {
             DateFormat('yyyy-MM-dd - kk:mm').format(clock.now()),
             isConnected ? 1 : 0,
             isConnected ? 'none' : 'append',
+            'complete',
           );
 
           // set the updated stock count
@@ -403,5 +406,119 @@ class CTxnsController extends GetxController {
     saleItemUsp.value = 0.0;
     totalAmount.value = 0.0;
     customerBal.value = 0.0;
+  }
+
+  /// -- add unsynced txns to the cloud --
+  Future<void> addUnsyncedTxnsToCloud() async {
+    try {
+      // -- check internet connectivity
+      final isConnected = await CNetworkManager.instance.isConnected();
+
+      if (isConnected) {
+        syncIsLoading.value = true;
+        await fetchTransactions();
+
+        var gSheetTxnAppends = unsyncedTxnAppends
+            .map((item) => {
+                  'txnId': item.txnId,
+                  'userId': item.userId,
+                  'userEmail': item.userEmail,
+                  'userName': item.userName,
+                  'productId': item.productId,
+                  'productCode': item.productCode,
+                  'productName': item.productName,
+                  'quantity': item.quantity,
+                  'totalAmount': item.totalAmount,
+                  'amountIssued': item.amountIssued,
+                  'unitSellingPrice': item.unitSellingPrice,
+                  'paymentMethod': item.paymentMethod,
+                  'customerName': item.customerName,
+                  'customerContacts': item.customerContacts,
+                  'txnAddress': item.txnAddress,
+                  'txnAddressCoordinates': item.txnAddressCoordinates,
+                  'date': item.date,
+                  'isSynced': 1,
+                  'syncAction': 'none',
+                  // 'isSynced': item.isSynced,
+                  // 'syncAction': item.syncAction,
+                  'txnStatus': item.txnStatus,
+                })
+            .toList();
+
+        // -- initialize spreadsheets --
+        await StoreSheetsApi.initSpreadSheets();
+        await StoreSheetsApi.saveTxnsToGSheets(gSheetTxnAppends);
+
+        // -- update sync status
+        await updateSyncedTxnUpdates();
+
+        // -- stop loader --
+        syncIsLoading.value = false;
+      } else {
+        CPopupSnackBar.warningSnackBar(
+          title: 'cloud sync requires internet',
+          message: 'an internet connection is required for cloud sync...',
+        );
+      }
+    } catch (e) {
+      // -- stop loader --
+      syncIsLoading.value = false;
+      CPopupSnackBar.errorSnackBar(
+        title: 'error uploading txns to cloud',
+        message: e.toString(),
+      );
+    } finally {
+      // -- stop loader --
+      syncIsLoading.value = false;
+    }
+  }
+
+  /// -- update txn details --
+  Future updateSyncedTxnUpdates() async {
+    try {
+      await fetchTransactions();
+      unsyncedTxnAppends.value = transactions
+          .where(
+              (txnItem) => txnItem.syncAction.toLowerCase().contains('append'))
+          .toList();
+
+      if (unsyncedTxnAppends.isNotEmpty) {
+        for (var element in unsyncedTxnAppends) {
+          var txnAppends = CTxnsModel(
+            element.userId,
+            element.userEmail,
+            element.userName,
+            element.productId,
+            element.productCode,
+            element.productName,
+            element.quantity,
+            element.totalAmount,
+            element.amountIssued,
+            element.unitSellingPrice,
+            element.paymentMethod,
+            element.customerName,
+            element.customerContacts,
+            element.txnAddress,
+            element.txnAddressCoordinates,
+            element.date,
+            1,
+            'none',
+            element.txnStatus,
+          );
+
+          await dbHelper.updateTxnDetails(txnAppends, element.txnId!);
+
+          CPopupSnackBar.successSnackBar(
+            title: 'txns sync success...',
+            message: 'txns successfully uploaded to cloud...',
+          );
+        }
+      }
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'Oh Snap!',
+        message: e.toString(),
+      );
+    }
   }
 }

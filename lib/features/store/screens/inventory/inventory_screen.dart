@@ -114,6 +114,8 @@ class InventoryScreen extends StatelessWidget {
                                                       .cloudSyncInventory();
                                                   await invController
                                                       .cloudSyncInventory();
+                                                  await txnsController
+                                                      .addUnsyncedTxnsToCloud();
                                                 },
                                                 icon: const Icon(
                                                   Iconsax.cloud_cross,

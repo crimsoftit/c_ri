@@ -4,12 +4,13 @@ class CTxnsModel {
   String _userId = "";
   String _userEmail = "";
   String _userName = "";
-  int? _saleId;
+  int? _txnId;
   int _productId = 0;
   String _productCode = "";
   String _productName = "";
   int _quantity = 0;
   double _totalAmount = 0.0;
+  double _amountIssued = 0.0;
   double _unitSellingPrice = 0.0;
   String _paymentMethod = "";
   String _customerName = "";
@@ -19,6 +20,7 @@ class CTxnsModel {
   String _date = "";
   int _isSynced = 0;
   String _syncAction = "";
+  String _txnStatus = "";
 
   CTxnsModel(
     this._userId,
@@ -29,6 +31,7 @@ class CTxnsModel {
     this._productName,
     this._quantity,
     this._totalAmount,
+    this._amountIssued,
     this._unitSellingPrice,
     this._paymentMethod,
     this._customerName,
@@ -38,10 +41,11 @@ class CTxnsModel {
     this._date,
     this._isSynced,
     this._syncAction,
+    this._txnStatus,
   );
 
   CTxnsModel.withId(
-    this._saleId,
+    this._txnId,
     this._userId,
     this._userEmail,
     this._userName,
@@ -50,6 +54,7 @@ class CTxnsModel {
     this._productName,
     this._quantity,
     this._totalAmount,
+    this._amountIssued,
     this._unitSellingPrice,
     this._paymentMethod,
     this._customerName,
@@ -59,11 +64,12 @@ class CTxnsModel {
     this._date,
     this._isSynced,
     this._syncAction,
+    this._txnStatus,
   );
 
   static List<String> getHeaders() {
     return [
-      'saleId',
+      'txnId',
       'userId',
       'userEmail',
       'userName',
@@ -72,6 +78,7 @@ class CTxnsModel {
       'productName',
       'quantity',
       'totalAmount',
+      'amountIssued',
       'unitSellingPrice',
       'paymentMethod',
       'customerName',
@@ -81,10 +88,11 @@ class CTxnsModel {
       'date',
       'isSynced',
       'syncAction',
+      'txnStatus',
     ];
   }
 
-  int? get saleId => _saleId;
+  int? get txnId => _txnId;
 
   String get userId => _userId;
   String get userEmail => _userEmail;
@@ -94,6 +102,7 @@ class CTxnsModel {
   String get productName => _productName;
   int get quantity => _quantity;
   double get totalAmount => _totalAmount;
+  double get amountIssued => _amountIssued;
   double get unitSellingPrice => _unitSellingPrice;
   String get paymentMethod => _paymentMethod;
   String get customerName => _customerName;
@@ -103,6 +112,7 @@ class CTxnsModel {
   String get date => _date;
   int get isSynced => _isSynced;
   String get syncAction => _syncAction;
+  String get txnStatus => _txnStatus;
 
   set userId(String newUid) {
     _userId = newUid;
@@ -137,6 +147,12 @@ class CTxnsModel {
   set totalAmount(double newtotalAmount) {
     if (newtotalAmount >= 0) {
       _totalAmount = newtotalAmount;
+    }
+  }
+
+  set amountIssued(double newAmountIssued) {
+    if (newAmountIssued > 0) {
+      _amountIssued = newAmountIssued;
     }
   }
 
@@ -180,12 +196,16 @@ class CTxnsModel {
     _syncAction = newSyncAction;
   }
 
+  set txnStatus(String newTxnStatus) {
+    _txnStatus = newTxnStatus;
+  }
+
   // convert a SoldItemsModel Object into a Map object
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{};
 
-    if (saleId != null) {
-      map['saleId'] = _saleId;
+    if (txnId != null) {
+      map['txnId'] = _txnId;
     }
     map['userId'] = _userId;
     map['userEmail'] = _userEmail;
@@ -196,6 +216,7 @@ class CTxnsModel {
     map['productName'] = _productName;
     map['quantity'] = _quantity;
     map['totalAmount'] = _totalAmount;
+    map['amountIssued'] = _amountIssued;
     map['unitSellingPrice'] = _unitSellingPrice;
     map['paymentMethod'] = _paymentMethod;
     map['customerName'] = _customerName;
@@ -205,13 +226,14 @@ class CTxnsModel {
     map['date'] = _date;
     map['isSynced'] = _isSynced;
     map['syncAction'] = _syncAction;
+    map['txnStatus'] = _txnStatus;
 
     return map;
   }
 
   // extract a SoldItemsModel object from a Map object
   CTxnsModel.fromMapObject(Map<String, dynamic> map) {
-    _saleId = map['saleId'];
+    _txnId = map['txnId'];
     _userId = map['userId'];
     _userEmail = map['userEmail'];
     _userName = map['userName'];
@@ -220,6 +242,7 @@ class CTxnsModel {
     _productName = map['productName'];
     _quantity = map['quantity'];
     _totalAmount = map['totalAmount'];
+    _amountIssued = map['amountIssued'];
     _unitSellingPrice = map['unitSellingPrice'];
     _paymentMethod = map['paymentMethod'];
     _customerName = map['customerName'];
@@ -229,5 +252,6 @@ class CTxnsModel {
     _date = map['date'];
     _isSynced = map['isSynced'];
     _syncAction = map['syncAction'];
+    _txnStatus = map['txnStatus'];
   }
 }

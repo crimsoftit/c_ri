@@ -58,7 +58,7 @@ class CItemsListView extends StatelessWidget {
           itemBuilder: (context, index) {
             var id = space == 'inventory'
                 ? '#${invController.foundInventoryItems[index].productId}'
-                : 'txn id: #${salesController.foundTxns[index].saleId}';
+                : 'txn id: #${salesController.foundTxns[index].txnId}';
 
             // var pCode = space == 'inventory'
             //     ? invController.foundInventoryItems[index].pCode
@@ -122,7 +122,7 @@ class CItemsListView extends StatelessWidget {
                   if (space == 'sales') {
                     Get.toNamed(
                       '/sales/txn_details',
-                      arguments: salesController.foundTxns[index].saleId,
+                      arguments: salesController.foundTxns[index].txnId,
                     );
                   }
                 },

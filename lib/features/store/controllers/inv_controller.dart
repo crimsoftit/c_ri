@@ -229,17 +229,15 @@ class CInventoryController extends GetxController {
       if (kDebugMode) {
         print(gSheetAppendItems);
       }
-      //CPopupSnackBar.customToast(message: "$gSheetAppendItems");
+
       await StoreSheetsApi.saveInvItemsToGSheets(gSheetAppendItems);
 
-      await updateSyncedAppends();
+      await updateSyncedInvAppends();
       isLoading.value = false;
     }
-
-    //return gSheetAppendItems;
   }
 
-  Future updateSyncedAppends() async {
+  Future updateSyncedInvAppends() async {
     try {
       // start loader while products are fetched
       isLoading.value = true;
@@ -781,6 +779,9 @@ class CInventoryController extends GetxController {
         title: 'inventory cloud sync ERROR!',
         message: 'inventory sync error: $e',
       );
+    } finally {
+      // stop loader
+      syncIsLoading.value = false;
     }
   }
 }

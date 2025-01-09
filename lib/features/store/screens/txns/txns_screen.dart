@@ -77,9 +77,14 @@ class TxnsScreen extends StatelessWidget {
                                           Iconsax.scan,
                                         ),
                                       ),
+                                      const SizedBox(
+                                        width: CSizes.spaceBtnSections / 4,
+                                      ),
 
                                       /// -- track unsynced txns --
-                                      txnsController.isLoading.value ||
+                                      // txnsController.isLoading.value ||
+                                      //         invController.isLoading.value
+                                      txnsController.syncIsLoading.value ||
                                               invController.isLoading.value
                                           ? const CShimmerEffect(
                                               width: 40.0,
@@ -92,7 +97,10 @@ class TxnsScreen extends StatelessWidget {
                                                   Iconsax.cloud_add,
                                                 )
                                               : IconButton(
-                                                  onPressed: () async {},
+                                                  onPressed: () async {
+                                                    txnsController
+                                                        .addUnsyncedTxnsToCloud();
+                                                  },
                                                   icon: const Icon(
                                                     Iconsax.cloud_cross,
                                                   ),
@@ -225,7 +233,7 @@ class TxnsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  'modified: ${txnsController.transactions[index].date} (txn id: #${txnsController.transactions[index].saleId})',
+                                  'modified: ${txnsController.transactions[index].date} (txn id: #${txnsController.transactions[index].txnId})',
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelSmall!
@@ -250,7 +258,7 @@ class TxnsScreen extends StatelessWidget {
                               Get.toNamed(
                                 '/sales/txn_details',
                                 arguments:
-                                    txnsController.transactions[index].saleId,
+                                    txnsController.transactions[index].txnId,
                               );
                             },
                           ),

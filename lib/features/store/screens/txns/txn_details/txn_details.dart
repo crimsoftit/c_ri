@@ -31,7 +31,7 @@ class _CTxnDetailsScreenState extends State<CTxnDetailsScreen> {
     //salesList = .toList();
 
     var txnDetail = salesController.transactions.firstWhere(
-      (element) => element.saleId.toString() == txnId.toString(),
+      (element) => element.txnId.toString() == txnId.toString(),
     );
 
     return Scaffold(
@@ -45,7 +45,7 @@ class _CTxnDetailsScreenState extends State<CTxnDetailsScreen> {
                   // app bar
                   CAppBar(
                     title: Text(
-                      'transaction details ${txnDetail.saleId}',
+                      'transaction details ${txnDetail.txnId}',
                       style: Theme.of(context).textTheme.headlineSmall!.apply(
                             color: CColors.white,
                           ),
