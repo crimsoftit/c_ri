@@ -55,6 +55,7 @@ class CInventoryController extends GetxController {
   final addInvItemFormKey = GlobalKey<FormState>();
 
   final isLoading = false.obs;
+  final syncIsLoading = false.obs;
 
   final userController = Get.put(CUserController());
   final searchController = Get.put(CSearchBarController());
@@ -203,8 +204,9 @@ class CInventoryController extends GetxController {
   }
 
   /// -- upload unsynced data to the cloud --
-  Future addUnsyncedInvToCloud() async {
-    fetchInventoryItems();
+  Future<void> addUnsyncedInvToCloud() async {
+    isLoading.value = true;
+    await fetchInventoryItems();
 
     var gSheetAppendItems = unSyncedAppends
         .map((e) => {
@@ -222,19 +224,26 @@ class CInventoryController extends GetxController {
               'syncAction': 'none',
             })
         .toList();
-    if (kDebugMode) {
-      print(gSheetAppendItems);
+
+    if (unSyncedAppends.isNotEmpty) {
+      if (kDebugMode) {
+        print(gSheetAppendItems);
+      }
+      //CPopupSnackBar.customToast(message: "$gSheetAppendItems");
+      await StoreSheetsApi.saveInvItemsToGSheets(gSheetAppendItems);
+
+      await updateSyncedAppends();
+      isLoading.value = false;
     }
-    //CPopupSnackBar.customToast(message: "$gSheetAppendItems");
-    await StoreSheetsApi.saveInvItemsToGSheets(gSheetAppendItems);
 
-    updateSyncedAppends();
-
-    return gSheetAppendItems;
+    //return gSheetAppendItems;
   }
 
   Future updateSyncedAppends() async {
     try {
+      // start loader while products are fetched
+      isLoading.value = true;
+
       unSyncedAppends.value = inventoryItems
           .where((item) => item.syncAction.toLowerCase().contains('append'))
           .toList();
@@ -258,6 +267,7 @@ class CInventoryController extends GetxController {
 
           await dbHelper.updateInventoryItem(
               syncAppendsData, element.productId!);
+          isLoading.value != isLoading.value;
         }
       }
     } catch (e) {
@@ -302,7 +312,7 @@ class CInventoryController extends GetxController {
 
         txtSyncAction.text = 'append';
       }
-
+      isLoading.value = false;
       return fetchedItem;
     } catch (e) {
       isLoading.value = false;
@@ -742,28 +752,35 @@ class CInventoryController extends GetxController {
   }
 
   Future cloudSyncInventory() async {
-    // start loader
-    isLoading.value = true;
+    try {
+      // start loader
+      syncIsLoading.value = true;
+      await fetchInventoryItems();
+      await fetchInvDels();
+      await syncInvDels();
+      // -- check internet connectivity
+      final isConnected = await CNetworkManager.instance.isConnected();
 
-    fetchInvDels();
-    syncInvDels();
-    // -- check internet connectivity
-    final isConnected = await CNetworkManager.instance.isConnected();
+      if (isConnected) {
+        /// -- initialize spreadsheets --
+        await StoreSheetsApi.initSpreadSheets();
+        await addUnsyncedInvToCloud();
+        await syncInvUpdates();
+        //isLoading.value = false;
+      } else {
+        CPopupSnackBar.warningSnackBar(
+          title: 'cloud sync requires internet',
+          message: 'an internet connection is required for cloud sync...',
+        );
+      }
 
-    if (isConnected) {
-      /// -- initialize spreadsheets --
-      await StoreSheetsApi.initSpreadSheets();
-      await addUnsyncedInvToCloud();
-      await syncInvUpdates();
-    } else {
-      CPopupSnackBar.warningSnackBar(
-        title: 'cloud sync requires internet',
-        message: 'an internet connection is required for cloud sync...',
+      // stop loader
+      syncIsLoading.value = false;
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'inventory cloud sync ERROR!',
+        message: 'inventory sync error: $e',
       );
-      isLoading.value = false;
     }
-
-    // stop loader
-    isLoading.value = false;
   }
 }

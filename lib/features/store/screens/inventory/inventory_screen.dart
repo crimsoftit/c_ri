@@ -95,7 +95,7 @@ class InventoryScreen extends StatelessWidget {
                                     const SizedBox(
                                       width: CSizes.spaceBtnSections / 4,
                                     ),
-                                    invController.isLoading.value
+                                    invController.syncIsLoading.value
                                         ? const CShimmerEffect(
                                             width: 40.0,
                                             height: 40.0,
@@ -110,7 +110,9 @@ class InventoryScreen extends StatelessWidget {
                                               )
                                             : IconButton(
                                                 onPressed: () async {
-                                                  invController
+                                                  await invController
+                                                      .cloudSyncInventory();
+                                                  await invController
                                                       .cloudSyncInventory();
                                                 },
                                                 icon: const Icon(

@@ -5,6 +5,7 @@ import 'package:c_ri/features/store/screens/inventory/dels.dart';
 import 'package:c_ri/features/store/screens/inventory/inv_for_updates.dart';
 import 'package:c_ri/features/store/screens/inventory/gsheets_inv_table_screen.dart';
 import 'package:c_ri/features/store/screens/search/search_results.dart';
+import 'package:c_ri/features/store/screens/txns/txns_for_appends.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/constants/txt_strings.dart';
@@ -89,7 +90,21 @@ class HomeScreen extends StatelessWidget {
                           btnTxtColor: CColors.grey,
                           editFontSize: true,
                           onPressed: () {
-                            Get.to(() => const ForUpdates());
+                            Get.to(() => const InvForUpdates());
+                          },
+                        ),
+                        const SizedBox(
+                          height: CSizes.spaceBtnItems,
+                        ),
+                        CSectionHeading(
+                          showActionBtn: true,
+                          title: 'pending txns',
+                          txtColor: CColors.white,
+                          btnTitle: 'view all',
+                          btnTxtColor: CColors.grey,
+                          editFontSize: true,
+                          onPressed: () {
+                            Get.to(() => const TxnsForAppends());
                           },
                         ),
                       ],

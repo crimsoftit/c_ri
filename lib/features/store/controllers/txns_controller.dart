@@ -48,6 +48,8 @@ class CTxnsController extends GetxController {
 
   final RxList<CTxnsModel> transactions = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> foundTxns = <CTxnsModel>[].obs;
+  final RxList<CTxnsModel> unsyncedTxnAppends = <CTxnsModel>[].obs;
+
   RxList txnDets = [].obs;
 
   final RxString sellItemScanResults = ''.obs;
@@ -209,6 +211,14 @@ class CTxnsController extends GetxController {
       transactions.assignAll(txns);
 
       foundTxns.value = transactions;
+
+      // assign values for unsynced txn appends
+      unsyncedTxnAppends.value = transactions
+          .where((unAppendedTxn) =>
+              unAppendedTxn.syncAction.toLowerCase().contains('append'))
+          .toList();
+
+      // assign values for unsynced txn updates
 
       // stop loader
       isLoading.value = false;

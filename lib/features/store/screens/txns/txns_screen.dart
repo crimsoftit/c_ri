@@ -1,6 +1,7 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
+import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/common/widgets/tab_views/store_items_tabs.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
@@ -16,8 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class SalesScreen extends StatelessWidget {
-  const SalesScreen({super.key});
+class TxnsScreen extends StatelessWidget {
+  const TxnsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,10 @@ class SalesScreen extends StatelessWidget {
     final userController = Get.put(CUserController());
     final searchController = Get.put(CSearchBarController());
     final invController = Get.put(CInventoryController());
-    final salesController = Get.put(CTxnsController());
+    final txnsController = Get.put(CTxnsController());
+
+    invController.fetchInventoryItems();
+    txnsController.fetchTransactions();
 
     return DefaultTabController(
       length: 2,
@@ -41,7 +45,6 @@ class SalesScreen extends StatelessWidget {
                     /// -- app bar --
                     Obx(
                       () {
-                        invController.fetchInventoryItems();
                         return CAppBar(
                           leadingWidget: searchController
                                   .salesShowSearchField.value
@@ -68,12 +71,32 @@ class SalesScreen extends StatelessWidget {
                                       IconButton(
                                         onPressed: () {
                                           invController.fetchInventoryItems();
-                                          salesController.scanItemForSale();
+                                          txnsController.scanItemForSale();
                                         },
                                         icon: const Icon(
                                           Iconsax.scan,
                                         ),
                                       ),
+
+                                      /// -- track unsynced txns --
+                                      txnsController.isLoading.value ||
+                                              invController.isLoading.value
+                                          ? const CShimmerEffect(
+                                              width: 40.0,
+                                              height: 40.0,
+                                              radius: 40.0,
+                                            )
+                                          : txnsController
+                                                  .unsyncedTxnAppends.isEmpty
+                                              ? const Icon(
+                                                  Iconsax.cloud_add,
+                                                )
+                                              : IconButton(
+                                                  onPressed: () async {},
+                                                  icon: const Icon(
+                                                    Iconsax.cloud_cross,
+                                                  ),
+                                                ),
                                     ],
                                   ),
                                 ),
@@ -116,18 +139,16 @@ class SalesScreen extends StatelessWidget {
                   }
 
                   // run loader --
-                  if (salesController.isLoading.value ||
+                  if (txnsController.isLoading.value ||
                       invController.isLoading.value) {
                     return const CVerticalProductShimmer(
                       itemCount: 7,
                     );
                   }
 
-                  salesController.fetchTransactions();
-
                   // -- no data widget --
                   if (invController.inventoryItems.isEmpty ||
-                      salesController.transactions.isEmpty) {
+                      txnsController.transactions.isEmpty) {
                     return const Center(
                       child: NoDataScreen(
                         lottieImage: CImages.noDataLottie,
@@ -141,7 +162,7 @@ class SalesScreen extends StatelessWidget {
                     child: ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
-                      itemCount: salesController.transactions.length,
+                      itemCount: txnsController.transactions.length,
                       itemBuilder: (context, index) {
                         return Card(
                           color: CColors.lightGrey,
@@ -155,7 +176,7 @@ class SalesScreen extends StatelessWidget {
                               backgroundColor: Colors.brown[300],
                               radius: 16.0,
                               child: Text(
-                                salesController
+                                txnsController
                                     .transactions[index].productName[0]
                                     .toUpperCase(),
                                 style: Theme.of(context)
@@ -167,7 +188,7 @@ class SalesScreen extends StatelessWidget {
                               ),
                             ),
                             title: Text(
-                              '${salesController.transactions[index].productName.toUpperCase()} ',
+                              '${txnsController.transactions[index].productName.toUpperCase()} ',
                               style: Theme.of(context)
                                   .textTheme
                                   .labelMedium!
@@ -184,7 +205,7 @@ class SalesScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
-                                  'pCode: ${salesController.transactions[index].productCode} t.Amount: ${userController.user.value.currencyCode}.${salesController.transactions[index].totalAmount}',
+                                  'pCode: ${txnsController.transactions[index].productCode} t.Amount: ${userController.user.value.currencyCode}.${txnsController.transactions[index].totalAmount}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelMedium!
@@ -194,7 +215,7 @@ class SalesScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  'payment method: ${salesController.transactions[index].paymentMethod} qty: ${salesController.transactions[index].quantity} ',
+                                  'payment method: ${txnsController.transactions[index].paymentMethod} qty: ${txnsController.transactions[index].quantity} ',
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelMedium!
@@ -204,7 +225,17 @@ class SalesScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  'modified: ${salesController.transactions[index].date} (txn id: #${salesController.transactions[index].saleId})',
+                                  'modified: ${txnsController.transactions[index].date} (txn id: #${txnsController.transactions[index].saleId})',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall!
+                                      .apply(
+                                        color: CColors.rBrown.withOpacity(0.7),
+                                        //fontStyle: FontStyle.italic,
+                                      ),
+                                ),
+                                Text(
+                                  'isSynced:${txnsController.transactions[index].isSynced} syncAction:${txnsController.transactions[index].syncAction}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelSmall!
@@ -219,7 +250,7 @@ class SalesScreen extends StatelessWidget {
                               Get.toNamed(
                                 '/sales/txn_details',
                                 arguments:
-                                    salesController.transactions[index].saleId,
+                                    txnsController.transactions[index].saleId,
                               );
                             },
                           ),
@@ -245,7 +276,7 @@ class SalesScreen extends StatelessWidget {
           ),
           onPressed: () {
             invController.fetchInventoryItems();
-            salesController.scanItemForSale();
+            txnsController.scanItemForSale();
           },
         ),
       ),
