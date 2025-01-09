@@ -12,6 +12,7 @@ class StoreSheetsApi {
   static const spreadsheetId = '1iUtgSjdyP3Q3cpdyhOftTAZI8_Bujv69QZpg06oMK_E';
 
   static final gsheets = GSheets(gsheetCredentials);
+
   static Worksheet? invSheet, txnsSheet;
 
   static Future initSpreadSheets() async {
@@ -73,24 +74,27 @@ class StoreSheetsApi {
     return CInventoryModel.gSheetFromJson(invMap!);
   }
 
-  /// -- fetch inventory item by user's email address from google sheets --
-  // static Future<CInventoryModel?> fetchGsheetInvItemByEmail(
-  //     String userEmail) async {
-  //   try {
-  //     if (invSheet == null) return null;
-
-  //     final invMap =
-  //         await invSheet!.values.map.rowByKey(userEmail, fromColumn: 3);
-
-  //     return CInventoryModel.gSheetFromJson(invMap!);
-  //   } catch (e) {
-  //     CPopupSnackBar.errorSnackBar(
-  //       title: 'error fetching user data',
-  //       message: e.toString(),
-  //     );
-  //     throw e.toString();
-  //   }
-  // }
+  /// -- update data (a single cell) in google sheets --
+  static Future<bool> updateInvStockCount({
+    required int id,
+    required String key,
+    required dynamic value,
+  }) async {
+    try {
+      if (invSheet == null) return false;
+      return invSheet!.values.insertValueByKeys(
+        value,
+        columnKey: key,
+        rowKey: id,
+      );
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'error updating cell data in google sheet',
+        message: e.toString(),
+      );
+      throw e.toString();
+    }
+  }
 
   /// -- fetch all inventory items from google sheets --
   static Future<List<CInventoryModel?>?> fetchAllGsheetInvItems() async {
@@ -175,16 +179,8 @@ class StoreSheetsApi {
     }
   }
 
-  // static Future<bool> deleteInvItemById(int id) async {
-  //   if (invSheet == null) return false;
-
-  //   final ss = await gsheets.spreadsheet(spreadsheetId);
-
-  //   final sheet = await getWorkSheet(
-  //     ss,
-  //     title: 'InventorySheet',
-  //   );
-
-  //   final range = await sheet!.values.getRange
-  // }
+  static Future saveTxnsToGSheets(List<Map<String, dynamic>> rowItems) async {
+    if (txnsSheet == null) return;
+    txnsSheet!.values.map.appendRows(rowItems);
+  }
 }

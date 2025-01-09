@@ -83,10 +83,13 @@ class CInventoryController extends GetxController {
 
   /// -- initialize cloud sync --
   initInvSync() async {
+    //final isConnected = await CNetworkManager.instance.isConnected();
+
     if (localStorage.read('SyncInvDataWithCloud') == true) {
       importInvDataFromCloud();
-      fetchInventoryItems();
       localStorage.write('SyncInvDataWithCloud', false);
+
+      fetchInventoryItems();
     }
   }
 
@@ -135,7 +138,6 @@ class CInventoryController extends GetxController {
     }
   }
 
-  /// ### -- MICROSECONDS_SINCE_EPOCH FOR PRODUCT ID -- ### ///
   /// -- add inventory item to sqflite database --
   addInventoryItem(CInventoryModel inventoryItem) async {
     try {
@@ -145,54 +147,43 @@ class CInventoryController extends GetxController {
       // add inventory item into sqflite db
       inventoryItem.productId = CHelperFunctions.generateId();
 
-      dbHelper.addInventoryItem(inventoryItem);
-      fetchInventoryItems();
-
-      // fetch this item from sqflite db to get the product id
-      var thisItem = await dbHelper.fetchInvItemByCodeAndEmail(
-          inventoryItem.pCode, userController.user.value.email);
-
       // -- check internet connectivity
       final isConnected = await CNetworkManager.instance.isConnected();
 
       if (isConnected) {
-        if (thisItem.isNotEmpty) {
-          // -- save data to gsheets --
-          var gSheetsInvData = CInventoryModel.withID(
-            thisItem.first.productId,
-            userController.user.value.id,
-            userController.user.value.email,
-            userController.user.value.fullName,
-            txtCode.text,
-            txtName.text,
-            int.parse(txtQty.text),
-            double.parse(txtBP.text),
-            double.parse(txtUnitSP.text),
-            DateFormat('yyyy-MM-dd - kk:mm').format(
-              clock.now(),
-            ),
-            1,
-            'none',
-          );
-          await StoreSheetsApi.saveInvItemsToGSheets([gSheetsInvData.toMap()]);
+        // -- save data to gsheets --
+        var gSheetsInvData = CInventoryModel.withID(
+          inventoryItem.productId,
+          userController.user.value.id,
+          userController.user.value.email,
+          userController.user.value.fullName,
+          txtCode.text,
+          txtName.text,
+          int.parse(txtQty.text),
+          double.parse(txtBP.text),
+          double.parse(txtUnitSP.text),
+          DateFormat('yyyy-MM-dd - kk:mm').format(
+            clock.now(),
+          ),
+          1,
+          'none',
+        );
+        await StoreSheetsApi.saveInvItemsToGSheets([gSheetsInvData.toMap()]);
 
-          /// -- update sync status
-          inventoryItem.isSynced = 1;
-          inventoryItem.syncAction = 'none';
-          await dbHelper.updateInventoryItem(
-              inventoryItem, thisItem.first.productId!);
-        } else {
-          isLoading.value = false;
-          CPopupSnackBar.errorSnackBar(
-              title: 'ERROR SAVING ITEM ONLINE: DOES NOT EXIST!!! ',
-              message: 'MAKOSA MAKOSA MAKOSA!!! PROBLEMS PROBLEMS PROBLEMS!!!');
-        }
+        /// -- update sync status
+        inventoryItem.isSynced = 1;
+        inventoryItem.syncAction = 'none';
       } else {
+        inventoryItem.isSynced = 0;
+        inventoryItem.syncAction = 'append';
         CPopupSnackBar.customToast(
           message:
               'while this works offline, consider using an internet connection to back up your data online!',
         );
       }
+
+      await dbHelper.addInventoryItem(inventoryItem);
+      await fetchInventoryItems();
 
       isLoading.value = false;
 
@@ -649,11 +640,12 @@ class CInventoryController extends GetxController {
       final dels = await dbHelper.fetchAllInvDels();
       dItems.assignAll(dels);
 
-      if (dItems.isEmpty) {
-        return [];
-      } else {
-        return dItems;
-      }
+      // if (dItems.isEmpty) {
+      //   return {[]};
+      // } else {
+      //   return dItems;
+      // }
+      return dItems.toList();
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
         title: 'DELS ERROR',
@@ -747,5 +739,31 @@ class CInventoryController extends GetxController {
         print('/n/n ----- /n all updates rada safi \n -----');
       }
     }
+  }
+
+  Future cloudSyncInventory() async {
+    // start loader
+    isLoading.value = true;
+
+    fetchInvDels();
+    syncInvDels();
+    // -- check internet connectivity
+    final isConnected = await CNetworkManager.instance.isConnected();
+
+    if (isConnected) {
+      /// -- initialize spreadsheets --
+      await StoreSheetsApi.initSpreadSheets();
+      await addUnsyncedInvToCloud();
+      await syncInvUpdates();
+    } else {
+      CPopupSnackBar.warningSnackBar(
+        title: 'cloud sync requires internet',
+        message: 'an internet connection is required for cloud sync...',
+      );
+      isLoading.value = false;
+    }
+
+    // stop loader
+    isLoading.value = false;
   }
 }

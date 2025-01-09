@@ -3,6 +3,7 @@ import 'package:c_ri/features/store/models/dels_model.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/models/txns_model.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -99,8 +100,10 @@ class DbHelper {
         'INSERT INTO $txnsTable VALUES (0, "as23df45", "sindani254@gmail.com", "Manu", "143d", "apples", 13, 15, 10.0, "Cash", "2/1/2022")');
     List inventory = await _db!.rawQuery('select * from inventory');
     List sales = await _db!.rawQuery('select * from sales');
-    print(inventory[0].toString());
-    print(sales[0].toString());
+    if (kDebugMode) {
+      print(inventory[0].toString());
+      print(sales[0].toString());
+    }
   }
 
   /// --- ### CRUD OPERATIONS ON INVENTORY TABLE ### ---
@@ -207,6 +210,27 @@ class DbHelper {
       return CPopupSnackBar.errorSnackBar(
         title: 'error updating stock count',
         message: e.toString(),
+      );
+    }
+  }
+
+  /// -- update inventory upon sale --
+  Future<int> updateInvSyncAfterStockUpdate(String sAction, int pId) async {
+    try {
+      int updateResult = await _db!.rawUpdate(
+        '''
+          UPDATE $invTable
+          SET syncAction = ?
+          WHERE productId = ?
+        ''',
+        [sAction, pId],
+      );
+      CPopupSnackBar.customToast(message: updateResult.toString());
+      return updateResult;
+    } catch (e) {
+      return CPopupSnackBar.errorSnackBar(
+        title: 'stock count sync error!',
+        message: 'error updating stock count SYNC ACTION: $e',
       );
     }
   }

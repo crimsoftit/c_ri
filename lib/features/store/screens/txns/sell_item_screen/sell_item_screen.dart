@@ -239,10 +239,13 @@ class CSellItemScreen extends StatelessWidget {
                             onChanged: (value) {
                               var usp = salesController.saleItemUsp.value;
                               salesController.computeTotals(value, usp);
-                              salesController.computeCustomerBal(
-                                  double.parse(
-                                      salesController.txtAmountIssued.text),
-                                  salesController.totalAmount.value);
+
+                              if (salesController.txtAmountIssued.text != '') {
+                                salesController.computeCustomerBal(
+                                    double.parse(
+                                        salesController.txtAmountIssued.text),
+                                    salesController.totalAmount.value);
+                              }
                             },
                           ),
 

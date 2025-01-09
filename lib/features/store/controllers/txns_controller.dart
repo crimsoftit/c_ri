@@ -1,11 +1,15 @@
 import 'dart:async';
 import 'package:barcode_scan2/barcode_scan2.dart';
+import 'package:c_ri/api/sheets/store_sheets_api.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
+import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/models/txns_model.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
+import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/full_screen_loader.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:clock/clock.dart';
@@ -23,7 +27,7 @@ class CTxnsController extends GetxController {
 
   @override
   void onInit() async {
-    isLoading.value = false;
+    await dbHelper.openDb();
 
     fetchTransactions();
 
@@ -74,6 +78,7 @@ class CTxnsController extends GetxController {
 
   final userController = Get.put(CUserController());
   final searchController = Get.put(CSearchBarController());
+  final invController = Get.put(CInventoryController());
 
   final txnsFormKey = GlobalKey<FormState>();
 
@@ -90,6 +95,8 @@ class CTxnsController extends GetxController {
   /// -- add sale transactions data to sqflite db --
   Future processTransaction() async {
     try {
+      final isConnected = await CNetworkManager.instance.isConnected();
+
       if (customerBal.value < 0) {
         customerBalErrorMsg.value = 'the amount issued is not enough!!';
         CPopupSnackBar.errorSnackBar(
@@ -108,7 +115,8 @@ class CTxnsController extends GetxController {
             CImages.docerAnimation,
           );
 
-          final newTxn = CTxnsModel(
+          final newTxn = CTxnsModel.withId(
+            CHelperFunctions.generateId(),
             userController.user.value.id,
             userController.user.value.email,
             userController.user.value.fullName,
@@ -124,23 +132,40 @@ class CTxnsController extends GetxController {
             txtTxnAddress.text,
             userController.user.value.locationCoordinates,
             DateFormat('yyyy-MM-dd - kk:mm').format(clock.now()),
-            0,
-            'append',
+            isConnected ? 1 : 0,
+            isConnected ? 'none' : 'append',
           );
+
+          // set the updated stock count
+          qtyAvailable.value -= int.parse(txtSaleItemQty.text);
+
+          // -- check internet connectivity
+          if (isConnected) {
+            // upload txn data to cloud
+            await StoreSheetsApi.saveTxnsToGSheets([newTxn.toMap()]);
+
+            // update stock count for inventory item's cloud data
+            await StoreSheetsApi.updateInvStockCount(
+              id: sellItemId.value,
+              key: 'quantity',
+              value: qtyAvailable.value,
+            );
+          } else {
+            await dbHelper.updateInvSyncAfterStockUpdate(
+                'update', sellItemId.value);
+          }
 
           // save txn data into the db
           await dbHelper.addSoldItem(newTxn);
 
-          // set the updated stock count
-          qtyAvailable.value -= int.parse(txtSaleItemQty.text);
           await dbHelper.updateStockCount(qtyAvailable.value, sellItemId.value);
 
-          resetSales();
+          //resetSales();
 
           fetchTransactions();
+          invController.fetchInventoryItems();
 
           // stop loader
-          CFullScreenLoader.stopLoading();
           isLoading.value = false;
 
           CPopupSnackBar.successSnackBar(
@@ -148,7 +173,10 @@ class CTxnsController extends GetxController {
             message: 'transaction successful!',
           );
 
-          Get.back();
+          if (!isLoading.value) {
+            CFullScreenLoader.stopLoading();
+            Get.back();
+          }
         }
       }
     } catch (e) {

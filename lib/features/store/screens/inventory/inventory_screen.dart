@@ -1,7 +1,7 @@
-import 'package:c_ri/api/sheets/store_sheets_api.dart';
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
+import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
@@ -15,8 +15,6 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
-import 'package:c_ri/utils/helpers/network_manager.dart';
-import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -32,6 +30,7 @@ class InventoryScreen extends StatelessWidget {
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
     final invController = Get.put(CInventoryController());
+    invController.fetchInventoryItems();
 
     final userController = Get.put(CUserController());
 
@@ -96,42 +95,28 @@ class InventoryScreen extends StatelessWidget {
                                     const SizedBox(
                                       width: CSizes.spaceBtnSections / 4,
                                     ),
-                                    invController.unSyncedAppends.isEmpty &&
-                                            invController
-                                                .unSyncedUpdates.isEmpty
-                                        ? const Icon(
-                                            Iconsax.cloud_add,
+                                    invController.isLoading.value
+                                        ? const CShimmerEffect(
+                                            width: 40.0,
+                                            height: 40.0,
+                                            radius: 40.0,
                                           )
-                                        : IconButton(
-                                            onPressed: () async {
-                                              invController.fetchInvDels();
-                                              invController.syncInvDels();
-                                              // -- check internet connectivity
-                                              final isConnected =
-                                                  await CNetworkManager.instance
-                                                      .isConnected();
-
-                                              if (isConnected) {
-                                                /// -- initialize spreadsheets --
-                                                await StoreSheetsApi
-                                                    .initSpreadSheets();
-                                                await invController
-                                                    .addUnsyncedInvToCloud();
-                                                await invController
-                                                    .syncInvUpdates();
-                                              } else {
-                                                CPopupSnackBar.warningSnackBar(
-                                                  title:
-                                                      'cloud sync requires internet',
-                                                  message:
-                                                      'an internet connection is required for cloud sync...',
-                                                );
-                                              }
-                                            },
-                                            icon: const Icon(
-                                              Iconsax.cloud_cross,
-                                            ),
-                                          ),
+                                        : invController
+                                                    .unSyncedAppends.isEmpty &&
+                                                invController
+                                                    .unSyncedUpdates.isEmpty
+                                            ? const Icon(
+                                                Iconsax.cloud_add,
+                                              )
+                                            : IconButton(
+                                                onPressed: () async {
+                                                  invController
+                                                      .cloudSyncInventory();
+                                                },
+                                                icon: const Icon(
+                                                  Iconsax.cloud_cross,
+                                                ),
+                                              ),
                                   ],
                                 ),
                               ),
@@ -167,8 +152,6 @@ class InventoryScreen extends StatelessWidget {
                     itemCount: 4,
                   );
                 }
-
-                invController.fetchInventoryItems();
 
                 if (searchController.txtInvSearchField.text.isNotEmpty &&
                     invController.foundInventoryItems.isEmpty) {
