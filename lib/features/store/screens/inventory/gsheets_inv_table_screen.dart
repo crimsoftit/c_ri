@@ -93,7 +93,7 @@ class GsheetsInvScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: CColors.rBrown,
         title: Text(
-          'cloud data...',
+          'cloud inventory data...',
           style: Theme.of(context).textTheme.labelLarge!.apply(
                 color: CColors.white,
               ),
@@ -109,26 +109,6 @@ class GsheetsInvScreen extends StatelessWidget {
               height: CHelperFunctions.screenHeight() * 0.7,
               child: Obx(
                 () {
-                  // run loader --
-                  // if (invController.isLoading.value) {
-                  //   return const CVerticalProductShimmer(
-                  //     itemCount: 4,
-                  //   );
-                  // }
-
-                  //invController.fetchUserInvSheetData();
-
-                  // -- no data widget --
-                  // if (invController.userGSheetData.isEmpty &&
-                  //     !invController.isLoading.value) {
-                  //   return const Center(
-                  //     child: NoDataScreen(
-                  //       lottieImage: CImages.noDataLottie,
-                  //       txt: 'No data found!',
-                  //     ),
-                  //   );
-                  // }
-                  //invController.fetchAllInvSheetData();
                   return DataTable(
                     columns: createColumns(),
                     rows: createRows(),

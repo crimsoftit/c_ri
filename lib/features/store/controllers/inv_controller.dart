@@ -62,8 +62,6 @@ class CInventoryController extends GetxController {
 
   @override
   void onInit() async {
-    /// -- check if cloud sync is needed for inventory items --
-
     dbHelper.openDb();
 
     fetchInventoryItems();
@@ -578,7 +576,7 @@ class CInventoryController extends GetxController {
   /// -- fetch inventory data from google sheets by userEmail --
   Future fetchUserInvSheetData() async {
     try {
-      // fetch items from sqflite db
+      // fetch items from cloud
       var gsheetItemsList = (await StoreSheetsApi.fetchAllGsheetInvItems())!;
 
       allGSheetData.assignAll(gsheetItemsList as Iterable<CInventoryModel>);

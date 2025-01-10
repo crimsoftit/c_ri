@@ -1,5 +1,9 @@
 // ignore_for_file: unnecessary_getters_setters
 
+import 'dart:convert';
+
+import 'package:c_ri/features/store/models/gsheet_models/txns_sheet_fields.dart';
+
 class CTxnsModel {
   String _userId = "";
   String _userEmail = "";
@@ -253,5 +257,31 @@ class CTxnsModel {
     _isSynced = map['isSynced'];
     _syncAction = map['syncAction'];
     _txnStatus = map['txnStatus'];
+  }
+
+  /// -- extract a CTxnsModel object from a GSheet Map object --
+  static CTxnsModel gSheetFromJson(Map<String, dynamic> json) {
+    return CTxnsModel.withId(
+      jsonDecode(json[TxnsSheetFields.txnId]),
+      json[TxnsSheetFields.userId],
+      json[TxnsSheetFields.userEmail],
+      json[TxnsSheetFields.userName],
+      jsonDecode(json[TxnsSheetFields.productId]),
+      json[TxnsSheetFields.productCode],
+      json[TxnsSheetFields.productName],
+      jsonDecode(json[TxnsSheetFields.quantity]),
+      double.parse(json[TxnsSheetFields.totalAmount]),
+      double.parse(json[TxnsSheetFields.amountIssued]),
+      double.parse(json[TxnsSheetFields.unitSellingPrice]),
+      json[TxnsSheetFields.paymentMethod],
+      json[TxnsSheetFields.customerName],
+      json[TxnsSheetFields.customerContacts],
+      json[TxnsSheetFields.txnAddress],
+      json[TxnsSheetFields.txnAddressCoordinates],
+      json[TxnsSheetFields.date],
+      jsonDecode(json[TxnsSheetFields.isSynced]),
+      json[TxnsSheetFields.syncAction],
+      json[TxnsSheetFields.txnStatus],
+    );
   }
 }

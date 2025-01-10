@@ -179,8 +179,26 @@ class StoreSheetsApi {
     }
   }
 
+  /// -- ## TRANSACTIONS - OPERATIONS ## --
+
   static Future saveTxnsToGSheets(List<Map<String, dynamic>> rowItems) async {
     if (txnsSheet == null) return;
     txnsSheet!.values.map.appendRows(rowItems);
+  }
+
+  static Future<List<CTxnsModel>?> fetchAllTxnsFromCloud() async {
+    if (txnsSheet == null) return null;
+
+    final txnsList = await txnsSheet!.values.map.allRows();
+
+    if (kDebugMode) {
+      print(txnsList == null
+          ? <CTxnsModel>[]
+          : txnsList.map(CTxnsModel.gSheetFromJson).toList());
+    }
+
+    return txnsList == null
+        ? <CTxnsModel>[]
+        : txnsList.map(CTxnsModel.gSheetFromJson).toList();
   }
 }

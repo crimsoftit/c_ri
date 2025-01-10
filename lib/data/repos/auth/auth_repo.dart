@@ -5,6 +5,7 @@ import 'package:c_ri/features/authentication/screens/onboarding/onboarding_scree
 import 'package:c_ri/features/authentication/screens/signup/verify_email.dart';
 import 'package:c_ri/features/personalization/screens/location_tings/device_settings_screen.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
+import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/nav_menu.dart';
 import 'package:c_ri/utils/exceptions/exceptions.dart';
 import 'package:c_ri/utils/exceptions/firebase_auth_exceptions.dart';
@@ -61,11 +62,13 @@ class AuthRepo extends GetxController {
         } else {
           //DbHelper dbHelper = DbHelper.instance;
           final invController = Get.put(CInventoryController());
+          final txnsController = Get.put(CTxnsController());
           // check data sync status
           deviceStorage.writeIfNull('SyncInvDataWithCloud', true);
           deviceStorage.writeIfNull('SyncTxnsDataWithCloud', true);
 
           invController.initInvSync();
+          txnsController.initTxnsSync();
 
           /// --- ### HANDLE IMPORT OF CLOUD DATA ### --- ///
           Get.offAll(() => const NavMenu());

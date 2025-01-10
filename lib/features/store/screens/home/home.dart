@@ -5,6 +5,7 @@ import 'package:c_ri/features/store/screens/inventory/dels.dart';
 import 'package:c_ri/features/store/screens/inventory/inv_for_updates.dart';
 import 'package:c_ri/features/store/screens/inventory/gsheets_inv_table_screen.dart';
 import 'package:c_ri/features/store/screens/search/search_results.dart';
+import 'package:c_ri/features/store/screens/txns/gsheets_txns_screen.dart';
 import 'package:c_ri/features/store/screens/txns/txns_for_appends.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -63,6 +64,20 @@ class HomeScreen extends StatelessWidget {
                           editFontSize: true,
                           onPressed: () {
                             Get.to(() => const GsheetsInvScreen());
+                          },
+                        ),
+                        const SizedBox(
+                          height: CSizes.spaceBtnItems,
+                        ),
+                        CSectionHeading(
+                          showActionBtn: true,
+                          title: 'popular categories',
+                          txtColor: CColors.white,
+                          btnTitle: 'gsheet txns data',
+                          btnTxtColor: CColors.grey,
+                          editFontSize: true,
+                          onPressed: () {
+                            Get.to(() => const GsheetsTxnsScreen());
                           },
                         ),
                         const SizedBox(

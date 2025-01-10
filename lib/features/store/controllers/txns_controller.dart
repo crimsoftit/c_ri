@@ -13,6 +13,7 @@ import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/full_screen_loader.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:clock/clock.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -30,15 +31,25 @@ class CTxnsController extends GetxController {
     await dbHelper.openDb();
 
     fetchTransactions();
-
+    addUnsyncedTxnsToCloud();
     resetSales();
     if (selectedPaymentMethod.value == 'Cash') {
       showAmountIssuedField.value = true;
     } else {
       showAmountIssuedField.value = false;
     }
-
+    initTxnsSync();
     super.onInit();
+  }
+
+  /// -- initialize cloud sync --
+  Future initTxnsSync() async {
+    if (localStorage.read('SyncTxnsDataWithCloud') == true) {
+      await importTxnsFromCloud();
+      localStorage.write('SyncTxnsDataWithCloud', false);
+
+      fetchTransactions();
+    }
   }
 
   /// -- variables --
@@ -49,6 +60,8 @@ class CTxnsController extends GetxController {
   final RxList<CTxnsModel> transactions = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> foundTxns = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> unsyncedTxnAppends = <CTxnsModel>[].obs;
+  final RxList<CTxnsModel> allGsheetTxnsData = <CTxnsModel>[].obs;
+  final RxList<CTxnsModel> userGsheetTxnsData = <CTxnsModel>[].obs;
 
   RxList txnDets = [].obs;
 
@@ -86,14 +99,15 @@ class CTxnsController extends GetxController {
   final txnsFormKey = GlobalKey<FormState>();
 
   /// -- initialize cloud sync status --
-  initSyncStatus() async {
-    //localStorage.writeIfNull('SyncTxnsDataWithCloud', true);
-    if (localStorage.read('SyncTxnsDataWithCloud') == true) {
-      CPopupSnackBar.customToast(
-        message: 'CLOUD SYNC IS REQUIRED FOR TXNS!!!',
-      );
-    }
-  }
+  // initSyncStatus() async {
+  //   //localStorage.writeIfNull('SyncTxnsDataWithCloud', true);
+  //   if (localStorage.read('SyncTxnsDataWithCloud') == true) {
+  //     await importTxnsFromCloud();
+  //     CPopupSnackBar.customToast(
+  //       message: 'CLOUD SYNC IS REQUIRED FOR TXNS!!!',
+  //     );
+  //   }
+  // }
 
   /// -- add sale transactions data to sqflite db --
   Future processTransaction() async {
@@ -338,11 +352,6 @@ class CTxnsController extends GetxController {
     if (value.isNotEmpty) {
       totalAmount.value = int.parse(value) * usp;
 
-      // if (int.parse(value) > qtyAvailable.value) {
-      //   stockUnavailableErrorMsg.value = 'insufficient stock!!';
-      // } else {
-      //   stockUnavailableErrorMsg.value = '';
-      // }
       checkStockStatus(value);
     } else {
       totalAmount.value = 0.0;
@@ -418,39 +427,45 @@ class CTxnsController extends GetxController {
         syncIsLoading.value = true;
         await fetchTransactions();
 
-        var gSheetTxnAppends = unsyncedTxnAppends
-            .map((item) => {
-                  'txnId': item.txnId,
-                  'userId': item.userId,
-                  'userEmail': item.userEmail,
-                  'userName': item.userName,
-                  'productId': item.productId,
-                  'productCode': item.productCode,
-                  'productName': item.productName,
-                  'quantity': item.quantity,
-                  'totalAmount': item.totalAmount,
-                  'amountIssued': item.amountIssued,
-                  'unitSellingPrice': item.unitSellingPrice,
-                  'paymentMethod': item.paymentMethod,
-                  'customerName': item.customerName,
-                  'customerContacts': item.customerContacts,
-                  'txnAddress': item.txnAddress,
-                  'txnAddressCoordinates': item.txnAddressCoordinates,
-                  'date': item.date,
-                  'isSynced': 1,
-                  'syncAction': 'none',
-                  // 'isSynced': item.isSynced,
-                  // 'syncAction': item.syncAction,
-                  'txnStatus': item.txnStatus,
-                })
-            .toList();
+        if (unsyncedTxnAppends.isNotEmpty) {
+          var gSheetTxnAppends = unsyncedTxnAppends
+              .map((item) => {
+                    'txnId': item.txnId,
+                    'userId': item.userId,
+                    'userEmail': item.userEmail,
+                    'userName': item.userName,
+                    'productId': item.productId,
+                    'productCode': item.productCode,
+                    'productName': item.productName,
+                    'quantity': item.quantity,
+                    'totalAmount': item.totalAmount,
+                    'amountIssued': item.amountIssued,
+                    'unitSellingPrice': item.unitSellingPrice,
+                    'paymentMethod': item.paymentMethod,
+                    'customerName': item.customerName,
+                    'customerContacts': item.customerContacts,
+                    'txnAddress': item.txnAddress,
+                    'txnAddressCoordinates': item.txnAddressCoordinates,
+                    'date': item.date,
+                    'isSynced': 1,
+                    'syncAction': 'none',
+                    // 'isSynced': item.isSynced,
+                    // 'syncAction': item.syncAction,
+                    'txnStatus': item.txnStatus,
+                  })
+              .toList();
 
-        // -- initialize spreadsheets --
-        await StoreSheetsApi.initSpreadSheets();
-        await StoreSheetsApi.saveTxnsToGSheets(gSheetTxnAppends);
+          // -- initialize spreadsheets --
+          await StoreSheetsApi.initSpreadSheets();
+          await StoreSheetsApi.saveTxnsToGSheets(gSheetTxnAppends);
 
-        // -- update sync status
-        await updateSyncedTxnUpdates();
+          // -- update sync status
+          await updateSyncedTxnUpdates();
+
+          if (kDebugMode) {
+            print(gSheetTxnAppends);
+          }
+        }
 
         // -- stop loader --
         syncIsLoading.value = false;
@@ -517,6 +532,91 @@ class CTxnsController extends GetxController {
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
         title: 'Oh Snap!',
+        message: e.toString(),
+      );
+    }
+  }
+
+  /// -- fetch txns from google sheets by userEmail --
+  Future fetchUserTxnsSheetData() async {
+    try {
+      isLoading.value = true;
+
+      var gSheetTxnsList = await StoreSheetsApi.fetchAllTxnsFromCloud();
+
+      allGsheetTxnsData.assignAll(gSheetTxnsList!);
+
+      userGsheetTxnsData.value = allGsheetTxnsData
+          .where((element) => element.userEmail
+              .toLowerCase()
+              .contains(userController.user.value.email.toLowerCase()))
+          .toList();
+
+      return userGsheetTxnsData;
+    } catch (e) {
+      isLoading.value = false;
+      return CPopupSnackBar.errorSnackBar(
+        title: 'Oh Snap!',
+        message: e.toString(),
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// -- import transactions from cloud --
+  Future importTxnsFromCloud() async {
+    try {
+      isLoading.value = true;
+
+      await fetchTransactions();
+
+      await fetchUserTxnsSheetData();
+
+      if (userGsheetTxnsData.isNotEmpty) {
+        if (transactions.isEmpty) {
+          for (var element in userGsheetTxnsData) {
+            var dbTxnImports = CTxnsModel.withId(
+              element.txnId,
+              element.userId,
+              element.userEmail,
+              element.userName,
+              element.productId,
+              element.productCode,
+              element.productName,
+              element.quantity,
+              element.totalAmount,
+              element.amountIssued,
+              element.unitSellingPrice,
+              element.paymentMethod,
+              element.customerName,
+              element.customerContacts,
+              element.txnAddress,
+              element.txnAddressCoordinates,
+              element.date,
+              element.isSynced,
+              element.syncAction,
+              element.txnStatus,
+            );
+
+            dbHelper.addSoldItem(dbTxnImports);
+            await fetchTransactions();
+            isLoading.value = false;
+
+            if (kDebugMode) {
+              print(
+                  "----------\n ===SYNCED TXNS=== \n $userGsheetTxnsData \n\n ----------");
+            }
+          }
+        } else {
+          CPopupSnackBar.customToast(
+              message: 'rada safi pande ya txn imports...');
+        }
+      }
+    } catch (e) {
+      isLoading.value = false;
+      return CPopupSnackBar.errorSnackBar(
+        title: 'ERROR IMPORTING USER DATA FROM CLOUD!',
         message: e.toString(),
       );
     }

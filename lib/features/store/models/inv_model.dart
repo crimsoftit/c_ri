@@ -163,7 +163,7 @@ class CInventoryModel {
     _syncAction = map['syncAction'];
   }
 
-  // extract a InventoryModel object from a GSheet Map object
+  // extract a CInventoryModel object from a GSheet Map object
   static CInventoryModel gSheetFromJson(Map<String, dynamic> json) {
     return CInventoryModel.withID(
       jsonDecode(json[InvSheetFields.productId]),
