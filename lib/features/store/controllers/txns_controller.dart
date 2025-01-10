@@ -187,14 +187,13 @@ class CTxnsController extends GetxController {
           // stop loader
           isLoading.value = false;
 
-          CPopupSnackBar.successSnackBar(
-            title: 'success!',
-            message: 'transaction successful!',
-          );
-
           if (!isLoading.value) {
             CFullScreenLoader.stopLoading();
-            Get.back();
+
+            CPopupSnackBar.successSnackBar(
+              title: 'success!',
+              message: 'transaction successful!',
+            );
           }
         }
       }
@@ -210,6 +209,8 @@ class CTxnsController extends GetxController {
       isLoading.value = false;
       // -- remove loader --
       CFullScreenLoader.stopLoading();
+      //Navigator.of(Get.overlayContext!).pop();
+      Get.back();
     }
   }
 
