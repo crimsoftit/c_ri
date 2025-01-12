@@ -30,14 +30,17 @@ class CTxnsController extends GetxController {
   void onInit() async {
     await dbHelper.openDb();
 
+    //resetSales();
+
     fetchTransactions();
     addUnsyncedTxnsToCloud();
-    resetSales();
-    if (selectedPaymentMethod.value == 'Cash') {
-      showAmountIssuedField.value = true;
-    } else {
-      showAmountIssuedField.value = false;
-    }
+
+    // if (selectedPaymentMethod.value == 'Cash') {
+    //   showAmountIssuedField.value = true;
+    // } else {
+    //   showAmountIssuedField.value = false;
+    // }
+    showAmountIssuedField.value == true;
     initTxnsSync();
     super.onInit();
   }
@@ -69,11 +72,14 @@ class CTxnsController extends GetxController {
   final RxString selectedPaymentMethod = 'Cash'.obs;
   final RxString stockUnavailableErrorMsg = ''.obs;
   final RxString customerBalErrorMsg = ''.obs;
+  final RxString amtIssuedFieldError = ''.obs;
 
   final RxBool itemExists = false.obs;
-  final RxBool showAmountIssuedField = false.obs;
+  final RxBool showAmountIssuedField = true.obs;
   final RxBool isLoading = false.obs;
   final RxBool syncIsLoading = false.obs;
+  final RxBool includeCustomerDetails = false.obs;
+  final RxBool txnSuccesfull = false.obs;
 
   final txtSaleItemQty = TextEditingController();
   final txtAmountIssued = TextEditingController();
@@ -98,17 +104,6 @@ class CTxnsController extends GetxController {
 
   final txnsFormKey = GlobalKey<FormState>();
 
-  /// -- initialize cloud sync status --
-  // initSyncStatus() async {
-  //   //localStorage.writeIfNull('SyncTxnsDataWithCloud', true);
-  //   if (localStorage.read('SyncTxnsDataWithCloud') == true) {
-  //     await importTxnsFromCloud();
-  //     CPopupSnackBar.customToast(
-  //       message: 'CLOUD SYNC IS REQUIRED FOR TXNS!!!',
-  //     );
-  //   }
-  // }
-
   /// -- add sale transactions data to sqflite db --
   Future processTransaction() async {
     try {
@@ -120,10 +115,16 @@ class CTxnsController extends GetxController {
           title: 'customer still owes you!!',
           message: 'the amount issued is not enough',
         );
+        return;
+      } else if (txtAmountIssued.text == '' &&
+          showAmountIssuedField.value == true) {
+        amtIssuedFieldError.value =
+            'please enter the amount issued by customer!!';
+        return;
       } else {
-        customerBalErrorMsg.value = '';
         // Validate returns true if the form is valid, or false otherwise.
-        if (txnsFormKey.currentState!.validate()) {
+        if (txnsFormKey.currentState!.validate() &&
+            customerBalErrorMsg.value == '') {
           // start loader while products are fetched
           isLoading.value = true;
           // -- start loader
@@ -142,7 +143,9 @@ class CTxnsController extends GetxController {
             saleItemName.value,
             int.parse(txtSaleItemQty.text),
             totalAmount.value,
-            double.parse(txtAmountIssued.text.trim()),
+            selectedPaymentMethod.value == 'Cash'
+                ? double.parse(txtAmountIssued.text)
+                : 0.0,
             saleItemUsp.value,
             selectedPaymentMethod.value,
             txtCustomerName.text,
@@ -179,38 +182,56 @@ class CTxnsController extends GetxController {
 
           await dbHelper.updateStockCount(qtyAvailable.value, sellItemId.value);
 
-          //resetSales();
-
-          fetchTransactions();
-          invController.fetchInventoryItems();
+          await fetchTransactions();
+          await invController.fetchInventoryItems();
 
           // stop loader
           isLoading.value = false;
 
-          if (!isLoading.value) {
-            CFullScreenLoader.stopLoading();
+          CFullScreenLoader.stopLoading();
 
-            CPopupSnackBar.successSnackBar(
-              title: 'success!',
-              message: 'transaction successful!',
-            );
+          CPopupSnackBar.successSnackBar(
+            title: 'success!',
+            message: 'transaction successful!',
+          );
+
+          txnSuccesfull.value == true;
+
+          if (txnSuccesfull.value == true) {
+            resetSalesFields();
+            Get.back();
           }
         }
       }
     } catch (e) {
       isLoading.value = false;
       CFullScreenLoader.stopLoading();
-      CPopupSnackBar.errorSnackBar(
-        title: 'Oh Snap! error saving transaction details',
-        message: e.toString(),
-      );
-      return;
+      if (txtAmountIssued.text == '' && showAmountIssuedField.value == true) {
+        amtIssuedFieldError.value =
+            'please enter the amount issued by customer!!';
+        CPopupSnackBar.errorSnackBar(
+          title: 'invalid value for amount issued!!',
+          message: 'please enter the amount issued by customer!!',
+        );
+        return;
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          title: 'Oh Snap! error saving transaction details',
+          message: e.toString(),
+        );
+      }
+
+      return null;
     } finally {
-      isLoading.value = false;
-      // -- remove loader --
-      CFullScreenLoader.stopLoading();
-      //Navigator.of(Get.overlayContext!).pop();
-      Get.back();
+      // if (txnSuccesfull.value) {
+      //   Future.delayed(const Duration(seconds: 3), () {
+      //     Get.back();
+      //   });
+      // }
+      resetSalesFields();
+      Navigator.of(Get.overlayContext!).pop();
+
+      //Get.back();
     }
   }
 
@@ -342,6 +363,9 @@ class CTxnsController extends GetxController {
 
   /// -- when search result item is selected --
   onSellItemBtnAction(CInventoryModel foundItem) {
+    //onInit();
+    selectedPaymentMethod.value == "Cash";
+    showAmountIssuedField.value == true;
     setTransactionDetails(foundItem);
     Get.toNamed(
       '/sales/sell_item/',
@@ -380,14 +404,18 @@ class CTxnsController extends GetxController {
     }
   }
 
-  /// -- set text to form fields --
+  /// -- set payment method --
   setPaymentMethod(String value) {
     selectedPaymentMethod.value = value;
     if (selectedPaymentMethod.value == 'Cash') {
-      showAmountIssuedField.value = true;
+      showAmountIssuedField.value == true;
     } else {
       showAmountIssuedField.value = false;
     }
+
+    // CPopupSnackBar.customToast(
+    //   message: selectedPaymentMethod.value,
+    // );
   }
 
   /// -- set sale details --
@@ -398,14 +426,21 @@ class CTxnsController extends GetxController {
     saleItemBp.value = foundItem.buyingPrice;
     saleItemUsp.value = foundItem.unitSellingPrice;
     qtyAvailable.value = foundItem.quantity;
+    showAmountIssuedField.value = true;
+    selectedPaymentMethod.value == 'Cash';
+    if (selectedPaymentMethod.value == 'Cash') {
+      showAmountIssuedField.value = true;
+    } else {
+      showAmountIssuedField.value = false;
+    }
   }
 
   /// -- reset sales --
-  resetSales() {
+  resetSalesFields() {
     sellItemScanResults.value = '';
-    selectedPaymentMethod.value = 'Cash';
+    selectedPaymentMethod.value == 'Cash';
     itemExists.value = false;
-    //showAmountIssuedField.value = false;
+    showAmountIssuedField.value = true;
     isLoading.value = false;
     txtSaleItemQty.text = '';
     txtAmountIssued.text = '';
@@ -600,7 +635,7 @@ class CTxnsController extends GetxController {
               element.txnStatus,
             );
 
-            dbHelper.addSoldItem(dbTxnImports);
+            await dbHelper.addSoldItem(dbTxnImports);
             await fetchTransactions();
             isLoading.value = false;
 

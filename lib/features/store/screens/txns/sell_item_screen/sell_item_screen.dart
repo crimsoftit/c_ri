@@ -1,4 +1,5 @@
 import 'package:c_ri/common/widgets/appbar/other_screens_app_bar.dart';
+import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/profile/widgets/c_profile_menu.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
@@ -16,14 +17,18 @@ class CSellItemScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final salesController = Get.put(CTxnsController());
+    final txnsController = Get.put(CTxnsController());
+    final userController = Get.put(CUserController());
+
+    final currency =
+        CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
 
     return Obx(
       () {
         return PopScope(
           canPop: true,
           onPopInvoked: (didPop) async {
-            salesController.resetSales();
+            txnsController.resetSalesFields();
           },
           child: Scaffold(
             body: SingleChildScrollView(
@@ -32,7 +37,7 @@ class CSellItemScreen extends StatelessWidget {
                 children: [
                   OtherScreensAppBar(
                     showScanner: false,
-                    title: '#${salesController.sellItemId.value}',
+                    title: '#${txnsController.sellItemId.value}',
                     trailingIconLeftPadding:
                         CHelperFunctions.screenWidth() * 0.25,
                     //trailingIconLeftPadding: 70,
@@ -48,54 +53,104 @@ class CSellItemScreen extends StatelessWidget {
                       CSizes.defaultSpace,
                     ),
                     child: Form(
-                      key: salesController.txnsFormKey,
+                      key: txnsController.txnsFormKey,
                       child: Column(
                         children: [
                           CProfileMenu(
+                            titleFlex: 4,
+                            secondRowWidgetFlex: 4,
                             title: 'code',
-                            value: salesController.saleItemCode.value,
+                            value: txnsController.saleItemCode.value,
                             verticalPadding: 7.0,
                             showTrailingIcon: false,
                             onTap: () {},
                           ),
                           CProfileMenu(
                             title: 'name',
-                            value: salesController.saleItemName.value,
+                            value: txnsController.saleItemName.value,
                             verticalPadding: 7.0,
                             showTrailingIcon: false,
+                            titleFlex: 4,
+                            secondRowWidgetFlex: 4,
                             onTap: () {},
                           ),
                           CProfileMenu(
                             title: 'usp',
                             value:
-                                'Ksh. ${(salesController.saleItemUsp.value)}',
+                                '$currency.${(txnsController.saleItemUsp.value)}',
                             verticalPadding: 7.0,
                             showTrailingIcon: false,
+                            titleFlex: 4,
+                            secondRowWidgetFlex: 4,
                             onTap: () {},
                           ),
                           CProfileMenu(
                             title: 'total amount',
                             value:
-                                'Ksh. ${(salesController.totalAmount.value)}',
+                                '$currency.${(txnsController.totalAmount.value)}',
                             verticalPadding: 7.0,
+                            titleFlex: 4,
+                            secondRowWidgetFlex: 4,
                             showTrailingIcon: false,
                             onTap: () {},
                           ),
+                          CProfileMenu(
+                            title: 'include customer details?',
+                            value:
+                                '$currency.${(txnsController.totalAmount.value)}',
+                            verticalPadding: 7.0,
+                            showTrailingIcon: false,
+                            titleFlex: 4,
+                            secondRowWidgetFlex: 4,
+                            valueIsWidget: true,
+                            valueWidget: Transform.scale(
+                              scale: 0.8,
+                              child: Switch(
+                                value:
+                                    txnsController.includeCustomerDetails.value,
+                                activeColor: CColors.rBrown,
+                                onChanged: (value) {
+                                  txnsController.includeCustomerDetails.value =
+                                      value;
+                                },
+                              ),
+                            ),
+                            onTap: () {},
+                          ),
+                          // CMenuTile(
+                          //   icon: Iconsax.security_user,
+                          //   horizontalPadding: 0,
+                          //   verticalPadding: 0,
+                          //   title: 'customer details',
+                          //   subTitle: 'include customer name and/or contacts',
+                          //   trailing: Switch(
+                          //     value:
+                          //         txnsController.includeCustomerDetails.value,
+                          //     activeColor: CColors.rBrown,
+                          //     onChanged: (value) {
+                          //       txnsController.includeCustomerDetails.value =
+                          //           value;
+                          //     },
+                          //   ),
+                          // ),
                           Visibility(
-                            visible:
-                                salesController.showAmountIssuedField.value,
+                            visible: txnsController.showAmountIssuedField.value,
                             child: CProfileMenu(
                               title: 'customer balance',
                               value:
-                                  'Ksh. ${(salesController.customerBal.value)}',
+                                  '$currency.${(txnsController.customerBal.value)}',
                               verticalPadding: 15.0,
                               showTrailingIcon: false,
+                              titleFlex: 2,
+                              secondRowWidgetFlex: 6,
                               onTap: () {},
                             ),
                           ),
                           CProfileMenu(
                             title: 'pay via:',
                             valueIsWidget: true,
+                            titleFlex: 2,
+                            secondRowWidgetFlex: 6,
                             valueWidget: DropdownButtonFormField(
                               hint: const Text('Cash'),
                               decoration: const InputDecoration(
@@ -119,11 +174,11 @@ class CSellItemScreen extends StatelessWidget {
                                     ),
                                   )
                                   .toList(),
-                              value:
-                                  salesController.selectedPaymentMethod.value,
+                              //value: 'Cash',
+                              value: txnsController.selectedPaymentMethod.value,
                               //style: TextStyle(height: 7.0),
                               onChanged: (value) {
-                                salesController.setPaymentMethod(value!);
+                                txnsController.setPaymentMethod(value!);
                               },
                             ),
                             verticalPadding: 15.0,
@@ -135,21 +190,20 @@ class CSellItemScreen extends StatelessWidget {
                           //     height: CSizes.spaceBtnInputFields,
                           //   ),
                           Visibility(
-                            visible:
-                                salesController.showAmountIssuedField.value,
+                            visible: txnsController.showAmountIssuedField.value,
                             child: Column(
                               children: [
                                 TextFormField(
                                   autofocus: false,
-                                  controller: salesController.txtAmountIssued,
+                                  controller: txnsController.txtAmountIssued,
                                   style: TextStyle(
                                     height: 0.7,
                                     fontWeight: FontWeight.normal,
-                                    color: salesController
+                                    color: txnsController
                                                 .customerBalErrorMsg.value ==
                                             'the amount issued is not enough!!'
                                         ? Colors.red
-                                        : CColors.rBrown,
+                                        : CColors.grey,
                                   ),
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
@@ -161,31 +215,58 @@ class CSellItemScreen extends StatelessWidget {
                                   ],
                                   decoration: InputDecoration(
                                     prefixIcon: Icon(
-                                      Iconsax.quote_up_square,
-                                      color: salesController
+                                      Iconsax.money,
+                                      color: txnsController
                                                   .customerBalErrorMsg.value ==
                                               'the amount issued is not enough!!'
                                           ? Colors.red
-                                          : CColors.grey,
+                                          : CColors.rBrown,
                                     ),
                                     labelText: 'amount issued by customer',
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: txnsController
+                                                    .amtIssuedFieldError
+                                                    .value !=
+                                                ''
+                                            ? Colors.red
+                                            : CColors.rBrown,
+                                      ),
+                                    ),
+                                    errorBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.red,
+                                      ),
+                                    ),
                                   ),
-                                  validator: (value) =>
-                                      CValidator.validateCustomerBal(
+                                  validator: (value) {
+                                    if (value!.isEmpty &&
+                                        txnsController
+                                            .showAmountIssuedField.value) {
+                                      txnsController
+                                              .amtIssuedFieldError.value ==
+                                          'this field is required';
+                                      return txnsController
+                                          .amtIssuedFieldError.value;
+                                    } else {
+                                      return CValidator.validateCustomerBal(
                                           'amount issued',
                                           value,
-                                          salesController.totalAmount.value),
+                                          txnsController.totalAmount.value);
+                                    }
+                                  },
                                   onChanged: (value) {
-                                    salesController.computeCustomerBal(
+                                    txnsController.computeCustomerBal(
                                         double.parse(value),
-                                        salesController.totalAmount.value);
+                                        txnsController.totalAmount.value);
                                   },
                                 ),
                                 Text(
-                                  salesController.customerBalErrorMsg.value,
+                                  //'${txnsController.customerBalErrorMsg.value} ${txnsController.amtIssuedFieldError.value}',
+                                  txnsController.amtIssuedFieldError.value,
                                   style: Theme.of(context)
                                       .textTheme
-                                      .labelSmall!
+                                      .labelMedium!
                                       .apply(
                                         color: Colors.red,
                                         fontStyle: FontStyle.italic,
@@ -200,11 +281,11 @@ class CSellItemScreen extends StatelessWidget {
 
                           TextFormField(
                             autofocus: true,
-                            controller: salesController.txtSaleItemQty,
+                            controller: txnsController.txtSaleItemQty,
                             style: TextStyle(
                               height: 0.7,
                               fontWeight: FontWeight.normal,
-                              color: salesController
+                              color: txnsController
                                           .stockUnavailableErrorMsg.value ==
                                       'insufficient stock!!'
                                   ? Colors.red
@@ -213,21 +294,26 @@ class CSellItemScreen extends StatelessWidget {
                             decoration: InputDecoration(
                               prefixIcon: Icon(
                                 Iconsax.quote_up_square,
-                                color: salesController
+                                color: txnsController
                                             .stockUnavailableErrorMsg.value ==
                                         'insufficient stock!!'
                                     ? Colors.red
                                     : CColors.grey,
                               ),
+                              errorBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.red,
+                                ),
+                              ),
                               hintStyle: TextStyle(
-                                color: salesController
+                                color: txnsController
                                             .stockUnavailableErrorMsg.value ==
                                         'insufficient stock!!'
                                     ? Colors.red
                                     : CColors.rBrown,
                               ),
                               labelText:
-                                  'qty/no.of units (${salesController.qtyAvailable.value} in stock)',
+                                  'qty/no.of units (${txnsController.qtyAvailable.value} in stock)',
                             ),
                             keyboardType: const TextInputType.numberWithOptions(
                               decimal: false,
@@ -237,14 +323,14 @@ class CSellItemScreen extends StatelessWidget {
                               FilteringTextInputFormatter.digitsOnly,
                             ],
                             onChanged: (value) {
-                              var usp = salesController.saleItemUsp.value;
-                              salesController.computeTotals(value, usp);
+                              var usp = txnsController.saleItemUsp.value;
+                              txnsController.computeTotals(value, usp);
 
-                              if (salesController.txtAmountIssued.text != '') {
-                                salesController.computeCustomerBal(
+                              if (txnsController.txtAmountIssued.text != '') {
+                                txnsController.computeCustomerBal(
                                     double.parse(
-                                        salesController.txtAmountIssued.text),
-                                    salesController.totalAmount.value);
+                                        txnsController.txtAmountIssued.text),
+                                    txnsController.totalAmount.value);
                               }
                             },
                           ),
@@ -252,13 +338,13 @@ class CSellItemScreen extends StatelessWidget {
                           /// -- stock insufficient error message
 
                           Visibility(
-                            visible: salesController
-                                        .stockUnavailableErrorMsg.value ==
-                                    'insufficient stock!!'
-                                ? true
-                                : false,
+                            visible:
+                                txnsController.stockUnavailableErrorMsg.value ==
+                                        'insufficient stock!!'
+                                    ? true
+                                    : false,
                             child: Text(
-                              salesController.stockUnavailableErrorMsg.value,
+                              txnsController.stockUnavailableErrorMsg.value,
                               style:
                                   Theme.of(context).textTheme.labelSmall!.apply(
                                         color: Colors.red,
@@ -266,55 +352,81 @@ class CSellItemScreen extends StatelessWidget {
                                       ),
                             ),
                           ),
-                          const SizedBox(
-                            height: CSizes.spaceBtnInputFields / 2,
-                          ),
-                          TextFormField(
-                            controller: salesController.txtCustomerName,
-                            style: const TextStyle(
-                              height: 0.7,
-                              fontWeight: FontWeight.normal,
+
+                          Visibility(
+                            visible:
+                                txnsController.includeCustomerDetails.value,
+                            child: Column(
+                              children: [
+                                const SizedBox(
+                                  height: CSizes.spaceBtnInputFields / 2,
+                                ),
+                                TextFormField(
+                                  controller: txnsController.txtCustomerName,
+                                  style: const TextStyle(
+                                    height: 0.7,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(
+                                      Iconsax.user,
+                                      color: CColors.grey,
+                                    ),
+                                    labelText: 'customer name(optional)',
+                                    labelStyle: TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: CSizes.spaceBtnInputFields / 2,
+                                ),
+                                TextFormField(
+                                  controller:
+                                      txnsController.txtCustomerContacts,
+                                  style: const TextStyle(
+                                    height: 0.7,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(
+                                      Iconsax.mobile,
+                                      color: CColors.grey,
+                                    ),
+                                    labelText: 'customer contacts(optional)',
+                                    labelStyle: TextStyle(
+                                      fontWeight: FontWeight.normal,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(
-                                Iconsax.quote_up_square,
-                                color: CColors.grey,
-                              ),
-                              labelText: 'customer name',
-                            ),
                           ),
-                          const SizedBox(
-                            height: CSizes.spaceBtnInputFields / 2,
-                          ),
-                          TextFormField(
-                            controller: salesController.txtCustomerContacts,
-                            style: const TextStyle(
-                              height: 0.7,
-                              fontWeight: FontWeight.normal,
-                            ),
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(
-                                Iconsax.quote_up_square,
-                                color: CColors.grey,
-                              ),
-                              labelText: 'customer contacts',
-                            ),
-                          ),
-                          const SizedBox(
-                            height: CSizes.spaceBtnInputFields,
-                          ),
-                          TextFormField(
-                            controller: salesController.txtTxnAddress,
-                            style: const TextStyle(
-                              height: 0.7,
-                              fontWeight: FontWeight.normal,
-                            ),
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(
-                                Iconsax.location,
-                                color: CColors.grey,
-                              ),
-                              labelText: 'txn address',
+
+                          Visibility(
+                            visible: false,
+                            child: Column(
+                              children: [
+                                const SizedBox(
+                                  height: CSizes.spaceBtnInputFields,
+                                ),
+                                TextFormField(
+                                  controller: txnsController.txtTxnAddress,
+                                  style: const TextStyle(
+                                    height: 0.7,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(
+                                      Iconsax.location,
+                                      color: CColors.grey,
+                                    ),
+                                    labelText: 'txn address',
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                           const SizedBox(
@@ -323,14 +435,14 @@ class CSellItemScreen extends StatelessWidget {
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: salesController
+                              onPressed: txnsController
                                           .stockUnavailableErrorMsg.value ==
                                       'insufficient stock!!'
                                   ? null
                                   : () {
-                                      if (salesController.customerBal.value <
+                                      if (txnsController.customerBal.value <
                                           0) {
-                                        salesController
+                                        txnsController
                                                 .customerBalErrorMsg.value ==
                                             'the amount issued is not enough!!';
                                         CPopupSnackBar.errorSnackBar(
@@ -338,13 +450,29 @@ class CSellItemScreen extends StatelessWidget {
                                           message:
                                               'the amount issued is not enough',
                                         );
+                                        //return;
                                       } else {
-                                        salesController.processTransaction();
+                                        if (txnsController
+                                                    .txtAmountIssued.text ==
+                                                '' &&
+                                            txnsController
+                                                .showAmountIssuedField.value) {
+                                          txnsController
+                                                  .amtIssuedFieldError.value ==
+                                              'please enter the amount issued by customer!!';
+                                          CPopupSnackBar.errorSnackBar(
+                                            title:
+                                                'invalid value for amount issued',
+                                            message:
+                                                'please enter the amount issued by customer!!',
+                                          );
+                                        } else {
+                                          txnsController.processTransaction();
+                                        }
                                       }
                                     },
                               child: Text(
-                                salesController
-                                            .stockUnavailableErrorMsg.value ==
+                                txnsController.stockUnavailableErrorMsg.value ==
                                         'insufficient stock!!'
                                     ? 'insufficient stock!!'
                                     : 'confirm sale',
@@ -353,7 +481,7 @@ class CSellItemScreen extends StatelessWidget {
                                     .labelMedium!
                                     .apply(
                                       fontWeightDelta: 1,
-                                      color: salesController
+                                      color: txnsController
                                                   .stockUnavailableErrorMsg
                                                   .value ==
                                               'insufficient stock!!'
@@ -364,7 +492,7 @@ class CSellItemScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            salesController.saleItemCode.value,
+                            txnsController.saleItemCode.value,
                           ),
                         ],
                       ),

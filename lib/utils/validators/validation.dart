@@ -40,7 +40,6 @@ class CValidator {
   /* ========== customer balance field validation ========== */
   static String? validateCustomerBal(
       String? fieldName, String? value, double tAmount) {
-    validateEmptyText(fieldName, value);
     if (double.parse(value!) < tAmount) {
       return 'customer should pay $tAmount';
     }

@@ -135,6 +135,8 @@ class ProfileScreen extends StatelessWidget {
                     CProfileMenu(
                       title: 'name',
                       value: userController.user.value.fullName,
+                      titleFlex: 2,
+                      secondRowWidgetFlex: 6,
                       onTap: () {
                         Get.to(() => const CUpdateName());
                       },
@@ -143,6 +145,8 @@ class ProfileScreen extends StatelessWidget {
                     CProfileMenu(
                       title: 'username',
                       value: 'retail intelligence',
+                      titleFlex: 2,
+                      secondRowWidgetFlex: 6,
                       onTap: () {},
                     ),
 
@@ -169,26 +173,36 @@ class ProfileScreen extends StatelessWidget {
                       title: 'user id',
                       value: userController.user.value.id,
                       icon: Iconsax.copy,
+                      titleFlex: 2,
+                      secondRowWidgetFlex: 6,
                       onTap: () {},
                     ),
                     CProfileMenu(
                       title: 'e-mail',
                       value: userController.user.value.email,
+                      titleFlex: 2,
+                      secondRowWidgetFlex: 6,
                       onTap: () {},
                     ),
                     CProfileMenu(
                       title: 'phone no.',
                       value: userController.user.value.phoneNo,
+                      titleFlex: 2,
+                      secondRowWidgetFlex: 6,
                       onTap: () {},
                     ),
                     CProfileMenu(
                       title: 'gender',
                       value: 'male',
+                      titleFlex: 2,
+                      secondRowWidgetFlex: 6,
                       onTap: () {},
                     ),
                     CProfileMenu(
                       title: 'dob.',
                       value: '8 Aug, 2000',
+                      titleFlex: 2,
+                      secondRowWidgetFlex: 6,
                       onTap: () {},
                     ),
                     const Divider(),

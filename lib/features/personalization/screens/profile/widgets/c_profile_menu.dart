@@ -14,13 +14,18 @@ class CProfileMenu extends StatelessWidget {
     this.showTrailingIcon = true,
     this.valueIsWidget = false,
     this.valueWidget,
+    this.onTrailingIconPressed,
+    required this.titleFlex,
+    required this.secondRowWidgetFlex,
   });
 
   final IconData icon;
   final String title;
   final String? value;
+  final int titleFlex, secondRowWidgetFlex;
   final double? verticalPadding;
   final VoidCallback onTap;
+  final VoidCallback? onTrailingIconPressed;
   final bool? showTrailingIcon, valueIsWidget;
   final Widget? valueWidget;
 
@@ -35,7 +40,7 @@ class CProfileMenu extends StatelessWidget {
         child: Row(
           children: [
             Expanded(
-              flex: 2,
+              flex: titleFlex,
               child: Text(
                 title,
                 style: Theme.of(context).textTheme.bodySmall!.apply(
@@ -45,7 +50,7 @@ class CProfileMenu extends StatelessWidget {
               ),
             ),
             Expanded(
-              flex: 6,
+              flex: secondRowWidgetFlex,
               child: valueIsWidget!
                   ? valueWidget!
                   : Text(
@@ -60,7 +65,7 @@ class CProfileMenu extends StatelessWidget {
             if (showTrailingIcon!)
               Expanded(
                 child: IconButton(
-                  onPressed: onTap,
+                  onPressed: onTrailingIconPressed,
                   icon: Icon(
                     icon,
                     size: 18.0,

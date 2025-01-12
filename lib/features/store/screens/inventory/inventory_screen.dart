@@ -118,7 +118,7 @@ class InventoryScreen extends StatelessWidget {
                                                       .addUnsyncedTxnsToCloud();
                                                 },
                                                 icon: const Icon(
-                                                  Iconsax.cloud_cross,
+                                                  Iconsax.cloud_change,
                                                 ),
                                               ),
                                   ],
@@ -369,6 +369,9 @@ class InventoryScreen extends StatelessWidget {
                                           size: CSizes.iconSm,
                                         ),
                                         onPressed: () {
+                                          txnsController.showAmountIssuedField
+                                                  .value ==
+                                              true;
                                           txnsController.onSellItemBtnAction(
                                               searchController.txtInvSearchField
                                                       .text.isNotEmpty
