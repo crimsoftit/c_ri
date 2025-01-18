@@ -1,26 +1,51 @@
 {
   "project_info": {
-    "project_number": "911608691249",
-    "project_id": "crimsoftri-53fb6",
-    "storage_bucket": "crimsoftri-53fb6.appspot.com"
+    "project_number": "347941456973",
+    "project_id": "crimsoftri-13169",
+    "storage_bucket": "crimsoftri-13169.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:911608691249:android:55a6797d04624d1fbcf310",
+        "mobilesdk_app_id": "1:347941456973:android:0f79ddb5540c5c5d9ca004",
         "android_client_info": {
           "package_name": "com.example.cri"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "347941456973-udcjea5v6agoaiqmeet4ceiu9q44dne8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.cri",
+            "certificate_hash": "90c3d9fd4f9db98e6312dc69f4a917806fd48f1e"
+          }
+        },
+        {
+          "client_id": "347941456973-dvlpjrgcftk8s7mesacg2aj05q7qb8on.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCcA1Am0ChywqR7_mLMS-L3iFc56m1POp4"
+          "current_key": "AIzaSyBtzNlrfvgyPLLGBmeVdEp5fxbQL55zIGg"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "347941456973-dvlpjrgcftk8s7mesacg2aj05q7qb8on.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "347941456973-b480a9djvdpfi1582npqdcnpha6tevap.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cRi"
+              }
+            }
+          ]
         }
       }
     }

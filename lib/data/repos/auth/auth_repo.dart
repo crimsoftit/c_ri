@@ -128,7 +128,7 @@ class AuthRepo extends GetxController {
         title: "An error occurred",
         message: e.toString(),
       );
-      throw 'something went wrong! please try again later.';
+      throw e.toString();
     }
   }
 
@@ -169,7 +169,7 @@ class AuthRepo extends GetxController {
         title: "An error occurred",
         message: e.toString(),
       );
-      throw 'something went wrong! please try again!';
+      throw e.toString();
     }
   }
 
@@ -206,7 +206,7 @@ class AuthRepo extends GetxController {
         title: "An error occurred",
         message: e.toString(),
       );
-      throw 'something went wrong! please try again!';
+      throw e.toString();
     }
   }
 
@@ -286,7 +286,7 @@ class AuthRepo extends GetxController {
         title: "An error occurred",
         message: e.toString(),
       );
-      throw 'something went wrong! please try again!';
+      throw e.toString();
     }
   }
 
@@ -312,11 +312,17 @@ class AuthRepo extends GetxController {
       return await FirebaseAuth.instance.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
       final exception = CExceptions.fromCode(e.code);
-      CPopupSnackBar.customToast(message: 'FIREBASE AUTH ERROR!');
+      CPopupSnackBar.customToast(
+        message: 'FIREBASE AUTH ERROR!',
+        forInternetConnectivityStatus: false,
+      );
       throw exception.message;
     } catch (_) {
       const exception = CExceptions();
-      CPopupSnackBar.customToast(message: 'AUTH ERROR!');
+      CPopupSnackBar.customToast(
+        message: 'AUTH ERROR!',
+        forInternetConnectivityStatus: false,
+      );
       throw exception.message;
     }
   }
@@ -365,7 +371,9 @@ class AuthRepo extends GetxController {
         title: 'unknown error!',
         message: e.toString(),
       );
-      throw 'something went wrong! please try again later';
+      //throw 'something went wrong! please try again!';
+
+      throw e.toString();
     }
   }
 
@@ -387,7 +395,9 @@ class AuthRepo extends GetxController {
         title: 'unknown error!',
         message: e.toString(),
       );
-      throw 'something went wrong! please try again later';
+      //throw 'something went wrong! please try again!';
+
+      throw e.toString();
     }
   }
 }

@@ -48,6 +48,7 @@ class CLoginController extends GetxController {
         CFullScreenLoader.stopLoading();
         CPopupSnackBar.customToast(
           message: 'please check your internet connection',
+          forInternetConnectivityStatus: false,
         );
         return;
       }
@@ -125,6 +126,7 @@ class CLoginController extends GetxController {
         message: error.toString(),
       );
     } catch (e) {
+      if (kDebugMode) print(e.toString());
       CPopupSnackBar.errorSnackBar(
         title: 'Oh Snap!',
         message: e.toString(),

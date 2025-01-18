@@ -3,7 +3,6 @@ import 'package:c_ri/features/authentication/screens/signup/widgets/t_and_c_chec
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/constants/txt_strings.dart';
-import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:c_ri/utils/validators/validation.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -203,9 +202,10 @@ class RSignupForm extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 //Get.to(() => const VerifyEmailScreen());
-                CPopupSnackBar.customToast(
-                  message: 'message',
-                );
+                // CPopupSnackBar.customToast(
+                //   message: 'message',
+                //   forInternetConnectivityStatus: false,
+                // );
                 signupController.signup();
               },
               child: Text(

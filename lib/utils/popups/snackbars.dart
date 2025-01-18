@@ -1,16 +1,24 @@
 import 'package:c_ri/utils/constants/colors.dart';
+import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class CPopupSnackBar {
+class CPopupSnackBar extends GetxController {
   static hideSnackBar() {
     ScaffoldMessenger.of(Get.context!).hideCurrentSnackBar();
   }
 
-  static customToast({required message}) {
+  RxBool forInternetConnectivityStatus = false.obs;
+  IconData? iconData;
+
+  static customToast(
+      {required message, required forInternetConnectivityStatus}) async {
     final isDarkTheme = CHelperFunctions.isDarkMode(Get.context!);
+    // -- check internet connectivity
+    final isConnected = await CNetworkManager.instance.isConnected();
 
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       SnackBar(
@@ -27,14 +35,35 @@ class CPopupSnackBar {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30.0),
             color: isDarkTheme
-                ? CColors.darkGrey.withOpacity(0.9)
-                : CColors.grey.withOpacity(0.9),
+                ? CColors.darkGrey.withValues(
+                    alpha: 0.9,
+                  )
+                : CColors.grey.withValues(
+                    alpha: 0.9,
+                  ),
           ),
           child: Center(
-            child: Text(
-              message,
-              style: Theme.of(Get.context!).textTheme.labelLarge,
-            ),
+            child: forInternetConnectivityStatus
+                ? Row(
+                    children: [
+                      Icon(
+                        isConnected ? Iconsax.wifi : Icons.wifi_off,
+                        color: CColors.rBrown,
+                        size: CSizes.iconSm,
+                      ),
+                      SizedBox(
+                        width: CSizes.spaceBtnInputFields / 4,
+                      ),
+                      Text(
+                        message,
+                        style: Theme.of(Get.context!).textTheme.labelLarge,
+                      ),
+                    ],
+                  )
+                : Text(
+                    message,
+                    style: Theme.of(Get.context!).textTheme.labelLarge,
+                  ),
           ),
         ),
       ),

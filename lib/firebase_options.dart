@@ -41,49 +41,53 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyD6gKR4IRjhMCC8xtJwtZIqxvcwWj1wKpE',
-    appId: '1:911608691249:web:b03a120e80e4602ebcf310',
-    messagingSenderId: '911608691249',
-    projectId: 'crimsoftri-53fb6',
-    authDomain: 'crimsoftri-53fb6.firebaseapp.com',
-    storageBucket: 'crimsoftri-53fb6.appspot.com',
-    measurementId: 'G-2Y94FF4SCE',
+    apiKey: 'AIzaSyDZ5LvX8kReAYWyLpNjy9dd7bwD-rGlECg',
+    appId: '1:347941456973:web:782558b83cb2dbe99ca004',
+    messagingSenderId: '347941456973',
+    projectId: 'crimsoftri-13169',
+    authDomain: 'crimsoftri-13169.firebaseapp.com',
+    storageBucket: 'crimsoftri-13169.firebasestorage.app',
+    measurementId: 'G-E1ZD1RRK1M',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCcA1Am0ChywqR7_mLMS-L3iFc56m1POp4',
-    appId: '1:911608691249:android:55a6797d04624d1fbcf310',
-    messagingSenderId: '911608691249',
-    projectId: 'crimsoftri-53fb6',
-    storageBucket: 'crimsoftri-53fb6.appspot.com',
+    apiKey: 'AIzaSyBtzNlrfvgyPLLGBmeVdEp5fxbQL55zIGg',
+    appId: '1:347941456973:android:0f79ddb5540c5c5d9ca004',
+    messagingSenderId: '347941456973',
+    projectId: 'crimsoftri-13169',
+    storageBucket: 'crimsoftri-13169.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyC9Re0s6XnMJGp1dKXBUMgLQi9xFJwsgIk',
-    appId: '1:911608691249:ios:72251752cdca8645bcf310',
-    messagingSenderId: '911608691249',
-    projectId: 'crimsoftri-53fb6',
-    storageBucket: 'crimsoftri-53fb6.appspot.com',
+    apiKey: 'AIzaSyDIRnFtrq8Gm53ifm0_abEO84cYBTet96Y',
+    appId: '1:347941456973:ios:abfd68100ff2485f9ca004',
+    messagingSenderId: '347941456973',
+    projectId: 'crimsoftri-13169',
+    storageBucket: 'crimsoftri-13169.firebasestorage.app',
+    androidClientId: '347941456973-udcjea5v6agoaiqmeet4ceiu9q44dne8.apps.googleusercontent.com',
+    iosClientId: '347941456973-b480a9djvdpfi1582npqdcnpha6tevap.apps.googleusercontent.com',
     iosBundleId: 'com.example.cRi',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyC9Re0s6XnMJGp1dKXBUMgLQi9xFJwsgIk',
-    appId: '1:911608691249:ios:72251752cdca8645bcf310',
-    messagingSenderId: '911608691249',
-    projectId: 'crimsoftri-53fb6',
-    storageBucket: 'crimsoftri-53fb6.appspot.com',
+    apiKey: 'AIzaSyDIRnFtrq8Gm53ifm0_abEO84cYBTet96Y',
+    appId: '1:347941456973:ios:abfd68100ff2485f9ca004',
+    messagingSenderId: '347941456973',
+    projectId: 'crimsoftri-13169',
+    storageBucket: 'crimsoftri-13169.firebasestorage.app',
+    androidClientId: '347941456973-udcjea5v6agoaiqmeet4ceiu9q44dne8.apps.googleusercontent.com',
+    iosClientId: '347941456973-b480a9djvdpfi1582npqdcnpha6tevap.apps.googleusercontent.com',
     iosBundleId: 'com.example.cRi',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyD6gKR4IRjhMCC8xtJwtZIqxvcwWj1wKpE',
-    appId: '1:911608691249:web:9806ebc824bf090dbcf310',
-    messagingSenderId: '911608691249',
-    projectId: 'crimsoftri-53fb6',
-    authDomain: 'crimsoftri-53fb6.firebaseapp.com',
-    storageBucket: 'crimsoftri-53fb6.appspot.com',
-    measurementId: 'G-FMGCDWLVD8',
+    apiKey: 'AIzaSyDZ5LvX8kReAYWyLpNjy9dd7bwD-rGlECg',
+    appId: '1:347941456973:web:352e58a6a32f82a29ca004',
+    messagingSenderId: '347941456973',
+    projectId: 'crimsoftri-13169',
+    authDomain: 'crimsoftri-13169.firebaseapp.com',
+    storageBucket: 'crimsoftri-13169.firebasestorage.app',
+    measurementId: 'G-77PTQ17DMS',
   );
 
 }

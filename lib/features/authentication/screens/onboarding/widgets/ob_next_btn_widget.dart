@@ -1,4 +1,5 @@
 import 'package:c_ri/features/authentication/controllers/onboarding/ob_controller.dart';
+import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/device/device_utilities.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,9 @@ class OnboardingNextBtnWidget extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           shape: const CircleBorder(),
         ),
-        child: const Icon(
+        child: Icon(
           Iconsax.arrow_right_3,
+          color: CColors.white,
         ),
       ),
     );

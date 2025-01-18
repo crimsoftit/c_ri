@@ -2,7 +2,6 @@ import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_cont
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
-import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -86,9 +85,9 @@ class OtherScreensAppBar extends StatelessWidget {
                     ? IconButton(
                         onPressed: () {
                           salesController.scanItemForSale();
-                          CPopupSnackBar.customToast(
-                              message:
-                                  salesController.sellItemScanResults.value);
+                          // CPopupSnackBar.customToast(
+                          //     message:
+                          //         salesController.sellItemScanResults.value);
                           Get.toNamed(
                             '/sales/sell_item/',
                           );

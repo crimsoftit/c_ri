@@ -227,7 +227,10 @@ class DbHelper {
         ''',
         [sAction, pId],
       );
-      CPopupSnackBar.customToast(message: updateResult.toString());
+      // CPopupSnackBar.customToast(
+      //   message: updateResult.toString(),
+      //   forInternetConnectivityStatus: false,
+      // );
       return updateResult;
     } catch (e) {
       return CPopupSnackBar.errorSnackBar(

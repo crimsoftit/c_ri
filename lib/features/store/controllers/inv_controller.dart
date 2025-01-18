@@ -12,10 +12,11 @@ import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:simple_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
 class CInventoryController extends GetxController {
   static CInventoryController get instance {
@@ -178,6 +179,7 @@ class CInventoryController extends GetxController {
         CPopupSnackBar.customToast(
           message:
               'while this works offline, consider using an internet connection to back up your data online!',
+          forInternetConnectivityStatus: true,
         );
       }
 
@@ -443,6 +445,7 @@ class CInventoryController extends GetxController {
           CPopupSnackBar.customToast(
             message:
                 'while this works offline, consider using an internet connection to back up your data online!',
+            forInternetConnectivityStatus: true,
           );
         }
         updateInventoryItem(inventoryItem);
@@ -456,7 +459,13 @@ class CInventoryController extends GetxController {
   void scanBarcodeNormal() async {
     try {
       scanResults.value = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'cancel', true, ScanMode.BARCODE);
+          '#ff6666',
+          'cancel',
+          true,
+          ScanMode.BARCODE,
+          2000,
+          CameraFace.back.toString(),
+          ScanFormat.ALL_FORMATS);
       txtCode.text = scanResults.value;
       fetchItemByCodeAndEmail(txtCode.text);
     } on PlatformException {

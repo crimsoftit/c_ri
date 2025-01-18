@@ -16,10 +16,11 @@ import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
+import 'package:simple_barcode_scanner/enum.dart';
+import 'package:simple_barcode_scanner/flutter_barcode_scanner.dart';
 
 class CTxnsController extends GetxController {
   static CTxnsController get instance {
@@ -278,12 +279,22 @@ class CTxnsController extends GetxController {
   Future<void> scanItemForSale() async {
     try {
       String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'cancel', true, ScanMode.BARCODE);
+          '#ff6666',
+          'cancel',
+          true,
+          ScanMode.BARCODE,
+          2000,
+          CameraFace.back.toString(),
+          ScanFormat.ALL_FORMATS);
 
       sellItemScanResults.value = barcodeScanRes;
 
       // -- set inventory item details to fields --
-      fetchForSaleItemByCode(sellItemScanResults.value);
+      if (sellItemScanResults.value != '' &&
+          sellItemScanResults.value != '-1') {
+        fetchForSaleItemByCode(sellItemScanResults.value);
+      }
+
       if (itemExists.value) {
         Get.toNamed(
           '/sales/sell_item/',
@@ -291,6 +302,7 @@ class CTxnsController extends GetxController {
       } else {
         CPopupSnackBar.customToast(
           message: 'item not found! please scan again or search inventory',
+          forInternetConnectivityStatus: false,
         );
         fetchTransactions();
       }
@@ -645,8 +657,10 @@ class CTxnsController extends GetxController {
             }
           }
         } else {
-          CPopupSnackBar.customToast(
-              message: 'rada safi pande ya txn imports...');
+          // CPopupSnackBar.customToast(
+          //   message: 'rada safi pande ya txn imports...',
+          //   forInternetConnectivityStatus: false,
+          // );
         }
       }
     } catch (e) {

@@ -1,4 +1,4 @@
-import 'package:android_intent/android_intent.dart';
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:c_ri/data/repos/auth/auth_repo.dart';
 import 'package:c_ri/data/repos/user/user_repo.dart';
 import 'package:c_ri/features/authentication/controllers/signup/signup_controller.dart';
@@ -116,6 +116,7 @@ class CLocationController1 extends GetxController {
       isLoading.value = false;
       CPopupSnackBar.customToast(
         message: 'please check your internet connection',
+        forInternetConnectivityStatus: false,
       );
       return;
     }
@@ -176,9 +177,10 @@ class CLocationController1 extends GetxController {
     // -- load user's currency code --
     signupController.fetchUserCurrencyByCountry(userCountry.value);
     uCurCode.value = signupController.userCurrencyCode.value;
-    CPopupSnackBar.customToast(
-      message: 'country: $value',
-    );
+    // CPopupSnackBar.customToast(
+    //   message: 'country: $value',
+    //   forInternetConnectivityStatus: false,
+    // );
   }
 
   countryPickerOnInit(String value) {

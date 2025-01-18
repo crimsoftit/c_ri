@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:android_intent/android_intent.dart';
+import 'package:android_intent_plus/android_intent.dart';
 import 'package:c_ri/common/widgets/dialogs/location_permission_dialog.dart';
 import 'package:c_ri/main.dart';
 import 'package:flutter/material.dart';
