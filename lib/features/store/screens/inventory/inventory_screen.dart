@@ -19,6 +19,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
+===========================
+
+HANLDE SEARCH FUNCTIONALITY
+
+===========================
 class InventoryScreen extends StatelessWidget {
   const InventoryScreen({
     super.key,
@@ -83,7 +88,7 @@ class InventoryScreen extends StatelessWidget {
                                               dialog.buildDialog(
                                             context,
                                             CInventoryModel('', '', '', '', '',
-                                                0, 0, 0, '', 0, ''),
+                                                0, 0.0, 0.0, 0.0, '', 0, ''),
                                             true,
                                           ),
                                         );
@@ -185,6 +190,53 @@ class InventoryScreen extends StatelessWidget {
                                 ? invController.inventoryItems.length
                                 : 0,
                     itemBuilder: (context, index) {
+                      // var itemCode =
+                      //     searchController.txtInvSearchField.text.isNotEmpty
+                      //         ? invController.foundInventoryItems[index].pCode
+                      //         : invController.inventoryItems[index].pCode;
+
+                      // var itemName =
+                      //     searchController.txtInvSearchField.text.isNotEmpty
+                      //         ? invController.foundInventoryItems[index].name
+                      //         : invController.inventoryItems[index].name;
+
+                      // var itemQty = searchController
+                      //         .txtInvSearchField.text.isNotEmpty
+                      //     ? invController.foundInventoryItems[index].quantity
+                      //     : invController.inventoryItems[index].quantity;
+
+                      // var itemBp = searchController
+                      //         .txtInvSearchField.text.isNotEmpty
+                      //     ? invController.foundInventoryItems[index].buyingPrice
+                      //     : invController.inventoryItems[index].buyingPrice;
+
+                      // var itemUBP =
+                      //     searchController.txtInvSearchField.text.isNotEmpty
+                      //         ? invController.foundInventoryItems[index].unitBp
+                      //         : invController.inventoryItems[index].unitBp;
+
+                      // var itemUsp =
+                      //     searchController.txtInvSearchField.text.isNotEmpty
+                      //         ? invController
+                      //             .foundInventoryItems[index].unitSellingPrice
+                      //         : invController
+                      //             .inventoryItems[index].unitSellingPrice;
+
+                      // var dateAdded =
+                      //     searchController.txtInvSearchField.text.isNotEmpty
+                      //         ? invController.foundInventoryItems[index].date
+                      //         : invController.inventoryItems[index].date;
+
+                      // var isSynced = searchController
+                      //         .txtInvSearchField.text.isNotEmpty
+                      //     ? invController.foundInventoryItems[index].isSynced
+                      //     : invController.inventoryItems[index].isSynced;
+
+                      // var syncAction = searchController
+                      //         .txtInvSearchField.text.isNotEmpty
+                      //     ? invController.foundInventoryItems[index].syncAction
+                      //     : invController.inventoryItems[index].syncAction;
+
                       return Dismissible(
                         key: Key(searchController
                                 .txtInvSearchField.text.isNotEmpty
@@ -259,30 +311,47 @@ class InventoryScreen extends StatelessWidget {
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Text(
-                                        "code: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].pCode : invController.inventoryItems[index].pCode} ",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelSmall!
-                                            .apply(
-                                              color: CColors.rBrown
-                                                  .withOpacity(0.7),
-                                            ),
+                                      Expanded(
+                                        child: Text(
+                                          "code: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].pCode : invController.inventoryItems[index].pCode} ",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelSmall!
+                                              .apply(
+                                                color:
+                                                    CColors.rBrown.withValues(
+                                                  alpha: 0.7,
+                                                ),
+                                              ),
+                                        ),
                                       ),
-
-                                      Text(
-                                        "Bp: $currency.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].buyingPrice : invController.inventoryItems[index].buyingPrice}",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelSmall!
-                                            .apply(
-                                              color: CColors.rBrown
-                                                  .withOpacity(0.7),
-                                            ),
+                                      Expanded(
+                                        child: Text(
+                                          "Bp: $currency.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].buyingPrice : invController.inventoryItems[index].buyingPrice}",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelSmall!
+                                              .apply(
+                                                color:
+                                                    CColors.rBrown.withValues(
+                                                  alpha: 0.7,
+                                                ),
+                                              ),
+                                        ),
                                       ),
-                                      // Text(
                                     ],
                                   ),
+                                ),
+                                Text(
+                                  "UBP: $currency.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].unitBp : invController.inventoryItems[index].unitBp}",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall!
+                                      .apply(
+                                        color: CColors.rBrown.withValues(
+                                          alpha: 0.7,
+                                        ),
+                                      ),
                                 ),
                                 Text(
                                   "USP: $currency.${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].unitSellingPrice : invController.inventoryItems[index].unitSellingPrice}  added by: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].userName.split(" ").elementAt(0) : invController.inventoryItems[index].userName.split(" ").elementAt(0)}",
@@ -290,7 +359,9 @@ class InventoryScreen extends StatelessWidget {
                                       .textTheme
                                       .labelSmall!
                                       .apply(
-                                        color: CColors.rBrown.withOpacity(0.7),
+                                        color: CColors.rBrown.withValues(
+                                          alpha: 0.7,
+                                        ),
                                         //fontStyle: FontStyle.italic,
                                       ),
                                 ),
@@ -300,17 +371,21 @@ class InventoryScreen extends StatelessWidget {
                                       .textTheme
                                       .labelSmall!
                                       .apply(
-                                        color: CColors.rBrown.withOpacity(0.7),
+                                        color: CColors.rBrown.withValues(
+                                          alpha: 0.7,
+                                        ),
                                         //fontStyle: FontStyle.italic,
                                       ),
                                 ),
                                 Text(
-                                  "isSynced: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].isSynced : invController.inventoryItems[index].isSynced} syncAction: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].syncAction : invController.inventoryItems[index].syncAction}",
+                                  "isSynced:${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].isSynced : invController.inventoryItems[index].isSynced} syncAction: ${searchController.txtInvSearchField.text.isNotEmpty ? invController.foundInventoryItems[index].syncAction : invController.inventoryItems[index].syncAction}",
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelSmall!
                                       .apply(
-                                        color: CColors.rBrown.withOpacity(0.7),
+                                        color: CColors.rBrown.withValues(
+                                          alpha: 0.7,
+                                        ),
                                         //fontStyle: FontStyle.italic,
                                       ),
                                 ),
@@ -319,7 +394,7 @@ class InventoryScreen extends StatelessWidget {
                                     SizedBox(
                                       child: TextButton.icon(
                                         label: Text(
-                                          'info',
+                                          'update',
                                           style: Theme.of(context)
                                               .textTheme
                                               .labelMedium!
@@ -328,24 +403,72 @@ class InventoryScreen extends StatelessWidget {
                                               ),
                                         ),
                                         icon: const Icon(
-                                          Iconsax.information,
+                                          Iconsax.edit,
                                           color: CColors.rBrown,
                                           size: CSizes.iconSm,
                                         ),
                                         onPressed: () {
-                                          Get.toNamed(
-                                            '/inventory/item_details/',
-                                            arguments: searchController
-                                                    .txtInvSearchField
-                                                    .text
-                                                    .isNotEmpty
-                                                ? invController
-                                                    .foundInventoryItems[index]
-                                                    .productId
-                                                : invController
-                                                    .inventoryItems[index]
-                                                    .productId,
-                                          );
+                                          // invController.itemExists.value = true;
+
+                                          // showDialog(
+                                          //   context: context,
+                                          //   useRootNavigator: false,
+                                          //   builder: (BuildContext context) {
+                                          //     invController.currentItemId
+                                          //         .value = (searchController
+                                          //             .txtInvSearchField
+                                          //             .text
+                                          //             .isNotEmpty
+                                          //         ? invController
+                                          //             .foundInventoryItems[
+                                          //                 index]
+                                          //             .productId
+                                          //         : invController
+                                          //             .inventoryItems[index]
+                                          //             .productId)!;
+                                          //     invController.txtId.text =
+                                          //         invController
+                                          //             .currentItemId.value
+                                          //             .toString();
+
+                                          //     return dialog.buildDialog(
+                                          //       context,
+                                          //       CInventoryModel.withID(
+                                          //         invController
+                                          //             .currentItemId.value,
+                                          //         userController.user.value.id,
+                                          //         userController
+                                          //             .user.value.email,
+                                          //         userController
+                                          //             .user.value.fullName,
+                                          //         itemCode,
+                                          //         itemName,
+                                          //         itemQty,
+                                          //         itemBp,
+                                          //         itemUBP,
+                                          //         itemUsp,
+                                          //         dateAdded,
+                                          //         isSynced,
+                                          //         syncAction,
+                                          //       ),
+                                          //       false,
+                                          //     );
+                                          //   },
+                                          // );
+
+                                          // Get.toNamed(
+                                          //   '/inventory/item_details/',
+                                          //   arguments: searchController
+                                          //           .txtInvSearchField
+                                          //           .text
+                                          //           .isNotEmpty
+                                          //       ? invController
+                                          //           .foundInventoryItems[index]
+                                          //           .productId
+                                          //       : invController
+                                          //           .inventoryItems[index]
+                                          //           .productId,
+                                          // );
                                         },
                                       ),
                                     ),
@@ -439,7 +562,7 @@ class InventoryScreen extends StatelessWidget {
             useRootNavigator: false,
             builder: (BuildContext context) => dialog.buildDialog(
               context,
-              CInventoryModel('', '', '', '', '', 0, 0, 0, '', 0, ''),
+              CInventoryModel('', '', '', '', '', 0, 0.0, 0.0, 0.0, '', 0, ''),
               true,
             ),
           );

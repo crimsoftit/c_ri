@@ -25,7 +25,7 @@ class CUserProfileTile extends StatelessWidget {
       leading: CRoundedContainer(
         showBorder: true,
         radius: 120,
-        borderColor: CColors.rBrown.withOpacity(0.3),
+        borderColor: CColors.rBrown.withValues(alpha: 0.3),
         child: Stack(
           children: [
             Obx(

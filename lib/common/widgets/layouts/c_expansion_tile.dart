@@ -69,21 +69,21 @@ class CExpansionTile extends StatelessWidget {
             Text(
               '$subTitleTxt1Item1 $subTitleTxt1Item2',
               style: Theme.of(context).textTheme.labelMedium!.apply(
-                    color: CColors.rBrown.withOpacity(0.8),
+                    color: CColors.rBrown.withValues(alpha: 0.8),
                     //fontStyle: FontStyle.italic,
                   ),
             ),
             Text(
               '$subTitleTxt2Item1 $subTitleTxt2Item2',
               style: Theme.of(context).textTheme.labelMedium!.apply(
-                    color: CColors.rBrown.withOpacity(0.8),
+                    color: CColors.rBrown.withValues(alpha: 0.8),
                     //fontStyle: FontStyle.italic,
                   ),
             ),
             Text(
               '$subTitleTxt3Item1 $subTitleTxt3Item2',
               style: Theme.of(context).textTheme.labelSmall!.apply(
-                    color: CColors.rBrown.withOpacity(0.7),
+                    color: CColors.rBrown.withValues(alpha: 0.7),
                     //fontStyle: FontStyle.italic,
                   ),
             ),

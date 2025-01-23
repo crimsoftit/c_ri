@@ -18,8 +18,10 @@ class CTabBar extends StatelessWidget implements PreferredSizeWidget {
       tabAlignment: TabAlignment.start,
       isScrollable: true,
       indicatorColor: isDarkTheme
-          ? CColors.rBrown.withOpacity(0.1)
-          : CColors.rBrown.withOpacity(0.3),
+          ? CColors.rBrown.withValues(
+              alpha: 0.1,
+            )
+          : CColors.rBrown.withValues(alpha: 0.3),
       unselectedLabelColor: CColors.darkGrey,
       labelColor: isDarkTheme ? CColors.white : CColors.grey,
       tabs: tabs,

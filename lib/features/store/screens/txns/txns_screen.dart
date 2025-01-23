@@ -218,7 +218,8 @@ class TxnsScreen extends StatelessWidget {
                                       .textTheme
                                       .labelMedium!
                                       .apply(
-                                        color: CColors.rBrown.withOpacity(0.8),
+                                        color: CColors.rBrown
+                                            .withValues(alpha: 0.8),
                                         //fontStyle: FontStyle.italic,
                                       ),
                                 ),
@@ -228,7 +229,8 @@ class TxnsScreen extends StatelessWidget {
                                       .textTheme
                                       .labelMedium!
                                       .apply(
-                                        color: CColors.rBrown.withOpacity(0.8),
+                                        color: CColors.rBrown
+                                            .withValues(alpha: 0.8),
                                         //fontStyle: FontStyle.italic,
                                       ),
                                 ),
@@ -238,7 +240,8 @@ class TxnsScreen extends StatelessWidget {
                                       .textTheme
                                       .labelSmall!
                                       .apply(
-                                        color: CColors.rBrown.withOpacity(0.7),
+                                        color: CColors.rBrown
+                                            .withValues(alpha: 0.7),
                                         //fontStyle: FontStyle.italic,
                                       ),
                                 ),
@@ -248,7 +251,8 @@ class TxnsScreen extends StatelessWidget {
                                       .textTheme
                                       .labelSmall!
                                       .apply(
-                                        color: CColors.rBrown.withOpacity(0.7),
+                                        color: CColors.rBrown
+                                            .withValues(alpha: 0.7),
                                         //fontStyle: FontStyle.italic,
                                       ),
                                 ),

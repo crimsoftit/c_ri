@@ -15,6 +15,7 @@ class CInventoryModel {
   String _name = "";
   int _quantity = 0;
   double _buyingPrice = 0.0;
+  double _unitBp = 0.0;
   double _unitSellingPrice = 0.0;
   String _date = "";
   int _isSynced = 0;
@@ -29,6 +30,7 @@ class CInventoryModel {
     this._name,
     this._quantity,
     this._buyingPrice,
+    this._unitBp,
     this._unitSellingPrice,
     this._date,
     this._isSynced,
@@ -44,6 +46,7 @@ class CInventoryModel {
     this._name,
     this._quantity,
     this._buyingPrice,
+    this._unitBp,
     this._unitSellingPrice,
     this._date,
     this._isSynced,
@@ -51,7 +54,7 @@ class CInventoryModel {
   );
 
   CInventoryModel empty() {
-    return CInventoryModel('', '', '', '', '', 0, 0, 0, '', 0, '');
+    return CInventoryModel('', '', '', '', '', 0, 0.0, 0.0, 0.0, '', 0, '');
   }
 
   int? get productId => _productId;
@@ -63,6 +66,7 @@ class CInventoryModel {
   String get name => _name;
   int get quantity => _quantity;
   double get buyingPrice => _buyingPrice;
+  double get unitBp => _unitBp;
   double get unitSellingPrice => _unitSellingPrice;
   String get date => _date;
   int get isSynced => _isSynced;
@@ -106,6 +110,12 @@ class CInventoryModel {
     }
   }
 
+  set unitBp(double newUBP) {
+    if (newUBP >= 1.0) {
+      _unitBp = newUBP;
+    }
+  }
+
   set unitSellingPrice(double newUSP) {
     if (newUSP >= 1.0) {
       _unitSellingPrice = newUSP;
@@ -138,6 +148,7 @@ class CInventoryModel {
     map['name'] = _name;
     map['quantity'] = _quantity;
     map['buyingPrice'] = _buyingPrice;
+    map['unitBp'] = _unitBp;
     map['unitSellingPrice'] = _unitSellingPrice;
     map['date'] = _date;
     map['isSynced'] = _isSynced;
@@ -157,6 +168,7 @@ class CInventoryModel {
     _pCode = map['pCode'];
     _quantity = map['quantity'];
     _buyingPrice = map['buyingPrice'];
+    _unitBp = map['unitBp'];
     _unitSellingPrice = map['unitSellingPrice'];
     _date = map['date'];
     _isSynced = map['isSynced'];
@@ -174,6 +186,7 @@ class CInventoryModel {
       json[InvSheetFields.name],
       jsonDecode(json[InvSheetFields.quantity]),
       double.parse(json[InvSheetFields.buyingPrice]),
+      double.parse(json[InvSheetFields.unitBp]),
       double.parse(json[InvSheetFields.unitSellingPrice]),
       json[InvSheetFields.date],
       jsonDecode(json[InvSheetFields.isSynced]),

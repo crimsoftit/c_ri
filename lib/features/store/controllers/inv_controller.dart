@@ -42,7 +42,10 @@ class CInventoryController extends GetxController {
 
   final RxBool itemExists = false.obs;
   final RxBool gSheetInvItemExists = false.obs;
+
   final RxInt currentItemId = 0.obs;
+
+  final RxDouble unitBP = 0.0.obs;
 
   final txtId = TextEditingController();
   final txtName = TextEditingController();
@@ -50,7 +53,6 @@ class CInventoryController extends GetxController {
   final txtQty = TextEditingController();
   final txtBP = TextEditingController();
   final txtUnitSP = TextEditingController();
-
   final txtSyncAction = TextEditingController();
 
   final addInvItemFormKey = GlobalKey<FormState>();
@@ -161,6 +163,7 @@ class CInventoryController extends GetxController {
           txtName.text,
           int.parse(txtQty.text),
           double.parse(txtBP.text),
+          unitBP.value,
           double.parse(txtUnitSP.text),
           DateFormat('yyyy-MM-dd - kk:mm').format(
             clock.now(),
@@ -218,6 +221,7 @@ class CInventoryController extends GetxController {
               'name': e.name,
               'quantity': e.quantity,
               'buyingPrice': e.buyingPrice,
+              'unitBp': e.unitBp,
               'unitSellingPrice': e.unitSellingPrice,
               'date': e.date,
               'isSynced': 1,
@@ -257,6 +261,7 @@ class CInventoryController extends GetxController {
             element.name,
             element.quantity,
             element.buyingPrice,
+            element.unitBp,
             element.unitSellingPrice,
             element.date,
             1,
@@ -297,6 +302,7 @@ class CInventoryController extends GetxController {
         txtName.text = fetchedItem.first.name;
         txtQty.text = (fetchedItem.first.quantity).toString();
         txtBP.text = (fetchedItem.first.buyingPrice).toString();
+        unitBP.value = fetchedItem.first.unitBp;
         txtUnitSP.text = (fetchedItem.first.unitSellingPrice).toString();
 
         txtSyncAction.text = 'update';
@@ -306,8 +312,8 @@ class CInventoryController extends GetxController {
         txtName.text = '';
         txtQty.text = '';
         txtBP.text = '';
+        unitBP.value = 0.0;
         txtUnitSP.text = '';
-
         txtSyncAction.text = 'append';
       }
       isLoading.value = false;
@@ -327,6 +333,7 @@ class CInventoryController extends GetxController {
     txtCode.text = "";
     txtQty.text = "";
     txtBP.text = "";
+    unitBP.value = 0.0;
     txtUnitSP.text = "";
     scanBarcodeNormal();
   }
@@ -412,9 +419,10 @@ class CInventoryController extends GetxController {
       inventoryItem.userName = userController.user.value.fullName;
 
       inventoryItem.name = txtName.text;
-      inventoryItem.pCode = txtCode.text.toString();
-      inventoryItem.quantity = int.parse(txtQty.text);
-      inventoryItem.buyingPrice = double.parse(txtBP.text);
+      inventoryItem.pCode = txtCode.text.trim();
+      inventoryItem.quantity = int.parse(txtQty.text.trim());
+      inventoryItem.buyingPrice = double.parse(txtBP.text.trim());
+      inventoryItem.unitBp = unitBP.value;
       inventoryItem.unitSellingPrice = double.parse(txtUnitSP.text);
       inventoryItem.date = DateFormat('yyyy-MM-dd - kk:mm').format(clock.now());
 
@@ -623,6 +631,7 @@ class CInventoryController extends GetxController {
             element.name,
             element.quantity,
             element.buyingPrice,
+            element.unitBp,
             element.unitSellingPrice,
             element.date,
             element.isSynced,
@@ -730,6 +739,7 @@ class CInventoryController extends GetxController {
           element.name,
           element.quantity,
           element.buyingPrice,
+          element.unitBp,
           element.unitSellingPrice,
           element.date,
           0,
@@ -790,5 +800,10 @@ class CInventoryController extends GetxController {
       // stop loader
       syncIsLoading.value = false;
     }
+  }
+
+  /// -- compute unitBP --
+  computeUnitBP(double bp, int qty) {
+    unitBP.value = bp / qty;
   }
 }

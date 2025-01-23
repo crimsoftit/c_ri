@@ -5,7 +5,7 @@ class RChipTheme {
   RChipTheme._();
 
   static ChipThemeData lightChipTheme = ChipThemeData(
-    disabledColor: CColors.grey.withOpacity(0.4),
+    disabledColor: CColors.grey.withValues(alpha: 0.4),
     //disabledColor: rGrey.withOpacity(0.4),
     labelStyle: const TextStyle(
       color: CColors.rBrown,

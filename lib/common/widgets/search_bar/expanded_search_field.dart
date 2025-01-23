@@ -65,13 +65,13 @@ class CExpandedSearchField extends StatelessWidget {
                   ),
                   child: Icon(
                     Iconsax.search_favorite,
-                    color: CColors.rBrown.withOpacity(0.6),
+                    color: CColors.rBrown.withValues(alpha: 0.6),
                     size: CSizes.iconSm,
                   ),
                 ),
                 hintText: 'search $hintTxt',
                 hintStyle: TextStyle(
-                  color: CColors.rBrown.withOpacity(0.6),
+                  color: CColors.rBrown.withValues(alpha: 0.6),
                 ),
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
@@ -100,7 +100,7 @@ class CExpandedSearchField extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: Icon(
                 Icons.close,
-                color: CColors.rBrown.withOpacity(0.6),
+                color: CColors.rBrown.withValues(alpha: 0.6),
                 size: CSizes.iconSm,
               ),
             ),

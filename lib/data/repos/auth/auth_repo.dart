@@ -67,8 +67,8 @@ class AuthRepo extends GetxController {
           deviceStorage.writeIfNull('SyncInvDataWithCloud', true);
           deviceStorage.writeIfNull('SyncTxnsDataWithCloud', true);
 
-          invController.initInvSync();
-          txnsController.initTxnsSync();
+          await invController.initInvSync();
+          await txnsController.initTxnsSync();
 
           /// --- ### HANDLE IMPORT OF CLOUD DATA ### --- ///
           Get.offAll(() => const NavMenu());

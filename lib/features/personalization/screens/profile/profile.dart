@@ -49,7 +49,7 @@ class ProfileScreen extends StatelessWidget {
                     CRoundedContainer(
                       showBorder: true,
                       radius: 100,
-                      borderColor: CColors.rBrown.withOpacity(0.3),
+                      borderColor: CColors.rBrown.withValues(alpha: 0.3),
                       child: Stack(
                         children: [
                           Obx(
@@ -90,7 +90,7 @@ class ProfileScreen extends StatelessWidget {
                                   size: 18.0,
                                   color: isDarkTheme
                                       ? CColors.white
-                                      : CColors.rBrown.withOpacity(0.6),
+                                      : CColors.rBrown.withValues(alpha: 0.6),
                                 ),
                               ),
                             ),

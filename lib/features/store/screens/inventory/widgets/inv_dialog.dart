@@ -17,6 +17,7 @@ class AddUpdateItemDialog {
       invController.txtCode.text = invModel.pCode.toString();
       invController.txtQty.text = invModel.quantity.toString();
       invController.txtBP.text = invModel.buyingPrice.toString();
+      invController.unitBP.value = invModel.unitBp;
       invController.txtUnitSP.text = invModel.unitSellingPrice.toString();
     } else {
       //invController.scanBarcodeNormal();
@@ -29,7 +30,17 @@ class AddUpdateItemDialog {
           return AlertDialog(
             insetPadding: const EdgeInsets.all(10.0),
             title: Obx(
-              () => Text(
+              () =>
+                  // IconButton(
+                  //   icon: Icon(
+                  //     Iconsax.arrow_left,
+                  //     color: CColors.rBrown,
+                  //   ),
+                  //   onPressed: () {
+                  //     Get.back();
+                  //   },
+                  // ),
+                  Text(
                 (invController.itemExists.value)
                     ? 'update ${invController.txtName.text}'
                     : 'new entry...',

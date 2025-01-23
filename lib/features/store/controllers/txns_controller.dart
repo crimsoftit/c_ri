@@ -33,16 +33,18 @@ class CTxnsController extends GetxController {
 
     //resetSales();
 
-    fetchTransactions();
-    addUnsyncedTxnsToCloud();
+    await fetchTransactions();
+    await initTxnsSync();
+    await addUnsyncedTxnsToCloud();
 
     // if (selectedPaymentMethod.value == 'Cash') {
     //   showAmountIssuedField.value = true;
     // } else {
     //   showAmountIssuedField.value = false;
     // }
-    showAmountIssuedField.value == true;
-    initTxnsSync();
+    showAmountIssuedField.value = true;
+    //await importTxnsFromCloud();
+
     super.onInit();
   }
 
@@ -52,7 +54,7 @@ class CTxnsController extends GetxController {
       await importTxnsFromCloud();
       localStorage.write('SyncTxnsDataWithCloud', false);
 
-      fetchTransactions();
+      await fetchTransactions();
     }
   }
 
@@ -142,10 +144,10 @@ class CTxnsController extends GetxController {
             sellItemId.value,
             saleItemCode.value,
             saleItemName.value,
-            int.parse(txtSaleItemQty.text),
+            int.parse(txtSaleItemQty.text.trim()),
             totalAmount.value,
             selectedPaymentMethod.value == 'Cash'
-                ? double.parse(txtAmountIssued.text)
+                ? double.parse(txtAmountIssued.text.trim())
                 : 0.0,
             saleItemUsp.value,
             selectedPaymentMethod.value,
@@ -196,12 +198,16 @@ class CTxnsController extends GetxController {
             message: 'transaction successful!',
           );
 
-          txnSuccesfull.value == true;
+          txnSuccesfull.value = true;
 
-          if (txnSuccesfull.value == true) {
-            resetSalesFields();
-            Get.back();
-          }
+          Future.delayed(
+            Duration(seconds: 2),
+            () {
+              resetSalesFields();
+              Navigator.pop(Get.overlayContext!);
+              //Get.back();
+            },
+          );
         }
       }
     } catch (e) {
@@ -220,19 +226,8 @@ class CTxnsController extends GetxController {
           title: 'Oh Snap! error saving transaction details',
           message: e.toString(),
         );
+        return;
       }
-
-      return null;
-    } finally {
-      // if (txnSuccesfull.value) {
-      //   Future.delayed(const Duration(seconds: 3), () {
-      //     Get.back();
-      //   });
-      // }
-      resetSalesFields();
-      Navigator.of(Get.overlayContext!).pop();
-
-      //Get.back();
     }
   }
 
@@ -283,7 +278,7 @@ class CTxnsController extends GetxController {
           'cancel',
           true,
           ScanMode.BARCODE,
-          2000,
+          3000,
           CameraFace.back.toString(),
           ScanFormat.ALL_FORMATS);
 
@@ -292,10 +287,12 @@ class CTxnsController extends GetxController {
       // -- set inventory item details to fields --
       if (sellItemScanResults.value != '' &&
           sellItemScanResults.value != '-1') {
-        fetchForSaleItemByCode(sellItemScanResults.value);
+        //fetchForSaleItemByCode(sellItemScanResults.value);
+        await fetchTransactions();
+        await fetchForSaleItemByCode(barcodeScanRes);
       }
 
-      if (itemExists.value) {
+      if (itemExists.value && !isLoading.value) {
         Get.toNamed(
           '/sales/sell_item/',
         );
@@ -304,7 +301,7 @@ class CTxnsController extends GetxController {
           message: 'item not found! please scan again or search inventory',
           forInternetConnectivityStatus: false,
         );
-        fetchTransactions();
+        await fetchTransactions();
       }
     } on PlatformException catch (platformException) {
       if (platformException.code == BarcodeScanner.cameraAccessDenied) {
@@ -355,6 +352,8 @@ class CTxnsController extends GetxController {
         itemExists.value = false;
         txtSaleItemQty.text = '';
       }
+
+      isLoading.value = false;
 
       return fetchedItem;
     } catch (e) {
@@ -420,7 +419,7 @@ class CTxnsController extends GetxController {
   setPaymentMethod(String value) {
     selectedPaymentMethod.value = value;
     if (selectedPaymentMethod.value == 'Cash') {
-      showAmountIssuedField.value == true;
+      showAmountIssuedField.value = true;
     } else {
       showAmountIssuedField.value = false;
     }

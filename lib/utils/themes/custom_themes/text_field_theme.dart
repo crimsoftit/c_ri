@@ -12,18 +12,21 @@ class CTextFormFieldTheme {
     labelStyle: const TextStyle().copyWith(
       fontSize: 11.0,
       color: CColors.rBrown,
-      // fontWeight: FontWeight.normal,
+      fontWeight: FontWeight.normal,
     ),
     hintStyle: const TextStyle().copyWith(
       fontSize: 11.0,
       color: CColors.rBrown,
-      // fontWeight: FontWeight.normal,
+      fontWeight: FontWeight.normal,
     ),
     errorStyle: const TextStyle().copyWith(
       fontStyle: FontStyle.italic,
     ),
     floatingLabelStyle: const TextStyle().copyWith(
-      color: CColors.rBrown.withOpacity(0.8),
+      //color: CColors.rBrown.withOpacity(0.8),
+      color: CColors.rBrown.withValues(
+        alpha: 0.8,
+      ),
     ),
     border: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(5.0),
@@ -75,13 +78,15 @@ class CTextFormFieldTheme {
     hintStyle: const TextStyle().copyWith(
       fontSize: 11.0,
       color: CColors.white,
-      // fontWeight: FontWeight.normal,
+      fontWeight: FontWeight.normal,
     ),
     errorStyle: const TextStyle().copyWith(
       fontStyle: FontStyle.italic,
     ),
     floatingLabelStyle: const TextStyle().copyWith(
-      color: CColors.white.withOpacity(0.8),
+      color: CColors.white.withValues(
+        alpha: 0.8,
+      ),
     ),
     border: const OutlineInputBorder().copyWith(
       borderRadius: BorderRadius.circular(5.0),

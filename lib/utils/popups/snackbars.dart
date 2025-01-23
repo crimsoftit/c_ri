@@ -23,14 +23,14 @@ class CPopupSnackBar extends GetxController {
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       SnackBar(
         elevation: 0,
-        duration: const Duration(seconds: 10),
+        duration: const Duration(seconds: 4),
         backgroundColor: Colors.transparent,
         content: Container(
           padding: const EdgeInsets.all(
-            12.0,
+            10.0,
           ),
           margin: const EdgeInsets.symmetric(
-            horizontal: 30.0,
+            horizontal: 20.0,
           ),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30.0),
@@ -46,17 +46,23 @@ class CPopupSnackBar extends GetxController {
             child: forInternetConnectivityStatus
                 ? Row(
                     children: [
-                      Icon(
-                        isConnected ? Iconsax.wifi : Icons.wifi_off,
-                        color: CColors.rBrown,
-                        size: CSizes.iconSm,
+                      Expanded(
+                        flex: 1,
+                        child: Icon(
+                          isConnected ? Iconsax.wifi : Icons.wifi_off,
+                          color: CColors.rBrown,
+                          size: CSizes.iconSm,
+                        ),
                       ),
                       SizedBox(
                         width: CSizes.spaceBtnInputFields / 4,
                       ),
-                      Text(
-                        message,
-                        style: Theme.of(Get.context!).textTheme.labelLarge,
+                      Expanded(
+                        flex: 6,
+                        child: Text(
+                          message,
+                          style: Theme.of(Get.context!).textTheme.labelLarge,
+                        ),
                       ),
                     ],
                   )

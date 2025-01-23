@@ -24,7 +24,7 @@ class CFullScreenLoader {
         child: Container(
           color: CHelperFunctions.isDarkMode(Get.context!)
               ? CColors.rBrown
-              : CColors.rBrown.withOpacity(0.1),
+              : CColors.rBrown.withValues(alpha: 0.1),
           width: double.infinity,
           height: double.infinity,
           child: Column(

@@ -32,7 +32,7 @@ class CColors {
 
   // -- container bg colors
   static const Color lightContainer = Color(0xfff6f6f6);
-  static Color darkContainer = CColors.white.withOpacity(0.1);
+  static Color darkContainer = CColors.white.withValues(alpha: 0.1);
 
   // -- button colors
   static const Color btnPrimary = Color(0xff4b68ff);

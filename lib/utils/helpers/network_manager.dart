@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'dart:io';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -11,7 +11,7 @@ class CNetworkManager extends GetxController {
   static CNetworkManager get instance => Get.find();
 
   /// -- variables --
-  final Connectivity _connectivity = Connectivity();
+  //final Connectivity _connectivity = Connectivity();
   StreamSubscription? _connectivitySubscription;
   // final Rx<ConnectivityResult> _connectionStatus = ConnectivityResult.none.obs;
 
@@ -28,12 +28,12 @@ class CNetworkManager extends GetxController {
           case InternetStatus.connected:
             hasConnection.value = true;
 
-            if (deviceStorage.read('ShowOnlineStatusOnResume') == true) {
-              CPopupSnackBar.customToast(
-                forInternetConnectivityStatus: true,
-                message: 'back online...',
-              );
-            }
+            // if (deviceStorage.read('ShowOnlineStatusOnResume') == true) {
+            //   CPopupSnackBar.customToast(
+            //     forInternetConnectivityStatus: true,
+            //     message: 'back online...',
+            //   );
+            // }
 
             break;
           case InternetStatus.disconnected:
@@ -42,7 +42,7 @@ class CNetworkManager extends GetxController {
               forInternetConnectivityStatus: true,
               message: 'offline cruise...',
             );
-            deviceStorage.writeIfNull('ShowOnlineStatusOnResume', true);
+            //deviceStorage.writeIfNull('ShowOnlineStatusOnResume', true);
 
             break;
           // default:
@@ -56,13 +56,36 @@ class CNetworkManager extends GetxController {
   /// -- check internet connection status --
   Future<bool> isConnected() async {
     try {
-      final result = await _connectivity.checkConnectivity();
-      if (result == ConnectivityResult.none) {
-        return false;
-      } else {
+      final result = await InternetAddress.lookup('example.com');
+      //final connectionSawa = await _connectivity.checkConnectivity();
+
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        hasConnection.value = true;
         return true;
+      } else {
+        hasConnection.value = false;
+        return false;
       }
+    } on SocketException catch (_) {
+      hasConnection.value = false;
+      // CPopupSnackBar.customToast(
+      //   forInternetConnectivityStatus: true,
+      //   message: 'offline cruise...',
+      // );
+      return false;
     } on PlatformException catch (_) {
+      hasConnection.value = false;
+      // CPopupSnackBar.customToast(
+      //   forInternetConnectivityStatus: true,
+      //   message: 'offline cruise...',
+      // );
+      return false;
+    } catch (err) {
+      hasConnection.value = false;
+      CPopupSnackBar.errorSnackBar(
+        title: 'internet connection error',
+        message: err.toString(),
+      );
       return false;
     }
   }
@@ -85,12 +108,12 @@ class CNetworkManager extends GetxController {
   @override
   void dispose() {
     super.dispose();
-    _connectivitySubscription!.cancel();
+    _connectivitySubscription?.cancel();
   }
 
   @override
   void onClose() {
     super.onClose();
-    _connectivitySubscription!.cancel();
+    _connectivitySubscription?.cancel();
   }
 }

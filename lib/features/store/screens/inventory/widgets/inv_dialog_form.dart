@@ -124,6 +124,14 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   return CValidator.validateNumber(
                       'quantity/no. of units', value);
                 },
+                onChanged: (value) {
+                  if (invController.txtBP.text.isNotEmpty && value.isNotEmpty) {
+                    invController.computeUnitBP(
+                      double.parse(invController.txtBP.text.trim()),
+                      int.parse(value.trim()),
+                    );
+                  }
+                },
               ),
               const SizedBox(
                 height: CSizes.spaceBtnInputFields / 2,
@@ -146,6 +154,22 @@ class AddUpdateInventoryForm extends StatelessWidget {
                 ),
                 validator: (value) {
                   return CValidator.validateNumber('buying price', value);
+                },
+                onChanged: (value) {
+                  if (invController.txtQty.text.isNotEmpty &&
+                      value.isNotEmpty) {
+                    invController.computeUnitBP(
+                      double.parse(value),
+                      int.parse(invController.txtQty.text),
+                    );
+                  }
+                },
+              ),
+              Obx(
+                () {
+                  return Text(
+                    'UBP: ${invController.unitBP.value}',
+                  );
                 },
               ),
               const SizedBox(
@@ -183,6 +207,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       icon: const Icon(
                         Iconsax.save_add,
                         size: CSizes.iconSm,
+                        color: CColors.white,
                       ),
                       label: Obx(
                         () => Text(

@@ -30,10 +30,10 @@ class NavMenu extends StatelessWidget {
             navController.selectedIndex.value = index;
           },
           backgroundColor:
-              isDark ? CColors.rBrown : CColors.rBrown.withOpacity(0.1),
+              isDark ? CColors.rBrown : CColors.rBrown.withValues(alpha: 0.1),
           indicatorColor: isDark
-              ? CColors.white.withOpacity(0.3)
-              : CColors.rBrown.withOpacity(0.3),
+              ? CColors.white.withValues(alpha: 0.3)
+              : CColors.rBrown.withValues(alpha: 0.3),
           destinations: const [
             NavigationDestination(
               icon: Icon(Iconsax.home),

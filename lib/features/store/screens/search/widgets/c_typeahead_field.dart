@@ -57,7 +57,7 @@ class CTypeAheadSearchField extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
           backgroundColor: CColors.white,
-          collapsedBackgroundColor: CColors.rBrown.withOpacity(0.08),
+          collapsedBackgroundColor: CColors.rBrown.withValues(alpha: 0.08),
           expandedCrossAxisAlignment: CrossAxisAlignment.start,
           title: Column(
             mainAxisAlignment: MainAxisAlignment.start,

@@ -2,6 +2,7 @@ import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/models/dels_model.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/models/txns_model.dart';
+import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -47,6 +48,7 @@ class DbHelper {
             name TEXT NOT NULL,
             quantity INTEGER NOT NULL,
             buyingPrice REAL NOT NULL,
+            unitBp REAL NOT NULL,
             unitSellingPrice REAL NOT NULL,
             date CHAR(30) NOT NULL,
             isSynced INTEGER NOT NULL,
@@ -96,8 +98,23 @@ class DbHelper {
   Future testDb() async {
     _db = await openDb();
 
-    await _db!.execute(
-        'INSERT INTO $invTable VALUES (0, "as23df45", "sindani254@gmail.com", "Manu", "12w34dds1", "fruit", 2, 200, 10, "3/2/2021")');
+    var invItem = CInventoryModel.withID(
+      CHelperFunctions.generateId(),
+      userController.user.value.id,
+      userController.user.value.email,
+      userController.user.value.fullName,
+      '4714290023',
+      'njugu',
+      200,
+      1400.00,
+      7.0,
+      10.0,
+      DateTime.now().toString(),
+      1,
+      'none',
+    );
+
+    await _db!.execute('INSERT INTO $invTable VALUES (${invItem.productId})');
     await _db!.execute(
         'INSERT INTO $txnsTable VALUES (0, "as23df45", "sindani254@gmail.com", "Manu", "143d", "apples", 13, 15, 10.0, "Cash", "2/1/2022")');
     List inventory = await _db!.rawQuery('select * from inventory');
@@ -156,6 +173,7 @@ class DbHelper {
         maps[i]['name'],
         maps[i]['quantity'],
         maps[i]['buyingPrice'],
+        maps[i]['unitBp'],
         maps[i]['unitSellingPrice'],
         maps[i]['date'],
         maps[i]['isSynced'],
