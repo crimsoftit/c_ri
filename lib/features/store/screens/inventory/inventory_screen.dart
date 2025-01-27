@@ -93,6 +93,7 @@ class CInventoryScreen extends StatelessWidget {
                                                   '',
                                                   '',
                                                   0,
+                                                  0,
                                                   0.0,
                                                   0.0,
                                                   0.0,
@@ -196,7 +197,8 @@ class CInventoryScreen extends StatelessWidget {
 
                   // run loader --
                   if (txnsController.isLoading.value ||
-                      invController.isLoading.value) {
+                      invController.isLoading.value ||
+                      invController.syncIsLoading.value) {
                     return const CVerticalProductShimmer(
                       itemCount: 7,
                     );
@@ -214,6 +216,9 @@ class CInventoryScreen extends StatelessWidget {
                   return SizedBox(
                     height: CHelperFunctions.screenHeight() * 0.72,
                     child: ListView.builder(
+                      padding: EdgeInsets.all(
+                        2.0,
+                      ),
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
                       itemCount: invController.inventoryItems.length,
@@ -268,7 +273,7 @@ class CInventoryScreen extends StatelessWidget {
                                     'code: ${invController.inventoryItems[index].pCode} usp: $currency.${userController.user.value.currencyCode}.${invController.inventoryItems[index].unitSellingPrice}',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .labelMedium!
+                                        .labelSmall!
                                         .apply(
                                           color: CColors.rBrown
                                               .withValues(alpha: 0.8),
@@ -308,17 +313,29 @@ class CInventoryScreen extends StatelessWidget {
                                           //fontStyle: FontStyle.italic,
                                         ),
                                   ),
-                                  // Text(
-                                  //   'isSynced:${invController.inventoryItems[index].isSynced} syncAction:${invController.inventoryItems[index].syncAction}',
-                                  //   style: Theme.of(context)
-                                  //       .textTheme
-                                  //       .labelSmall!
-                                  //       .apply(
-                                  //         color: CColors.rBrown
-                                  //             .withValues(alpha: 0.7),
-                                  //         //fontStyle: FontStyle.italic,
-                                  //       ),
-                                  // ),
+                                  Text(
+                                    'isSynced:${invController.inventoryItems[index].isSynced} syncAction:${invController.inventoryItems[index].syncAction}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall!
+                                        .apply(
+                                          color: CColors.rBrown
+                                              .withValues(alpha: 0.7),
+                                          //fontStyle: FontStyle.italic,
+                                        ),
+                                  ),
+
+                                  Text(
+                                    'total sales:${invController.inventoryItems[index].qtySold}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall!
+                                        .apply(
+                                          color: CColors.rBrown
+                                              .withValues(alpha: 0.7),
+                                          //fontStyle: FontStyle.italic,
+                                        ),
+                                  ),
 
                                   Row(
                                     crossAxisAlignment:
@@ -326,106 +343,148 @@ class CInventoryScreen extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Flexible(
-                                        fit: FlexFit.loose,
-                                        child: TextButton.icon(
-                                          label: Text(
-                                            'update',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium!
-                                                .apply(
-                                                  color: CColors.rBrown,
-                                                ),
-                                          ),
-                                          icon: const Icon(
-                                            Iconsax.edit,
-                                            color: CColors.rBrown,
-                                            size: CSizes.iconSm,
-                                          ),
-                                          onPressed: () {
-                                            invController.itemExists.value =
-                                                true;
-                                            showDialog(
-                                              context: context,
-                                              useRootNavigator: true,
-                                              builder: (BuildContext context) {
-                                                invController
-                                                        .currentItemId.value =
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .productId!;
-                                                return dialog.buildDialog(
-                                                  context,
-                                                  CInventoryModel.withID(
-                                                    invController
-                                                        .currentItemId.value,
-                                                    userController
-                                                        .user.value.id,
-                                                    userController
-                                                        .user.value.email,
-                                                    userController
-                                                        .user.value.fullName,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .pCode,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .name,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .quantity,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .buyingPrice,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .unitBp,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .unitSellingPrice,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .date,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .isSynced,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .syncAction,
-                                                  ),
-                                                  false,
-                                                );
-                                              },
-                                            );
-                                          },
+                                      TextButton.icon(
+                                        iconAlignment: IconAlignment.start,
+                                        label: Text(
+                                          'sell',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium!
+                                              .apply(
+                                                color: CColors.rBrown,
+                                              ),
                                         ),
+                                        icon: const Icon(
+                                          Iconsax.card_pos,
+                                          color: CColors.rBrown,
+                                          size: CSizes.iconSm,
+                                        ),
+                                        style: TextButton.styleFrom(
+                                          padding: EdgeInsets.zero,
+                                          minimumSize: Size(
+                                            30,
+                                            20,
+                                          ),
+                                          alignment: Alignment.centerLeft,
+                                        ),
+                                        // style: ButtonStyle(
+                                        //   shape: WidgetStateProperty.all(
+                                        //     RoundedRectangleBorder(
+                                        //       borderRadius:
+                                        //           BorderRadius.circular(
+                                        //         5.0,
+                                        //       ),
+                                        //       side: BorderSide(
+                                        //         color: CColors.rBrown,
+                                        //       ),
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        onPressed: () {
+                                          txnsController.showAmountIssuedField
+                                              .value = true;
+                                          txnsController.onSellItemBtnAction(
+                                              invController
+                                                  .inventoryItems[index]);
+                                        },
                                       ),
-                                      Flexible(
-                                        fit: FlexFit.loose,
-                                        child: TextButton.icon(
-                                          label: Text(
-                                            'sell',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium!
-                                                .apply(
-                                                  color: CColors.rBrown,
-                                                ),
-                                          ),
-                                          icon: const Icon(
-                                            Iconsax.card_pos,
-                                            color: CColors.rBrown,
-                                            size: CSizes.iconSm,
-                                          ),
-                                          onPressed: () {
-                                            txnsController.showAmountIssuedField
-                                                .value = true;
-                                            txnsController.onSellItemBtnAction(
-                                                invController
-                                                    .inventoryItems[index]);
-                                          },
+                                      SizedBox(
+                                        width: 5.0,
+                                      ),
+                                      TextButton.icon(
+                                        iconAlignment: IconAlignment.start,
+                                        label: Text(
+                                          'update',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium!
+                                              .apply(
+                                                color: CColors.rBrown,
+                                              ),
                                         ),
+                                        // style: ButtonStyle(
+                                        //   shape: WidgetStateProperty.all(
+                                        //     RoundedRectangleBorder(
+                                        //       borderRadius:
+                                        //           BorderRadius.circular(
+                                        //         5.0,
+                                        //       ),
+                                        //       side: BorderSide(
+                                        //         color: CColors.rBrown,
+                                        //       ),
+                                        //     ),
+                                        //   ),
+                                        // ),
+                                        style: TextButton.styleFrom(
+                                          padding: EdgeInsets.zero,
+                                          minimumSize: Size(
+                                            30,
+                                            20,
+                                          ),
+                                          alignment: Alignment.centerLeft,
+                                        ),
+                                        icon: const Icon(
+                                          Iconsax.edit,
+                                          color: CColors.rBrown,
+                                          size: CSizes.iconSm,
+                                        ),
+                                        onPressed: () {
+                                          invController.itemExists.value = true;
+                                          showDialog(
+                                            context: context,
+                                            useRootNavigator: true,
+                                            builder: (BuildContext context) {
+                                              invController
+                                                      .currentItemId.value =
+                                                  invController
+                                                      .inventoryItems[index]
+                                                      .productId!;
+                                              return dialog.buildDialog(
+                                                context,
+                                                CInventoryModel.withID(
+                                                  invController
+                                                      .currentItemId.value,
+                                                  userController.user.value.id,
+                                                  userController
+                                                      .user.value.email,
+                                                  userController
+                                                      .user.value.fullName,
+                                                  invController
+                                                      .inventoryItems[index]
+                                                      .pCode,
+                                                  invController
+                                                      .inventoryItems[index]
+                                                      .name,
+                                                  invController
+                                                      .inventoryItems[index]
+                                                      .quantity,
+                                                  invController
+                                                      .inventoryItems[index]
+                                                      .qtySold,
+                                                  invController
+                                                      .inventoryItems[index]
+                                                      .buyingPrice,
+                                                  invController
+                                                      .inventoryItems[index]
+                                                      .unitBp,
+                                                  invController
+                                                      .inventoryItems[index]
+                                                      .unitSellingPrice,
+                                                  invController
+                                                      .inventoryItems[index]
+                                                      .date,
+                                                  invController
+                                                      .inventoryItems[index]
+                                                      .isSynced,
+                                                  invController
+                                                      .inventoryItems[index]
+                                                      .syncAction,
+                                                ),
+                                                false,
+                                              );
+                                            },
+                                          );
+                                        },
                                       ),
                                     ],
                                   ),
@@ -472,7 +531,7 @@ class CInventoryScreen extends StatelessWidget {
               builder: (BuildContext context) => dialog.buildDialog(
                 context,
                 CInventoryModel(
-                    '', '', '', '', '', 0, 0.0, 0.0, 0.0, '', 0, ''),
+                    '', '', '', '', '', 0, 0, 0.0, 0.0, 0.0, '', 0, ''),
                 true,
               ),
             );

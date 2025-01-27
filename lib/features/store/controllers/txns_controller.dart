@@ -92,6 +92,7 @@ class CTxnsController extends GetxController {
 
   final RxInt sellItemId = 0.obs;
   final RxInt qtyAvailable = 0.obs;
+  final RxInt totalSales = 0.obs;
 
   final RxString saleItemName = ''.obs;
   final RxString saleItemCode = ''.obs;
@@ -163,6 +164,7 @@ class CTxnsController extends GetxController {
 
           // set the updated stock count
           qtyAvailable.value -= int.parse(txtSaleItemQty.text);
+          totalSales.value += int.parse(txtSaleItemQty.text.trim());
 
           // -- check internet connectivity
           if (isConnected) {
@@ -170,10 +172,17 @@ class CTxnsController extends GetxController {
             await StoreSheetsApi.saveTxnsToGSheets([newTxn.toMap()]);
 
             // update stock count for inventory item's cloud data
-            await StoreSheetsApi.updateInvStockCount(
+            StoreSheetsApi.updateInvStockCount(
               id: sellItemId.value,
               key: 'quantity',
               value: qtyAvailable.value,
+            );
+
+            // update total sales for inventory item's cloud data
+            await StoreSheetsApi.updateInvItemsSalesCount(
+              id: sellItemId.value,
+              key: 'qtySold',
+              value: totalSales.value,
             );
           } else {
             await dbHelper.updateInvSyncAfterStockUpdate(
@@ -183,7 +192,8 @@ class CTxnsController extends GetxController {
           // save txn data into the db
           await dbHelper.addSoldItem(newTxn);
 
-          await dbHelper.updateStockCount(qtyAvailable.value, sellItemId.value);
+          await dbHelper.updateStockCountAndSales(
+              qtyAvailable.value, totalSales.value, sellItemId.value);
 
           await fetchTransactions();
           await invController.fetchInventoryItems();
@@ -348,9 +358,11 @@ class CTxnsController extends GetxController {
         saleItemUsp.value = fetchedItem.first.unitSellingPrice;
 
         qtyAvailable.value = fetchedItem.first.quantity;
+        totalSales.value = fetchedItem.first.qtySold;
       } else {
         itemExists.value = false;
         txtSaleItemQty.text = '';
+        totalSales.value = 0;
       }
 
       isLoading.value = false;
@@ -437,6 +449,7 @@ class CTxnsController extends GetxController {
     saleItemBp.value = foundItem.buyingPrice;
     saleItemUsp.value = foundItem.unitSellingPrice;
     qtyAvailable.value = foundItem.quantity;
+    totalSales.value = foundItem.qtySold;
     showAmountIssuedField.value = true;
     selectedPaymentMethod.value == 'Cash';
     if (selectedPaymentMethod.value == 'Cash') {
@@ -458,6 +471,7 @@ class CTxnsController extends GetxController {
     saleItemName.value = '';
     saleItemCode.value = '';
     qtyAvailable.value = 0;
+    totalSales.value = 0;
     saleItemBp.value = 0.0;
     saleItemUsp.value = 0.0;
     totalAmount.value = 0.0;

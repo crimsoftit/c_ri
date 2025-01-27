@@ -47,6 +47,7 @@ class DbHelper {
             pCode LONGTEXT NOT NULL,
             name TEXT NOT NULL,
             quantity INTEGER NOT NULL,
+            qtySold INTEGER NOT NULL,
             buyingPrice REAL NOT NULL,
             unitBp REAL NOT NULL,
             unitSellingPrice REAL NOT NULL,
@@ -106,6 +107,7 @@ class DbHelper {
       '4714290023',
       'njugu',
       200,
+      10,
       1400.00,
       7.0,
       10.0,
@@ -172,6 +174,7 @@ class DbHelper {
         maps[i]['pCode'],
         maps[i]['name'],
         maps[i]['quantity'],
+        maps[i]['qtySold'],
         maps[i]['buyingPrice'],
         maps[i]['unitBp'],
         maps[i]['unitSellingPrice'],
@@ -215,15 +218,16 @@ class DbHelper {
   }
 
   /// -- update inventory upon sale --
-  Future<int> updateStockCount(int newStockCount, int pId) async {
+  Future<int> updateStockCountAndSales(
+      int newStockCount, int newTotalSales, int pId) async {
     try {
       int updateResult = await _db!.rawUpdate(
         '''
           UPDATE $invTable
-          SET quantity = ?
+          SET quantity = ?, qtySold = ?
           WHERE productId = ?
         ''',
-        [newStockCount, pId],
+        [newStockCount, newTotalSales, pId],
       );
       return updateResult;
     } catch (e) {

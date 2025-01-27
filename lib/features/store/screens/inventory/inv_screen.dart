@@ -93,6 +93,7 @@ class CInvScreen extends StatelessWidget {
                                                   '',
                                                   '',
                                                   0,
+                                                  0,
                                                   0.0,
                                                   0.0,
                                                   0.0,
@@ -351,7 +352,7 @@ class CInvScreen extends StatelessWidget {
               builder: (BuildContext context) => dialog.buildDialog(
                 context,
                 CInventoryModel(
-                    '', '', '', '', '', 0, 0.0, 0.0, 0.0, '', 0, ''),
+                    '', '', '', '', '', 0, 0, 0.0, 0.0, 0.0, '', 0, ''),
                 true,
               ),
             );

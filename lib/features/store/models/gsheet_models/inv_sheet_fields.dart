@@ -6,6 +6,7 @@ class InvSheetFields {
   static const String pCode = 'pCode';
   static const String name = 'name';
   static const String quantity = 'quantity';
+  static const String qtySold = 'qtySold';
   static const String buyingPrice = 'buyingPrice';
   static const String unitBp = 'unitBp';
   static const String unitSellingPrice = 'unitSellingPrice';
@@ -22,6 +23,7 @@ class InvSheetFields {
       pCode,
       name,
       quantity,
+      qtySold,
       buyingPrice,
       unitBp,
       unitSellingPrice,

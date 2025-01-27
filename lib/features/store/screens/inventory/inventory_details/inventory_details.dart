@@ -303,6 +303,7 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                   invItem.pCode,
                   invItem.name,
                   invItem.quantity,
+                  invItem.qtySold,
                   invItem.buyingPrice,
                   invItem.unitBp,
                   invItem.unitSellingPrice,

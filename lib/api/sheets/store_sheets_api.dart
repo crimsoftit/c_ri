@@ -74,28 +74,6 @@ class StoreSheetsApi {
     return CInventoryModel.gSheetFromJson(invMap!);
   }
 
-  /// -- update data (a single cell) in google sheets --
-  static Future<bool> updateInvStockCount({
-    required int id,
-    required String key,
-    required dynamic value,
-  }) async {
-    try {
-      if (invSheet == null) return false;
-      return invSheet!.values.insertValueByKeys(
-        value,
-        columnKey: key,
-        rowKey: id,
-      );
-    } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'error updating cell data in google sheet',
-        message: e.toString(),
-      );
-      throw e.toString();
-    }
-  }
-
   /// -- fetch all inventory items from google sheets --
   static Future<List<CInventoryModel?>?> fetchAllGsheetInvItems() async {
     if (invSheet == null) return null;
@@ -129,7 +107,29 @@ class StoreSheetsApi {
   }
 
   /// -- update data (a single cell) in google sheets --
-  static Future<bool> updateCell({
+  static Future<bool> updateInvStockCount({
+    required int id,
+    required String key,
+    required dynamic value,
+  }) async {
+    try {
+      if (invSheet == null) return false;
+      return invSheet!.values.insertValueByKeys(
+        value,
+        columnKey: key,
+        rowKey: id,
+      );
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'error updating cell data in google sheet',
+        message: e.toString(),
+      );
+      throw e.toString();
+    }
+  }
+
+  /// -- update data (a single cell) in google sheets --
+  static Future<bool> updateInvItemsSalesCount({
     required int id,
     required String key,
     required dynamic value,
