@@ -1,7 +1,6 @@
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
-import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -18,7 +17,7 @@ class CPopupSnackBar extends GetxController {
       {required message, required forInternetConnectivityStatus}) async {
     final isDarkTheme = CHelperFunctions.isDarkMode(Get.context!);
     // -- check internet connectivity
-    final isConnected = await CNetworkManager.instance.isConnected();
+    //final isConnected = await CNetworkManager.instance.isConnected();
 
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       SnackBar(
@@ -49,7 +48,7 @@ class CPopupSnackBar extends GetxController {
                       Expanded(
                         flex: 1,
                         child: Icon(
-                          isConnected ? Iconsax.wifi : Icons.wifi_off,
+                          Icons.wifi_off,
                           color: CColors.rBrown,
                           size: CSizes.iconSm,
                         ),

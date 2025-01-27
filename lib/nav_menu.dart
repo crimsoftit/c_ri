@@ -72,7 +72,7 @@ class NavMenuController extends GetxController {
 
   final screens = [
     const HomeScreen(),
-    const InventoryScreen(),
+    const CInventoryScreen(),
     const TxnsScreen(),
     const SettingsScreen(),
     const ProfileScreen(),

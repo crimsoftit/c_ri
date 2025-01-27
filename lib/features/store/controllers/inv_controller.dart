@@ -211,33 +211,38 @@ class CInventoryController extends GetxController {
     isLoading.value = true;
     await fetchInventoryItems();
 
-    var gSheetAppendItems = unSyncedAppends
-        .map((e) => {
-              'productId': e.productId,
-              'userId': e.userId,
-              'userEmail': e.userEmail,
-              'userName': e.userName,
-              'pCode': e.pCode,
-              'name': e.name,
-              'quantity': e.quantity,
-              'buyingPrice': e.buyingPrice,
-              'unitBp': e.unitBp,
-              'unitSellingPrice': e.unitSellingPrice,
-              'date': e.date,
-              'isSynced': 1,
-              'syncAction': 'none',
-            })
-        .toList();
+    // -- check internet connectivity
+    final isConnectedToInternet = await CNetworkManager.instance.isConnected();
 
-    if (unSyncedAppends.isNotEmpty) {
-      if (kDebugMode) {
-        print(gSheetAppendItems);
+    if (isConnectedToInternet) {
+      var gSheetAppendItems = unSyncedAppends
+          .map((e) => {
+                'productId': e.productId,
+                'userId': e.userId,
+                'userEmail': e.userEmail,
+                'userName': e.userName,
+                'pCode': e.pCode,
+                'name': e.name,
+                'quantity': e.quantity,
+                'buyingPrice': e.buyingPrice,
+                'unitBp': e.unitBp,
+                'unitSellingPrice': e.unitSellingPrice,
+                'date': e.date,
+                'isSynced': 1,
+                'syncAction': 'none',
+              })
+          .toList();
+
+      if (unSyncedAppends.isNotEmpty) {
+        if (kDebugMode) {
+          print(gSheetAppendItems);
+        }
+
+        await StoreSheetsApi.saveInvItemsToGSheets(gSheetAppendItems);
+
+        await updateSyncedInvAppends();
+        isLoading.value = false;
       }
-
-      await StoreSheetsApi.saveInvItemsToGSheets(gSheetAppendItems);
-
-      await updateSyncedInvAppends();
-      isLoading.value = false;
     }
   }
 
@@ -246,31 +251,37 @@ class CInventoryController extends GetxController {
       // start loader while products are fetched
       isLoading.value = true;
 
-      unSyncedAppends.value = inventoryItems
-          .where((item) => item.syncAction.toLowerCase().contains('append'))
-          .toList();
+      // -- check internet connectivity
+      final isConnectedToInternet =
+          await CNetworkManager.instance.isConnected();
 
-      if (unSyncedAppends.isNotEmpty) {
-        for (var element in unSyncedAppends) {
-          var syncAppendsData = CInventoryModel.withID(
-            element.productId,
-            element.userId,
-            element.userEmail,
-            element.userName,
-            element.pCode,
-            element.name,
-            element.quantity,
-            element.buyingPrice,
-            element.unitBp,
-            element.unitSellingPrice,
-            element.date,
-            1,
-            'none',
-          );
+      if (isConnectedToInternet) {
+        unSyncedAppends.value = inventoryItems
+            .where((item) => item.syncAction.toLowerCase().contains('append'))
+            .toList();
 
-          await dbHelper.updateInventoryItem(
-              syncAppendsData, element.productId!);
-          isLoading.value != isLoading.value;
+        if (unSyncedAppends.isNotEmpty) {
+          for (var element in unSyncedAppends) {
+            var syncAppendsData = CInventoryModel.withID(
+              element.productId,
+              element.userId,
+              element.userEmail,
+              element.userName,
+              element.pCode,
+              element.name,
+              element.quantity,
+              element.buyingPrice,
+              element.unitBp,
+              element.unitSellingPrice,
+              element.date,
+              1,
+              'none',
+            );
+
+            await dbHelper.updateInventoryItem(
+                syncAppendsData, element.productId!);
+            isLoading.value != isLoading.value;
+          }
         }
       }
     } catch (e) {
@@ -339,7 +350,7 @@ class CInventoryController extends GetxController {
   }
 
   onSearchInventory(String value) {
-    //fetchInventoryItems();
+    fetchInventoryItems();
 
     foundInventoryItems.value = inventoryItems
         .where((element) =>
@@ -618,35 +629,41 @@ class CInventoryController extends GetxController {
   Future importInvDataFromCloud() async {
     try {
       isLoading.value = true;
-      await fetchUserInvSheetData();
 
-      if (userGSheetData.isNotEmpty) {
-        for (var element in userGSheetData) {
-          var dbData = CInventoryModel.withID(
-            element.productId,
-            element.userId,
-            element.userEmail,
-            element.userName,
-            element.pCode,
-            element.name,
-            element.quantity,
-            element.buyingPrice,
-            element.unitBp,
-            element.unitSellingPrice,
-            element.date,
-            element.isSynced,
-            element.syncAction,
-          );
+      // -- check internet connectivity
+      final isConnectedToInternet =
+          await CNetworkManager.instance.isConnected();
 
-          dbHelper.addInventoryItem(dbData);
-          fetchInventoryItems();
+      if (isConnectedToInternet) {
+        await fetchUserInvSheetData();
+        if (userGSheetData.isNotEmpty) {
+          for (var element in userGSheetData) {
+            var dbData = CInventoryModel.withID(
+              element.productId,
+              element.userId,
+              element.userEmail,
+              element.userName,
+              element.pCode,
+              element.name,
+              element.quantity,
+              element.buyingPrice,
+              element.unitBp,
+              element.unitSellingPrice,
+              element.date,
+              element.isSynced,
+              element.syncAction,
+            );
 
-          isLoading.value = false;
+            dbHelper.addInventoryItem(dbData);
+            fetchInventoryItems();
+
+            isLoading.value = false;
+          }
         }
-      }
 
-      if (kDebugMode) {
-        print("----------\n\n $userGSheetData \n\n ----------");
+        if (kDebugMode) {
+          print("----------\n\n $userGSheetData \n\n ----------");
+        }
       }
     } catch (e) {
       isLoading.value = false;
@@ -682,8 +699,8 @@ class CInventoryController extends GetxController {
   Future syncInvDels() async {
     await dbHelper.openDb();
     // -- check internet connectivity
-    final isConnected = await CNetworkManager.instance.isConnected();
-    if (isConnected) {
+    final isConnectedToInternet = await CNetworkManager.instance.isConnected();
+    if (isConnectedToInternet) {
       final dels = await dbHelper.fetchAllInvDels();
       dItems.assignAll(dels);
 
@@ -725,43 +742,49 @@ class CInventoryController extends GetxController {
 
   Future syncInvUpdates() async {
     await fetchInventoryItems();
-    if (unSyncedUpdates.isNotEmpty) {
-      for (var element in unSyncedUpdates) {
-        if (element.isSynced == 1) {
-          await deleteInvSheetItem(element.productId!);
+
+    // -- check internet connectivity
+    final isConnectedToInternet = await CNetworkManager.instance.isConnected();
+
+    if (isConnectedToInternet) {
+      if (unSyncedUpdates.isNotEmpty) {
+        for (var element in unSyncedUpdates) {
+          if (element.isSynced == 1) {
+            await deleteInvSheetItem(element.productId!);
+          }
+          final invUpdateItem = CInventoryModel.withID(
+            element.productId,
+            element.userId,
+            element.userEmail,
+            element.userName,
+            element.pCode,
+            element.name,
+            element.quantity,
+            element.buyingPrice,
+            element.unitBp,
+            element.unitSellingPrice,
+            element.date,
+            0,
+            'append',
+          );
+
+          await dbHelper.updateInventoryItem(invUpdateItem, element.productId!);
+
+          final delItem = CDelsModel(
+            element.productId,
+            element.name,
+            'inventory',
+            1,
+            'none',
+          );
+          await dbHelper.updateDel(delItem);
+
+          fetchInventoryItems();
         }
-        final invUpdateItem = CInventoryModel.withID(
-          element.productId,
-          element.userId,
-          element.userEmail,
-          element.userName,
-          element.pCode,
-          element.name,
-          element.quantity,
-          element.buyingPrice,
-          element.unitBp,
-          element.unitSellingPrice,
-          element.date,
-          0,
-          'append',
-        );
-
-        await dbHelper.updateInventoryItem(invUpdateItem, element.productId!);
-
-        final delItem = CDelsModel(
-          element.productId,
-          element.name,
-          'inventory',
-          1,
-          'none',
-        );
-        await dbHelper.updateDel(delItem);
-
-        fetchInventoryItems();
-      }
-    } else {
-      if (kDebugMode) {
-        print('/n/n ----- /n all updates rada safi \n -----');
+      } else {
+        if (kDebugMode) {
+          print('/n/n ----- /n all updates rada safi \n -----');
+        }
       }
     }
   }
@@ -772,13 +795,15 @@ class CInventoryController extends GetxController {
       syncIsLoading.value = true;
       await fetchInventoryItems();
       await fetchInvDels();
-      await syncInvDels();
-      // -- check internet connectivity
-      final isConnected = await CNetworkManager.instance.isConnected();
 
-      if (isConnected) {
+      // -- check internet connectivity
+      final isConnectedToInternet =
+          await CNetworkManager.instance.isConnected();
+
+      if (isConnectedToInternet) {
         /// -- initialize spreadsheets --
         await StoreSheetsApi.initSpreadSheets();
+        await syncInvDels();
         await addUnsyncedInvToCloud();
         await syncInvUpdates();
         //isLoading.value = false;

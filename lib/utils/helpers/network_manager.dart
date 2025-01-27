@@ -28,13 +28,6 @@ class CNetworkManager extends GetxController {
           case InternetStatus.connected:
             hasConnection.value = true;
 
-            // if (deviceStorage.read('ShowOnlineStatusOnResume') == true) {
-            //   CPopupSnackBar.customToast(
-            //     forInternetConnectivityStatus: true,
-            //     message: 'back online...',
-            //   );
-            // }
-
             break;
           case InternetStatus.disconnected:
             hasConnection.value = false;
@@ -42,12 +35,8 @@ class CNetworkManager extends GetxController {
               forInternetConnectivityStatus: true,
               message: 'offline cruise...',
             );
-            //deviceStorage.writeIfNull('ShowOnlineStatusOnResume', true);
 
             break;
-          // default:
-          //   hasConnection.value = false;
-          //   break;
         }
       },
     );

@@ -21,8 +21,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class CInventoryScreen extends StatelessWidget {
-  const CInventoryScreen({super.key});
+class CInvScreen extends StatelessWidget {
+  const CInvScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -286,19 +286,8 @@ class CInventoryScreen extends StatelessWidget {
                                   //         //fontStyle: FontStyle.italic,
                                   //       ),
                                   // ),
-                                  // Text(
-                                  //   'modified: ${invController.inventoryItems[index].date} (id: #${invController.inventoryItems[index].productId})',
-                                  //   style: Theme.of(context)
-                                  //       .textTheme
-                                  //       .labelSmall!
-                                  //       .apply(
-                                  //         color: CColors.rBrown
-                                  //             .withValues(alpha: 0.7),
-                                  //         //fontStyle: FontStyle.italic,
-                                  //       ),
-                                  // ),
                                   Text(
-                                    'modified: ${invController.inventoryItems[index].date}',
+                                    'modified: ${invController.inventoryItems[index].date} (id: #${invController.inventoryItems[index].productId})',
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelSmall!
@@ -308,126 +297,16 @@ class CInventoryScreen extends StatelessWidget {
                                           //fontStyle: FontStyle.italic,
                                         ),
                                   ),
-                                  // Text(
-                                  //   'isSynced:${invController.inventoryItems[index].isSynced} syncAction:${invController.inventoryItems[index].syncAction}',
-                                  //   style: Theme.of(context)
-                                  //       .textTheme
-                                  //       .labelSmall!
-                                  //       .apply(
-                                  //         color: CColors.rBrown
-                                  //             .withValues(alpha: 0.7),
-                                  //         //fontStyle: FontStyle.italic,
-                                  //       ),
-                                  // ),
-
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Flexible(
-                                        fit: FlexFit.loose,
-                                        child: TextButton.icon(
-                                          label: Text(
-                                            'update',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium!
-                                                .apply(
-                                                  color: CColors.rBrown,
-                                                ),
-                                          ),
-                                          icon: const Icon(
-                                            Iconsax.edit,
-                                            color: CColors.rBrown,
-                                            size: CSizes.iconSm,
-                                          ),
-                                          onPressed: () {
-                                            invController.itemExists.value =
-                                                true;
-                                            showDialog(
-                                              context: context,
-                                              useRootNavigator: true,
-                                              builder: (BuildContext context) {
-                                                invController
-                                                        .currentItemId.value =
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .productId!;
-                                                return dialog.buildDialog(
-                                                  context,
-                                                  CInventoryModel.withID(
-                                                    invController
-                                                        .currentItemId.value,
-                                                    userController
-                                                        .user.value.id,
-                                                    userController
-                                                        .user.value.email,
-                                                    userController
-                                                        .user.value.fullName,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .pCode,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .name,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .quantity,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .buyingPrice,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .unitBp,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .unitSellingPrice,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .date,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .isSynced,
-                                                    invController
-                                                        .inventoryItems[index]
-                                                        .syncAction,
-                                                  ),
-                                                  false,
-                                                );
-                                              },
-                                            );
-                                          },
+                                  Text(
+                                    'isSynced:${invController.inventoryItems[index].isSynced} syncAction:${invController.inventoryItems[index].syncAction}',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall!
+                                        .apply(
+                                          color: CColors.rBrown
+                                              .withValues(alpha: 0.7),
+                                          //fontStyle: FontStyle.italic,
                                         ),
-                                      ),
-                                      Flexible(
-                                        fit: FlexFit.loose,
-                                        child: TextButton.icon(
-                                          label: Text(
-                                            'sell',
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium!
-                                                .apply(
-                                                  color: CColors.rBrown,
-                                                ),
-                                          ),
-                                          icon: const Icon(
-                                            Iconsax.card_pos,
-                                            color: CColors.rBrown,
-                                            size: CSizes.iconSm,
-                                          ),
-                                          onPressed: () {
-                                            txnsController.showAmountIssuedField
-                                                .value = true;
-                                            txnsController.onSellItemBtnAction(
-                                                invController
-                                                    .inventoryItems[index]);
-                                          },
-                                        ),
-                                      ),
-                                    ],
                                   ),
                                 ],
                               ),
