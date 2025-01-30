@@ -1,4 +1,5 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
+import 'package:c_ri/common/widgets/cart/add_to_cart_btn.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
 import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
@@ -343,6 +344,13 @@ class CInventoryScreen extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
+                                      CAddToCartBtn(
+                                        pId: invController
+                                            .inventoryItems[index].productId!,
+                                      ),
+                                      SizedBox(
+                                        width: 5.0,
+                                      ),
                                       TextButton.icon(
                                         iconAlignment: IconAlignment.start,
                                         label: Text(

@@ -5,6 +5,7 @@ import 'package:c_ri/features/authentication/screens/signup/signup.dart';
 import 'package:c_ri/features/authentication/screens/signup/verify_email.dart';
 import 'package:c_ri/features/personalization/screens/profile/profile.dart';
 import 'package:c_ri/features/personalization/screens/settings/user_settings.dart';
+import 'package:c_ri/features/store/screens/checkout/checkout.dart';
 import 'package:c_ri/features/store/screens/home/home.dart';
 import 'package:c_ri/features/store/screens/inventory/inventory_details/inventory_details.dart';
 import 'package:c_ri/features/store/screens/inventory/inventory_screen.dart';
@@ -41,6 +42,10 @@ class CAppRoutes {
     GetPage(
       name: CRoutes.txnDetailsScreen,
       page: () => const CTxnDetailsScreen(),
+    ),
+    GetPage(
+      name: CRoutes.checkoutScreen,
+      page: () => const CCheckoutScreen(),
     ),
     GetPage(
       name: CRoutes.settings,

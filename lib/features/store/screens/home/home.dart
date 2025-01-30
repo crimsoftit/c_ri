@@ -1,10 +1,10 @@
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
+import 'package:c_ri/common/widgets/cart/cart_counter_icon.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/store/screens/home/widgets/home_appbar.dart';
 import 'package:c_ri/features/store/screens/inventory/dels.dart';
 import 'package:c_ri/features/store/screens/inventory/inv_for_updates.dart';
 import 'package:c_ri/features/store/screens/inventory/gsheets_inv_table_screen.dart';
-import 'package:c_ri/features/store/screens/search/search_results.dart';
 import 'package:c_ri/features/store/screens/txns/gsheets_txns_screen.dart';
 import 'package:c_ri/features/store/screens/txns/txns_for_appends.dart';
 import 'package:c_ri/utils/constants/colors.dart';
@@ -12,7 +12,6 @@ import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/constants/txt_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -29,19 +28,8 @@ class HomeScreen extends StatelessWidget {
                   // -- ## HOME PAGE APP BAR ## --
                   CHomeAppBarWidget(
                     appBarTitle: CTexts.homeAppbarTitle,
-                    actionsSection: IconButton(
-                      onPressed: () {
-                        Get.to(
-                          () {
-                            return const CSearchResultsScreen();
-                          },
-                        );
-                      },
-                      icon: const Icon(
-                        Iconsax.search_normal,
-                        color: CColors.white,
-                        size: CSizes.iconMd,
-                      ),
+                    actionsSection: CCartCounterIcon(
+                      iconColor: Colors.white,
                     ),
                     screenTitle: '',
                     isHomeScreen: true,
