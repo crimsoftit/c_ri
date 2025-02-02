@@ -1,10 +1,12 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
-import 'package:c_ri/common/widgets/cart/add_to_cart_btn.dart';
+import 'package:c_ri/common/widgets/products/cart/add_to_cart_btn.dart';
+import 'package:c_ri/common/widgets/products/circle_avatar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
 import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/common/widgets/tab_views/store_items_tabs.dart';
+import 'package:c_ri/common/widgets/txt_widgets/product_title_txt.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
@@ -239,33 +241,48 @@ class CInventoryScreen extends StatelessWidget {
                               contentPadding: const EdgeInsets.all(
                                 5.0,
                               ),
-                              leading: CircleAvatar(
-                                backgroundColor: Colors.brown[300],
-                                radius: 16.0,
-                                child: Text(
-                                  invController.inventoryItems[index].name[0]
-                                      .toUpperCase(),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge!
-                                      .apply(
-                                        color: CColors.white,
-                                      ),
-                                ),
+
+                              // leading: CircleAvatar(
+                              //   backgroundColor: Colors.brown[300],
+                              //   radius: 16.0,
+                              //   child: Text(
+                              //     invController.inventoryItems[index].name[0]
+                              //         .toUpperCase(),
+                              //     style: Theme.of(context)
+                              //         .textTheme
+                              //         .labelLarge!
+                              //         .apply(
+                              //           color: CColors.white,
+                              //         ),
+                              //   ),
+                              // ),
+                              leading: CCircleAvatar(
+                                title:
+                                    invController.inventoryItems[index].name[0],
+                                bgColor: invController
+                                            .inventoryItems[index].quantity <
+                                        5
+                                    ? Colors.red
+                                    : CColors.rBrown,
                               ),
-                              title: Text(
-                                '${invController.inventoryItems[index].name.toUpperCase()} ',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium!
-                                    .apply(
-                                      color: CColors.rBrown,
-                                      //fontSizeFactor: 1.2,
-                                      //fontWeightDelta: 2,
-                                    ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
+                              title: CProductTitleText(
+                                title: invController.inventoryItems[index].name
+                                    .toUpperCase(),
+                                smallSize: false,
                               ),
+                              // Text(
+                              //   '${invController.inventoryItems[index].name.toUpperCase()} ',
+                              //   style: Theme.of(context)
+                              //       .textTheme
+                              //       .labelMedium!
+                              //       .apply(
+                              //         color: CColors.rBrown,
+                              //         //fontSizeFactor: 1.2,
+                              //         //fontWeightDelta: 2,
+                              //       ),
+                              //   overflow: TextOverflow.ellipsis,
+                              //   maxLines: 1,
+                              // ),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -303,16 +320,11 @@ class CInventoryScreen extends StatelessWidget {
                                   //         //fontStyle: FontStyle.italic,
                                   //       ),
                                   // ),
-                                  Text(
-                                    'modified: ${invController.inventoryItems[index].date}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelSmall!
-                                        .apply(
-                                          color: CColors.rBrown
-                                              .withValues(alpha: 0.7),
-                                          //fontStyle: FontStyle.italic,
-                                        ),
+
+                                  CProductTitleText(
+                                    title:
+                                        'modified: ${invController.inventoryItems[index].date}',
+                                    smallSize: true,
                                   ),
                                   Text(
                                     'isSynced:${invController.inventoryItems[index].isSynced} syncAction:${invController.inventoryItems[index].syncAction}',

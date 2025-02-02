@@ -1,5 +1,5 @@
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
-import 'package:c_ri/common/widgets/cart/cart_counter_icon.dart';
+import 'package:c_ri/common/widgets/products/cart/cart_counter_icon.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/store/screens/home/widgets/home_appbar.dart';
 import 'package:c_ri/features/store/screens/inventory/dels.dart';
