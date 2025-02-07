@@ -1,5 +1,4 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
-import 'package:c_ri/common/widgets/products/cart/add_to_cart_btn.dart';
 import 'package:c_ri/common/widgets/products/circle_avatar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
@@ -9,10 +8,12 @@ import 'package:c_ri/common/widgets/tab_views/store_items_tabs.dart';
 import 'package:c_ri/common/widgets/txt_widgets/product_title_txt.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
+import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
+import 'package:c_ri/features/store/screens/checkout/checkout_screen.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/inv_dialog.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
@@ -34,6 +35,7 @@ class CInventoryScreen extends StatelessWidget {
     final searchController = Get.put(CSearchBarController());
     final invController = Get.put(CInventoryController());
     final txnsController = Get.put(CTxnsController());
+    final cartController = Get.put(CCartController());
 
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
@@ -356,10 +358,34 @@ class CInventoryScreen extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      CAddToCartBtn(
-                                        pId: invController
-                                            .inventoryItems[index].productId!,
+                                      IconButton(
+                                        iconSize: 20.0,
+                                        icon: const Icon(
+                                          Icons.add_box_outlined,
+                                          // color: Color.fromARGB(255, 153, 113, 98),
+                                          color: CColors.darkerGrey,
+                                        ),
+                                        onPressed: () {
+                                          invController.fetchInventoryItems();
+                                          var invItem = invController
+                                              .inventoryItems
+                                              .firstWhere((item) =>
+                                                  item.productId.toString() ==
+                                                  invController
+                                                      .inventoryItems[index]
+                                                      .productId
+                                                      .toString()
+                                                      .toLowerCase());
+                                          final cartItem = cartController
+                                              .convertInvToCartItem(invItem, 1);
+                                          cartController
+                                              .addSingleItemToCart(cartItem);
+                                        },
                                       ),
+                                      // CAddToCartBtn(
+                                      //   pId: invController
+                                      //       .inventoryItems[index].productId!,
+                                      // ),
                                       SizedBox(
                                         width: 5.0,
                                       ),
@@ -542,26 +568,53 @@ class CInventoryScreen extends StatelessWidget {
         ),
 
         /// -- floating action button to scan item for sale --
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            invController.runInvScanner();
-            showDialog(
-              context: context,
-              useRootNavigator: false,
-              builder: (BuildContext context) => dialog.buildDialog(
-                context,
-                CInventoryModel(
-                    '', '', '', '', '', 0, 0, 0.0, 0.0, 0.0, '', 0, ''),
-                true,
-              ),
+        floatingActionButton: Obx(
+          () {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                cartController.countOfCartItems.value >= 1
+                    ? FloatingActionButton.extended(
+                        onPressed: () {
+                          Get.to(() => const CCheckoutScreen());
+                        },
+                        label: const Text('checkout'),
+                        backgroundColor: Colors.brown,
+                        foregroundColor: Colors.white,
+                        icon: const Icon(
+                          Iconsax.wallet_check,
+                        ),
+                        heroTag: 'checkout',
+                      )
+                    : SizedBox(),
+                const SizedBox(
+                  height: CSizes.spaceBtnSections / 2,
+                ),
+                FloatingActionButton.extended(
+                  onPressed: () {
+                    invController.runInvScanner();
+                    showDialog(
+                      context: context,
+                      useRootNavigator: false,
+                      builder: (BuildContext context) => dialog.buildDialog(
+                        context,
+                        CInventoryModel(
+                            '', '', '', '', '', 0, 0, 0.0, 0.0, 0.0, '', 0, ''),
+                        true,
+                      ),
+                    );
+                  },
+                  label: const Text('add item'),
+                  backgroundColor: Colors.brown,
+                  foregroundColor: Colors.white,
+                  icon: const Icon(
+                    Iconsax.additem,
+                  ),
+                  heroTag: 'scan',
+                ),
+              ],
             );
           },
-          label: const Text('add item'),
-          backgroundColor: Colors.brown,
-          foregroundColor: Colors.white,
-          icon: const Icon(
-            Iconsax.additem,
-          ),
         ),
       ),
     );

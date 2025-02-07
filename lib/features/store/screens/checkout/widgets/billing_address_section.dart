@@ -33,7 +33,7 @@ class CBillingAddressSection extends StatelessWidget {
                   Icons.verified_user,
                   color: isDarkTheme
                       ? CColors.white
-                      : CColors.rBrown.withOpacity(0.5),
+                      : CColors.rBrown.withValues(alpha: 0.5),
                   size: 16.0,
                 ),
                 const SizedBox(
@@ -54,7 +54,7 @@ class CBillingAddressSection extends StatelessWidget {
                   Icons.phone,
                   color: isDarkTheme
                       ? CColors.white
-                      : CColors.rBrown.withOpacity(0.5),
+                      : CColors.rBrown.withValues(alpha: 0.5),
                   size: 16.0,
                 ),
                 const SizedBox(
@@ -75,7 +75,7 @@ class CBillingAddressSection extends StatelessWidget {
                   Icons.location_history,
                   color: isDarkTheme
                       ? CColors.white
-                      : CColors.rBrown.withOpacity(0.5),
+                      : CColors.rBrown.withValues(alpha: 0.5),
                   size: 16.0,
                 ),
                 const SizedBox(

@@ -9,18 +9,34 @@ import 'package:iconsax/iconsax.dart';
 class CItemQtyWithAddRemoveBtns extends StatelessWidget {
   const CItemQtyWithAddRemoveBtns({
     super.key,
+    required this.qtyFieldInitialValue,
+    required this.qtyfieldController,
+    required this.onBtnChanged,
   });
+
+  final String qtyFieldInitialValue;
+  final TextEditingController qtyfieldController;
+  final VoidCallback onBtnChanged;
 
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    //final cartController = Get.put(CCartController());
+
+    //cartController.fetchCartItems();
 
     return CRoundedContainer(
       showBorder: true,
       bgColor: isDarkTheme ? CColors.dark : CColors.white,
+      // padding: EdgeInsets.only(
+      //   top: CSizes.xs,
+      //   bottom: CSizes.xs,
+      //   right: CSizes.xs,
+      //   left: CSizes.sm,
+      // ),
       padding: EdgeInsets.only(
-        top: CSizes.xs,
-        bottom: CSizes.xs,
+        top: 0,
+        bottom: 0,
         right: CSizes.xs,
         left: CSizes.sm,
       ),
@@ -43,6 +59,7 @@ class CItemQtyWithAddRemoveBtns extends StatelessWidget {
           SizedBox(
             width: 40.0,
             child: TextFormField(
+              initialValue: qtyFieldInitialValue,
               decoration: InputDecoration(
                 border: InputBorder.none,
                 disabledBorder: InputBorder.none,
@@ -51,6 +68,9 @@ class CItemQtyWithAddRemoveBtns extends StatelessWidget {
                 focusedBorder: InputBorder.none,
                 hintText: 'qty',
               ),
+              onChanged: (value) {
+                onBtnChanged();
+              },
             ),
           ),
           // Text(

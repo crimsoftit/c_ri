@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
-class SuccessScreen extends StatelessWidget {
-  const SuccessScreen({
+class CSuccessScreen extends StatelessWidget {
+  const CSuccessScreen({
     super.key,
     required this.image,
     required this.title,

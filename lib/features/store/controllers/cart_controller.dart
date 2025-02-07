@@ -2,6 +2,7 @@ import 'package:c_ri/features/store/models/cart_item_model.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/local_storage/storage_utility.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class CCartController extends GetxController {
@@ -13,10 +14,23 @@ class CCartController extends GetxController {
   RxDouble totalCartPrice = 0.0.obs;
   RxList<CCartItemModel> cartItems = <CCartItemModel>[].obs;
 
-  //final localStorage = GetStorage();
+  RxList<TextEditingController> qtyFieldControllers =
+      <TextEditingController>[].obs;
 
   CCartController() {
     fetchCartItems();
+  }
+
+  /// -- fetch cart items from device storage --
+  void fetchCartItems() async {
+    final cartItemsStrings =
+        CLocalStorage.instance().readData<List<dynamic>>('cartItems');
+
+    if (cartItemsStrings != null) {
+      cartItems.assignAll(cartItemsStrings.map(
+          (item) => CCartItemModel.fromJson(item as Map<String, dynamic>)));
+      updateCartTotals();
+    }
   }
 
   /// -- add items to cart --
@@ -115,18 +129,6 @@ class CCartController extends GetxController {
     final cartItemsStrings = cartItems.map((item) => item.toJson()).toList();
     await CLocalStorage.instance().writeData('cartItems', cartItemsStrings);
     //await localStorage.write('cartItems', cartItemsStrings);
-  }
-
-  /// -- fetch cart items from device storage --
-  void fetchCartItems() async {
-    final cartItemsStrings =
-        CLocalStorage.instance().readData<List<dynamic>>('cartItems');
-
-    if (cartItemsStrings != null) {
-      cartItems.assignAll(cartItemsStrings.map(
-          (item) => CCartItemModel.fromJson(item as Map<String, dynamic>)));
-      updateCartTotals();
-    }
   }
 
   /// -- get a specific item's quantity in the cart --

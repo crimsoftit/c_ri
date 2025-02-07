@@ -54,6 +54,9 @@ class CImages {
   static String loadingAnime =
       "assets/images/lottie_anime/141397-loading-juggle.json";
 
+  static String paymentSuccessfulAnimation =
+      "assets/images/lottie_anime/120978-payment-successful.json";
+
   // static String searchAnimation =
   //     "assets/images/animations/72785-searching.json";
   // static String emptyAnimation =
@@ -64,8 +67,7 @@ class CImages {
   //     "assets/images/animations/72462-check-register.json";
   // static String thankYouAnimation =
   //     "assets/images/animations/104368-thank-you.json";
-  // static String paymentSuccessfulAnimation =
-  //     "assets/images/animations/120978-payment-successful.json";
+
   // static String loadingJuggleAnimation =
   //     "assets/images/animations/141397-loading-juggle.json";
   // static String cloudUploadingAnimation =
@@ -102,4 +104,7 @@ class CImages {
   static const String flashOn = "assets/icons/flash_on.jpeg";
   static const String flashOff = "assets/icons/flash_off.jpg";
   static const String switchCamera = "assets/icons/switch_camera.png";
+
+  // -- payment platforms --
+  static const String mPesaLogo = "assets/icons/payment_methods/mpesa_2.png";
 }

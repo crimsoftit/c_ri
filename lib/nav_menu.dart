@@ -1,6 +1,5 @@
 import 'package:c_ri/features/personalization/screens/profile/profile.dart';
 import 'package:c_ri/features/personalization/screens/settings/user_settings.dart';
-import 'package:c_ri/features/store/screens/checkout/checkout_screen.dart';
 import 'package:c_ri/features/store/screens/home/home.dart';
 import 'package:c_ri/features/store/screens/inventory/inventory_screen.dart';
 import 'package:c_ri/features/store/screens/txns/txns_screen.dart';
@@ -44,10 +43,10 @@ class NavMenu extends StatelessWidget {
               icon: Icon(Iconsax.card_tick),
               label: 'inventory',
             ),
-            NavigationDestination(
-              icon: Icon(Iconsax.wallet_check),
-              label: 'checkout',
-            ),
+            // NavigationDestination(
+            //   icon: Icon(Iconsax.wallet_check),
+            //   label: 'checkout',
+            // ),
             NavigationDestination(
               icon: Icon(Iconsax.empty_wallet_time),
               label: 'sales',
@@ -76,7 +75,7 @@ class NavMenuController extends GetxController {
   final screens = [
     const HomeScreen(),
     const CInventoryScreen(),
-    const CCheckoutScreen(),
+    //const CCheckoutScreen(),
     const TxnsScreen(),
     const SettingsScreen(),
     const ProfileScreen(),

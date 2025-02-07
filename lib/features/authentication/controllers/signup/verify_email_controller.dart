@@ -48,7 +48,7 @@ class CVerifyEmailController extends GetxController {
         final user = FirebaseAuth.instance.currentUser;
         if (user?.emailVerified ?? false) {
           timer.cancel();
-          Get.off(() => SuccessScreen(
+          Get.off(() => CSuccessScreen(
                 image: CImages.successfulRegAnimation,
                 title: CTexts.accountCreatedTitle,
                 subTitle: CTexts.accountCreatedSubTitle,
@@ -66,7 +66,7 @@ class CVerifyEmailController extends GetxController {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null && currentUser.emailVerified) {
       Get.off(() {
-        SuccessScreen(
+        CSuccessScreen(
           image: CImages.successfulRegAnimation,
           title: CTexts.accountCreatedTitle,
           subTitle: CTexts.accountCreatedSubTitle,
