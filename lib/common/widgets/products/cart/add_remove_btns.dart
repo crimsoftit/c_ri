@@ -9,14 +9,10 @@ import 'package:iconsax/iconsax.dart';
 class CItemQtyWithAddRemoveBtns extends StatelessWidget {
   const CItemQtyWithAddRemoveBtns({
     super.key,
-    required this.qtyFieldInitialValue,
-    required this.qtyfieldController,
-    required this.onBtnChanged,
+    required this.qtyTxtField,
   });
 
-  final String qtyFieldInitialValue;
-  final TextEditingController qtyfieldController;
-  final VoidCallback onBtnChanged;
+  final Widget qtyTxtField;
 
   @override
   Widget build(BuildContext context) {
@@ -56,23 +52,7 @@ class CItemQtyWithAddRemoveBtns extends StatelessWidget {
           ),
 
           // -- field to set quantity --
-          SizedBox(
-            width: 40.0,
-            child: TextFormField(
-              initialValue: qtyFieldInitialValue,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                disabledBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                hintText: 'qty',
-              ),
-              onChanged: (value) {
-                onBtnChanged();
-              },
-            ),
-          ),
+          qtyTxtField,
           // Text(
           //   '2',
           // ),

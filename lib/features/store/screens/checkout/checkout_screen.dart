@@ -31,8 +31,6 @@ class CCheckoutScreen extends StatelessWidget {
     final currencySymbol =
         CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
 
-    cartController.fetchCartItems();
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: CColors.rBrown,

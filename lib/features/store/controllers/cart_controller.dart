@@ -21,6 +21,12 @@ class CCartController extends GetxController {
     fetchCartItems();
   }
 
+  @override
+  void onInit() async {
+    fetchCartItems();
+    super.onInit();
+  }
+
   /// -- fetch cart items from device storage --
   void fetchCartItems() async {
     final cartItemsStrings =
@@ -81,11 +87,16 @@ class CCartController extends GetxController {
   }
 
   /// -- add a single item to cart --
-  void addSingleItemToCart(CCartItemModel item) {
+  void addSingleItemToCart(
+      CCartItemModel item, bool fromQtyTxtField, String? qtyValue) {
     int itemIndex = cartItems
         .indexWhere((cartItem) => cartItem.productId == item.productId);
     if (itemIndex >= 0) {
-      cartItems[itemIndex].quantity += 1;
+      if (fromQtyTxtField) {
+        cartItems[itemIndex].quantity = int.parse(qtyValue!);
+      } else {
+        cartItems[itemIndex].quantity += 1;
+      }
     } else {
       cartItems.add(item);
     }
@@ -108,6 +119,7 @@ class CCartController extends GetxController {
     updateCartTotals();
     saveCartItems();
     cartItems.refresh();
+    fetchCartItems();
   }
 
   /// -- update cart totals --

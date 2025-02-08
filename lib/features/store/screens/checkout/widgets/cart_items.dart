@@ -2,9 +2,11 @@ import 'package:c_ri/common/widgets/products/cart/add_remove_btns.dart';
 import 'package:c_ri/common/widgets/products/store_item.dart';
 import 'package:c_ri/common/widgets/txt_widgets/product_price_txt.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
+import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class CCartItems extends StatelessWidget {
@@ -15,11 +17,12 @@ class CCartItems extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartController = Get.put(CCartController());
-
+    final invController = Get.put(CInventoryController());
     final scrollController = ScrollController();
 
     return Obx(
       () {
+        //cartController.fetchCartItems();
         return Scrollbar(
           thumbVisibility: true,
           controller: scrollController,
@@ -33,12 +36,13 @@ class CCartItems extends StatelessWidget {
               );
             },
             itemBuilder: (_, index) {
-              final item = cartController.cartItems[index];
-              cartController.qtyFieldControllers.add(TextEditingController());
+              final cartItem = cartController.cartItems[index];
+              cartController.qtyFieldControllers.add(
+                  TextEditingController(text: cartItem.quantity.toString()));
               return Column(
                 children: [
                   CStoreItemWidget(
-                    cartItem: item,
+                    cartItem: cartItem,
                   ),
                   SizedBox(
                     height: CSizes.spaceBtnItems / 4,
@@ -54,15 +58,52 @@ class CCartItems extends StatelessWidget {
                           ),
                           // -- buttons to increment, decrement qty --
                           CItemQtyWithAddRemoveBtns(
-                            qtyFieldInitialValue: cartController
-                                .cartItems[index].quantity
-                                .toString(),
-                            qtyfieldController:
-                                cartController.qtyFieldControllers[index],
-                            onBtnChanged: () {
-                              cartController.qtyFieldControllers[index].text =
-                                  'r';
-                            },
+                            qtyTxtField: SizedBox(
+                              width: 40.0,
+                              child: TextFormField(
+                                controller:
+                                    cartController.qtyFieldControllers[index],
+                                //initialValue: qtyFieldInitialValue,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  errorBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  hintText: 'qty',
+                                ),
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                  decimal: false,
+                                  signed: false,
+                                ),
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+
+                                onChanged: (value) {
+                                  if (cartController
+                                          .qtyFieldControllers[index].text !=
+                                      '') {
+                                    invController.fetchInventoryItems();
+                                    cartController.fetchCartItems();
+                                    var invItem = invController.inventoryItems
+                                        .firstWhere((item) =>
+                                            item.productId.toString() ==
+                                            cartController
+                                                .cartItems[index].productId
+                                                .toString()
+                                                .toLowerCase());
+                                    final thisCartItem =
+                                        cartController.convertInvToCartItem(
+                                            invItem, int.parse(value));
+                                    cartController.addSingleItemToCart(
+                                        thisCartItem, true, value);
+                                  }
+                                  //qtyFieldInitialValue = value;
+                                },
+                              ),
+                            ),
                           ),
                         ],
                       ),

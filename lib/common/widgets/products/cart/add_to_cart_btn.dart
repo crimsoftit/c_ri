@@ -26,7 +26,7 @@ class CAddToCartBtn extends StatelessWidget {
         var invItem = invController.inventoryItems.firstWhere((item) =>
             item.productId.toString() == pId.toString().toLowerCase());
         final cartItem = cartController.convertInvToCartItem(invItem, 1);
-        cartController.addSingleItemToCart(cartItem);
+        cartController.addSingleItemToCart(cartItem, false, null);
       },
       child: Obx(
         () {
