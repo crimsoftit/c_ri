@@ -36,13 +36,12 @@ class CCartItems extends StatelessWidget {
               );
             },
             itemBuilder: (_, index) {
-              final cartItem = cartController.cartItems[index];
-              cartController.qtyFieldControllers.add(
-                  TextEditingController(text: cartItem.quantity.toString()));
+              cartController.qtyFieldControllers.add(TextEditingController(
+                  text: cartController.cartItems[index].quantity.toString()));
               return Column(
                 children: [
                   CStoreItemWidget(
-                    cartItem: cartItem,
+                    cartItem: cartController.cartItems[index],
                   ),
                   SizedBox(
                     height: CSizes.spaceBtnItems / 4,
@@ -58,6 +57,7 @@ class CCartItems extends StatelessWidget {
                           ),
                           // -- buttons to increment, decrement qty --
                           CItemQtyWithAddRemoveBtns(
+                            removeItemBtnAction: () {},
                             qtyTxtField: SizedBox(
                               width: 40.0,
                               child: TextFormField(
@@ -100,10 +100,34 @@ class CCartItems extends StatelessWidget {
                                     cartController.addSingleItemToCart(
                                         thisCartItem, true, value);
                                   }
-                                  //qtyFieldInitialValue = value;
                                 },
                               ),
                             ),
+                            addItemBtnAction: () {
+                              if (cartController
+                                      .qtyFieldControllers[index].text !=
+                                  '') {
+                                invController.fetchInventoryItems();
+                                cartController.fetchCartItems();
+                                var invItem = invController.inventoryItems
+                                    .firstWhere((item) =>
+                                        item.productId.toString() ==
+                                        cartController
+                                            .cartItems[index].productId
+                                            .toString()
+                                            .toLowerCase());
+                                final thisCartItem = cartController
+                                    .convertInvToCartItem(invItem, 1);
+                                cartController.addSingleItemToCart(
+                                    thisCartItem, false, null);
+                                cartController.fetchCartItems();
+                                // cartController.qtyFieldControllers[index].text =
+                                //     cartItem.quantity.toString();
+                                cartController.qtyFieldControllers[index].text =
+                                    cartController.cartItems[index].quantity
+                                        .toString();
+                              }
+                            },
                           ),
                         ],
                       ),
@@ -112,8 +136,9 @@ class CCartItems extends StatelessWidget {
                           right: 8.0,
                         ),
                         child: CProductPriceTxt(
-                          price:
-                              cartController.cartItems[index].price.toString(),
+                          price: (cartController.cartItems[index].price *
+                                  cartController.cartItems[index].quantity)
+                              .toStringAsFixed(2),
                           isLarge: true,
                           txtColor: CColors.rBrown,
                         ),

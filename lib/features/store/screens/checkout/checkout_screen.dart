@@ -100,13 +100,19 @@ class CCheckoutScreen extends StatelessWidget {
                       SizedBox(
                         height: CHelperFunctions.screenHeight() * 0.42,
                         child: CRoundedContainer(
+                          padding: EdgeInsets.all(
+                            CSizes.defaultSpace / 4,
+                          ),
                           bgColor: CColors.rBrown.withValues(
                             alpha: 0.2,
                           ),
                           child: CCartItems(),
                         ),
                       ),
-                      Divider(),
+                      //Divider(),
+                      SizedBox(
+                        height: CSizes.defaultSpace / 4,
+                      ),
 
                       // -- billing section --
                       CRoundedContainer(
@@ -158,7 +164,7 @@ class CCheckoutScreen extends StatelessWidget {
             );
           },
           label: Text(
-            'CHECKOUT $currencySymbol.1200.00',
+            'CHECKOUT $currencySymbol.${cartController.totalCartPrice.value.toStringAsFixed(2)}',
           ),
           icon: Icon(
             Iconsax.wallet_check,

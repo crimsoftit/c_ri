@@ -139,7 +139,8 @@ class CCartController extends GetxController {
   /// -- save cart items to device storage --
   void saveCartItems() async {
     final cartItemsStrings = cartItems.map((item) => item.toJson()).toList();
-    await CLocalStorage.instance().writeData('cartItems', cartItemsStrings);
+    //await CLocalStorage.instance().writeData('cartItems', cartItemsStrings);
+    CLocalStorage.instance().writeData('cartItems', cartItemsStrings);
     //await localStorage.write('cartItems', cartItemsStrings);
   }
 
@@ -157,5 +158,26 @@ class CCartController extends GetxController {
     itemQtyInCart.value = 0;
     cartItems.clear();
     updateCart();
+  }
+
+  @override
+  void dispose() {
+    for (var controller in qtyFieldControllers) {
+      controller.dispose();
+    }
+    qtyFieldControllers.clear();
+    qtyFieldControllers.close();
+
+    super.dispose();
+  }
+
+  @override
+  void onClose() {
+    for (var controller in qtyFieldControllers) {
+      controller.dispose();
+    }
+    qtyFieldControllers.clear();
+    qtyFieldControllers.close();
+    super.onClose();
   }
 }

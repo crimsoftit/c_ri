@@ -69,7 +69,7 @@ class CInventoryController extends GetxController {
 
     fetchInventoryItems();
     //fetchUserInvSheetData();
-    addUnsyncedInvToCloud();
+    //addUnsyncedInvToCloud();
     fetchInvDels();
     fetchInvUpdates();
     syncInvDels();
@@ -79,7 +79,6 @@ class CInventoryController extends GetxController {
       foundInventoryItems.value = inventoryItems;
     }
     await initInvSync();
-    //await addUnsyncedInvToCloud();
     super.onInit();
   }
 

@@ -10,9 +10,12 @@ class CItemQtyWithAddRemoveBtns extends StatelessWidget {
   const CItemQtyWithAddRemoveBtns({
     super.key,
     required this.qtyTxtField,
+    this.addItemBtnAction,
+    this.removeItemBtnAction,
   });
 
   final Widget qtyTxtField;
+  final VoidCallback? addItemBtnAction, removeItemBtnAction;
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +49,7 @@ class CItemQtyWithAddRemoveBtns extends StatelessWidget {
             size: CSizes.md,
             color: isDarkTheme ? CColors.white : CColors.rBrown,
             bgColor: isDarkTheme ? CColors.darkerGrey : CColors.light,
+            onPressed: removeItemBtnAction,
           ),
           SizedBox(
             width: CSizes.spaceBtnItems,
@@ -66,6 +70,7 @@ class CItemQtyWithAddRemoveBtns extends StatelessWidget {
             size: CSizes.md,
             color: CColors.white,
             bgColor: CColors.rBrown,
+            onPressed: addItemBtnAction,
           ),
         ],
       ),
