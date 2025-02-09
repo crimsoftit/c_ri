@@ -57,7 +57,32 @@ class CCartItems extends StatelessWidget {
                           ),
                           // -- buttons to increment, decrement qty --
                           CItemQtyWithAddRemoveBtns(
-                            removeItemBtnAction: () {},
+                            // button to decrement item qty in the cart
+                            removeItemBtnAction: () {
+                              if (cartController
+                                      .qtyFieldControllers[index].text !=
+                                  '') {
+                                invController.fetchInventoryItems();
+                                cartController.fetchCartItems();
+                                var invItem = invController.inventoryItems
+                                    .firstWhere((item) =>
+                                        item.productId.toString() ==
+                                        cartController
+                                            .cartItems[index].productId
+                                            .toString()
+                                            .toLowerCase());
+                                final thisCartItem = cartController
+                                    .convertInvToCartItem(invItem, 1);
+                                cartController
+                                    .removeSingleItemFromCart(thisCartItem);
+                                cartController.fetchCartItems();
+                                // cartController.qtyFieldControllers[index].text =
+                                //     cartItem.quantity.toString();
+                                cartController.qtyFieldControllers[index].text =
+                                    cartController.cartItems[index].quantity
+                                        .toString();
+                              }
+                            },
                             qtyTxtField: SizedBox(
                               width: 40.0,
                               child: TextFormField(
@@ -103,6 +128,8 @@ class CCartItems extends StatelessWidget {
                                 },
                               ),
                             ),
+
+                            // button to increment item qty in the cart
                             addItemBtnAction: () {
                               if (cartController
                                       .qtyFieldControllers[index].text !=

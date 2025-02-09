@@ -1,5 +1,6 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/products/cart/add_to_cart_btn.dart';
+import 'package:c_ri/common/widgets/products/cart/positioned_cart_counter_widget.dart';
 import 'package:c_ri/common/widgets/products/circle_avatar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
@@ -260,7 +261,7 @@ class CInventoryScreen extends StatelessWidget {
                               //   ),
                               // ),
                               leading: CCircleAvatar(
-                                title:
+                                avatarInitial:
                                     invController.inventoryItems[index].name[0],
                                 bgColor: invController
                                             .inventoryItems[index].quantity <
@@ -538,17 +539,27 @@ class CInventoryScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 cartController.countOfCartItems.value >= 1
-                    ? FloatingActionButton.extended(
-                        onPressed: () {
-                          Get.to(() => const CCheckoutScreen());
-                        },
-                        label: const Text('checkout'),
-                        backgroundColor: Colors.brown,
-                        foregroundColor: Colors.white,
-                        icon: const Icon(
-                          Iconsax.wallet_check,
-                        ),
-                        heroTag: 'checkout',
+                    ? Stack(
+                        children: [
+                          FloatingActionButton.extended(
+                            onPressed: () {
+                              Get.to(() => const CCheckoutScreen());
+                            },
+                            label: const Text('checkout'),
+                            backgroundColor: Colors.brown,
+                            foregroundColor: Colors.white,
+                            icon: const Icon(
+                              Iconsax.wallet_check,
+                            ),
+                            heroTag: 'checkout',
+                          ),
+                          CPositionedCartCounterWidget(
+                            counterBgColor: CColors.white,
+                            counterTxtColor: CColors.rBrown,
+                            rightPosition: 80.0,
+                            topPosition: 5.0,
+                          ),
+                        ],
                       )
                     : SizedBox(),
                 const SizedBox(

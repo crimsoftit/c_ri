@@ -2,6 +2,7 @@ import 'package:c_ri/features/store/models/cart_item_model.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/local_storage/storage_utility.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -104,6 +105,48 @@ class CCartController extends GetxController {
     updateCart();
   }
 
+  /// -- add a single item to cart --
+  void removeSingleItemFromCart(CCartItemModel item) {
+    int removeItemIndex = cartItems.indexWhere(
+      (itemToRemove) {
+        return itemToRemove.productId == item.productId;
+      },
+    );
+
+    if (removeItemIndex >= 0) {
+      if (cartItems[removeItemIndex].quantity > 1) {
+        cartItems[removeItemIndex].quantity -= 1;
+      } else {
+        // show confirm dialog before entirely removing
+        cartItems[removeItemIndex].quantity == 1
+            ? removeItemFromCartDialog(removeItemIndex, item.pName)
+            : cartItems.removeAt(removeItemIndex);
+      }
+      updateCart();
+    }
+  }
+
+  /// -- confirm dialog before entirely removing item from cart --
+  void removeItemFromCartDialog(int itemIndex, String itemToRemove) {
+    Get.defaultDialog(
+      title: 'remove item?',
+      middleText: 'are you certain you wish to remove this item from the cart?',
+      onConfirm: () {
+        // perform action to entirely remove this item from the cart
+        cartItems.removeAt(itemIndex);
+        updateCart();
+        CPopupSnackBar.customToast(
+          message: '$itemToRemove removed from the cart...',
+          forInternetConnectivityStatus: false,
+        );
+        Get.back();
+      },
+      onCancel: () {
+        Get.back();
+      },
+    );
+  }
+
   /// -- convert a CInventoryModel to a CCartItemModel --
   CCartItemModel convertInvToCartItem(CInventoryModel item, int quantity) {
     return CCartItemModel(
@@ -168,6 +211,10 @@ class CCartController extends GetxController {
     qtyFieldControllers.clear();
     qtyFieldControllers.close();
 
+    if (kDebugMode) {
+      print("----------\n\n TextEditingControllers DISPOSED \n\n ----------");
+    }
+
     super.dispose();
   }
 
@@ -178,6 +225,10 @@ class CCartController extends GetxController {
     }
     qtyFieldControllers.clear();
     qtyFieldControllers.close();
+
+    if (kDebugMode) {
+      print("----------\n\n TextEditingControllers CLOSED \n\n ----------");
+    }
     super.onClose();
   }
 }

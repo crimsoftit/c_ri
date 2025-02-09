@@ -23,7 +23,7 @@ class CNetworkManager extends GetxController {
   void onInit() {
     super.onInit();
     _connectivitySubscription = InternetConnection().onStatusChange.listen(
-      (event) {
+      (event) async {
         switch (event) {
           case InternetStatus.connected:
             hasConnection.value = true;

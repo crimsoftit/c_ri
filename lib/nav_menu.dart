@@ -62,7 +62,11 @@ class NavMenu extends StatelessWidget {
           ],
         ),
       ),
-      body: Obx(() => navController.screens[navController.selectedIndex.value]),
+      body: Obx(
+        () {
+          return navController.screens[navController.selectedIndex.value];
+        },
+      ),
     );
   }
 }

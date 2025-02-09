@@ -29,7 +29,7 @@ class CStoreItemWidget extends StatelessWidget {
     return Row(
       children: [
         CCircleAvatar(
-          title: cartItem.pName[0].toUpperCase(),
+          avatarInitial: cartItem.pName[0],
           txtColor: isDarkTheme ? CColors.rBrown : CColors.white,
           bgColor: isDarkTheme ? CColors.white : CColors.rBrown,
         ),

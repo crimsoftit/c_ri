@@ -13,6 +13,7 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -33,7 +34,9 @@ class CCheckoutScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: CColors.rBrown,
+        backgroundColor: CNetworkManager.instance.hasConnection.value
+            ? CColors.primaryBrown
+            : CColors.black,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -74,12 +77,8 @@ class CCheckoutScreen extends StatelessWidget {
               actionBtnText: 'let\'s fill it',
               animation: CImages.noDataLottie,
               onActionBtnPressed: () {
-                Get.off(
-                  () {
-                    navController.selectedIndex.value = 1;
-                    NavMenu();
-                  },
-                );
+                navController.selectedIndex.value = 1;
+                Get.to(() => const NavMenu());
               },
             );
 
@@ -163,8 +162,12 @@ class CCheckoutScreen extends StatelessWidget {
               },
             );
           },
-          label: Text(
-            'CHECKOUT $currencySymbol.${cartController.totalCartPrice.value.toStringAsFixed(2)}',
+          label: Obx(
+            () {
+              return Text(
+                'CHECKOUT $currencySymbol.${cartController.totalCartPrice.value.toStringAsFixed(2)}',
+              );
+            },
           ),
           icon: Icon(
             Iconsax.wallet_check,

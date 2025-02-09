@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 class CCircleAvatar extends StatelessWidget {
   const CCircleAvatar({
     super.key,
-    required this.title,
     this.bgColor = CColors.rBrown,
     this.txtColor = CColors.white,
+    required this.avatarInitial,
   });
 
-  final String title;
+  final String avatarInitial;
   final Color? bgColor, txtColor;
 
   @override
@@ -19,7 +19,7 @@ class CCircleAvatar extends StatelessWidget {
       // backgroundColor: Colors.brown[300],
       radius: 16.0,
       child: Text(
-        'K',
+        avatarInitial.toUpperCase(),
         style: Theme.of(context).textTheme.labelLarge!.apply(
               color: txtColor,
             ),
