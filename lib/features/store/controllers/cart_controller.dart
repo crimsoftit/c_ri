@@ -10,9 +10,14 @@ class CCartController extends GetxController {
   static CCartController get instance => Get.find();
 
   /// -- variables --
+  RxDouble discount = 0.0.obs;
+  RxDouble taxFee = 0.0.obs;
+  RxDouble txnTotals = 0.0.obs;
+  RxDouble totalCartPrice = 0.0.obs;
+
   RxInt countOfCartItems = 0.obs;
   RxInt itemQtyInCart = 0.obs;
-  RxDouble totalCartPrice = 0.0.obs;
+
   RxList<CCartItemModel> cartItems = <CCartItemModel>[].obs;
 
   RxList<TextEditingController> qtyFieldControllers =
@@ -175,8 +180,9 @@ class CCartController extends GetxController {
       computedCartItemsCount += item.quantity;
     }
 
-    totalCartPrice.value = computedTotalCartPrice;
     countOfCartItems.value = computedCartItemsCount;
+    totalCartPrice.value = computedTotalCartPrice;
+    txnTotals.value = totalCartPrice.value + discount.value + taxFee.value;
   }
 
   /// -- save cart items to device storage --
@@ -201,6 +207,11 @@ class CCartController extends GetxController {
     itemQtyInCart.value = 0;
     cartItems.clear();
     updateCart();
+  }
+
+  /// -- initialize quantity of inventory item in the cart --
+  void initializeItemCountInCart(CInventoryModel invItem) {
+    itemQtyInCart.value = getItemQtyInCart(invItem.productId.toString());
   }
 
   @override

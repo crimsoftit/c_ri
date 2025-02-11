@@ -186,6 +186,7 @@ flutter:
     - assets/icons/flash_off.jpg
     - assets/icons/flash_on.jpeg
     - assets/icons/payment_methods/
+    - assets/icons/payment_methods/bitcoin.jpeg
     - assets/icons/payment_methods/mpesa_2.png
     - assets/icons/payment_methods/mpesa.png
     - assets/icons/switch_camera.png

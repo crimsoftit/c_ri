@@ -48,10 +48,12 @@ class CHomeAppBarWidget extends StatelessWidget {
                   );
                 } else {
                   return Text(
-                    userController.user.value.businessName,
+                    userController.user.value.businessName == ''
+                        ? userController.user.value.fullName
+                        : userController.user.value.businessName,
                     style: Theme.of(context).textTheme.headlineSmall!.apply(
                           color: CColors.white,
-                          fontSizeFactor: 0.7,
+                          //fontSizeFactor: 0.7,
                         ),
                   );
                 }

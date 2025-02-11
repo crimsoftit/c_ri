@@ -24,12 +24,50 @@ class CBillingAmountSection extends StatelessWidget {
             ),
             CProductPriceTxt(
               price: cartController.totalCartPrice.value.toStringAsFixed(2),
-              isLarge: true,
+              isLarge: false,
               txtColor: CColors.rBrown,
             ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
             Text(
-              cartController.totalCartPrice.value.toStringAsFixed(2),
+              'discount',
               style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            CProductPriceTxt(
+              price: cartController.discount.value.toStringAsFixed(2),
+              isLarge: false,
+              txtColor: CColors.rBrown,
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'tax fee',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            CProductPriceTxt(
+              price: cartController.taxFee.value.toStringAsFixed(2),
+              isLarge: false,
+              txtColor: CColors.rBrown,
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'total amount',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            CProductPriceTxt(
+              price: cartController.txnTotals.value.toStringAsFixed(2),
+              isLarge: true,
+              txtColor: CColors.rBrown,
             ),
           ],
         ),

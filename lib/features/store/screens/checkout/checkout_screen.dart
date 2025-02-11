@@ -4,7 +4,7 @@ import 'package:c_ri/common/widgets/success_screen/success_screen.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 
-import 'package:c_ri/features/store/screens/checkout/widgets/payment_method_section.dart';
+import 'package:c_ri/features/store/screens/checkout/widgets/payment_methods/payment_method_section.dart';
 import 'package:c_ri/features/store/screens/checkout/widgets/billing_amount_section.dart';
 import 'package:c_ri/features/store/screens/checkout/widgets/cart_items.dart';
 import 'package:c_ri/features/store/screens/search/search_results.dart';
@@ -71,15 +71,17 @@ class CCheckoutScreen extends StatelessWidget {
         child: Obx(
           () {
             /// -- empty data widget --
-            final noDataWidget = CAnimatedLoaderWidget(
-              showActionBtn: true,
-              text: 'whoops! cart is EMPTY!',
-              actionBtnText: 'let\'s fill it',
-              animation: CImages.noDataLottie,
-              onActionBtnPressed: () {
-                navController.selectedIndex.value = 1;
-                Get.to(() => const NavMenu());
-              },
+            final noDataWidget = Center(
+              child: CAnimatedLoaderWidget(
+                showActionBtn: true,
+                text: 'whoops! cart is EMPTY!',
+                actionBtnText: 'let\'s fill it',
+                animation: CImages.emptyCartLottie,
+                onActionBtnPressed: () {
+                  navController.selectedIndex.value = 1;
+                  Get.to(() => const NavMenu());
+                },
+              ),
             );
 
             if (cartController.cartItems.isEmpty) {
@@ -97,7 +99,9 @@ class CCheckoutScreen extends StatelessWidget {
                     children: [
                       // -- list of items in the cart --
                       SizedBox(
-                        height: CHelperFunctions.screenHeight() * 0.42,
+                        height: cartController.cartItems.length <= 2
+                            ? CHelperFunctions.screenHeight() * 0.30
+                            : CHelperFunctions.screenHeight() * 0.42,
                         child: CRoundedContainer(
                           padding: EdgeInsets.all(
                             CSizes.defaultSpace / 4,
@@ -145,36 +149,43 @@ class CCheckoutScreen extends StatelessWidget {
           },
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ElevatedButton.icon(
-          onPressed: () {
-            Get.to(
-              () {
-                return CSuccessScreen(
-                  title: 'txn success',
-                  subTitle: 'transaction successful',
-                  image: CImages.paymentSuccessfulAnimation,
-                  onPressed: () {
-                    Get.offAll(() => NavMenu());
+      bottomNavigationBar: cartController.cartItems.isNotEmpty
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Get.to(
+                    () {
+                      return Obx(
+                        () {
+                          return CSuccessScreen(
+                            title: 'txn success',
+                            subTitle: 'transaction successful',
+                            image: CImages.paymentSuccessfulAnimation,
+                            onPressed: () {
+                              navController.selectedIndex.value = 1;
+                              Get.offAll(() => NavMenu());
+                            },
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+                label: Obx(
+                  () {
+                    return Text(
+                      'CHECKOUT $currencySymbol.${cartController.totalCartPrice.value.toStringAsFixed(2)}',
+                    );
                   },
-                );
-              },
-            );
-          },
-          label: Obx(
-            () {
-              return Text(
-                'CHECKOUT $currencySymbol.${cartController.totalCartPrice.value.toStringAsFixed(2)}',
-              );
-            },
-          ),
-          icon: Icon(
-            Iconsax.wallet_check,
-            color: CColors.white,
-          ),
-        ),
-      ),
+                ),
+                icon: Icon(
+                  Iconsax.wallet_check,
+                  color: CColors.white,
+                ),
+              ),
+            )
+          : null,
     );
   }
 }

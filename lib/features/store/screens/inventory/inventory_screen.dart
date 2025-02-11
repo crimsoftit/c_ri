@@ -540,32 +540,44 @@ class CInventoryScreen extends StatelessWidget {
               children: [
                 cartController.countOfCartItems.value >= 1
                     ? Stack(
+                        alignment: Alignment.centerRight,
                         children: [
-                          FloatingActionButton.extended(
+                          // FloatingActionButton.extended(
+                          //   onPressed: () {
+                          //     Get.to(() => const CCheckoutScreen());
+                          //   },
+                          //   label: const Text('checkout'),
+                          //   backgroundColor: Colors.brown,
+                          //   foregroundColor: Colors.white,
+                          //   icon: const Icon(
+                          //     Iconsax.wallet_check,
+                          //   ),
+                          //   heroTag: 'checkout',
+                          // ),
+                          FloatingActionButton(
                             onPressed: () {
                               Get.to(() => const CCheckoutScreen());
                             },
-                            label: const Text('checkout'),
                             backgroundColor: Colors.brown,
                             foregroundColor: Colors.white,
-                            icon: const Icon(
+                            heroTag: 'checkout',
+                            child: const Icon(
                               Iconsax.wallet_check,
                             ),
-                            heroTag: 'checkout',
                           ),
                           CPositionedCartCounterWidget(
                             counterBgColor: CColors.white,
                             counterTxtColor: CColors.rBrown,
-                            rightPosition: 80.0,
-                            topPosition: 5.0,
+                            rightPosition: 10.0,
+                            topPosition: 8.0,
                           ),
                         ],
                       )
                     : SizedBox(),
                 const SizedBox(
-                  height: CSizes.spaceBtnSections / 2,
+                  height: CSizes.spaceBtnSections / 8,
                 ),
-                FloatingActionButton.extended(
+                FloatingActionButton(
                   onPressed: () {
                     invController.runInvScanner();
                     showDialog(
@@ -579,14 +591,44 @@ class CInventoryScreen extends StatelessWidget {
                       ),
                     );
                   },
-                  label: const Text('add item'),
+
                   backgroundColor: Colors.brown,
                   foregroundColor: Colors.white,
-                  icon: const Icon(
-                    Iconsax.additem,
-                  ),
+                  // icon: const Icon(
+                  //   Iconsax.additem,
+                  // ),
+
                   heroTag: 'scan',
+                  child: const Icon(
+                    Iconsax.scan_barcode,
+                  ),
                 ),
+                // FloatingActionButton.extended(
+                //   onPressed: () {
+                //     invController.runInvScanner();
+                //     showDialog(
+                //       context: context,
+                //       useRootNavigator: false,
+                //       builder: (BuildContext context) => dialog.buildDialog(
+                //         context,
+                //         CInventoryModel(
+                //             '', '', '', '', '', 0, 0, 0.0, 0.0, 0.0, '', 0, ''),
+                //         true,
+                //       ),
+                //     );
+                //   },
+                //   // label: const Text('add item'),
+                //   label: const Text('add item'),
+                //   backgroundColor: Colors.brown,
+                //   foregroundColor: Colors.white,
+                //   // icon: const Icon(
+                //   //   Iconsax.additem,
+                //   // ),
+                //   icon: const Icon(
+                //     Iconsax.scan_barcode,
+                //   ),
+                //   heroTag: 'scan',
+                // ),
               ],
             );
           },

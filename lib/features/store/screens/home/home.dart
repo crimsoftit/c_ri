@@ -37,7 +37,23 @@ class HomeScreen extends StatelessWidget {
                       left: CSizes.defaultSpace,
                     ),
                     child: Column(
-                      children: [],
+                      children: [
+                        // -- top sellers category heading --
+                        CSectionHeading(
+                          showActionBtn: true,
+                          title: 'top sellers...',
+                          txtColor: CColors.white,
+                          btnTitle: 'gsheet inventory data',
+                          btnTxtColor: CColors.grey,
+                          editFontSize: true,
+                          onPressed: () {
+                            Get.to(() => const GsheetsInvScreen());
+                          },
+                        ),
+                        const SizedBox(
+                          height: CSizes.spaceBtnItems,
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(
@@ -47,21 +63,6 @@ class HomeScreen extends StatelessWidget {
               ),
             ),
 
-            // -- top sellers category heading --
-            CSectionHeading(
-              showActionBtn: true,
-              title: 'top sellers...',
-              txtColor: CColors.rBrown,
-              btnTitle: 'gsheet inventory data',
-              btnTxtColor: CColors.darkGrey,
-              editFontSize: true,
-              onPressed: () {
-                Get.to(() => const GsheetsInvScreen());
-              },
-            ),
-            const SizedBox(
-              height: CSizes.spaceBtnItems,
-            ),
             // CSectionHeading(
             //   showActionBtn: true,
             //   title: 'popular categories',

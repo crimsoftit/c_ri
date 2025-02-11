@@ -34,8 +34,9 @@ class CProductPriceTxt extends StatelessWidget {
                 color: txtColor,
                 decoration: lineThrough ? TextDecoration.lineThrough : null,
               )
-          : Theme.of(context).textTheme.titleLarge!.apply(
+          : Theme.of(context).textTheme.labelMedium!.apply(
                 color: txtColor,
+                fontSizeDelta: 0.7,
                 decoration: lineThrough ? TextDecoration.lineThrough : null,
               ),
     );

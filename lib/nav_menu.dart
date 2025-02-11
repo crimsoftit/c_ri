@@ -5,6 +5,7 @@ import 'package:c_ri/features/store/screens/inventory/inventory_screen.dart';
 import 'package:c_ri/features/store/screens/txns/txns_screen.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -29,11 +30,18 @@ class NavMenu extends StatelessWidget {
           onDestinationSelected: (index) {
             navController.selectedIndex.value = index;
           },
-          backgroundColor:
-              isDark ? CColors.rBrown : CColors.rBrown.withValues(alpha: 0.1),
+          backgroundColor: isDark
+              ? CNetworkManager.instance.hasConnection.value
+                  ? CColors.rBrown
+                  : CColors.black
+              : CNetworkManager.instance.hasConnection.value
+                  ? CColors.rBrown.withValues(alpha: 0.1)
+                  : CColors.black.withValues(alpha: 0.1),
           indicatorColor: isDark
               ? CColors.white.withValues(alpha: 0.3)
-              : CColors.rBrown.withValues(alpha: 0.3),
+              : CNetworkManager.instance.hasConnection.value
+                  ? CColors.rBrown.withValues(alpha: 0.3)
+                  : CColors.black.withValues(alpha: 0.3),
           destinations: const [
             NavigationDestination(
               icon: Icon(Iconsax.home),

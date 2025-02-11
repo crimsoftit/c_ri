@@ -95,6 +95,8 @@ class CImages {
 
   // -- no data screen images --
   static const String noDataLottie = "assets/images/lottie_anime/no_data.json";
+  static const String emptyCartLottie =
+      "assets/images/lottie_anime/lady-adding-product-in-cart-animation.json";
   static const String errorDataLottie = "assets/images/data_error.json";
 
   // -- loading animated images --
@@ -106,5 +108,15 @@ class CImages {
   static const String switchCamera = "assets/icons/switch_camera.png";
 
   // -- payment platforms --
-  static const String mPesaLogo = "assets/icons/payment_methods/mpesa_2.png";
+  static const String bitcoin = "assets/icons/payment_methods/bitcoin.jpeg";
+  static const String cash = "assets/icons/payment_methods/cash.jpg";
+  static const String cash2 = "assets/icons/payment_methods/cash_2.jpg";
+  static const String cash3 = "assets/icons/payment_methods/cash_3.jpeg";
+  static const String googlePayLogo =
+      "assets/icons/payment_methods/google-pay.png";
+  static const String masterCardLogo =
+      "assets/icons/payment_methods/master-card.png";
+  static const String mPesaLogo = "assets/icons/payment_methods/mpesa.png";
+  static const String paypalLogo = "assets/icons/payment_methods/paypal.png";
+  static const String visaLogo = "assets/icons/payment_methods/visa.png";
 }

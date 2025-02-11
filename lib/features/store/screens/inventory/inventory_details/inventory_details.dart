@@ -3,8 +3,10 @@ import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_cont
 import 'package:c_ri/common/widgets/list_tiles/menu_tile.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
+import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
+import 'package:c_ri/features/store/screens/inventory/inventory_details/widgets/add_to_cart_bottom_nav_bar.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/inv_dialog.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -26,7 +28,7 @@ class CInventoryDetailsScreen extends StatefulWidget {
 class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
   var itemId = Get.arguments;
   var invController = Get.put(CInventoryController());
-
+  final cartController = Get.put(CCartController());
   final userController = Get.put(CUserController());
 
   // ignore: prefer_typing_uninitialized_variables
@@ -190,13 +192,13 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                       ),
                       CMenuTile(
                         icon: Iconsax.calendar,
-                        title: 'comming soon',
+                        title: invItem.date,
                         subTitle: 'last modified',
                         onTap: () {},
                       ),
                       CMenuTile(
                         icon: Iconsax.card_tick,
-                        title: 'coming soon',
+                        title: invItem.qtySold.toString(),
                         subTitle: 'total sales',
                         onTap: () {},
                       ),
@@ -279,6 +281,9 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: CAddToCartBottomNavBar(
+        inventoryItem: invItem,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
