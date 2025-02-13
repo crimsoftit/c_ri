@@ -50,9 +50,6 @@ class CPaymentMethodSection extends StatelessWidget {
                     fit: BoxFit.contain,
                   ),
                 ),
-                // SizedBox(
-                //   height: CSizes.spaceBtnItems / 2,
-                // ),
                 Text(
                   checkoutController.selectedPaymentMethod.value.platformName,
                   style: Theme.of(context).textTheme.bodyLarge,

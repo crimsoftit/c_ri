@@ -273,6 +273,7 @@ class CInventoryScreen extends StatelessWidget {
                                 title: invController.inventoryItems[index].name
                                     .toUpperCase(),
                                 smallSize: false,
+                                txtColor: CColors.rBrown,
                               ),
 
                               subtitle: Column(

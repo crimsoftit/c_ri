@@ -1,4 +1,5 @@
 class TxnsSheetFields {
+  static const String soldItemId = 'soldItemId';
   static const String txnId = 'txnId';
   static const String userId = 'userId';
   static const String userEmail = 'userEmail';

@@ -19,12 +19,12 @@ class CStoreItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    //final cartController = Get.put(CCartController());
 
     final invController = Get.put(CInventoryController());
+    //invController.fetchInventoryItems();
 
     var invItem = invController.inventoryItems
-        .firstWhere((item) => item.productId.toString() == cartItem.productId);
+        .firstWhere((item) => item.productId == cartItem.productId);
 
     return Row(
       children: [

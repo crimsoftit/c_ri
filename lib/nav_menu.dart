@@ -2,7 +2,7 @@ import 'package:c_ri/features/personalization/screens/profile/profile.dart';
 import 'package:c_ri/features/personalization/screens/settings/user_settings.dart';
 import 'package:c_ri/features/store/screens/home/home.dart';
 import 'package:c_ri/features/store/screens/inventory/inventory_screen.dart';
-import 'package:c_ri/features/store/screens/txns/txns_screen.dart';
+import 'package:c_ri/features/store/screens/txns/sales_screen.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:c_ri/utils/helpers/network_manager.dart';

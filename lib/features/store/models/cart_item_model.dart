@@ -1,5 +1,5 @@
 class CCartItemModel {
-  String productId;
+  int productId;
   String pName;
   int quantity;
   double price;
@@ -14,7 +14,7 @@ class CCartItemModel {
   /// -- empty cart --
   static CCartItemModel empty() {
     return CCartItemModel(
-      productId: '',
+      productId: 0,
       quantity: 0,
     );
   }

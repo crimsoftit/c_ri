@@ -29,7 +29,7 @@ class CAddToCartBtn extends StatelessWidget {
       },
       child: Obx(
         () {
-          final pQtyInCart = cartController.getItemQtyInCart(pId.toString());
+          final pQtyInCart = cartController.getItemQtyInCart(pId);
 
           return Container(
             // width: 30.0,

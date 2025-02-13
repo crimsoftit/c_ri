@@ -59,7 +59,8 @@ class DbHelper {
 
       database.execute('''
           CREATE TABLE IF NOT EXISTS $txnsTable(
-            txnId INTEGER PRIMARY KEY AUTOINCREMENT,
+            soldItemId INTEGER PRIMARY KEY AUTOINCREMENT,
+            txnId INTEGER NOT NULL,
             userId TEXT NOT NULL,
             userEmail TEXT NOT NULL,
             userName TEXT NOT NULL,

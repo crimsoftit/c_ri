@@ -1,4 +1,5 @@
 import 'package:c_ri/common/widgets/products/cart/positioned_cart_counter_widget.dart';
+import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/screens/checkout/checkout_screen.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +18,14 @@ class CCartCounterIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartController = Get.put(CCartController());
+    cartController.fetchCartItems();
+
     return Stack(
       children: [
         IconButton(
           onPressed: () {
+            cartController.fetchCartItems();
             Get.to(() => const CCheckoutScreen());
           },
           icon: Icon(

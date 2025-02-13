@@ -139,6 +139,7 @@ class CTxnsController extends GetxController {
 
           final newTxn = CTxnsModel.withId(
             CHelperFunctions.generateId(),
+            CHelperFunctions.generateId(),
             userController.user.value.id,
             userController.user.value.email,
             userController.user.value.fullName,
@@ -491,6 +492,7 @@ class CTxnsController extends GetxController {
         if (unsyncedTxnAppends.isNotEmpty) {
           var gSheetTxnAppends = unsyncedTxnAppends
               .map((item) => {
+                    'soldItemId': item.soldItemId,
                     'txnId': item.txnId,
                     'userId': item.userId,
                     'userEmail': item.userEmail,
@@ -561,6 +563,7 @@ class CTxnsController extends GetxController {
       if (unsyncedTxnAppends.isNotEmpty) {
         for (var element in unsyncedTxnAppends) {
           var txnAppends = CTxnsModel(
+            element.txnId,
             element.userId,
             element.userEmail,
             element.userName,
@@ -582,7 +585,7 @@ class CTxnsController extends GetxController {
             element.txnStatus,
           );
 
-          await dbHelper.updateTxnDetails(txnAppends, element.txnId!);
+          await dbHelper.updateTxnDetails(txnAppends, element.txnId);
 
           CPopupSnackBar.successSnackBar(
             title: 'txns sync success...',
@@ -638,6 +641,7 @@ class CTxnsController extends GetxController {
         if (transactions.isEmpty) {
           for (var element in userGsheetTxnsData) {
             var dbTxnImports = CTxnsModel.withId(
+              element.soldItemId,
               element.txnId,
               element.userId,
               element.userEmail,

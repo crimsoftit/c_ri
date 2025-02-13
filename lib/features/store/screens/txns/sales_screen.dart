@@ -55,7 +55,7 @@ class TxnsScreen extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       Text(
-                                        'transactions',
+                                        'sales',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyLarge!
@@ -212,6 +212,16 @@ class TxnsScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
+                                Text(
+                                  'soldItemId: ${txnsController.transactions[index].soldItemId}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .apply(
+                                        color: CColors.rBrown,
+                                        //fontStyle: FontStyle.italic,
+                                      ),
+                                ),
                                 Text(
                                   'pCode: ${txnsController.transactions[index].productCode} t.Amount: ${userController.user.value.currencyCode}.${txnsController.transactions[index].totalAmount}',
                                   style: Theme.of(context)

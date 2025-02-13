@@ -112,6 +112,11 @@ class CImages {
   static const String cash = "assets/icons/payment_methods/cash.jpg";
   static const String cash2 = "assets/icons/payment_methods/cash_2.jpg";
   static const String cash3 = "assets/icons/payment_methods/cash_3.jpeg";
+  static const String cash4 = "assets/icons/payment_methods/cash_4.png";
+  static const String cash5 = "assets/icons/payment_methods/cash_5.png";
+  static const String cash6 = "assets/icons/payment_methods/cash_6.png";
+  static const String cash7 = "assets/icons/payment_methods/cash_7.png";
+
   static const String googlePayLogo =
       "assets/icons/payment_methods/google-pay.png";
   static const String masterCardLogo =

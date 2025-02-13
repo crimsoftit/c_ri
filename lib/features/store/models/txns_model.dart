@@ -5,10 +5,12 @@ import 'dart:convert';
 import 'package:c_ri/features/store/models/gsheet_models/txns_sheet_fields.dart';
 
 class CTxnsModel {
+  int? _soldItemId;
+  int _txnId = 0;
   String _userId = "";
   String _userEmail = "";
   String _userName = "";
-  int? _txnId;
+
   int _productId = 0;
   String _productCode = "";
   String _productName = "";
@@ -27,6 +29,7 @@ class CTxnsModel {
   String _txnStatus = "";
 
   CTxnsModel(
+    this._txnId,
     this._userId,
     this._userEmail,
     this._userName,
@@ -49,6 +52,7 @@ class CTxnsModel {
   );
 
   CTxnsModel.withId(
+    this._soldItemId,
     this._txnId,
     this._userId,
     this._userEmail,
@@ -73,6 +77,7 @@ class CTxnsModel {
 
   static List<String> getHeaders() {
     return [
+      'soldItemId',
       'txnId',
       'userId',
       'userEmail',
@@ -96,7 +101,8 @@ class CTxnsModel {
     ];
   }
 
-  int? get txnId => _txnId;
+  int? get soldItemId => _soldItemId;
+  int get txnId => _txnId;
 
   String get userId => _userId;
   String get userEmail => _userEmail;
@@ -117,6 +123,14 @@ class CTxnsModel {
   int get isSynced => _isSynced;
   String get syncAction => _syncAction;
   String get txnStatus => _txnStatus;
+
+  set soldItemId(int? newsoldItemId) {
+    _soldItemId = newsoldItemId;
+  }
+
+  set txnId(int newTxnId) {
+    _txnId = newTxnId;
+  }
 
   set userId(String newUid) {
     _userId = newUid;
@@ -208,9 +222,10 @@ class CTxnsModel {
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{};
 
-    if (txnId != null) {
-      map['txnId'] = _txnId;
+    if (soldItemId != null) {
+      map['soldItemId'] = _soldItemId;
     }
+    map['txnId'] = _txnId;
     map['userId'] = _userId;
     map['userEmail'] = _userEmail;
     map['userName'] = _userName;
@@ -237,6 +252,7 @@ class CTxnsModel {
 
   // extract a SoldItemsModel object from a Map object
   CTxnsModel.fromMapObject(Map<String, dynamic> map) {
+    _soldItemId = map['soldItemId'];
     _txnId = map['txnId'];
     _userId = map['userId'];
     _userEmail = map['userEmail'];
@@ -262,6 +278,7 @@ class CTxnsModel {
   /// -- extract a CTxnsModel object from a GSheet Map object --
   static CTxnsModel gSheetFromJson(Map<String, dynamic> json) {
     return CTxnsModel.withId(
+      jsonDecode(json[TxnsSheetFields.soldItemId]),
       jsonDecode(json[TxnsSheetFields.txnId]),
       json[TxnsSheetFields.userId],
       json[TxnsSheetFields.userEmail],

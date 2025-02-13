@@ -49,7 +49,7 @@ class CPopupSnackBar extends GetxController {
                         flex: 1,
                         child: Icon(
                           Icons.wifi_off,
-                          color: CColors.rBrown,
+                          color: isDarkTheme ? CColors.white : CColors.rBrown,
                           size: CSizes.iconSm,
                         ),
                       ),

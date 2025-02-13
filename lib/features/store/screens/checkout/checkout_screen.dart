@@ -1,8 +1,8 @@
 import 'package:c_ri/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:c_ri/common/widgets/loaders/animated_loader.dart';
-import 'package:c_ri/common/widgets/success_screen/success_screen.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
+import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 
 import 'package:c_ri/features/store/screens/checkout/widgets/payment_methods/payment_method_section.dart';
 import 'package:c_ri/features/store/screens/checkout/widgets/billing_amount_section.dart';
@@ -24,6 +24,7 @@ class CCheckoutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartController = Get.put(CCartController());
+    final checkoutController = Get.put(CCheckoutController());
     final navController = Get.put(NavMenuController());
     final userController = Get.put(CUserController());
 
@@ -154,23 +155,24 @@ class CCheckoutScreen extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton.icon(
                 onPressed: () {
-                  Get.to(
-                    () {
-                      return Obx(
-                        () {
-                          return CSuccessScreen(
-                            title: 'txn success',
-                            subTitle: 'transaction successful',
-                            image: CImages.paymentSuccessfulAnimation,
-                            onPressed: () {
-                              navController.selectedIndex.value = 1;
-                              Get.offAll(() => NavMenu());
-                            },
-                          );
-                        },
-                      );
-                    },
-                  );
+                  checkoutController.processTxn();
+                  // Get.to(
+                  //   () {
+                  //     return Obx(
+                  //       () {
+                  //         return CSuccessScreen(
+                  //           title: 'txn success',
+                  //           subTitle: 'transaction successful',
+                  //           image: CImages.paymentSuccessfulAnimation,
+                  //           onPressed: () {
+                  //             navController.selectedIndex.value = 1;
+                  //             Get.offAll(() => NavMenu());
+                  //           },
+                  //         );
+                  //       },
+                  //     );
+                  //   },
+                  // );
                 },
                 label: Obx(
                   () {

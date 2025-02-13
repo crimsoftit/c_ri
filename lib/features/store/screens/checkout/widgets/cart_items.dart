@@ -91,6 +91,7 @@ class CCartItems extends StatelessWidget {
                                 //initialValue: qtyFieldInitialValue,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
+                                  contentPadding: EdgeInsets.zero,
                                   disabledBorder: InputBorder.none,
                                   enabledBorder: InputBorder.none,
                                   errorBorder: InputBorder.none,

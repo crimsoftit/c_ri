@@ -5,6 +5,7 @@ import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 class CCartController extends GetxController {
   static CCartController get instance => Get.find();
@@ -29,6 +30,7 @@ class CCartController extends GetxController {
 
   @override
   void onInit() async {
+    await GetStorage.init();
     fetchCartItems();
     super.onInit();
   }
@@ -155,7 +157,7 @@ class CCartController extends GetxController {
   /// -- convert a CInventoryModel to a CCartItemModel --
   CCartItemModel convertInvToCartItem(CInventoryModel item, int quantity) {
     return CCartItemModel(
-      productId: item.productId.toString(),
+      productId: item.productId!,
       pName: item.name,
       quantity: quantity,
       price: item.unitSellingPrice,
@@ -167,7 +169,7 @@ class CCartController extends GetxController {
     updateCartTotals();
     saveCartItems();
     cartItems.refresh();
-    fetchCartItems();
+    //fetchCartItems();
   }
 
   /// -- update cart totals --
@@ -194,7 +196,7 @@ class CCartController extends GetxController {
   }
 
   /// -- get a specific item's quantity in the cart --
-  int getItemQtyInCart(String pId) {
+  int getItemQtyInCart(int pId) {
     final foundCartItemQty = cartItems
         .where((item) => item.productId == pId)
         .fold(0, (previousValue, element) => previousValue + element.quantity);
@@ -211,7 +213,7 @@ class CCartController extends GetxController {
 
   /// -- initialize quantity of inventory item in the cart --
   void initializeItemCountInCart(CInventoryModel invItem) {
-    itemQtyInCart.value = getItemQtyInCart(invItem.productId.toString());
+    itemQtyInCart.value = getItemQtyInCart(invItem.productId!);
   }
 
   @override
@@ -229,17 +231,17 @@ class CCartController extends GetxController {
     super.dispose();
   }
 
-  @override
-  void onClose() {
-    for (var controller in qtyFieldControllers) {
-      controller.dispose();
-    }
-    qtyFieldControllers.clear();
-    qtyFieldControllers.close();
+  // @override
+  // void onClose() {
+  //   for (var controller in qtyFieldControllers) {
+  //     controller.dispose();
+  //   }
+  //   qtyFieldControllers.clear();
+  //   qtyFieldControllers.close();
 
-    if (kDebugMode) {
-      print("----------\n\n TextEditingControllers CLOSED \n\n ----------");
-    }
-    super.onClose();
-  }
+  //   if (kDebugMode) {
+  //     print("----------\n\n TextEditingControllers CLOSED \n\n ----------");
+  //   }
+  //   super.onClose();
+  // }
 }
