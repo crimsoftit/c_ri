@@ -18,8 +18,6 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
-    //Get.put(CProductsRepo());
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(

@@ -109,7 +109,7 @@ class CImages {
 
   // -- payment platforms --
   static const String bitcoin = "assets/icons/payment_methods/bitcoin.jpeg";
-  static const String cash = "assets/icons/payment_methods/cash.jpg";
+
   static const String cash2 = "assets/icons/payment_methods/cash_2.jpg";
   static const String cash3 = "assets/icons/payment_methods/cash_3.jpeg";
   static const String cash4 = "assets/icons/payment_methods/cash_4.png";

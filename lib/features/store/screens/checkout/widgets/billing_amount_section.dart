@@ -58,7 +58,7 @@ class CBillingAmountSection extends StatelessWidget {
           ],
         ),
         SizedBox(
-          height: CSizes.spaceBtnItems / 4,
+          height: CSizes.spaceBtnItems / 10,
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

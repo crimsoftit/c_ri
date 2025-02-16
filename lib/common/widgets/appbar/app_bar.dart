@@ -17,6 +17,7 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.horizontalPadding = CSizes.md,
     this.leadingWidget,
     this.showSubTitle = false,
+    this.bgColor,
   });
 
   final Widget? title;
@@ -24,7 +25,7 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showBackArrow;
   final bool? showSubTitle;
   final IconData? leadingIcon;
-  final Color? backIconColor;
+  final Color? backIconColor, bgColor;
   final List<Widget>? actions;
   final VoidCallback? leadingOnPressed;
   final VoidCallback backIconAction;
@@ -43,6 +44,7 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
         leadingWidth: showBackArrow
             ? CHelperFunctions.screenWidth() * 0.1
             : CHelperFunctions.screenWidth() * 0.799,
+        backgroundColor: bgColor,
 
         leading: showBackArrow
             ? IconButton(

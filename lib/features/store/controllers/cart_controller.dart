@@ -1,3 +1,4 @@
+import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/cart_item_model.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/local_storage/storage_utility.dart';
@@ -23,6 +24,8 @@ class CCartController extends GetxController {
 
   RxList<TextEditingController> qtyFieldControllers =
       <TextEditingController>[].obs;
+
+  final invController = Get.put(CInventoryController());
 
   CCartController() {
     fetchCartItems();
@@ -99,17 +102,39 @@ class CCartController extends GetxController {
       CCartItemModel item, bool fromQtyTxtField, String? qtyValue) {
     int itemIndex = cartItems
         .indexWhere((cartItem) => cartItem.productId == item.productId);
-    if (itemIndex >= 0) {
-      if (fromQtyTxtField) {
-        cartItems[itemIndex].quantity = int.parse(qtyValue!);
-      } else {
-        cartItems[itemIndex].quantity += 1;
-      }
-    } else {
-      cartItems.add(item);
-    }
 
-    updateCart();
+    // -- check stock qty --
+    final inventoryItem = invController.inventoryItems
+        .firstWhere((invItem) => invItem.productId == item.productId);
+
+    if (inventoryItem.quantity > 0) {
+      if (itemIndex >= 0) {
+        if (cartItems[itemIndex].quantity >= inventoryItem.quantity) {
+          CPopupSnackBar.warningSnackBar(
+            title: 'oh snap!',
+            message: 'only ${inventoryItem.quantity} items are stocked!',
+          );
+          qtyFieldControllers[itemIndex].text =
+              inventoryItem.quantity.toString();
+          return;
+        } else {
+          if (fromQtyTxtField) {
+            cartItems[itemIndex].quantity = int.parse(qtyValue!);
+          } else {
+            cartItems[itemIndex].quantity += 1;
+          }
+        }
+      } else {
+        cartItems.add(item);
+      }
+
+      updateCart();
+    } else {
+      CPopupSnackBar.warningSnackBar(
+        title: 'oh snap!',
+        message: '${inventoryItem.name} is out of stock!',
+      );
+    }
   }
 
   /// -- add a single item to cart --
@@ -158,18 +183,20 @@ class CCartController extends GetxController {
   CCartItemModel convertInvToCartItem(CInventoryModel item, int quantity) {
     return CCartItemModel(
       productId: item.productId!,
+      pCode: item.pCode,
       pName: item.name,
       quantity: quantity,
+      availableStockQty: item.quantity,
       price: item.unitSellingPrice,
     );
   }
 
   /// -- update cart content --
-  void updateCart() async {
+  void updateCart() {
     updateCartTotals();
     saveCartItems();
     cartItems.refresh();
-    //fetchCartItems();
+    fetchCartItems();
   }
 
   /// -- update cart totals --

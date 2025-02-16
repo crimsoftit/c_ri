@@ -1,5 +1,6 @@
 import 'package:c_ri/common/widgets/products/circle_avatar.dart';
 import 'package:c_ri/common/widgets/txt_widgets/product_title_txt.dart';
+import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/cart_item_model.dart';
 import 'package:c_ri/utils/constants/colors.dart';
@@ -22,9 +23,13 @@ class CStoreItemWidget extends StatelessWidget {
 
     final invController = Get.put(CInventoryController());
     //invController.fetchInventoryItems();
+    final checkoutController = Get.put(CCheckoutController());
 
     var invItem = invController.inventoryItems
         .firstWhere((item) => item.productId == cartItem.productId);
+
+    checkoutController.itemStockCount.value = cartItem.availableStockQty;
+    checkoutController.totalInvSales.value = invItem.qtySold;
 
     return Row(
       children: [
@@ -49,7 +54,7 @@ class CStoreItemWidget extends StatelessWidget {
               Flexible(
                 fit: FlexFit.loose,
                 child: CProductTitleText(
-                  title: cartItem.pName,
+                  title: cartItem.pName.toUpperCase(),
                   smallSize: false,
                 ),
               ),
@@ -59,7 +64,12 @@ class CStoreItemWidget extends StatelessWidget {
                 TextSpan(
                   children: [
                     TextSpan(
-                      text: '${invItem.quantity} stocked ',
+                      text:
+                          '${checkoutController.itemStockCount.value} newly stocked ',
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
+                    TextSpan(
+                      text: '${cartItem.availableStockQty} stocked ',
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
                     TextSpan(
@@ -72,6 +82,9 @@ class CStoreItemWidget extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+              Text(
+                checkoutController.totalInvSales.value.toString(),
               ),
             ],
           ),

@@ -4,6 +4,8 @@ import 'package:c_ri/features/authentication/screens/login/login.dart';
 import 'package:c_ri/features/authentication/screens/onboarding/onboarding_screen.dart';
 import 'package:c_ri/features/authentication/screens/signup/verify_email.dart';
 import 'package:c_ri/features/personalization/screens/location_tings/device_settings_screen.dart';
+import 'package:c_ri/features/store/controllers/cart_controller.dart';
+import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/nav_menu.dart';
@@ -69,6 +71,8 @@ class AuthRepo extends GetxController {
 
           await invController.initInvSync();
           await txnsController.initTxnsSync();
+          Get.put(CCheckoutController());
+          Get.put(CCartController());
 
           /// --- ### HANDLE IMPORT OF CLOUD DATA ### --- ///
           Get.offAll(() => const NavMenu());

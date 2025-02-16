@@ -491,31 +491,33 @@ class CTxnsController extends GetxController {
 
         if (unsyncedTxnAppends.isNotEmpty) {
           var gSheetTxnAppends = unsyncedTxnAppends
-              .map((item) => {
-                    'soldItemId': item.soldItemId,
-                    'txnId': item.txnId,
-                    'userId': item.userId,
-                    'userEmail': item.userEmail,
-                    'userName': item.userName,
-                    'productId': item.productId,
-                    'productCode': item.productCode,
-                    'productName': item.productName,
-                    'quantity': item.quantity,
-                    'totalAmount': item.totalAmount,
-                    'amountIssued': item.amountIssued,
-                    'unitSellingPrice': item.unitSellingPrice,
-                    'paymentMethod': item.paymentMethod,
-                    'customerName': item.customerName,
-                    'customerContacts': item.customerContacts,
-                    'txnAddress': item.txnAddress,
-                    'txnAddressCoordinates': item.txnAddressCoordinates,
-                    'date': item.date,
-                    'isSynced': 1,
-                    'syncAction': 'none',
-                    // 'isSynced': item.isSynced,
-                    // 'syncAction': item.syncAction,
-                    'txnStatus': item.txnStatus,
-                  })
+              .map(
+                (item) => {
+                  'soldItemId': item.soldItemId,
+                  'txnId': item.txnId,
+                  'userId': item.userId,
+                  'userEmail': item.userEmail,
+                  'userName': item.userName,
+                  'productId': item.productId,
+                  'productCode': item.productCode,
+                  'productName': item.productName,
+                  'quantity': item.quantity,
+                  'totalAmount': item.totalAmount,
+                  'amountIssued': item.amountIssued,
+                  'unitSellingPrice': item.unitSellingPrice,
+                  'paymentMethod': item.paymentMethod,
+                  'customerName': item.customerName,
+                  'customerContacts': item.customerContacts,
+                  'txnAddress': item.txnAddress,
+                  'txnAddressCoordinates': item.txnAddressCoordinates,
+                  'date': item.date,
+                  'isSynced': 1,
+                  'syncAction': 'none',
+                  // 'isSynced': item.isSynced,
+                  // 'syncAction': item.syncAction,
+                  'txnStatus': item.txnStatus,
+                },
+              )
               .toList();
 
           // -- initialize spreadsheets --

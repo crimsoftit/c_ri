@@ -88,13 +88,16 @@ class CSuccessScreen extends StatelessWidget {
                         ), // background color
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: onPressed,
-                      child: Text(
-                        'CONTINUE',
-                        style: Theme.of(context).textTheme.labelMedium?.apply(
-                              color: CColors.white,
-                            ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: onPressed,
+                        child: Text(
+                          'CONTINUE',
+                          style: Theme.of(context).textTheme.labelMedium?.apply(
+                                color: CColors.white,
+                              ),
+                        ),
                       ),
                     ),
                   ],

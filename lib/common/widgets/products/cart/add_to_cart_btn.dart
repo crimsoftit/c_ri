@@ -21,7 +21,7 @@ class CAddToCartBtn extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        invController.fetchInventoryItems();
+        //invController.fetchInventoryItems();
         var invItem = invController.inventoryItems.firstWhere((item) =>
             item.productId.toString() == pId.toString().toLowerCase());
         final cartItem = cartController.convertInvToCartItem(invItem, 1);

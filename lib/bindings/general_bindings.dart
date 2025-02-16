@@ -1,5 +1,3 @@
-import 'package:c_ri/features/store/controllers/cart_controller.dart';
-import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/local_storage/storage_utility.dart';
 import 'package:get/get.dart';
@@ -13,7 +11,5 @@ class CGeneralBindings extends Bindings {
     /// -- todo: init local storage (GetX Local Storage) --
     await GetStorage.init();
     Get.put(CLocalStorage.instance());
-    Get.put(CCartController());
-    Get.put(CCheckoutController());
   }
 }

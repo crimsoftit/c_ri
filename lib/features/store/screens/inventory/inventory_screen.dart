@@ -308,7 +308,7 @@ class CInventoryScreen extends StatelessWidget {
                                         ),
                                   ),
                                   Text(
-                                    'total sales:${invController.inventoryItems[index].qtySold}',
+                                    'total sales:${invController.inventoryItems[index].qtySold} (in stock:${invController.inventoryItems[index].quantity})',
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelSmall!

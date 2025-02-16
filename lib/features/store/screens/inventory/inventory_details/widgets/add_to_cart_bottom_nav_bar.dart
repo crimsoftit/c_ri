@@ -87,7 +87,6 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                     width: 40.0,
                     height: 40.0,
                     onPressed: () {
-                      
                       if (cartController.itemQtyInCart.value <
                           inventoryItem.quantity) {
                         cartController.itemQtyInCart.value += 1;

@@ -34,6 +34,7 @@ class CPaymentMethodSection extends StatelessWidget {
         Obx(
           () {
             return Row(
+              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CRoundedContainer(
                   width: 60.0,
@@ -50,10 +51,49 @@ class CPaymentMethodSection extends StatelessWidget {
                     fit: BoxFit.contain,
                   ),
                 ),
+                const SizedBox(
+                  width: CSizes.spaceBtnItems / 4,
+                ),
                 Text(
                   checkoutController.selectedPaymentMethod.value.platformName,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
+                checkoutController.selectedPaymentMethod.value.platformName ==
+                        'cash'
+                    ? Row(
+                        children: [
+                          const SizedBox(
+                            width: CSizes.spaceBtnItems,
+                            height: 38.0,
+                          ),
+                          CRoundedContainer(
+                            //width: 160.0,
+                            width: CHelperFunctions.screenWidth() * 0.5,
+                            //height: 40.0,
+                            child: TextFormField(
+                              autofocus: checkoutController
+                                  .setFocusOnAmtIssuedField.value,
+                              controller:
+                                  checkoutController.amtIssuedFieldController,
+                              decoration: InputDecoration(
+                                focusColor: CColors.rBrown.withValues(
+                                  alpha: 0.3,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: CColors.error,
+                                  ),
+                                ),
+                                labelText: 'amount issued by customer',
+                              ),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : SizedBox(),
               ],
             );
           },

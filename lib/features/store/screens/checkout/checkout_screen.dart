@@ -14,6 +14,7 @@ import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:c_ri/utils/helpers/network_manager.dart';
+import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -72,17 +73,15 @@ class CCheckoutScreen extends StatelessWidget {
         child: Obx(
           () {
             /// -- empty data widget --
-            final noDataWidget = Center(
-              child: CAnimatedLoaderWidget(
-                showActionBtn: true,
-                text: 'whoops! cart is EMPTY!',
-                actionBtnText: 'let\'s fill it',
-                animation: CImages.emptyCartLottie,
-                onActionBtnPressed: () {
-                  navController.selectedIndex.value = 1;
-                  Get.to(() => const NavMenu());
-                },
-              ),
+            final noDataWidget = CAnimatedLoaderWidget(
+              showActionBtn: true,
+              text: 'whoops! cart is EMPTY!',
+              actionBtnText: 'let\'s fill it',
+              animation: CImages.emptyCartLottie,
+              onActionBtnPressed: () {
+                navController.selectedIndex.value = 1;
+                Get.to(() => const NavMenu());
+              },
             );
 
             if (cartController.cartItems.isEmpty) {
@@ -153,38 +152,48 @@ class CCheckoutScreen extends StatelessWidget {
       bottomNavigationBar: cartController.cartItems.isNotEmpty
           ? Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  checkoutController.processTxn();
-                  // Get.to(
-                  //   () {
-                  //     return Obx(
-                  //       () {
-                  //         return CSuccessScreen(
-                  //           title: 'txn success',
-                  //           subTitle: 'transaction successful',
-                  //           image: CImages.paymentSuccessfulAnimation,
-                  //           onPressed: () {
-                  //             navController.selectedIndex.value = 1;
-                  //             Get.offAll(() => NavMenu());
-                  //           },
-                  //         );
-                  //       },
-                  //     );
-                  //   },
-                  // );
-                },
-                label: Obx(
-                  () {
-                    return Text(
+              child: Obx(
+                () {
+                  return ElevatedButton.icon(
+                    onPressed: () {
+                      if (checkoutController
+                              .selectedPaymentMethod.value.platformName ==
+                          'cash') {
+                        if (checkoutController.amtIssuedFieldController.text ==
+                            '') {
+                          CPopupSnackBar.customToast(
+                            message:
+                                'please enter the amount issued by customer!!',
+                            forInternetConnectivityStatus: false,
+                          );
+                          checkoutController.setFocusOnAmtIssuedField.value =
+                              true;
+                          return;
+                        } else if (double.parse(checkoutController
+                                .amtIssuedFieldController.text
+                                .trim()) <
+                            cartController.totalCartPrice.value) {
+                          CPopupSnackBar.errorSnackBar(
+                            title: 'customer still owes you!!',
+                            message: 'the amount issued is not enough',
+                          );
+                          return;
+                        } else {
+                          checkoutController.processTxn();
+                        }
+                      } else {
+                        checkoutController.processTxn();
+                      }
+                    },
+                    label: Text(
                       'CHECKOUT $currencySymbol.${cartController.totalCartPrice.value.toStringAsFixed(2)}',
-                    );
-                  },
-                ),
-                icon: Icon(
-                  Iconsax.wallet_check,
-                  color: CColors.white,
-                ),
+                    ),
+                    icon: Icon(
+                      Iconsax.wallet_check,
+                      color: CColors.white,
+                    ),
+                  );
+                },
               ),
             )
           : null,

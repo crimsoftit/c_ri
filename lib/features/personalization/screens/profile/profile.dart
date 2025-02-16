@@ -1,4 +1,3 @@
-import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:c_ri/common/widgets/img_widgets/c_circular_img.dart';
 import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
@@ -23,16 +22,27 @@ class ProfileScreen extends StatelessWidget {
     final userController = Get.put(CUserController());
 
     return Scaffold(
-      appBar: CAppBar(
-        showBackArrow: false,
-        backIconColor: isDarkTheme ? CColors.white : CColors.rBrown,
+      // appBar: CAppBar(
+      //   bgColor: CColors.rBrown,
+      //   showBackArrow: false,
+      //   backIconColor: isDarkTheme ? CColors.white : CColors.rBrown,
+      //   title: Text(
+      //     'me profile',
+      //     style: Theme.of(context).textTheme.headlineSmall,
+      //   ),
+      //   backIconAction: () {
+      //     //Get.back();
+      //   },
+      // ),
+      appBar: AppBar(
+        backgroundColor: CColors.rBrown,
+        automaticallyImplyLeading: false,
         title: Text(
           'me profile',
-          style: Theme.of(context).textTheme.headlineSmall,
+          style: Theme.of(context).textTheme.bodyLarge!.apply(
+                color: CColors.white,
+              ),
         ),
-        backIconAction: () {
-          Get.back();
-        },
       ),
 
       // -- body --
@@ -47,6 +57,7 @@ class ProfileScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     CRoundedContainer(
+                      bgColor: CColors.rBrown,
                       showBorder: true,
                       radius: 100,
                       borderColor: CColors.rBrown.withValues(alpha: 0.3),
