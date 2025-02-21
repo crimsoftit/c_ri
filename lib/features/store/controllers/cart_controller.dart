@@ -25,7 +25,7 @@ class CCartController extends GetxController {
   RxList<TextEditingController> qtyFieldControllers =
       <TextEditingController>[].obs;
 
-  final invController = Get.put(CInventoryController());
+  //
 
   CCartController() {
     fetchCartItems();
@@ -104,6 +104,7 @@ class CCartController extends GetxController {
         .indexWhere((cartItem) => cartItem.productId == item.productId);
 
     // -- check stock qty --
+    final invController = Get.put(CInventoryController());
     final inventoryItem = invController.inventoryItems
         .firstWhere((invItem) => invItem.productId == item.productId);
 
@@ -132,7 +133,7 @@ class CCartController extends GetxController {
     } else {
       CPopupSnackBar.warningSnackBar(
         title: 'oh snap!',
-        message: '${inventoryItem.name} is out of stock!',
+        message: '${cartItems[itemIndex].pName} is out of stock!',
       );
     }
   }

@@ -5,6 +5,7 @@ import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
+import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -19,6 +20,7 @@ class CCartItems extends StatelessWidget {
     final cartController = Get.put(CCartController());
     final invController = Get.put(CInventoryController());
     final scrollController = ScrollController();
+    final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     return Obx(
       () {
@@ -83,7 +85,7 @@ class CCartItems extends StatelessWidget {
                                         .toString();
                               }
                             },
-                            qtyTxtField: SizedBox(
+                            qtyField: SizedBox(
                               width: 40.0,
                               child: TextFormField(
                                 controller:
@@ -106,6 +108,9 @@ class CCartItems extends StatelessWidget {
                                 inputFormatters: <TextInputFormatter>[
                                   FilteringTextInputFormatter.digitsOnly
                                 ],
+                                style: TextStyle(
+                                  color: CColors.rBrown,
+                                ),
 
                                 onChanged: (value) {
                                   if (cartController
@@ -168,7 +173,8 @@ class CCartItems extends StatelessWidget {
                                   cartController.cartItems[index].quantity)
                               .toStringAsFixed(2),
                           isLarge: true,
-                          txtColor: CColors.rBrown,
+                          txtColor:
+                              isDarkTheme ? CColors.white : CColors.rBrown,
                         ),
                       ),
                       // SizedBox(

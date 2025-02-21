@@ -50,12 +50,14 @@ class CStoreItemWidget extends StatelessWidget {
               CProductTitleText(
                 title: invItem.date,
                 smallSize: true,
+                txtColor: isDarkTheme ? CColors.white : CColors.rBrown,
               ),
               Flexible(
                 fit: FlexFit.loose,
                 child: CProductTitleText(
                   title: cartItem.pName.toUpperCase(),
                   smallSize: false,
+                  txtColor: isDarkTheme ? CColors.white : CColors.rBrown,
                 ),
               ),
 
@@ -83,9 +85,9 @@ class CStoreItemWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              Text(
-                checkoutController.totalInvSales.value.toString(),
-              ),
+              // Text(
+              //   checkoutController.totalInvSales.value.toString(),
+              // ),
             ],
           ),
         ),

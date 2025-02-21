@@ -1,3 +1,4 @@
+import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -9,17 +10,18 @@ class CSearchBarController extends GetxController {
   /// -- variables --
   RxBool invShowSearchField = false.obs;
   RxBool salesShowSearchField = false.obs;
+  RxBool showAnimatedTypeAheadField = false.obs;
 
   final txtInvSearchField = TextEditingController();
   final txtSalesSearch = TextEditingController();
   final txtTypeAheadFieldController = TextEditingController();
 
-  //final invController = Get.put(CInventoryController());
-
+  final cartController = Get.put(CCartController());
   @override
   void onInit() {
     invShowSearchField.value = false;
     salesShowSearchField.value = false;
+    showAnimatedTypeAheadField.value = false;
     txtInvSearchField.text = '';
     txtSalesSearch.text = '';
     super.onInit();
@@ -43,5 +45,10 @@ class CSearchBarController extends GetxController {
     }
 
     //invShowSearchField.value = !invShowSearchField.value;
+  }
+
+  onTypeAheadSearchIconTap() {
+    showAnimatedTypeAheadField.value = !showAnimatedTypeAheadField.value;
+    cartController.itemQtyInCart.value = 0;
   }
 }

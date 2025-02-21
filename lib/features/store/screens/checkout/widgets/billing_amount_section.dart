@@ -47,6 +47,7 @@ class CBillingAmountSection extends StatelessWidget {
                     icon: Icon(
                       Iconsax.add,
                       color: isDarkTheme ? CColors.white : CColors.rBrown,
+                      size: CSizes.iconMd,
                     ),
                     onPressed: () {},
                   )
@@ -72,6 +73,7 @@ class CBillingAmountSection extends StatelessWidget {
                     icon: Icon(
                       Iconsax.add,
                       color: isDarkTheme ? CColors.white : CColors.rBrown,
+                      size: CSizes.iconMd,
                     ),
                     onPressed: () {},
                   )

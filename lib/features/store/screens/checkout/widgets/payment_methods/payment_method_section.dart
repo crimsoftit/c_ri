@@ -63,12 +63,15 @@ class CPaymentMethodSection extends StatelessWidget {
                     ? Row(
                         children: [
                           const SizedBox(
-                            width: CSizes.spaceBtnItems,
+                            width: CSizes.spaceBtnItems * 1.3,
                             height: 38.0,
                           ),
                           CRoundedContainer(
                             //width: 160.0,
                             width: CHelperFunctions.screenWidth() * 0.5,
+                            bgColor: isDarkTheme
+                                ? CColors.rBrown.withValues(alpha: 0.3)
+                                : CColors.white,
                             //height: 40.0,
                             child: TextFormField(
                               autofocus: checkoutController

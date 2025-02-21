@@ -47,6 +47,8 @@ class CInventoryScreen extends StatelessWidget {
     invController.fetchInventoryItems();
     txnsController.fetchTransactions();
 
+    final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -559,7 +561,9 @@ class CInventoryScreen extends StatelessWidget {
                             onPressed: () {
                               Get.to(() => const CCheckoutScreen());
                             },
-                            backgroundColor: Colors.brown,
+                            backgroundColor: isConnectedToInternet
+                                ? Colors.brown
+                                : CColors.black,
                             foregroundColor: Colors.white,
                             heroTag: 'checkout',
                             child: const Icon(
@@ -593,7 +597,8 @@ class CInventoryScreen extends StatelessWidget {
                     );
                   },
 
-                  backgroundColor: Colors.brown,
+                  backgroundColor:
+                      isConnectedToInternet ? Colors.brown : CColors.black,
                   foregroundColor: Colors.white,
                   // icon: const Icon(
                   //   Iconsax.additem,

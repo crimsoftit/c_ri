@@ -39,7 +39,7 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
         horizontal: horizontalPadding!,
       ),
       child: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: showBackArrow ? true : false,
         //leadingWidth: 280.0,
         leadingWidth: showBackArrow
             ? CHelperFunctions.screenWidth() * 0.1
@@ -55,13 +55,18 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               )
             : leadingIcon != null
-                ? IconButton(
-                    onPressed: leadingOnPressed,
-                    icon: Icon(
-                      leadingIcon,
-                      color: backIconColor,
-                      //color: CColors.white,
-                    ),
+                ? Row(
+                    children: [
+                      IconButton(
+                        onPressed: leadingOnPressed,
+                        icon: Icon(
+                          leadingIcon,
+                          color: backIconColor,
+                          //color: CColors.white,
+                        ),
+                      ),
+                      leadingWidget!,
+                    ],
                   )
                 : leadingWidget,
         title: title,

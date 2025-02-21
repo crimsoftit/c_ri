@@ -95,7 +95,7 @@ class CTextTheme {
       color: Colors.white,
     ),
     titleSmall: const TextStyle().copyWith(
-      fontSize: 16.0,
+      fontSize: 12.0,
       fontWeight: FontWeight.w400,
       color: Colors.white,
     ),
@@ -120,12 +120,12 @@ class CTextTheme {
       color: Colors.white,
     ),
     labelMedium: const TextStyle().copyWith(
-      fontSize: 9.0,
+      fontSize: 11.0,
       fontWeight: FontWeight.normal,
       color: Colors.white,
     ),
     labelSmall: const TextStyle().copyWith(
-      fontSize: 8.0,
+      fontSize: 9.0,
       fontWeight: FontWeight.normal,
       color: Colors.white,
     ),
