@@ -8,6 +8,7 @@ class CCircularIcon extends StatelessWidget {
     this.width,
     this.height,
     this.size,
+    required this.iconBorderRadius,
     required this.icon,
     this.color,
     this.bgColor,
@@ -15,6 +16,7 @@ class CCircularIcon extends StatelessWidget {
   });
 
   final double? width, height, size;
+  final double iconBorderRadius;
   final IconData icon;
   final Color? color, bgColor;
   final VoidCallback? onPressed;
@@ -30,7 +32,7 @@ class CCircularIcon extends StatelessWidget {
         border: Border.all(
           color: Colors.transparent,
         ),
-        borderRadius: BorderRadius.circular(100),
+        borderRadius: BorderRadius.circular(iconBorderRadius),
         //color: Colors.transparent,
         color: bgColor != null
             ? bgColor!

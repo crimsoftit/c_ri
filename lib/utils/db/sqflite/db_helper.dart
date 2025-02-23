@@ -149,12 +149,12 @@ class DbHelper {
 
     // Query the table for inventory list
     final result = await db!.rawQuery(
-        'SELECT * FROM $invTable WHERE userEmail = ? ORDER BY date DESC',
+        'SELECT * FROM $invTable WHERE userEmail = ? ORDER BY quantity ASC',
         [email]);
 
     //final result = await db!.query(invTable, orderBy: 'productId ASC');
 
-    // Convert the List<Map<String, dynamic> into a List<Note>.
+    // Convert the List<Map<String, dynamic> into a List<CInventoryModel>.
     return result.map((json) => CInventoryModel.fromMapObject(json)).toList();
   }
 
@@ -327,6 +327,28 @@ class DbHelper {
     );
 
     return delRes;
+  }
+
+  /// -- fetch top sellers --
+  Future<List<CInventoryModel>> fetchTopSellers(String email) async {
+    try {
+      // Get a reference to the database.
+      final db = _db;
+
+      final topSellers = await db!
+          .rawQuery('SELECT * FROM $invTable ORDER BY qtySold DESC LIMIT 10');
+
+      // convert the List<Map<String, dynamic> into a List<CInventoryModel>.
+      return topSellers
+          .map((json) => CInventoryModel.fromMapObject(json))
+          .toList();
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'error fetching top sellers',
+        message: '$e',
+      );
+      throw e.toString();
+    }
   }
 
   /// ==== ### CRUD OPERATIONS ON SALES TABLE ### ====

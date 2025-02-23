@@ -1,8 +1,8 @@
-import 'package:c_ri/api/sheets/store_sheets_api.dart';
 import 'package:c_ri/common/widgets/success_screen/success_screen.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
+import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/models/cart_item_model.dart';
 import 'package:c_ri/features/store/models/payment_method_model.dart';
 import 'package:c_ri/features/store/models/txns_model.dart';
@@ -12,7 +12,6 @@ import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
-import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/full_screen_loader.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +29,7 @@ class CCheckoutController extends GetxController {
     );
     amtIssuedFieldController.text = '';
     setFocusOnAmtIssuedField.value = false;
+    //txnsController.importTxnsFromCloud();
 
     super.onInit();
   }
@@ -47,6 +47,7 @@ class CCheckoutController extends GetxController {
 
   final cartController = Get.put(CCartController());
   final navController = Get.put(NavMenuController());
+  final txnsController = Get.put(CTxnsController());
   final userController = Get.put(CUserController());
 
   final TextEditingController amtIssuedFieldController =
@@ -57,9 +58,6 @@ class CCheckoutController extends GetxController {
   /// -- process txn --
   void processTxn() async {
     try {
-      final isConnectedToInternet =
-          await CNetworkManager.instance.isConnected();
-
       // -- start loader --
       CFullScreenLoader.openLoadingDialog(
         'processing txn...',
@@ -99,8 +97,10 @@ class CCheckoutController extends GetxController {
             '',
             '',
             '',
-            isConnectedToInternet ? 1 : 0,
-            isConnectedToInternet ? 'none' : 'append',
+            // isConnectedToInternet ? 1 : 0,
+            // isConnectedToInternet ? 'none' : 'append',
+            0,
+            'append',
             'complete',
           );
 
@@ -114,44 +114,75 @@ class CCheckoutController extends GetxController {
               itemStockCount.value, totalInvSales.value, cartItem.productId);
 
           // -- synchronize data if device has an internet connection --
-          if (isConnectedToInternet) {
-            // upload txn data to cloud
-            await StoreSheetsApi.saveTxnsToGSheets([newTxnData.toMap()]);
+          // if (isConnectedToInternet) {
+          //   await txnsController.fetchTransactions();
 
-            // update stock count for inventory item's cloud data
-            StoreSheetsApi.updateInvStockCount(
-              id: cartItem.productId,
-              key: 'quantity',
-              value: itemStockCount.value,
-            );
+          //   // fetch these sales from sqflite db
+          //   var txnItem = txnsController.transactions.firstWhere(
+          //       (txnItem) => txnItem.soldItemId == cartItem.productId);
 
-            // update total sales for inventory item's cloud data
-            await StoreSheetsApi.updateInvItemsSalesCount(
-              id: cartItem.productId,
-              key: 'qtySold',
-              value: totalInvSales.value,
-            );
-          } else {
-            await dbHelper.updateInvSyncAfterStockUpdate(
-                'update', cartItem.productId);
-          }
+          //   // upload txn data to cloud
+          //   var txnItemForCloudAppend = CTxnsModel.withId(
+          //     txnItem.soldItemId,
+          //     txnItem.txnId,
+          //     txnItem.userId,
+          //     txnItem.userEmail,
+          //     txnItem.userName,
+          //     txnItem.productId,
+          //     txnItem.productCode,
+          //     txnItem.productName,
+          //     txnItem.quantity,
+          //     txnItem.totalAmount,
+          //     txnItem.amountIssued,
+          //     txnItem.unitSellingPrice,
+          //     txnItem.paymentMethod,
+          //     txnItem.customerName,
+          //     txnItem.customerContacts,
+          //     txnItem.txnAddress,
+          //     txnItem.txnAddressCoordinates,
+          //     txnItem.date,
+          //     1,
+          //     'none',
+          //     'complete',
+          //   );
 
-          // clear cart
-          cartController.clearCart();
-          Get.off(
-            () {
-              return CSuccessScreen(
-                title: 'txn success',
-                subTitle: 'transaction successful',
-                image: CImages.paymentSuccessfulAnimation,
-                onPressed: () {
-                  navController.selectedIndex.value = 2;
-                  Get.offAll(() => NavMenu());
-                },
-              );
-            },
-          );
+          //   await StoreSheetsApi.saveTxnsToGSheets(
+          //       [txnItemForCloudAppend.toMap()]);
+
+          //   // update stock count for inventory item's cloud data
+          //   StoreSheetsApi.updateInvStockCount(
+          //     id: cartItem.productId,
+          //     key: 'quantity',
+          //     value: itemStockCount.value,
+          //   );
+
+          //   // update total sales for inventory item's cloud data
+          //   await StoreSheetsApi.updateInvItemsSalesCount(
+          //     id: cartItem.productId,
+          //     key: 'qtySold',
+          //     value: totalInvSales.value,
+          //   );
+          // } else {
+          //   await dbHelper.updateInvSyncAfterStockUpdate(
+          //       'update', cartItem.productId);
+          // }
         }
+
+        // clear cart
+        cartController.clearCart();
+        Get.off(
+          () {
+            return CSuccessScreen(
+              title: 'txn success',
+              subTitle: 'transaction successful',
+              image: CImages.paymentSuccessfulAnimation,
+              onPressed: () {
+                navController.selectedIndex.value = 2;
+                Get.offAll(() => NavMenu());
+              },
+            );
+          },
+        );
       }
     } catch (e) {
       CPopupSnackBar.errorSnackBar(

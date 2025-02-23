@@ -264,8 +264,6 @@ class CTxnsController extends GetxController {
               unAppendedTxn.syncAction.toLowerCase().contains('append'))
           .toList();
 
-      // assign values for unsynced txn updates
-
       // stop loader
       isLoading.value = false;
 
@@ -523,6 +521,9 @@ class CTxnsController extends GetxController {
           // -- initialize spreadsheets --
           await StoreSheetsApi.initSpreadSheets();
           await StoreSheetsApi.saveTxnsToGSheets(gSheetTxnAppends);
+
+          DO THIS NEXT
+          updateInvSyncAfterStockUpdate('update', cartItem.productId);
 
           // -- update sync status
           await updateSyncedTxnUpdates();

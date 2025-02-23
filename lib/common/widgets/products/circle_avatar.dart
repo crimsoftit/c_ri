@@ -22,7 +22,7 @@ class CCircleAvatar extends StatelessWidget {
       radius: radius,
       child: Text(
         avatarInitial.toUpperCase(),
-        style: Theme.of(context).textTheme.labelLarge!.apply(
+        style: Theme.of(context).textTheme.titleMedium!.apply(
               color: txtColor,
             ),
       ),

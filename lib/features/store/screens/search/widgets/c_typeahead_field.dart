@@ -41,7 +41,7 @@ class CTypeAheadSearchField extends StatelessWidget {
             color: CColors.rBrown,
             //fontSize: 11.0,
             fontStyle: FontStyle.normal,
-            height: 3.0,
+            height: 2.0,
           ),
           decoration: InputDecoration(
             prefixIcon: Icon(
@@ -171,70 +171,89 @@ class CTypeAheadSearchField extends StatelessWidget {
                     ),
 
                     // -- buttons to increment, decrement qty --
-                    CItemQtyWithAddRemoveBtns(
-                      useTxtFieldForQty: false,
-                      horizontalSpacing: CSizes.spaceBtnItems / 4.0,
-                      btnsLeftPadding: 0,
-                      btnsRightPadding: 0,
-                      iconWidth: 28.0,
-                      iconHeight: 28.0,
-                      // button to decrement item qty in the cart
-                      removeItemBtnAction: () {
-                        cartController.itemQtyInCart.value < 1
-                            ? null
-                            : cartController.itemQtyInCart.value -= 1;
-                      },
-                      qtyWidget: Obx(
-                        () {
-                          return Text(
+                    Obx(
+                      () {
+                        return CItemQtyWithAddRemoveBtns(
+                          includeAddToCartActionBtn: true,
+                          useSmallIcons: true,
+                          useTxtFieldForQty: false,
+                          horizontalSpacing: CSizes.spaceBtnItems / 2.0,
+                          btnsLeftPadding: 0,
+                          btnsRightPadding: 0,
+                          iconWidth: 31.0,
+                          iconHeight: 31.0,
+                          add2CartActionBtnTxt: 'add',
+                          add2CartBtnTxtColor:
+                              cartController.itemQtyInCart.value < 1
+                                  ? CColors.grey
+                                  : CColors.rBrown,
+                          add2CartIconColor:
+                              cartController.itemQtyInCart.value < 1
+                                  ? CColors.grey
+                                  : CColors.rBrown,
+                          addToCartBtnAction:
+                              cartController.itemQtyInCart.value < 1
+                                  ? null
+                                  : () {
+                                      cartController.addToCart(suggestion);
+                                      cartController.fetchCartItems();
+                                    },
+                          // button to decrement item qty in the cart
+                          removeItemBtnAction: () {
+                            cartController.itemQtyInCart.value < 1
+                                ? null
+                                : cartController.itemQtyInCart.value -= 1;
+                          },
+                          qtyWidget: Text(
                             //'${cartItem.quantity}',
                             cartController.itemQtyInCart.value.toString(),
                             style:
                                 Theme.of(context).textTheme.labelMedium!.apply(
                                       color: CColors.rBrown,
+                                      fontSizeDelta: 1.5,
                                     ),
-                          );
-                        },
-                      ),
+                          ),
 
-                      // button to increment item qty in the cart
-                      addItemBtnAction: () {
-                        if (cartController.itemQtyInCart.value <
-                            suggestion.quantity) {
-                          cartController.itemQtyInCart.value += 1;
-                        } else {
-                          CPopupSnackBar.warningSnackBar(
-                              title:
-                                  'only ${suggestion.quantity} of ${suggestion.name} are stocked',
-                              message:
-                                  'you can only add up to ${suggestion.quantity} ${suggestion.name} items to the cart');
-                        }
+                          // button to increment item qty in the cart
+                          addItemBtnAction: () {
+                            if (cartController.itemQtyInCart.value <
+                                suggestion.quantity) {
+                              cartController.itemQtyInCart.value += 1;
+                            } else {
+                              CPopupSnackBar.warningSnackBar(
+                                  title:
+                                      'only ${suggestion.quantity} of ${suggestion.name} are stocked',
+                                  message:
+                                      'you can only add up to ${suggestion.quantity} ${suggestion.name} items to the cart');
+                            }
+                          },
+                          qtyField: null,
+                        );
                       },
-                      qtyField: null,
                     ),
 
                     SizedBox(
                       width: CSizes.defaultSpace / 3,
                     ),
-                    Obx(
-                      () {
-                        return TextButton.icon(
-                          label: Text(
-                            'add',
-                            style:
-                                Theme.of(context).textTheme.labelMedium!.apply(
-                                      color: CColors.rBrown,
-                                    ),
-                          ),
-                          onPressed: cartController.itemQtyInCart.value < 1
-                              ? null
-                              : () {
-                                  cartController.addToCart(suggestion);
-                                  cartController.fetchCartItems();
-                                },
-                        );
-                      },
-                    ),
+                    // Obx(
+                    //   () {
+                    //     return TextButton.icon(
+                    //       label: Text(
+                    //         'add',
+                    //         style:
+                    //             Theme.of(context).textTheme.labelMedium!.apply(
+                    //                   color: CColors.rBrown,
+                    //                 ),
+                    //       ),
+                    //       onPressed: cartController.itemQtyInCart.value < 1
+                    //           ? null
+                    //           : () {
+                    //               cartController.addToCart(suggestion);
+                    //               cartController.fetchCartItems();
+                    //             },
+                    //     );
+                    //   },
+                    // ),
                   ],
                 ),
               ],

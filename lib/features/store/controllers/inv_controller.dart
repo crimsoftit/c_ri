@@ -34,9 +34,10 @@ class CInventoryController extends GetxController {
   final RxList<CDelsModel> dItems = <CDelsModel>[].obs;
   final RxList<CDelsModel> pendingUpdates = <CDelsModel>[].obs;
   final RxList<CInventoryModel> allGSheetData = <CInventoryModel>[].obs;
-  final RxList<CInventoryModel> userGSheetData = <CInventoryModel>[].obs;
+  final RxList<CInventoryModel> topSoldItems = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> unSyncedAppends = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> unSyncedUpdates = <CInventoryModel>[].obs;
+  final RxList<CInventoryModel> userGSheetData = <CInventoryModel>[].obs;
 
   final RxString scanResults = ''.obs;
 
@@ -68,8 +69,6 @@ class CInventoryController extends GetxController {
     dbHelper.openDb();
 
     fetchInventoryItems();
-    //fetchUserInvSheetData();
-    //addUnsyncedInvToCloud();
     fetchInvDels();
     fetchInvUpdates();
     syncInvDels();
@@ -79,6 +78,7 @@ class CInventoryController extends GetxController {
       foundInventoryItems.value = inventoryItems;
     }
     await initInvSync();
+    fetchTopSellers();
     super.onInit();
   }
 
@@ -828,6 +828,33 @@ class CInventoryController extends GetxController {
     } finally {
       // stop loader
       syncIsLoading.value = false;
+    }
+  }
+
+  /// -- fetch top sellers --
+  Future<List<CInventoryModel>> fetchTopSellers() async {
+    try {
+      // start loader while products are fetched
+      isLoading.value = true;
+
+      await dbHelper.openDb();
+
+      final topSellers =
+          await dbHelper.fetchTopSellers(userController.user.value.email);
+
+      // assign top sold items to a list
+      topSoldItems.assignAll(topSellers);
+
+      // stop loader
+      isLoading.value = false;
+
+      return topSellers;
+    } catch (e) {
+      isLoading.value = false;
+      return CPopupSnackBar.errorSnackBar(
+        title: 'Oh Snap!',
+        message: e.toString(),
+      );
     }
   }
 

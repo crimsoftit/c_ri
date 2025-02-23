@@ -29,6 +29,7 @@ class TxnsScreen extends StatelessWidget {
     final txnsController = Get.put(CTxnsController());
 
     invController.fetchInventoryItems();
+    //Get.put(CInventoryController());
     txnsController.fetchTransactions();
 
     return DefaultTabController(

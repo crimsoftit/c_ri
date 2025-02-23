@@ -59,6 +59,7 @@ class CCartItems extends StatelessWidget {
                           ),
                           // -- buttons to increment, decrement qty --
                           CItemQtyWithAddRemoveBtns(
+                            includeAddToCartActionBtn: false,
                             // button to decrement item qty in the cart
                             removeItemBtnAction: () {
                               if (cartController

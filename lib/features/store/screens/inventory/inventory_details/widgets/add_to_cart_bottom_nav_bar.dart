@@ -48,6 +48,7 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                 children: [
                   CCircularIcon(
                     icon: Iconsax.minus,
+                    iconBorderRadius: 100,
                     bgColor: CNetworkManager.instance.hasConnection.value
                         ? CColors.rBrown.withValues(alpha: 0.5)
                         : CColors.black.withValues(alpha: 0.5),
@@ -79,6 +80,7 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                   ),
 
                   CCircularIcon(
+                    iconBorderRadius: 100,
                     bgColor: CNetworkManager.instance.hasConnection.value
                         ? CColors.rBrown
                         : CColors.black,
