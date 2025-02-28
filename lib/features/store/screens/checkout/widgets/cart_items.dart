@@ -76,11 +76,10 @@ class CCartItems extends StatelessWidget {
                                             .toLowerCase());
                                 final thisCartItem = cartController
                                     .convertInvToCartItem(invItem, 1);
-                                cartController
-                                    .removeSingleItemFromCart(thisCartItem);
+                                cartController.removeSingleItemFromCart(
+                                    thisCartItem, true);
                                 cartController.fetchCartItems();
-                                // cartController.qtyFieldControllers[index].text =
-                                //     cartItem.quantity.toString();
+
                                 cartController.qtyFieldControllers[index].text =
                                     cartController.cartItems[index].quantity
                                         .toString();

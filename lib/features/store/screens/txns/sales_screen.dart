@@ -100,7 +100,7 @@ class TxnsScreen extends StatelessWidget {
                                               : IconButton(
                                                   onPressed: () async {
                                                     txnsController
-                                                        .addUnsyncedTxnsToCloud();
+                                                        .addAndUpdateUnsyncedTxnsToCloud();
                                                   },
                                                   icon: const Icon(
                                                     Iconsax.cloud_change,

@@ -2,6 +2,7 @@ import 'package:c_ri/common/widgets/success_screen/success_screen.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
+import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/models/cart_item_model.dart';
 import 'package:c_ri/features/store/models/payment_method_model.dart';
@@ -40,8 +41,8 @@ class CCheckoutController extends GetxController {
 
   RxList<CCartItemModel> itemsInCart = <CCartItemModel>[].obs;
 
-  final RxInt itemStockCount = 0.obs;
-  final RxInt totalInvSales = 0.obs;
+  //final RxInt itemStockCount = 0.obs;
+  //final RxInt totalInvSales = 0.obs;
 
   final RxBool setFocusOnAmtIssuedField = false.obs;
 
@@ -105,67 +106,42 @@ class CCheckoutController extends GetxController {
           );
 
           // save txn data into the db
-          await dbHelper.addSoldItem(newTxnData);
+          await dbHelper.addSoldItem(newTxnData).then((result) {
+            if (dbHelper.saleItemAddedToDb.value) {
+              result = 'item added';
 
-          // -- update stock count & total sales for this inventory item --
-          itemStockCount.value -= cartItem.quantity;
-          totalInvSales.value += cartItem.quantity;
-          await dbHelper.updateStockCountAndSales(
-              itemStockCount.value, totalInvSales.value, cartItem.productId);
+              // -- update stock count & total sales for this inventory item --
+              final invController = Get.put(CInventoryController());
+              invController.fetchInventoryItems();
+              var invItem = invController.inventoryItems
+                  .firstWhere((item) => item.productId == cartItem.productId);
 
-          // -- synchronize data if device has an internet connection --
-          // if (isConnectedToInternet) {
-          //   await txnsController.fetchTransactions();
+              invItem.qtySold += cartItem.quantity;
+              invItem.quantity -= cartItem.quantity;
 
-          //   // fetch these sales from sqflite db
-          //   var txnItem = txnsController.transactions.firstWhere(
-          //       (txnItem) => txnItem.soldItemId == cartItem.productId);
+              dbHelper.updateInventoryItem(invItem, cartItem.productId);
+              CPopupSnackBar.successSnackBar(
+                title: 'inventory stock update',
+                message: 'inventory stock update successful',
+              );
 
-          //   // upload txn data to cloud
-          //   var txnItemForCloudAppend = CTxnsModel.withId(
-          //     txnItem.soldItemId,
-          //     txnItem.txnId,
-          //     txnItem.userId,
-          //     txnItem.userEmail,
-          //     txnItem.userName,
-          //     txnItem.productId,
-          //     txnItem.productCode,
-          //     txnItem.productName,
-          //     txnItem.quantity,
-          //     txnItem.totalAmount,
-          //     txnItem.amountIssued,
-          //     txnItem.unitSellingPrice,
-          //     txnItem.paymentMethod,
-          //     txnItem.customerName,
-          //     txnItem.customerContacts,
-          //     txnItem.txnAddress,
-          //     txnItem.txnAddressCoordinates,
-          //     txnItem.date,
-          //     1,
-          //     'none',
-          //     'complete',
-          //   );
+              // -- update sync status/action for this inventory item --
+              dbHelper.updateInvOfflineSyncAfterStockUpdate(
+                  'update', cartItem.productId);
+            } else {
+              result = 'ERROR ADDING SALE ITEM';
+            }
+            CPopupSnackBar.customToast(
+              message: result,
+              forInternetConnectivityStatus: false,
+            );
+          });
 
-          //   await StoreSheetsApi.saveTxnsToGSheets(
-          //       [txnItemForCloudAppend.toMap()]);
+          // itemStockCount.value -= cartItem.quantity;
+          // totalInvSales.value += cartItem.quantity;
 
-          //   // update stock count for inventory item's cloud data
-          //   StoreSheetsApi.updateInvStockCount(
-          //     id: cartItem.productId,
-          //     key: 'quantity',
-          //     value: itemStockCount.value,
-          //   );
-
-          //   // update total sales for inventory item's cloud data
-          //   await StoreSheetsApi.updateInvItemsSalesCount(
-          //     id: cartItem.productId,
-          //     key: 'qtySold',
-          //     value: totalInvSales.value,
-          //   );
-          // } else {
-          //   await dbHelper.updateInvSyncAfterStockUpdate(
-          //       'update', cartItem.productId);
-          // }
+          // await dbHelper.updateStockCountAndSales(
+          //     itemStockCount.value, totalInvSales.value, cartItem.productId);
         }
 
         // clear cart

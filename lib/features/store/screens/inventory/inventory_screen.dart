@@ -148,7 +148,7 @@ class CInventoryScreen extends StatelessWidget {
                                                       await invController
                                                           .cloudSyncInventory();
                                                       await txnsController
-                                                          .addUnsyncedTxnsToCloud();
+                                                          .addAndUpdateUnsyncedTxnsToCloud();
                                                     } else {
                                                       CPopupSnackBar
                                                           .customToast(

@@ -19,7 +19,7 @@ class CCartCounterIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartController = Get.put(CCartController());
-    cartController.fetchCartItems();
+    //cartController.fetchCartItems();
 
     return Stack(
       children: [

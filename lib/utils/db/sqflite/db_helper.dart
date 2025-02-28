@@ -9,7 +9,18 @@ import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DbHelper {
+class DbHelper extends GetxController {
+  /// -- constructor --
+  // make this a singleton class
+  DbHelper._privateConstructor();
+  static final DbHelper instance = DbHelper._privateConstructor();
+
+  @override
+  void onInit() async {
+    saleItemAddedToDb.value = false;
+    super.onInit();
+  }
+
   final int version = 1;
 
   /// -- variables --
@@ -21,12 +32,10 @@ class DbHelper {
   final txnsTable = 'txns';
   final delsForSyncTable = 'delsForSync';
 
+  final RxBool saleItemAddedToDb = false.obs;
+
   static final DbHelper _dbHelper = DbHelper._internal();
   DbHelper._internal();
-
-  // make this a singleton class
-  DbHelper._privateConstructor();
-  static final DbHelper instance = DbHelper._privateConstructor();
 
   factory DbHelper() {
     return _dbHelper;
@@ -94,6 +103,8 @@ class DbHelper {
           )
         ''');
     }, version: version);
+
+    saleItemAddedToDb.value = false;
     return _db!;
   }
 
@@ -240,7 +251,8 @@ class DbHelper {
   }
 
   /// -- update inventory upon sale --
-  Future<int> updateInvSyncAfterStockUpdate(String sAction, int pId) async {
+  Future<int> updateInvOfflineSyncAfterStockUpdate(
+      String sAction, int pId) async {
     try {
       int updateResult = await _db!.rawUpdate(
         '''
@@ -353,7 +365,7 @@ class DbHelper {
 
   /// ==== ### CRUD OPERATIONS ON SALES TABLE ### ====
   // -- save sale details to the database --
-  Future<void> addSoldItem(CTxnsModel soldItem) async {
+  Future addSoldItem(CTxnsModel soldItem) async {
     try {
       // Get a reference to the database.
       final db = _db;
@@ -363,11 +375,13 @@ class DbHelper {
       // In this case, replace any previous data.
       await db?.insert(txnsTable, soldItem.toMap(),
           conflictAlgorithm: ConflictAlgorithm.replace);
+      saleItemAddedToDb.value = true;
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
         title: 'error performing transaction',
         message: e.toString(),
       );
+      saleItemAddedToDb.value = false;
     }
   }
 

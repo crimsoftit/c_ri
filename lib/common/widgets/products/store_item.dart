@@ -1,6 +1,5 @@
 import 'package:c_ri/common/widgets/products/circle_avatar.dart';
 import 'package:c_ri/common/widgets/txt_widgets/product_title_txt.dart';
-import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/cart_item_model.dart';
 import 'package:c_ri/utils/constants/colors.dart';
@@ -22,14 +21,9 @@ class CStoreItemWidget extends StatelessWidget {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     final invController = Get.put(CInventoryController());
-    //invController.fetchInventoryItems();
-    final checkoutController = Get.put(CCheckoutController());
 
     var invItem = invController.inventoryItems
         .firstWhere((item) => item.productId == cartItem.productId);
-
-    checkoutController.itemStockCount.value = cartItem.availableStockQty;
-    checkoutController.totalInvSales.value = invItem.qtySold;
 
     return Row(
       children: [
@@ -66,11 +60,6 @@ class CStoreItemWidget extends StatelessWidget {
                 TextSpan(
                   children: [
                     TextSpan(
-                      text:
-                          '${checkoutController.itemStockCount.value} newly stocked ',
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
-                    TextSpan(
                       text: '${cartItem.availableStockQty} stocked ',
                       style: Theme.of(context).textTheme.labelSmall,
                     ),
@@ -85,9 +74,6 @@ class CStoreItemWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              // Text(
-              //   checkoutController.totalInvSales.value.toString(),
-              // ),
             ],
           ),
         ),

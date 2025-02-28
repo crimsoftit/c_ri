@@ -85,6 +85,7 @@ class CCartController extends GetxController {
     if (index >= 0) {
       // item already added to cart
       cartItems[index].quantity = selectedCartItem.quantity;
+      qtyFieldControllers[index].text = cartItems[index].quantity.toString();
     } else {
       cartItems.add(selectedCartItem);
     }
@@ -115,8 +116,8 @@ class CCartController extends GetxController {
             title: 'oh snap!',
             message: 'only ${inventoryItem.quantity} items are stocked!',
           );
-          qtyFieldControllers[itemIndex].text =
-              inventoryItem.quantity.toString();
+          // qtyFieldControllers[itemIndex].text =
+          //     inventoryItem.quantity.toString();
           return;
         } else {
           if (fromQtyTxtField) {
@@ -127,6 +128,7 @@ class CCartController extends GetxController {
         }
       } else {
         cartItems.add(item);
+        updateCart();
       }
 
       updateCart();
@@ -138,8 +140,8 @@ class CCartController extends GetxController {
     }
   }
 
-  /// -- add a single item to cart --
-  void removeSingleItemFromCart(CCartItemModel item) {
+  /// -- decrement cart item qty/remove a single item from the cart --
+  void removeSingleItemFromCart(CCartItemModel item, bool showConfirmDialog) {
     int removeItemIndex = cartItems.indexWhere(
       (itemToRemove) {
         return itemToRemove.productId == item.productId;
@@ -150,12 +152,24 @@ class CCartController extends GetxController {
       if (cartItems[removeItemIndex].quantity > 1) {
         cartItems[removeItemIndex].quantity -= 1;
       } else {
-        // show confirm dialog before entirely removing
-        cartItems[removeItemIndex].quantity == 1
-            ? removeItemFromCartDialog(removeItemIndex, item.pName)
-            : cartItems.removeAt(removeItemIndex);
+        if (showConfirmDialog) {
+          // show confirm dialog before entirely removing
+          cartItems[removeItemIndex].quantity == 1
+              ? removeItemFromCartDialog(removeItemIndex, item.pName)
+              : cartItems.removeAt(removeItemIndex);
+        } else {
+          // perform action to entirely remove this item from the cart
+          cartItems.removeAt(removeItemIndex);
+          updateCart();
+          // CPopupSnackBar.customToast(
+          //   message: '$itemToRemove removed from the cart...',
+          //   forInternetConnectivityStatus: false,
+          // );
+        }
       }
       updateCart();
+      qtyFieldControllers[removeItemIndex].text =
+          cartItems[removeItemIndex].quantity.toString();
     }
   }
 
@@ -240,7 +254,8 @@ class CCartController extends GetxController {
   }
 
   /// -- initialize quantity of inventory item in the cart --
-  void initializeItemCountInCart(CInventoryModel invItem) {
+  void initializeItemCountInCart(CInventoryModel invItem) async {
+    await Future.delayed(Duration.zero);
     itemQtyInCart.value = getItemQtyInCart(invItem.productId!);
   }
 

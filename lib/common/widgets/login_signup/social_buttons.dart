@@ -2,6 +2,8 @@ import 'package:c_ri/features/authentication/controllers/login/login_controller.
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
+import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,7 +28,17 @@ class CSocialButtons extends StatelessWidget {
           ),
           child: IconButton(
             onPressed: () async {
-              loginController.googleSignIn();
+              // -- check internet connectivity
+              final isConnectedToInternet =
+                  await CNetworkManager.instance.isConnected();
+              if (isConnectedToInternet) {
+                loginController.googleSignIn();
+              } else {
+                CPopupSnackBar.warningSnackBar(
+                  title: 'not connected to internet!',
+                  message: 'login requires an internet connection',
+                );
+              }
             },
             icon: const Image(
               width: CSizes.iconMd,

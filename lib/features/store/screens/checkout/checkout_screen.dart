@@ -195,14 +195,20 @@ class CCheckoutScreen extends StatelessWidget {
                         );
                         return;
                       } else {
-                        checkoutController.processTxn();
+                        // checkoutController.processTxn();
                       }
                     } else {
-                      checkoutController.processTxn();
+                      //checkoutController.processTxn();
                     }
+                    checkoutController.processTxn();
                   },
                   label: Text(
                     'CHECKOUT $currencySymbol.${cartController.totalCartPrice.value.toStringAsFixed(2)}',
+                    style: Theme.of(context).textTheme.bodyMedium!.apply(
+                          color: CColors.white,
+                          fontSizeFactor: 1.20,
+                          fontWeightDelta: 2,
+                        ),
                   ),
                   icon: Icon(
                     Iconsax.wallet_check,

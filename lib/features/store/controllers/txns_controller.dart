@@ -35,7 +35,7 @@ class CTxnsController extends GetxController {
 
     await fetchTransactions();
     await initTxnsSync();
-    await addUnsyncedTxnsToCloud();
+    await addAndUpdateUnsyncedTxnsToCloud();
 
     // if (selectedPaymentMethod.value == 'Cash') {
     //   showAmountIssuedField.value = true;
@@ -137,8 +137,7 @@ class CTxnsController extends GetxController {
             CImages.docerAnimation,
           );
 
-          final newTxn = CTxnsModel.withId(
-            CHelperFunctions.generateId(),
+          final newTxn = CTxnsModel(
             CHelperFunctions.generateId(),
             userController.user.value.id,
             userController.user.value.email,
@@ -186,7 +185,7 @@ class CTxnsController extends GetxController {
               value: totalSales.value,
             );
           } else {
-            await dbHelper.updateInvSyncAfterStockUpdate(
+            await dbHelper.updateInvOfflineSyncAfterStockUpdate(
                 'update', sellItemId.value);
           }
 
@@ -478,7 +477,7 @@ class CTxnsController extends GetxController {
   }
 
   /// -- add unsynced txns to the cloud --
-  Future<void> addUnsyncedTxnsToCloud() async {
+  Future<void> addAndUpdateUnsyncedTxnsToCloud() async {
     try {
       // -- check internet connectivity
       final isConnected = await CNetworkManager.instance.isConnected();
@@ -521,9 +520,6 @@ class CTxnsController extends GetxController {
           // -- initialize spreadsheets --
           await StoreSheetsApi.initSpreadSheets();
           await StoreSheetsApi.saveTxnsToGSheets(gSheetTxnAppends);
-
-          DO THIS NEXT
-          updateInvSyncAfterStockUpdate('update', cartItem.productId);
 
           // -- update sync status
           await updateSyncedTxnUpdates();
@@ -587,6 +583,13 @@ class CTxnsController extends GetxController {
             'none',
             element.txnStatus,
           );
+
+          // update stock count for inventory item's cloud data
+          // StoreSheetsApi.updateInvStockCount(
+          //   id: element.soldItemId!,
+          //   key: 'quantity',
+          //   value: element.quantity,
+          // );
 
           await dbHelper.updateTxnDetails(txnAppends, element.txnId);
 

@@ -1,5 +1,6 @@
 import 'package:c_ri/common/widgets/icons/circular_icon.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
+import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -20,10 +21,10 @@ class CAddToCartBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final cartController = Get.put(CCartController());
+    final invController = Get.put(CInventoryController());
+    final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
-    //cartController.fetchCartItems();
     cartController.initializeItemCountInCart(inventoryItem);
 
     return Container(
@@ -67,14 +68,7 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                     cartController.itemQtyInCart.value.toString(),
                     style: Theme.of(context).textTheme.titleSmall,
                   ),
-                  // Text(
-                  //   cartController
-                  //       .getItemQtyInCart(inventoryItem.productId.toString())
-                  //       .toString(),
-                  //   style: Theme.of(context).textTheme.titleSmall!.apply(
-                  //         fontSizeFactor: 0.85,
-                  //       ),
-                  // ),
+
                   const SizedBox(
                     width: CSizes.spaceBtnItems,
                   ),
@@ -107,7 +101,10 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                 onPressed: cartController.itemQtyInCart.value < 1
                     ? null
                     : () {
+                        invController.fetchInventoryItems();
+                        cartController.fetchCartItems();
                         cartController.addToCart(inventoryItem);
+                        cartController.fetchCartItems();
                       },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.all(

@@ -19,19 +19,23 @@ class CAddToCartBtn extends StatelessWidget {
     final cartController = CCartController.instance;
     final invController = Get.put(CInventoryController());
 
-    return InkWell(
-      onTap: () {
-        //invController.fetchInventoryItems();
-        var invItem = invController.inventoryItems.firstWhere((item) =>
-            item.productId.toString() == pId.toString().toLowerCase());
-        final cartItem = cartController.convertInvToCartItem(invItem, 1);
-        cartController.addSingleItemToCart(cartItem, false, null);
-      },
-      child: Obx(
-        () {
-          final pQtyInCart = cartController.getItemQtyInCart(pId);
+    return Obx(
+      () {
+        final pQtyInCart = cartController.getItemQtyInCart(pId);
+        return InkWell(
+          onTap: () {
+            cartController.fetchCartItems();
+            var invItem = invController.inventoryItems.firstWhere((item) =>
+                item.productId.toString() == pId.toString().toLowerCase());
+            final cartItem = cartController.convertInvToCartItem(invItem, 1);
+            cartController.addSingleItemToCart(cartItem, false, null);
 
-          return Container(
+            // int cartItemIndex = cartController.cartItems.indexWhere(
+            //     (cartItem) => cartItem.productId == invItem.productId);
+            // cartController.qtyFieldControllers[cartItemIndex].text =
+            //     cartController.cartItems[cartItemIndex].quantity.toString();
+          },
+          child: Container(
             // width: 30.0,
             // height: 30.0,
             decoration: BoxDecoration(
@@ -58,9 +62,9 @@ class CAddToCartBtn extends StatelessWidget {
                       ),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }
