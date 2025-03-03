@@ -607,6 +607,8 @@ class CInventoryController extends GetxController {
   Future fetchUserInvSheetData() async {
     try {
       // fetch items from cloud
+      await StoreSheetsApi.initSpreadSheets();
+
       var gsheetItemsList = (await StoreSheetsApi.fetchAllGsheetInvItems())!;
 
       allGSheetData.assignAll(gsheetItemsList as Iterable<CInventoryModel>);
@@ -621,7 +623,7 @@ class CInventoryController extends GetxController {
     } catch (e) {
       isLoading.value = false;
       return CPopupSnackBar.errorSnackBar(
-        title: 'Oh Snap!',
+        title: 'Oh Snap! ERROR FETCHING USER GSHEET INV DATA',
         message: e.toString(),
       );
     }
