@@ -52,7 +52,7 @@ class CVerifyEmailController extends GetxController {
                 image: CImages.successfulRegAnimation,
                 title: CTexts.accountCreatedTitle,
                 subTitle: CTexts.accountCreatedSubTitle,
-                onPressed: () {
+                onContinueBtnPressed: () {
                   AuthRepo.instance.screenRedirect();
                 },
               ));
@@ -70,7 +70,7 @@ class CVerifyEmailController extends GetxController {
           image: CImages.successfulRegAnimation,
           title: CTexts.accountCreatedTitle,
           subTitle: CTexts.accountCreatedSubTitle,
-          onPressed: () {
+          onContinueBtnPressed: () {
             AuthRepo.instance.screenRedirect();
           },
         );

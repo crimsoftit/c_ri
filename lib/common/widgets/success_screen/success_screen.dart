@@ -4,6 +4,7 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:lottie/lottie.dart';
 
 class CSuccessScreen extends StatelessWidget {
@@ -12,11 +13,13 @@ class CSuccessScreen extends StatelessWidget {
     required this.image,
     required this.title,
     required this.subTitle,
-    required this.onPressed,
+    this.onGenerateRecieptBtnPressed,
+    required this.onContinueBtnPressed,
   });
 
   final String image, title, subTitle;
-  final VoidCallback onPressed;
+  final VoidCallback? onGenerateRecieptBtnPressed;
+  final VoidCallback onContinueBtnPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +79,11 @@ class CSuccessScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     TextButton.icon(
-                      onPressed: onPressed,
+                      onPressed: onGenerateRecieptBtnPressed,
+                      icon: Icon(
+                        Iconsax.receipt,
+                        color: CColors.white,
+                      ),
                       label: Text(
                         'generate receipt?',
                       ),
@@ -91,7 +98,7 @@ class CSuccessScreen extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: onPressed,
+                        onPressed: onContinueBtnPressed,
                         child: Text(
                           'CONTINUE',
                           style: Theme.of(context).textTheme.labelMedium?.apply(

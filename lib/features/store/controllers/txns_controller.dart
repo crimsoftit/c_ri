@@ -31,19 +31,13 @@ class CTxnsController extends GetxController {
   void onInit() async {
     await dbHelper.openDb();
 
-    //resetSales();
+
 
     await fetchTransactions();
     await initTxnsSync();
     await addAndUpdateUnsyncedTxnsToCloud();
 
-    // if (selectedPaymentMethod.value == 'Cash') {
-    //   showAmountIssuedField.value = true;
-    // } else {
-    //   showAmountIssuedField.value = false;
-    // }
     showAmountIssuedField.value = true;
-    //await importTxnsFromCloud();
 
     super.onInit();
   }

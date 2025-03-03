@@ -14,6 +14,9 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Can I have location always?</string>
 
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+  <true/>
+
 
 
 	<key>CFBundleDevelopmentRegion</key>

@@ -9,14 +9,17 @@ import 'package:c_ri/features/store/models/payment_method_model.dart';
 import 'package:c_ri/features/store/models/txns_model.dart';
 import 'package:c_ri/features/store/screens/checkout/widgets/payment_methods/payment_methods_tile.dart';
 import 'package:c_ri/nav_menu.dart';
+import 'package:c_ri/services/pdf_services.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:c_ri/utils/popups/full_screen_loader.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
+import 'package:clock/clock.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class CCheckoutController extends GetxController {
   static CCheckoutController get instance => Get.find();
@@ -38,6 +41,8 @@ class CCheckoutController extends GetxController {
   /// -- variables --
   final Rx<CPaymentMethodModel> selectedPaymentMethod =
       CPaymentMethodModel.empty().obs;
+
+  final pdfServices = CPdfServices.instance;
 
   RxList<CCartItemModel> itemsInCart = <CCartItemModel>[].obs;
 
@@ -90,16 +95,16 @@ class CCheckoutController extends GetxController {
             cartItem.pName,
             cartItem.quantity,
             cartController.txnTotals.value,
-            double.parse(amtIssuedFieldController.text.trim()),
+            selectedPaymentMethod.value.platformName == 'cash'
+                ? double.parse(amtIssuedFieldController.text.trim())
+                : 0.00,
             cartItem.price,
             selectedPaymentMethod.value.platformName,
             '',
             '',
             '',
             '',
-            '',
-            // isConnectedToInternet ? 1 : 0,
-            // isConnectedToInternet ? 'none' : 'append',
+            DateFormat('yyyy-MM-dd - kk:mm').format(clock.now()),
             0,
             'append',
             'complete',
@@ -144,16 +149,27 @@ class CCheckoutController extends GetxController {
           //     itemStockCount.value, totalInvSales.value, cartItem.productId);
         }
 
-        // clear cart
-        cartController.clearCart();
         Get.off(
           () {
             return CSuccessScreen(
               title: 'txn success',
               subTitle: 'transaction successful',
               image: CImages.paymentSuccessfulAnimation,
-              onPressed: () {
+              // onGenerateRecieptBtnPressed: () async {
+              //   final pdfData = await pdfServices.createHelloWorld();
+              //   pdfServices.savePdfFile('receipt_1', pdfData);
+              // },
+              onGenerateRecieptBtnPressed: () async {
+                final pdfData = await pdfServices.generateReceipt(itemsInCart);
+                pdfServices.savePdfFile('receipt_1', pdfData);
+              },
+              onContinueBtnPressed: () {
                 navController.selectedIndex.value = 2;
+
+                // TODO: save receipts before clearing
+                // clear cart
+                cartController.clearCart();
+
                 Get.offAll(() => NavMenu());
               },
             );
