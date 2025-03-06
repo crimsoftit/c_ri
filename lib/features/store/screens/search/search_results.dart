@@ -4,7 +4,6 @@ import 'package:c_ri/features/store/screens/search/widgets/c_typeahead_field.dar
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class CSearchResultsScreen extends StatelessWidget {
   const CSearchResultsScreen({super.key});
@@ -21,7 +20,8 @@ class CSearchResultsScreen extends StatelessWidget {
                 CAppBar(
                   title: const CTypeAheadSearchField(),
                   backIconAction: () {
-                    Get.back();
+                    Navigator.of(context).pop();
+                    //Get.back();
                   },
                 ),
 

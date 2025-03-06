@@ -24,7 +24,10 @@ class ResetPasswordScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: () => Get.back(),
+            onPressed: () {
+              Navigator.of(Get.overlayContext!).pop();
+              // Get.back()
+            },
             icon: const Icon(CupertinoIcons.clear),
           ),
         ],

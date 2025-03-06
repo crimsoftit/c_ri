@@ -52,7 +52,8 @@ class OtherScreensAppBar extends StatelessWidget {
                         size: CSizes.iconSm,
                       ),
                       onPressed: () {
-                        Get.back();
+                        Navigator.of(context).pop();
+                        //Get.back();
                       },
                     ),
                   ),

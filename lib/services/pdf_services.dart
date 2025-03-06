@@ -2,8 +2,6 @@ import 'dart:io';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/models/cart_item_model.dart';
-import 'package:c_ri/features/store/models/receipt_headers.dart';
-import 'package:c_ri/utils/computations/price_calculator.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/services.dart';
@@ -45,106 +43,70 @@ class CPdfServices extends GetxController {
 
   Future<Uint8List> generateReceipt(List<CCartItemModel> itemsInCart) async {
     final receipt = pdf_widget.Document();
-    final currencySymbol =
-        CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
-    final List<CReceiptHeaders> elements = [
-      CReceiptHeaders(
-        'item name',
-        'item price',
-        'qty',
-        'total',
-        'vat',
-      ),
-      for (var receiptItem in itemsInCart)
-        CReceiptHeaders(
-          receiptItem.pName,
-          receiptItem.price.toStringAsFixed(2),
-          receiptItem.quantity.toString(),
-          (receiptItem.quantity * receiptItem.price).toStringAsFixed(2),
-          (receiptItem.price * .19).toStringAsFixed(2),
-        ),
-      CReceiptHeaders(
-        'sub total',
-        '',
-        '',
-        '',
-        '${(double.parse(CPriceCalculator.instance.computeCartItemsSubTotal(itemsInCart)))}',
-      ),
-      CReceiptHeaders(
-        'VAT total',
-        '',
-        '',
-        '',
-        '$currencySymbol.${(double.parse(CPriceCalculator.instance.computeVatTotals(itemsInCart)))}',
-      ),
-      CReceiptHeaders(
-        'total amount',
-        '',
-        '',
-        '',
-        '$currencySymbol.${(double.parse(CPriceCalculator.instance.computeVatTotals(itemsInCart))) * (double.parse(CPriceCalculator.instance.computeCartItemsSubTotal(itemsInCart)))}',
-      ),
-    ];
 
     final receiptLogo =
         (await rootBundle.load(CImages.darkAppLogo)).buffer.asUint8List();
 
     receipt.addPage(
-      pdf_widget.Page(
+      pdf_widget.MultiPage(
         pageFormat: PdfPageFormat.a6,
         build: (pdf_widget.Context context) {
-          return pdf_widget.Column(
-            children: [
-              pdf_widget.Image(
-                pdf_widget.MemoryImage(receiptLogo),
-                width: 50.0,
-                height: 50.0,
-                fit: pdf_widget.BoxFit.cover,
-              ),
-              pdf_widget.Row(
-                mainAxisAlignment: pdf_widget.MainAxisAlignment.spaceBetween,
-                children: [
-                  pdf_widget.Column(
-                    children: [
-                      pdf_widget.Text(
-                        'customer name',
-                      ),
-                      pdf_widget.Text(
-                        'customer address',
-                      ),
-                      pdf_widget.Text(
-                        'customer city',
-                      ),
-                    ],
-                  ),
-                  pdf_widget.Column(
-                    children: [
-                      pdf_widget.Text(
-                        'Simiyu Sindani',
-                      ),
-                      pdf_widget.Text(
-                        'Kisumu Dala',
-                      ),
-                      pdf_widget.Text(
-                        'customer city',
-                      ),
-                      pdf_widget.Text(
-                        'VAT-id: 4219384',
-                      ),
-                      pdf_widget.Text(
-                        'txn id: 01234',
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              pdf_widget.Divider(),
-              pdf_widget.Text(elements.first.itemName),
-              pdf_widget.Text((double.parse(
-                      CPriceCalculator.instance.computeVatTotals(itemsInCart))
-                  .toStringAsFixed(2))),
-            ],
-          );
+          return [
+            receiptTitle(),
+            pdf_widget.Column(
+              children: [
+                pdf_widget.Image(
+                  pdf_widget.MemoryImage(receiptLogo),
+                  width: 50.0,
+                  height: 50.0,
+                  fit: pdf_widget.BoxFit.cover,
+                ),
+                pdf_widget.Row(
+                  mainAxisAlignment: pdf_widget.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pdf_widget.Column(
+                      children: [
+                        pdf_widget.Text(
+                          'customer name',
+                        ),
+                        pdf_widget.Text(
+                          'customer address',
+                        ),
+                        pdf_widget.Text(
+                          'customer city',
+                        ),
+                      ],
+                    ),
+                    pdf_widget.Column(
+                      children: [
+                        pdf_widget.Text(
+                          'Simiyu Sindani',
+                        ),
+                        pdf_widget.Text(
+                          'Kisumu Dala',
+                        ),
+                        pdf_widget.Text(
+                          'customer city',
+                        ),
+                        pdf_widget.Text(
+                          'VAT-id: 4219384',
+                        ),
+                        pdf_widget.Text(
+                          'txn id: 01234',
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                pdf_widget.Divider(),
+                // pdf_widget.Text(elements.first.itemName),
+                // pdf_widget.Text((double.parse(
+                //         CPriceCalculator.instance.computeVatTotals(itemsInCart))
+                //     .toStringAsFixed(2))),
+                receiptItems(),
+              ],
+            ),
+          ];
         },
       ),
     );
@@ -153,12 +115,83 @@ class CPdfServices extends GetxController {
   }
 
   Future<void> savePdfFile(String fileName, Uint8List byteList) async {
-    final receiptOutput = await getTemporaryDirectory();
+    final receiptOutput = await getApplicationDocumentsDirectory();
     var filePath = '${receiptOutput.path}/$fileName.pdf';
     final pdfFile = File(filePath);
 
     await pdfFile.writeAsBytes(byteList);
 
     await OpenFile.open(filePath);
+  }
+
+  static pdf_widget.Widget receiptTitle() {
+    return pdf_widget.Column(
+      crossAxisAlignment: pdf_widget.CrossAxisAlignment.start,
+      children: [
+        pdf_widget.Text(
+          'CUSTOMER RECEIPT',
+          style: pdf_widget.TextStyle(
+            fontBold: pdf_widget.Font.helveticaBold(),
+            fontSize: 13.0,
+            // color: pdf_widget.CColors.rBrown,
+          ),
+        ),
+      ],
+    );
+  }
+
+  pdf_widget.Widget receiptItems() {
+    final currencySymbol =
+        CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
+
+    final headers = [
+      'description',
+      'price',
+      'qty',
+      'vat',
+      'total',
+    ];
+
+    cartController.fetchCartItems();
+
+    final receiptData = cartController.cartItems.map(
+      (item) {
+        final itemTotal = item.price * item.quantity * .19;
+        return [
+          item.pName,
+          '$currencySymbol.${item.price.toStringAsFixed(2)}',
+          item.quantity,
+          19,
+          '$currencySymbol.${itemTotal.toStringAsFixed(2)}',
+        ];
+      },
+    ).toList();
+
+    return pdf_widget.TableHelper.fromTextArray(
+      columnWidths: {
+        0: pdf_widget.FractionColumnWidth(0.4),
+        1: pdf_widget.FractionColumnWidth(0.2),
+        2: pdf_widget.FractionColumnWidth(0.2),
+        3: pdf_widget.FractionColumnWidth(0.2),
+        4: pdf_widget.FractionColumnWidth(0.4),
+      },
+      headers: headers,
+      data: receiptData,
+      border: null,
+      headerStyle: pdf_widget.TextStyle(
+        fontWeight: pdf_widget.FontWeight.bold,
+      ),
+      cellHeight: 30.0,
+      headerDecoration: pdf_widget.BoxDecoration(
+        color: PdfColors.brown500,
+      ),
+      cellAlignments: {
+        0: pdf_widget.Alignment.centerLeft,
+        1: pdf_widget.Alignment.centerRight,
+        2: pdf_widget.Alignment.centerRight,
+        3: pdf_widget.Alignment.centerRight,
+        4: pdf_widget.Alignment.centerRight,
+      },
+    );
   }
 }

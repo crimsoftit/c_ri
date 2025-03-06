@@ -52,7 +52,7 @@ class _CTxnDetailsScreenState extends State<CTxnDetailsScreen> {
                     ),
                     backIconAction: () {
                       Navigator.pop(context, true);
-                      Get.back();
+                      //Get.back();
                     },
                     showBackArrow: true,
                     backIconColor: CColors.white,

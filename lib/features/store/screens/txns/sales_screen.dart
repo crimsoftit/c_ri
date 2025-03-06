@@ -7,6 +7,7 @@ import 'package:c_ri/common/widgets/tab_views/store_items_tabs.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
+import 'package:c_ri/features/store/controllers/sync_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
@@ -22,11 +23,12 @@ class TxnsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    final userController = Get.put(CUserController());
-    final searchController = Get.put(CSearchBarController());
     final invController = Get.put(CInventoryController());
+    final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    final searchController = Get.put(CSearchBarController());
+    final syncController = Get.put(CSyncController());
     final txnsController = Get.put(CTxnsController());
+    final userController = Get.put(CUserController());
 
     invController.fetchInventoryItems();
     //Get.put(CInventoryController());
@@ -99,6 +101,8 @@ class TxnsScreen extends StatelessWidget {
                                                 )
                                               : IconButton(
                                                   onPressed: () async {
+                                                    syncController
+                                                        .processSync();
                                                     txnsController
                                                         .addAndUpdateUnsyncedTxnsToCloud();
                                                   },

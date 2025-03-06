@@ -143,7 +143,8 @@ class CTypeAheadSearchField extends StatelessWidget {
                         TextButton.icon(
                           onPressed: () async {
                             searchBarController.onTypeAheadSearchIconTap();
-                            Get.back();
+                            Navigator.of(context).pop();
+                            //Get.back();
                             cartController
                                 .initializeItemCountInCart(suggestion);
                             Get.toNamed(

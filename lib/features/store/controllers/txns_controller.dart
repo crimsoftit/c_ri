@@ -31,8 +31,6 @@ class CTxnsController extends GetxController {
   void onInit() async {
     await dbHelper.openDb();
 
-
-
     await fetchTransactions();
     await initTxnsSync();
     await addAndUpdateUnsyncedTxnsToCloud();
@@ -478,7 +476,7 @@ class CTxnsController extends GetxController {
 
       if (isConnected) {
         syncIsLoading.value = true;
-        await fetchTransactions();
+        fetchTransactions();
 
         if (unsyncedTxnAppends.isNotEmpty) {
           var gSheetTxnAppends = unsyncedTxnAppends

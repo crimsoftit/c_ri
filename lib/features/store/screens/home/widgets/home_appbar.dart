@@ -79,7 +79,7 @@ class CHomeAppBarWidget extends StatelessWidget {
       ),
       actions: [actionsSection],
       backIconAction: () {
-        Get.back();
+        //Get.back();
       },
     );
   }

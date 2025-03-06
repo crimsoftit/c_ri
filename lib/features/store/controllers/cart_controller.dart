@@ -186,10 +186,12 @@ class CCartController extends GetxController {
           message: '$itemToRemove removed from the cart...',
           forInternetConnectivityStatus: false,
         );
-        Get.back();
+        //Get.back();
+        Navigator.of(Get.overlayContext!).pop();
       },
       onCancel: () {
-        Get.back();
+        Navigator.of(Get.overlayContext!).pop();
+        //Get.back();
       },
     );
   }

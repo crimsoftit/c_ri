@@ -26,7 +26,8 @@ class CUpdateName extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         backIconAction: () {
-          Get.back();
+          Navigator.of(context).pop();
+          //Get.back();
         },
       ),
 

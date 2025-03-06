@@ -13,6 +13,7 @@ import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dar
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
+import 'package:c_ri/features/store/controllers/sync_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/screens/checkout/checkout_screen.dart';
@@ -32,12 +33,13 @@ class CInventoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    final userController = Get.put(CUserController());
-    final searchController = Get.put(CSearchBarController());
-    final invController = Get.put(CInventoryController());
-    final txnsController = Get.put(CTxnsController());
     final cartController = Get.put(CCartController());
+    final invController = Get.put(CInventoryController());
+    final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    final searchController = Get.put(CSearchBarController());
+    final syncController = Get.put(CSyncController());
+    final txnsController = Get.put(CTxnsController());
+    final userController = Get.put(CUserController());
 
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
@@ -143,12 +145,8 @@ class CInventoryScreen extends StatelessWidget {
                                                             .isConnected();
 
                                                     if (internetIsConnected) {
-                                                      await invController
-                                                          .cloudSyncInventory();
-                                                      await invController
-                                                          .cloudSyncInventory();
-                                                      await txnsController
-                                                          .addAndUpdateUnsyncedTxnsToCloud();
+                                                      syncController
+                                                          .processSync();
                                                     } else {
                                                       CPopupSnackBar
                                                           .customToast(
@@ -179,7 +177,7 @@ class CInventoryScreen extends StatelessWidget {
                             controller: searchController.txtSalesSearch,
                           ),
                           backIconAction: () {
-                            // Navigator.pop(context, true);
+                            Navigator.pop(context, true);
                             // Get.back();
                           },
                         );

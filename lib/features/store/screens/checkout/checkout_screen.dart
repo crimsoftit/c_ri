@@ -46,7 +46,8 @@ class CCheckoutScreen extends StatelessWidget {
                 size: CSizes.iconMd,
               ),
               onPressed: () {
-                Get.back();
+                //Get.back();
+                Navigator.pop(context);
               },
             ),
           ),

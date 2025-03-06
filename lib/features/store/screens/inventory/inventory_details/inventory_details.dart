@@ -77,7 +77,7 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                     ),
                     backIconAction: () {
                       Navigator.pop(context, true);
-                      Get.back();
+                      //Get.back();
                     },
                     showBackArrow: true,
                     backIconColor: CColors.white,

@@ -26,7 +26,8 @@ class CPaymentMethodsTile extends StatelessWidget {
       contentPadding: const EdgeInsets.all(0),
       onTap: () {
         checkoutController.selectedPaymentMethod.value = paymentMethod;
-        Get.back();
+        //Get.back();
+        Navigator.pop(context);
       },
       leading: CRoundedContainer(
         width: 60.0,
