@@ -17,6 +17,7 @@ import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:c_ri/utils/popups/full_screen_loader.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:clock/clock.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -69,6 +70,8 @@ class CCheckoutController extends GetxController {
         'processing txn...',
         CImages.docerAnimation,
       );
+
+      txnsController.fetchTransactions();
 
       // -- fetch cart content --
       cartController.fetchCartItems();
@@ -125,10 +128,13 @@ class CCheckoutController extends GetxController {
               invItem.quantity -= cartItem.quantity;
 
               dbHelper.updateInventoryItem(invItem, cartItem.productId);
-              CPopupSnackBar.successSnackBar(
-                title: 'inventory stock update',
-                message: 'inventory stock update successful',
-              );
+
+              if (kDebugMode) {
+                CPopupSnackBar.successSnackBar(
+                  title: 'inventory stock update',
+                  message: 'inventory stock update successful',
+                );
+              }
 
               // -- update sync status/action for this inventory item --
               dbHelper.updateInvOfflineSyncAfterStockUpdate(
@@ -169,6 +175,7 @@ class CCheckoutController extends GetxController {
                 // TODO: save receipts before clearing
                 // clear cart
                 cartController.clearCart();
+                txnsController.fetchTransactions();
 
                 Get.offAll(() => NavMenu());
               },

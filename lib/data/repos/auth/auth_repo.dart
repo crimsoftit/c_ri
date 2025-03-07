@@ -105,13 +105,13 @@ class AuthRepo extends GetxController {
       );
     } on FirebaseAuthException catch (e) {
       CPopupSnackBar.errorSnackBar(
-        title: "firebaseAuth exception error",
+        title: "login error!",
         message: e.code.toString(),
       );
       throw CFirebaseAuthExceptions(e.code).message;
     } on FirebaseException catch (e) {
       CPopupSnackBar.errorSnackBar(
-        title: "firebase exception error",
+        title: "login error",
         message: e.code.toString(),
       );
       throw CFirebaseAuthExceptions(e.code).message;
@@ -146,13 +146,13 @@ class AuthRepo extends GetxController {
       );
     } on FirebaseAuthException catch (e) {
       CPopupSnackBar.errorSnackBar(
-        title: "firebaseAuth exception error",
+        title: "signup error",
         message: e.code.toString(),
       );
       throw CFirebaseAuthExceptions(e.code).message;
     } on FirebaseException catch (e) {
       CPopupSnackBar.errorSnackBar(
-        title: "firebase exception error",
+        title: "authentication error",
         message: e.code.toString(),
       );
       throw CFirebaseAuthExceptions(e.code).message;
@@ -183,13 +183,13 @@ class AuthRepo extends GetxController {
       await _auth.currentUser?.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
       CPopupSnackBar.errorSnackBar(
-        title: "firebaseAuth exception error",
+        title: "authentication error",
         message: e.code.toString(),
       );
       throw CFirebaseAuthExceptions(e.code).message;
     } on FirebaseException catch (e) {
       CPopupSnackBar.errorSnackBar(
-        title: "firebase exception error",
+        title: "authentication error",
         message: e.code.toString(),
       );
       throw CFirebaseAuthExceptions(e.code).message;
@@ -263,13 +263,13 @@ class AuthRepo extends GetxController {
       await _auth.sendPasswordResetEmail(email: email);
     } on FirebaseAuthException catch (e) {
       CPopupSnackBar.errorSnackBar(
-        title: "firebaseAuth exception error",
+        title: "authentication error",
         message: e.code.toString(),
       );
       throw CFirebaseAuthExceptions(e.code).message;
     } on FirebaseException catch (e) {
       CPopupSnackBar.errorSnackBar(
-        title: "firebase exception error",
+        title: "authentication error",
         message: e.code.toString(),
       );
       throw CFirebaseAuthExceptions(e.code).message;
@@ -317,7 +317,7 @@ class AuthRepo extends GetxController {
     } on FirebaseAuthException catch (e) {
       final exception = CExceptions.fromCode(e.code);
       CPopupSnackBar.customToast(
-        message: 'FIREBASE AUTH ERROR!',
+        message: 'AUTHENTICATION ERROR!',
         forInternetConnectivityStatus: false,
       );
       throw exception.message;

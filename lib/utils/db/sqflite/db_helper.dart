@@ -347,8 +347,9 @@ class DbHelper extends GetxController {
       // Get a reference to the database.
       final db = _db;
 
-      final topSellers = await db!
-          .rawQuery('SELECT * FROM $invTable ORDER BY qtySold DESC LIMIT 10');
+      final topSellers = await db!.rawQuery(
+          'SELECT * FROM $invTable WHERE userEmail = ? ORDER BY qtySold DESC LIMIT 10',
+          [email]);
 
       // convert the List<Map<String, dynamic> into a List<CInventoryModel>.
       return topSellers
@@ -410,6 +411,36 @@ class DbHelper extends GetxController {
         message: e.toString(),
       );
       return 0;
+    }
+  }
+
+  Future<int> updateTxnItemsSyncStatus(
+      int syncStatus, String sAction, int soldItemId) async {
+    try {
+      // Get a reference to the database.
+      final db = _db;
+
+      int updateResult = await db!.rawUpdate(
+        '''
+          UPDATE $txnsTable 
+          SET isSynced = ?, syncAction = ? 
+          WHERE soldItemId = ?
+        ''',
+        [syncStatus, sAction, soldItemId],
+      );
+
+      CPopupSnackBar.customToast(
+        message: '$updateResult',
+        forInternetConnectivityStatus: false,
+      );
+
+      return updateResult;
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'stock count sync error!',
+        message: 'error updating txns SYNC LOCALLY: $e',
+      );
+      throw e.toString();
     }
   }
 }

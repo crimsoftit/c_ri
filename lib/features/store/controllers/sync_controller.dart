@@ -12,7 +12,5 @@ class CSyncController extends GetxController {
   void processSync() async {
     await invController.cloudSyncInventory();
     await invController.cloudSyncInventory();
-    await txnsController.addAndUpdateUnsyncedTxnsToCloud();
-    await txnsController.addAndUpdateUnsyncedTxnsToCloud();
   }
 }

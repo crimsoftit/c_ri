@@ -33,7 +33,6 @@ class CTxnsController extends GetxController {
 
     await fetchTransactions();
     await initTxnsSync();
-    await addAndUpdateUnsyncedTxnsToCloud();
 
     showAmountIssuedField.value = true;
 
@@ -75,6 +74,7 @@ class CTxnsController extends GetxController {
   final RxBool syncIsLoading = false.obs;
   final RxBool includeCustomerDetails = false.obs;
   final RxBool txnSuccesfull = false.obs;
+  final RxBool txnsFetched = false.obs;
 
   final txtSaleItemQty = TextEditingController();
   final txtAmountIssued = TextEditingController();
@@ -257,14 +257,21 @@ class CTxnsController extends GetxController {
 
       // stop loader
       isLoading.value = false;
+      txnsFetched.value = true;
 
       return txns;
     } catch (e) {
       isLoading.value = false;
-      return CPopupSnackBar.errorSnackBar(
-        title: 'Oh Snap!',
-        message: e.toString(),
-      );
+      txnsFetched.value = false;
+
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'Oh Snap!',
+          message: e.toString(),
+        );
+      }
+      throw e.toString();
     } finally {
       isLoading.value = false;
     }
@@ -320,10 +327,14 @@ class CTxnsController extends GetxController {
         message: formatException.message,
       );
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'sell item scan error!',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'sell item scan error!',
+          message: e.toString(),
+        );
+      }
+      throw e.toString();
     }
   }
 
@@ -360,10 +371,17 @@ class CTxnsController extends GetxController {
       return fetchedItem;
     } catch (e) {
       isLoading.value = false;
-      return CPopupSnackBar.errorSnackBar(
-        title: 'Oh Snap!',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print('****');
+        print(e.toString());
+        print('****');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error fetching scan item!',
+          message: 'error fetching scan item for sale: $e',
+        );
+      }
+
+      throw e.toString();
     }
   }
 
@@ -469,133 +487,95 @@ class CTxnsController extends GetxController {
   }
 
   /// -- add unsynced txns to the cloud --
-  Future<void> addAndUpdateUnsyncedTxnsToCloud() async {
+  Future<void> addSalesToCloud() async {
     try {
-      // -- check internet connectivity
-      final isConnected = await CNetworkManager.instance.isConnected();
+      syncIsLoading.value = true;
+      await fetchTransactions().then(
+        (result) {
+          if (result.isNotEmpty) {
+            final unsyncedTxns = transactions.where((unsyncedTxn) =>
+                unsyncedTxn.syncAction.toLowerCase() == 'append'.toLowerCase());
 
-      if (isConnected) {
-        syncIsLoading.value = true;
-        fetchTransactions();
+            if (unsyncedTxns.isNotEmpty) {
+              var gSheetTxnAppends = unsyncedTxns
+                  .map(
+                    (sale) => {
+                      'soldItemId': sale.soldItemId,
+                      'txnId': sale.txnId,
+                      'userId': sale.userId,
+                      'userEmail': sale.userEmail,
+                      'userName': sale.userName,
+                      'productId': sale.productId,
+                      'productCode': sale.productCode,
+                      'productName': sale.productName,
+                      'quantity': sale.quantity,
+                      'totalAmount': sale.totalAmount,
+                      'amountIssued': sale.amountIssued,
+                      'unitSellingPrice': sale.unitSellingPrice,
+                      'paymentMethod': sale.paymentMethod,
+                      'customerName': sale.customerName,
+                      'customerContacts': sale.customerContacts,
+                      'txnAddress': sale.txnAddress,
+                      'txnAddressCoordinates': sale.txnAddressCoordinates,
+                      'date': sale.date,
+                      'isSynced': 1,
+                      'syncAction': 'none',
+                      'txnStatus': sale.txnStatus,
+                    },
+                  )
+                  .toList();
 
-        if (unsyncedTxnAppends.isNotEmpty) {
-          var gSheetTxnAppends = unsyncedTxnAppends
-              .map(
-                (item) => {
-                  'soldItemId': item.soldItemId,
-                  'txnId': item.txnId,
-                  'userId': item.userId,
-                  'userEmail': item.userEmail,
-                  'userName': item.userName,
-                  'productId': item.productId,
-                  'productCode': item.productCode,
-                  'productName': item.productName,
-                  'quantity': item.quantity,
-                  'totalAmount': item.totalAmount,
-                  'amountIssued': item.amountIssued,
-                  'unitSellingPrice': item.unitSellingPrice,
-                  'paymentMethod': item.paymentMethod,
-                  'customerName': item.customerName,
-                  'customerContacts': item.customerContacts,
-                  'txnAddress': item.txnAddress,
-                  'txnAddressCoordinates': item.txnAddressCoordinates,
-                  'date': item.date,
-                  'isSynced': 1,
-                  'syncAction': 'none',
-                  // 'isSynced': item.isSynced,
-                  // 'syncAction': item.syncAction,
-                  'txnStatus': item.txnStatus,
-                },
-              )
-              .toList();
+              // -- save sales data to cloud --
+              //StoreSheetsApi.initSpreadSheets();
+              StoreSheetsApi.saveTxnsToGSheets(gSheetTxnAppends)
+                  .then((result) async {
+                if (result) {
+                  // -- update txns status locally --
 
-          // -- initialize spreadsheets --
-          await StoreSheetsApi.initSpreadSheets();
-          await StoreSheetsApi.saveTxnsToGSheets(gSheetTxnAppends);
-
-          // -- update sync status
-          await updateSyncedTxnUpdates();
-
-          if (kDebugMode) {
-            print(gSheetTxnAppends);
+                  for (var forSyncItem in unsyncedTxns) {
+                    await dbHelper.updateTxnItemsSyncStatus(
+                        1, 'none', forSyncItem.soldItemId!);
+                  }
+                } else {
+                  syncIsLoading.value = false;
+                  CPopupSnackBar.errorSnackBar(
+                    title: 'ERROR SYNCING TXNS TO CLOUD...',
+                    message: 'an error occurred while uploading txns to cloud',
+                  );
+                }
+              });
+            } else {
+              syncIsLoading.value = false;
+              if (kDebugMode) {
+                print('***** ALL TXNS RADA SAFI *****');
+              }
+              CPopupSnackBar.customToast(
+                message: '***** ALL TXNS RADA SAFI *****',
+                forInternetConnectivityStatus: false,
+              );
+            }
+          } else {
+            syncIsLoading.value = false;
+            CPopupSnackBar.customToast(
+              message: 'NO SALES/TXNS FOUND!',
+              forInternetConnectivityStatus: false,
+            );
           }
-        }
-
-        // -- stop loader --
-        syncIsLoading.value = false;
-      } else {
-        CPopupSnackBar.warningSnackBar(
-          title: 'cloud sync requires internet',
-          message: 'an internet connection is required for cloud sync...',
+        },
+      );
+    } catch (e) {
+      syncIsLoading.value = false;
+      if (kDebugMode) {
+        print('***');
+        print('* an error occurred while uploading txns to cloud: $e *');
+        print('***');
+        CPopupSnackBar.errorSnackBar(
+          title: 'ERROR SYNCING TXNS TO CLOUD...',
+          message: 'an error occurred while uploading txns to cloud: $e',
         );
       }
-    } catch (e) {
-      // -- stop loader --
-      syncIsLoading.value = false;
-      CPopupSnackBar.errorSnackBar(
-        title: 'error uploading txns to cloud',
-        message: e.toString(),
-      );
-    } finally {
-      // -- stop loader --
-      syncIsLoading.value = false;
-    }
-  }
 
-  /// -- update txn details --
-  Future updateSyncedTxnUpdates() async {
-    try {
-      await fetchTransactions();
-      unsyncedTxnAppends.value = transactions
-          .where(
-              (txnItem) => txnItem.syncAction.toLowerCase().contains('append'))
-          .toList();
-
-      if (unsyncedTxnAppends.isNotEmpty) {
-        for (var element in unsyncedTxnAppends) {
-          var txnAppends = CTxnsModel(
-            element.txnId,
-            element.userId,
-            element.userEmail,
-            element.userName,
-            element.productId,
-            element.productCode,
-            element.productName,
-            element.quantity,
-            element.totalAmount,
-            element.amountIssued,
-            element.unitSellingPrice,
-            element.paymentMethod,
-            element.customerName,
-            element.customerContacts,
-            element.txnAddress,
-            element.txnAddressCoordinates,
-            element.date,
-            1,
-            'none',
-            element.txnStatus,
-          );
-
-          // update stock count for inventory item's cloud data
-          // StoreSheetsApi.updateInvStockCount(
-          //   id: element.soldItemId!,
-          //   key: 'quantity',
-          //   value: element.quantity,
-          // );
-
-          await dbHelper.updateTxnDetails(txnAppends, element.txnId);
-
-          CPopupSnackBar.successSnackBar(
-            title: 'txns sync success...',
-            message: 'txns successfully uploaded to cloud...',
-          );
-        }
-      }
-    } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'Oh Snap!',
-        message: e.toString(),
-      );
+      throw e.toString();
     }
   }
 
@@ -617,9 +597,21 @@ class CTxnsController extends GetxController {
       return userGsheetTxnsData;
     } catch (e) {
       isLoading.value = false;
+
+      if (kDebugMode) {
+        print('***');
+        print(
+            '* an error occurred while fetching user\'s cloud txn data: $e *');
+        print('***');
+        CPopupSnackBar.errorSnackBar(
+          title: 'Oh Snap!',
+          message: e.toString(),
+        );
+      }
+
       return CPopupSnackBar.errorSnackBar(
         title: 'Oh Snap!',
-        message: e.toString(),
+        message: 'an error occurred while fetching user\'s cloud txn data',
       );
     } finally {
       isLoading.value = false;
@@ -668,14 +660,9 @@ class CTxnsController extends GetxController {
 
             if (kDebugMode) {
               print(
-                  "----------\n ===SYNCED TXNS=== \n $userGsheetTxnsData \n\n ----------");
+                  "----------\n ===SYNCED TXNS=== \n ${userGsheetTxnsData.iterator} \n\n ----------");
             }
           }
-        } else {
-          // CPopupSnackBar.customToast(
-          //   message: 'rada safi pande ya txn imports...',
-          //   forInternetConnectivityStatus: false,
-          // );
         }
       }
     } catch (e) {

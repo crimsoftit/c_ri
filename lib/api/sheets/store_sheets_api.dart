@@ -181,9 +181,22 @@ class StoreSheetsApi {
 
   /// -- ## TRANSACTIONS - OPERATIONS ## --
 
-  static Future saveTxnsToGSheets(List<Map<String, dynamic>> rowItems) async {
-    if (txnsSheet == null) return;
-    txnsSheet!.values.map.appendRows(rowItems);
+  static Future<bool> saveTxnsToGSheets(
+      List<Map<String, dynamic>> rowItems) async {
+    try {
+      if (txnsSheet == null) return false;
+      txnsSheet!.values.map.appendRows(rowItems);
+      return true;
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'error syncing txns'.toUpperCase(),
+        message: '$e',
+      );
+      if (kDebugMode) {
+        print(e.toString());
+      }
+      throw 'ERROR SYNCING TXNS: $e';
+    }
   }
 
   static Future<List<CTxnsModel>?> fetchAllTxnsFromCloud() async {

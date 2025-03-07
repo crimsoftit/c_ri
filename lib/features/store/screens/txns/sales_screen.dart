@@ -7,13 +7,14 @@ import 'package:c_ri/common/widgets/tab_views/store_items_tabs.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
-import 'package:c_ri/features/store/controllers/sync_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
+import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -26,12 +27,11 @@ class TxnsScreen extends StatelessWidget {
     final invController = Get.put(CInventoryController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final searchController = Get.put(CSearchBarController());
-    final syncController = Get.put(CSyncController());
+    //final syncController = Get.put(CSyncController());
     final txnsController = Get.put(CTxnsController());
     final userController = Get.put(CUserController());
 
-    invController.fetchInventoryItems();
-    //Get.put(CInventoryController());
+    Get.put(CInventoryController());
     txnsController.fetchTransactions();
 
     return DefaultTabController(
@@ -88,7 +88,8 @@ class TxnsScreen extends StatelessWidget {
                                       // txnsController.isLoading.value ||
                                       //         invController.isLoading.value
                                       txnsController.syncIsLoading.value ||
-                                              invController.isLoading.value
+                                              invController.isLoading.value ||
+                                              txnsController.syncIsLoading.value
                                           ? const CShimmerEffect(
                                               width: 40.0,
                                               height: 40.0,
@@ -101,10 +102,30 @@ class TxnsScreen extends StatelessWidget {
                                                 )
                                               : IconButton(
                                                   onPressed: () async {
-                                                    syncController
-                                                        .processSync();
-                                                    txnsController
-                                                        .addAndUpdateUnsyncedTxnsToCloud();
+                                                    // -- check internet connectivity --
+                                                    final internetIsConnected =
+                                                        await CNetworkManager
+                                                            .instance
+                                                            .isConnected();
+                                                    if (internetIsConnected) {
+                                                      await txnsController
+                                                          .addSalesToCloud()
+                                                          .then((result) {
+                                                        txnsController
+                                                            .syncIsLoading
+                                                            .value = false;
+                                                        txnsController.isLoading
+                                                            .value = false;
+                                                      });
+                                                    } else {
+                                                      CPopupSnackBar
+                                                          .customToast(
+                                                        message:
+                                                            'internet connection required for cloud sync!',
+                                                        forInternetConnectivityStatus:
+                                                            true,
+                                                      );
+                                                    }
                                                   },
                                                   icon: const Icon(
                                                     Iconsax.cloud_change,
@@ -153,7 +174,8 @@ class TxnsScreen extends StatelessWidget {
 
                   // run loader --
                   if (txnsController.isLoading.value ||
-                      invController.isLoading.value) {
+                      invController.isLoading.value ||
+                      txnsController.syncIsLoading.value) {
                     return const CVerticalProductShimmer(
                       itemCount: 7,
                     );
