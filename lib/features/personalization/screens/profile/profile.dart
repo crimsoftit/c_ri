@@ -1,9 +1,12 @@
+import 'package:c_ri/common/widgets/appbar/app_bar.dart';
+import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:c_ri/common/widgets/img_widgets/c_circular_img.dart';
 import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/profile/widgets/c_profile_menu.dart';
+import 'package:c_ri/features/personalization/screens/profile/widgets/update_bizname_widget.dart';
 import 'package:c_ri/features/personalization/screens/profile/widgets/update_name.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
@@ -22,37 +25,36 @@ class ProfileScreen extends StatelessWidget {
     final userController = Get.put(CUserController());
 
     return Scaffold(
-      // appBar: CAppBar(
-      //   bgColor: CColors.rBrown,
-      //   showBackArrow: false,
-      //   backIconColor: isDarkTheme ? CColors.white : CColors.rBrown,
-      //   title: Text(
-      //     'me profile',
-      //     style: Theme.of(context).textTheme.headlineSmall,
-      //   ),
-      //   backIconAction: () {
-      //     //Get.back();
-      //   },
-      // ),
-      appBar: AppBar(
-        backgroundColor: CColors.rBrown,
-        automaticallyImplyLeading: false,
-        title: Text(
-          'me profile',
-          style: Theme.of(context).textTheme.bodyLarge!.apply(
-                color: CColors.white,
-              ),
-        ),
-      ),
-
       // -- body --
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(CSizes.defaultSpace),
-          child: Column(
-            children: [
-              // -- profile picture
-              SizedBox(
+        child: Column(
+          children: [
+            // -- header --
+            CPrimaryHeaderContainer(
+              child: Column(
+                children: [
+                  // app bar
+                  CAppBar(
+                    title: Text(
+                      'your profile',
+                      style: Theme.of(context).textTheme.headlineSmall!.apply(
+                            color: CColors.white,
+                          ),
+                    ),
+                    backIconAction: () {},
+                    showBackArrow: false,
+                    showSubTitle: true,
+                  ),
+
+                  const SizedBox(
+                    height: CSizes.spaceBtnSections / 5,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(CSizes.defaultSpace),
+              child: SizedBox(
                 width: double.infinity,
                 child: Column(
                   children: [
@@ -140,13 +142,13 @@ class ProfileScreen extends StatelessWidget {
                       editFontSize: false,
                     ),
                     const SizedBox(
-                      height: CSizes.spaceBtnItems,
+                      height: CSizes.spaceBtnItems / 2,
                     ),
 
                     CProfileMenu(
-                      title: 'name',
+                      title: 'full name',
                       value: userController.user.value.fullName,
-                      titleFlex: 2,
+                      titleFlex: 3,
                       secondRowWidgetFlex: 6,
                       onTap: () {
                         Get.to(() => const CUpdateName());
@@ -154,9 +156,24 @@ class ProfileScreen extends StatelessWidget {
                     ),
 
                     CProfileMenu(
+                      title: 'business name',
+                      value: userController.user.value.businessName,
+                      titleFlex: 3,
+                      valueIsWidget:
+                          userController.user.value.businessName == ''
+                              ? true
+                              : false,
+                      secondRowWidgetFlex: 6,
+                      verticalPadding: 3.0,
+                      onTap: () {
+                        Get.to(() => const CUpdateBusinessName());
+                      },
+                    ),
+
+                    CProfileMenu(
                       title: 'username',
                       value: 'retail intelligence',
-                      titleFlex: 2,
+                      titleFlex: 3,
                       secondRowWidgetFlex: 6,
                       onTap: () {},
                     ),
@@ -183,7 +200,7 @@ class ProfileScreen extends StatelessWidget {
                     CProfileMenu(
                       title: 'user id',
                       value: userController.user.value.id,
-                      icon: Iconsax.copy,
+                      trailingIcon: Iconsax.copy,
                       titleFlex: 2,
                       secondRowWidgetFlex: 6,
                       onTap: () {},
@@ -237,8 +254,8 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

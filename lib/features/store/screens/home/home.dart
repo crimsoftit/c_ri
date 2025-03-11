@@ -1,25 +1,36 @@
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:c_ri/common/widgets/products/cart/cart_counter_icon.dart';
+import 'package:c_ri/common/widgets/products/cart/positioned_cart_counter_widget.dart';
 import 'package:c_ri/common/widgets/products/circle_avatar.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
+import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
+import 'package:c_ri/features/store/screens/checkout/checkout_screen.dart';
 import 'package:c_ri/features/store/screens/home/widgets/home_appbar.dart';
 import 'package:c_ri/nav_menu.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/constants/txt_strings.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final cartController = Get.put(CCartController());
     final invController = Get.put(CInventoryController());
-    //final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
+
     final navController = Get.put(NavMenuController());
+
+    invController.fetchInventoryItems();
+    invController.fetchTopSellers();
+    cartController.fetchCartItems();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -108,13 +119,6 @@ class HomeScreen extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-
-                                        // CProductTitleText(
-                                        //   title: invController
-                                        //       .topSoldItems[index].name,
-                                        //   smallSize: true,
-                                        //   txtColor: CColors.white,
-                                        // ),
                                         CRoundedContainer(
                                           bgColor: Colors.transparent,
                                           showBorder: false,
@@ -236,6 +240,46 @@ class HomeScreen extends StatelessWidget {
             // ),
           ],
         ),
+      ),
+
+      /// -- floating action button to scan item for sale --
+      floatingActionButton: Obx(
+        () {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              cartController.countOfCartItems.value >= 1
+                  ? Stack(
+                      alignment: Alignment.centerRight,
+                      children: [
+                        FloatingActionButton(
+                          onPressed: () {
+                            Get.to(() => const CCheckoutScreen());
+                          },
+                          backgroundColor: isConnectedToInternet
+                              ? Colors.brown
+                              : CColors.black,
+                          foregroundColor: Colors.white,
+                          heroTag: 'checkout',
+                          child: const Icon(
+                            Iconsax.wallet_check,
+                          ),
+                        ),
+                        CPositionedCartCounterWidget(
+                          counterBgColor: CColors.white,
+                          counterTxtColor: CColors.rBrown,
+                          rightPosition: 10.0,
+                          topPosition: 8.0,
+                        ),
+                      ],
+                    )
+                  : SizedBox(),
+              const SizedBox(
+                height: CSizes.spaceBtnSections / 8,
+              ),
+            ],
+          );
+        },
       ),
     );
   }

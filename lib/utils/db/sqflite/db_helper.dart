@@ -429,15 +429,17 @@ class DbHelper extends GetxController {
         [syncStatus, sAction, soldItemId],
       );
 
-      CPopupSnackBar.customToast(
-        message: '$updateResult',
-        forInternetConnectivityStatus: false,
-      );
+      // if (kDebugMode) {
+      //   CPopupSnackBar.customToast(
+      //     message: '$updateResult',
+      //     forInternetConnectivityStatus: false,
+      //   );
+      // }
 
       return updateResult;
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
-        title: 'stock count sync error!',
+        title: 'txn sync error!',
         message: 'error updating txns SYNC LOCALLY: $e',
       );
       throw e.toString();

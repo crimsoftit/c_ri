@@ -4,6 +4,7 @@ import 'package:c_ri/features/authentication/screens/login/login.dart';
 import 'package:c_ri/features/authentication/screens/onboarding/onboarding_screen.dart';
 import 'package:c_ri/features/authentication/screens/signup/verify_email.dart';
 import 'package:c_ri/features/personalization/screens/location_tings/device_settings_screen.dart';
+import 'package:c_ri/features/personalization/screens/profile/widgets/update_bizname_widget.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
@@ -17,6 +18,7 @@ import 'package:c_ri/utils/exceptions/platform_exceptions.dart';
 import 'package:c_ri/utils/local_storage/storage_utility.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
@@ -61,6 +63,8 @@ class AuthRepo extends GetxController {
             userDets.locationCoordinates == '' ||
             userDets.userAddress == '') {
           Get.offAll(() => const CDeviceSettingsScreen());
+        } else if (userDets.businessName == '') {
+          Get.offAll(() => const CUpdateBusinessName());
         } else {
           //DbHelper dbHelper = DbHelper.instance;
           final invController = Get.put(CInventoryController());
@@ -104,16 +108,22 @@ class AuthRepo extends GetxController {
         password: password,
       );
     } on FirebaseAuthException catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: "login error!",
-        message: e.code.toString(),
-      );
+      if (kDebugMode) {
+        CPopupSnackBar.errorSnackBar(
+          title: "login error!",
+          message: e.code.toString(),
+        );
+      }
+
       throw CFirebaseAuthExceptions(e.code).message;
     } on FirebaseException catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: "login error",
-        message: e.code.toString(),
-      );
+      if (kDebugMode) {
+        CPopupSnackBar.errorSnackBar(
+          title: "login error",
+          message: e.code.toString(),
+        );
+      }
+
       throw CFirebaseAuthExceptions(e.code).message;
     } on FormatException catch (e) {
       CPopupSnackBar.errorSnackBar(
@@ -128,10 +138,12 @@ class AuthRepo extends GetxController {
       );
       throw CPlatformExceptions(e.code).message;
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: "An error occurred",
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        CPopupSnackBar.errorSnackBar(
+          title: "a login error occurred",
+          message: e.toString(),
+        );
+      }
       throw e.toString();
     }
   }

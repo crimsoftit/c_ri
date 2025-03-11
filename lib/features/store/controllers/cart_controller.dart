@@ -25,8 +25,6 @@ class CCartController extends GetxController {
   RxList<TextEditingController> qtyFieldControllers =
       <TextEditingController>[].obs;
 
-  //
-
   CCartController() {
     fetchCartItems();
   }
@@ -35,6 +33,7 @@ class CCartController extends GetxController {
   void onInit() async {
     await GetStorage.init();
     fetchCartItems();
+    qtyFieldControllers = <TextEditingController>[].obs;
     super.onInit();
   }
 
@@ -111,19 +110,33 @@ class CCartController extends GetxController {
 
     if (inventoryItem.quantity > 0) {
       if (itemIndex >= 0) {
-        if (cartItems[itemIndex].quantity >= inventoryItem.quantity) {
-          CPopupSnackBar.warningSnackBar(
-            title: 'oh snap!',
-            message: 'only ${inventoryItem.quantity} items are stocked!',
-          );
-          // qtyFieldControllers[itemIndex].text =
-          //     inventoryItem.quantity.toString();
-          return;
+        if (fromQtyTxtField && qtyValue != '') {
+          if (int.parse(qtyValue!) > inventoryItem.quantity) {
+            CPopupSnackBar.warningSnackBar(
+              title: 'oh snap!',
+              message: 'only ${inventoryItem.quantity} items are stocked!',
+            );
+            qtyFieldControllers[itemIndex].text =
+                inventoryItem.quantity.toString();
+            qtyValue = qtyFieldControllers[itemIndex].text;
+            //return;
+          }
+          cartItems[itemIndex].quantity = int.parse(qtyValue);
         } else {
-          if (fromQtyTxtField) {
-            cartItems[itemIndex].quantity = int.parse(qtyValue!);
+          if (cartItems[itemIndex].quantity >= inventoryItem.quantity) {
+            CPopupSnackBar.warningSnackBar(
+              title: 'oh snap!',
+              message: 'only ${inventoryItem.quantity} items are stocked!',
+            );
+            // qtyFieldControllers[itemIndex].text =
+            //     inventoryItem.quantity.toString();
+            return;
           } else {
-            cartItems[itemIndex].quantity += 1;
+            if (fromQtyTxtField) {
+              cartItems[itemIndex].quantity = int.parse(qtyValue!);
+            } else {
+              cartItems[itemIndex].quantity += 1;
+            }
           }
         }
       } else {

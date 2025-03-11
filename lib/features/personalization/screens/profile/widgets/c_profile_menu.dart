@@ -9,7 +9,7 @@ class CProfileMenu extends StatelessWidget {
     required this.title,
     this.value,
     required this.onTap,
-    this.icon = Iconsax.arrow_right_34,
+    this.trailingIcon = Iconsax.arrow_right_34,
     this.verticalPadding = CSizes.spaceBtnItems / 3,
     this.showTrailingIcon = true,
     this.valueIsWidget = false,
@@ -19,7 +19,7 @@ class CProfileMenu extends StatelessWidget {
     required this.secondRowWidgetFlex,
   });
 
-  final IconData icon;
+  final IconData trailingIcon;
   final String title;
   final String? value;
   final int titleFlex, secondRowWidgetFlex;
@@ -67,7 +67,7 @@ class CProfileMenu extends StatelessWidget {
                 child: IconButton(
                   onPressed: onTrailingIconPressed,
                   icon: Icon(
-                    icon,
+                    trailingIcon,
                     size: 18.0,
                     color: CColors.rBrown,
                   ),

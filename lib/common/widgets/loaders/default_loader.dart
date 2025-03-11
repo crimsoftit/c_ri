@@ -1,5 +1,7 @@
 import 'package:c_ri/utils/constants/colors.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class DefaultLoaderScreen extends StatelessWidget {
   const DefaultLoaderScreen({
@@ -8,13 +10,24 @@ class DefaultLoaderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: CColors.rBrown,
-      body: Center(
-        child: CircularProgressIndicator(
-          color: CColors.white,
-        ),
-      ),
+    return Obx(
+      () {
+        final isConnectedToInternet =
+            CNetworkManager.instance.hasConnection.value;
+
+        return Scaffold(
+          backgroundColor: isConnectedToInternet
+              ? CColors.rBrown
+              : CColors.black.withValues(
+                  alpha: 0.3,
+                ),
+          body: Center(
+            child: CircularProgressIndicator(
+              color: CColors.white,
+            ),
+          ),
+        );
+      },
     );
   }
 }

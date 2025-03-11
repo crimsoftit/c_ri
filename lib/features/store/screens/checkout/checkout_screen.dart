@@ -13,6 +13,7 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -33,6 +34,8 @@ class CCheckoutScreen extends StatelessWidget {
 
     final currencySymbol =
         CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
+
+    final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
 
     return Scaffold(
         appBar: AppBar(
@@ -166,6 +169,19 @@ class CCheckoutScreen extends StatelessWidget {
             ],
           ),
         ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            checkoutController.scanItemForCheckout();
+          },
+          label: Text(
+            'scan',
+          ),
+          icon: const Icon(
+            Iconsax.scan_barcode,
+          ),
+          backgroundColor: isConnectedToInternet ? Colors.brown : CColors.black,
+          foregroundColor: Colors.white,
+        ),
         bottomNavigationBar: Obx(
           () {
             if (cartController.cartItems.isNotEmpty) {
@@ -186,7 +202,8 @@ class CCheckoutScreen extends StatelessWidget {
                         checkoutController.setFocusOnAmtIssuedField.value =
                             true;
                         return;
-                      } else if (double.parse(checkoutController
+                      }
+                      if (double.parse(checkoutController
                               .amtIssuedFieldController.text
                               .trim()) <
                           cartController.totalCartPrice.value) {
@@ -195,21 +212,34 @@ class CCheckoutScreen extends StatelessWidget {
                           message: 'the amount issued is not enough',
                         );
                         return;
-                      } else {
-                        // checkoutController.processTxn();
                       }
-                    } else {
-                      //checkoutController.processTxn();
                     }
                     checkoutController.processTxn();
                   },
-                  label: Text(
-                    'CHECKOUT $currencySymbol.${cartController.totalCartPrice.value.toStringAsFixed(2)}',
-                    style: Theme.of(context).textTheme.bodyMedium!.apply(
-                          color: CColors.white,
-                          fontSizeFactor: 1.20,
-                          fontWeightDelta: 2,
+                  label: SizedBox(
+                    height: 34.1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'CHECKOUT',
+                          style: Theme.of(context).textTheme.bodyMedium!.apply(
+                                color: CColors.white,
+                                fontSizeFactor: 0.88,
+                                fontWeightDelta: 1,
+                              ),
                         ),
+                        Text(
+                          '$currencySymbol.${cartController.totalCartPrice.value.toStringAsFixed(2)}',
+                          style: Theme.of(context).textTheme.bodyMedium!.apply(
+                                color: CColors.white,
+                                fontSizeFactor: 1.10,
+                                fontWeightDelta: 2,
+                              ),
+                        ),
+                      ],
+                    ),
                   ),
                   icon: Icon(
                     Iconsax.wallet_check,

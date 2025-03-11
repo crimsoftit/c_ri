@@ -40,6 +40,7 @@ class CCartItems extends StatelessWidget {
             itemBuilder: (_, index) {
               cartController.qtyFieldControllers.add(TextEditingController(
                   text: cartController.cartItems[index].quantity.toString()));
+
               return Column(
                 children: [
                   CStoreItemWidget(
@@ -113,11 +114,14 @@ class CCartItems extends StatelessWidget {
                                 ),
 
                                 onChanged: (value) {
+                                  // value = cartController
+                                  //     .qtyFieldControllers[index].text
+                                  //     .trim();
+                                  invController.fetchInventoryItems();
+                                  cartController.fetchCartItems();
                                   if (cartController
                                           .qtyFieldControllers[index].text !=
                                       '') {
-                                    invController.fetchInventoryItems();
-                                    cartController.fetchCartItems();
                                     var invItem = invController.inventoryItems
                                         .firstWhere((item) =>
                                             item.productId.toString() ==
@@ -125,9 +129,36 @@ class CCartItems extends StatelessWidget {
                                                 .cartItems[index].productId
                                                 .toString()
                                                 .toLowerCase());
+
                                     final thisCartItem =
                                         cartController.convertInvToCartItem(
                                             invItem, int.parse(value));
+
+                                    // if (int.parse(value) > invItem.quantity) {
+                                    //   CPopupSnackBar.customToast(
+                                    //     message:
+                                    //         'only ${invItem.quantity} of ${invItem.name} are stocked',
+                                    //     forInternetConnectivityStatus: false,
+                                    //   );
+                                    //   cartController.qtyFieldControllers[index]
+                                    //       .text = invItem.quantity.toString();
+                                    //   // value = cartController
+                                    //   //     .qtyFieldControllers[index].text
+                                    //   //     .trim();
+                                    //   // cartController.addSingleItemToCart(
+                                    //   //     thisCartItem,
+                                    //   //     true,
+                                    //   //     cartController
+                                    //   //         .qtyFieldControllers[index].text
+                                    //   //         .trim());
+                                    //   cartController.addSingleItemToCart(
+                                    //       thisCartItem,
+                                    //       true,
+                                    //       cartController
+                                    //           .qtyFieldControllers[index].text
+                                    //           .trim());
+                                    //   //return;
+                                    // }
                                     cartController.addSingleItemToCart(
                                         thisCartItem, true, value);
                                   }

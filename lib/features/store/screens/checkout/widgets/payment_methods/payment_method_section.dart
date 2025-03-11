@@ -5,6 +5,7 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class CPaymentMethodSection extends StatelessWidget {
@@ -74,6 +75,15 @@ class CPaymentMethodSection extends StatelessWidget {
                                 : CColors.white,
                             //height: 40.0,
                             child: TextFormField(
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                decimal: true,
+                                signed: false,
+                              ),
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d+(\.\d*)?')),
+                              ],
                               autofocus: checkoutController
                                   .setFocusOnAmtIssuedField.value,
                               controller:
@@ -84,7 +94,9 @@ class CPaymentMethodSection extends StatelessWidget {
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: CColors.error,
+                                    color: CColors.rBrown.withValues(
+                                      alpha: 0.3,
+                                    ),
                                   ),
                                 ),
                                 labelText: 'amount issued by customer',

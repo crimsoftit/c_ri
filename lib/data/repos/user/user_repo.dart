@@ -9,6 +9,7 @@ import 'package:c_ri/utils/exceptions/platform_exceptions.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -197,33 +198,57 @@ class CUserRepo extends GetxController {
           .doc(AuthRepo.instance.authUser?.uid)
           .update(json);
     } on FirebaseAuthException catch (e) {
+      if (kDebugMode) {
+        CPopupSnackBar.errorSnackBar(
+          title: "firebaseAuth exception error",
+          message: e.code.toString(),
+        );
+      }
       CPopupSnackBar.errorSnackBar(
-        title: "firebaseAuth exception error",
-        message: e.code.toString(),
+        title: "server error!",
+        message: 'an error occurred while updating your details!',
       );
       throw CFirebaseAuthExceptions(e.code).message;
     } on FirebaseException catch (e) {
+      if (kDebugMode) {
+        CPopupSnackBar.errorSnackBar(
+          title: "firebaseAuth exception error",
+          message: e.code.toString(),
+        );
+      }
       CPopupSnackBar.errorSnackBar(
-        title: "firebase exception error",
-        message: e.code.toString(),
+        title: "server error!",
+        message: 'an error occurred while updating your details!',
       );
       throw CFirebaseAuthExceptions(e.code).message;
     } on FormatException catch (e) {
       CPopupSnackBar.errorSnackBar(
-        title: "platform exception error",
+        title: "format exception error",
         message: e.message,
       );
       throw CFormatExceptions(e.message);
     } on PlatformException catch (e) {
+      if (kDebugMode) {
+        CPopupSnackBar.errorSnackBar(
+          title: "platform exception error",
+          message: e.code.toString(),
+        );
+      }
       CPopupSnackBar.errorSnackBar(
         title: "platform exception error",
-        message: e.code.toString(),
+        message: 'an unknown platform error occurred!',
       );
       throw CPlatformExceptions(e.code).message;
     } catch (e) {
+      if (kDebugMode) {
+        CPopupSnackBar.errorSnackBar(
+          title: "an error occurred while updating your details!",
+          message: e.toString(),
+        );
+      }
       CPopupSnackBar.errorSnackBar(
-        title: "An error occurred",
-        message: e.toString(),
+        title: "an unknown error occurred!",
+        message: 'an error occurred while updating your details!',
       );
       //throw 'something went wrong! please try again!';
 

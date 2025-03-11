@@ -97,15 +97,17 @@ class CInventoryModel {
   }
 
   set name(String newName) {
-    if (newName.length <= 255 || newName.length >= 3) {
-      _name = newName;
-    }
+    _name = newName;
+    // if (newName.length <= 255 || newName.length >= 3) {
+    //   _name = newName;
+    // }
   }
 
   set quantity(int newQty) {
-    if (newQty > 0) {
-      _quantity = newQty;
-    }
+    _quantity = newQty;
+    // if (newQty > 0) {
+    //   _quantity = newQty;
+    // }
   }
 
   set qtySold(int newQtySold) {
@@ -113,21 +115,24 @@ class CInventoryModel {
   }
 
   set buyingPrice(double newBP) {
-    if (newBP >= 1.0) {
-      _buyingPrice = newBP;
-    }
+    _buyingPrice = newBP;
+    // if (newBP >= 1.0) {
+    //   _buyingPrice = newBP;
+    // }
   }
 
   set unitBp(double newUBP) {
-    if (newUBP >= 1.0) {
-      _unitBp = newUBP;
-    }
+    _unitBp = newUBP;
+    // if (newUBP >= 1.0) {
+    //   _unitBp = newUBP;
+    // }
   }
 
   set unitSellingPrice(double newUSP) {
-    if (newUSP >= 1.0) {
-      _unitSellingPrice = newUSP;
-    }
+    _unitSellingPrice = newUSP;
+    // if (newUSP >= 1.0) {
+    //   _unitSellingPrice = newUSP;
+    // }
   }
 
   set date(String newDate) {

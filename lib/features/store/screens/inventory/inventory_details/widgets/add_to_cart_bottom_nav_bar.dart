@@ -15,9 +15,21 @@ class CAddToCartBottomNavBar extends StatelessWidget {
   const CAddToCartBottomNavBar({
     super.key,
     required this.inventoryItem,
+    this.addIconBtnColor,
+    this.addIconTxtColor,
+    this.minusIconBtnColor,
+    this.minusIconTxtColor,
+    this.add2CartBtnBorderColor,
+    this.fromCheckoutScreen = false,
   });
 
   final CInventoryModel inventoryItem;
+  final Color? addIconBtnColor,
+      addIconTxtColor,
+      minusIconBtnColor,
+      minusIconTxtColor,
+      add2CartBtnBorderColor;
+  final bool fromCheckoutScreen;
 
   @override
   Widget build(BuildContext context) {
@@ -50,12 +62,17 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                   CCircularIcon(
                     icon: Iconsax.minus,
                     iconBorderRadius: 100,
-                    bgColor: CNetworkManager.instance.hasConnection.value
-                        ? CColors.rBrown.withValues(alpha: 0.5)
-                        : CColors.black.withValues(alpha: 0.5),
+                    // bgColor: addIconBtnColor ??
+                    //     (CNetworkManager.instance.hasConnection.value
+                    //         ? CColors.rBrown
+                    //         : CColors.black),
+                    bgColor: minusIconBtnColor ??
+                        (CNetworkManager.instance.hasConnection.value
+                            ? CColors.rBrown.withValues(alpha: 0.5)
+                            : CColors.black.withValues(alpha: 0.5)),
                     width: 40.0,
                     height: 40.0,
-                    color: CColors.white,
+                    color: minusIconBtnColor ?? CColors.white,
                     onPressed: () => cartController.itemQtyInCart.value < 1
                         ? null
                         : cartController.itemQtyInCart.value -= 1,
@@ -75,11 +92,12 @@ class CAddToCartBottomNavBar extends StatelessWidget {
 
                   CCircularIcon(
                     iconBorderRadius: 100,
-                    bgColor: CNetworkManager.instance.hasConnection.value
-                        ? CColors.rBrown
-                        : CColors.black,
+                    bgColor: addIconBtnColor ??
+                        (CNetworkManager.instance.hasConnection.value
+                            ? CColors.rBrown
+                            : CColors.black),
                     icon: Iconsax.add,
-                    color: CColors.white,
+                    color: addIconTxtColor ?? CColors.white,
                     width: 40.0,
                     height: 40.0,
                     onPressed: () {
@@ -105,6 +123,9 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                         cartController.fetchCartItems();
                         cartController.addToCart(inventoryItem);
                         cartController.fetchCartItems();
+                        if (fromCheckoutScreen) {
+                          Navigator.pop(context);
+                        }
                       },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.all(
@@ -113,8 +134,8 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                   backgroundColor: CNetworkManager.instance.hasConnection.value
                       ? CColors.rBrown
                       : CColors.black,
-                  side: const BorderSide(
-                    color: CColors.rBrown,
+                  side: BorderSide(
+                    color: add2CartBtnBorderColor ?? CColors.rBrown,
                   ),
                 ),
                 label: Text(

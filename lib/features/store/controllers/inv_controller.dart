@@ -606,9 +606,7 @@ class CInventoryController extends GetxController {
   /// -- fetch inventory data from google sheets by userEmail --
   Future fetchUserInvSheetData() async {
     try {
-      // fetch items from cloud
-      await StoreSheetsApi.initSpreadSheets();
-
+      // fetch inventory items from cloud
       var gsheetItemsList = (await StoreSheetsApi.fetchAllGsheetInvItems())!;
 
       allGSheetData.assignAll(gsheetItemsList as Iterable<CInventoryModel>);
@@ -619,7 +617,7 @@ class CInventoryController extends GetxController {
               .contains(userController.user.value.email.toLowerCase()))
           .toList();
 
-      return allGSheetData;
+      return userGSheetData;
     } catch (e) {
       isLoading.value = false;
       return CPopupSnackBar.errorSnackBar(

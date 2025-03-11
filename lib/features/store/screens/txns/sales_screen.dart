@@ -1,14 +1,17 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
+import 'package:c_ri/common/widgets/products/cart/positioned_cart_counter_widget.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
 import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/common/widgets/tab_views/store_items_tabs.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
+import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
+import 'package:c_ri/features/store/screens/checkout/checkout_screen.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -24,7 +27,9 @@ class TxnsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartController = Get.put(CCartController());
     final invController = Get.put(CInventoryController());
+    final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final searchController = Get.put(CSearchBarController());
     //final syncController = Get.put(CSyncController());
@@ -314,20 +319,95 @@ class TxnsScreen extends StatelessWidget {
         ),
 
         /// -- floating action button to scan item for sale --
-        floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: Colors.brown,
-          foregroundColor: Colors.white,
-          icon: const Icon(
-            Iconsax.additem,
-          ),
-          label: const Text(
-            'transact',
-          ),
-          onPressed: () {
-            invController.fetchInventoryItems();
-            txnsController.scanItemForSale();
+        floatingActionButton: Obx(
+          () {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                cartController.countOfCartItems.value >= 1
+                    ? Stack(
+                        alignment: Alignment.centerRight,
+                        children: [
+                          FloatingActionButton(
+                            onPressed: () {
+                              Get.to(() => const CCheckoutScreen());
+                            },
+                            backgroundColor: isConnectedToInternet
+                                ? Colors.brown
+                                : CColors.black,
+                            foregroundColor: Colors.white,
+                            heroTag: 'checkout',
+                            child: const Icon(
+                              Iconsax.wallet_check,
+                            ),
+                          ),
+                          CPositionedCartCounterWidget(
+                            counterBgColor: CColors.white,
+                            counterTxtColor: CColors.rBrown,
+                            rightPosition: 10.0,
+                            topPosition: 8.0,
+                          ),
+                        ],
+                      )
+                    : SizedBox(),
+                const SizedBox(
+                  height: CSizes.spaceBtnSections / 8,
+                ),
+                // FloatingActionButton.extended(
+                //   backgroundColor:
+                //       isConnectedToInternet ? Colors.brown : CColors.black,
+                //   foregroundColor: Colors.white,
+                //   icon: const Icon(
+                //     Iconsax.scan,
+                //     size: CSizes.iconMd,
+                //   ),
+                //   label: const Text(
+                //     'transact',
+                //   ),
+                //   onPressed: () {
+                //     invController.fetchInventoryItems();
+                //     txnsController.scanItemForSale();
+                //   },
+                // ),
+                FloatingActionButton(
+                  backgroundColor:
+                      isConnectedToInternet ? Colors.brown : CColors.black,
+                  foregroundColor: Colors.white,
+                  heroTag: 'transact',
+                  // label: const Text(
+                  //   'transact',
+                  // ),
+                  onPressed: () {
+                    invController.fetchInventoryItems();
+                    txnsController.scanItemForSale();
+                  },
+                  child: const Icon(
+                    Iconsax.scan,
+                    size: CSizes.iconMd,
+                  ),
+                ),
+              ],
+            );
           },
         ),
+
+        /// -- floating action button to scan item for sale --
+        // floatingActionButton: FloatingActionButton.extended(
+        //   backgroundColor:
+        //       isConnectedToInternet ? Colors.brown : CColors.rBrown,
+        //   foregroundColor: Colors.white,
+        //   icon: const Icon(
+        //     Iconsax.scan,
+        //     size: CSizes.iconMd,
+        //   ),
+        //   label: const Text(
+        //     'transact',
+        //   ),
+        //   onPressed: () {
+        //     invController.fetchInventoryItems();
+        //     txnsController.scanItemForSale();
+        //   },
+        // ),
       ),
     );
   }

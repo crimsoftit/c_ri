@@ -91,6 +91,33 @@ class StoreSheetsApi {
         : invList.map(CInventoryModel.gSheetFromJson).toList();
   }
 
+  /// -- fetch user's gsheet inventory data --
+  // static Future<List<CInventoryModel?>?> fetchUserGsheetInvData(String userEmail) async {
+  //   try {
+  //     if (invSheet == null) return null;
+
+  //     final userInvMap =
+  //         await invSheet!.values.map.rowByKey(userEmail, fromColumn: 3);
+
+  //     return userInvMap == null
+  //       ? <CInventoryModel>[]
+  //       : userInvMap.map(CInventoryModel.gSheetFromJson).toList()\;
+  //   } catch (e) {
+  //     CPopupSnackBar.errorSnackBar(
+  //       title: 'error syncing inventory'.toUpperCase(),
+  //       message: 'an error occurred while uploading inventory to cloud',
+  //     );
+  //     if (kDebugMode) {
+  //       print(e.toString());
+  //       CPopupSnackBar.errorSnackBar(
+  //         title: 'error syncing inventory'.toUpperCase(),
+  //         message: '$e',
+  //       );
+  //     }
+  //     throw 'ERROR SYNCING INVENTORY: $e';
+  //   }
+  // }
+
   /// -- update data (entire row) in google sheets --
   static Future<bool> updateInvData(
       int id, Map<String, dynamic> itemModel) async {
@@ -190,10 +217,14 @@ class StoreSheetsApi {
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
         title: 'error syncing txns'.toUpperCase(),
-        message: '$e',
+        message: 'an error occurred while uploading txns to cloud',
       );
       if (kDebugMode) {
         print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'error syncing txns'.toUpperCase(),
+          message: '$e',
+        );
       }
       throw 'ERROR SYNCING TXNS: $e';
     }

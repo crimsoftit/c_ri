@@ -245,21 +245,6 @@ class CInventoryScreen extends StatelessWidget {
                               contentPadding: const EdgeInsets.all(
                                 5.0,
                               ),
-
-                              // leading: CircleAvatar(
-                              //   backgroundColor: Colors.brown[300],
-                              //   radius: 16.0,
-                              //   child: Text(
-                              //     invController.inventoryItems[index].name[0]
-                              //         .toUpperCase(),
-                              //     style: Theme.of(context)
-                              //         .textTheme
-                              //         .labelLarge!
-                              //         .apply(
-                              //           color: CColors.white,
-                              //         ),
-                              //   ),
-                              // ),
                               leading: CCircleAvatar(
                                 avatarInitial:
                                     invController.inventoryItems[index].name[0],
@@ -275,7 +260,6 @@ class CInventoryScreen extends StatelessWidget {
                                 smallSize: false,
                                 txtColor: CColors.rBrown,
                               ),
-
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -324,82 +308,51 @@ class CInventoryScreen extends StatelessWidget {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      // IconButton(
-                                      //   iconSize: 20.0,
+                                      if (invController
+                                              .inventoryItems[index].quantity >=
+                                          1)
+                                        CAddToCartBtn(
+                                          pId: invController
+                                              .inventoryItems[index].productId!,
+                                        ),
+                                      if (invController
+                                              .inventoryItems[index].quantity >=
+                                          1)
+                                        SizedBox(
+                                          width: 5.0,
+                                        ),
+                                      // TextButton.icon(
+                                      //   iconAlignment: IconAlignment.start,
+                                      //   label: Text(
+                                      //     'sell',
+                                      //     style: Theme.of(context)
+                                      //         .textTheme
+                                      //         .labelMedium!
+                                      //         .apply(
+                                      //           color: CColors.rBrown,
+                                      //         ),
+                                      //   ),
                                       //   icon: const Icon(
-                                      //     Icons.add_box_outlined,
-                                      //     // color: Color.fromARGB(255, 153, 113, 98),
-                                      //     color: CColors.darkerGrey,
+                                      //     Iconsax.card_pos,
+                                      //     color: CColors.rBrown,
+                                      //     size: CSizes.iconSm,
+                                      //   ),
+                                      //   style: TextButton.styleFrom(
+                                      //     padding: EdgeInsets.zero,
+                                      //     minimumSize: Size(
+                                      //       30,
+                                      //       20,
+                                      //     ),
+                                      //     alignment: Alignment.centerLeft,
                                       //   ),
                                       //   onPressed: () {
-                                      //     invController.fetchInventoryItems();
-                                      //     var invItem = invController
-                                      //         .inventoryItems
-                                      //         .firstWhere((item) =>
-                                      //             item.productId.toString() ==
-                                      //             invController
-                                      //                 .inventoryItems[index]
-                                      //                 .productId
-                                      //                 .toString()
-                                      //                 .toLowerCase());
-                                      //     final cartItem = cartController
-                                      //         .convertInvToCartItem(invItem, 1);
-                                      //     cartController
-                                      //         .addSingleItemToCart(cartItem);
+                                      //     txnsController.showAmountIssuedField
+                                      //         .value = true;
+                                      //     txnsController.onSellItemBtnAction(
+                                      //         invController
+                                      //             .inventoryItems[index]);
                                       //   },
                                       // ),
-                                      CAddToCartBtn(
-                                        pId: invController
-                                            .inventoryItems[index].productId!,
-                                      ),
-                                      SizedBox(
-                                        width: 5.0,
-                                      ),
-                                      TextButton.icon(
-                                        iconAlignment: IconAlignment.start,
-                                        label: Text(
-                                          'sell',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelMedium!
-                                              .apply(
-                                                color: CColors.rBrown,
-                                              ),
-                                        ),
-                                        icon: const Icon(
-                                          Iconsax.card_pos,
-                                          color: CColors.rBrown,
-                                          size: CSizes.iconSm,
-                                        ),
-                                        style: TextButton.styleFrom(
-                                          padding: EdgeInsets.zero,
-                                          minimumSize: Size(
-                                            30,
-                                            20,
-                                          ),
-                                          alignment: Alignment.centerLeft,
-                                        ),
-                                        // style: ButtonStyle(
-                                        //   shape: WidgetStateProperty.all(
-                                        //     RoundedRectangleBorder(
-                                        //       borderRadius:
-                                        //           BorderRadius.circular(
-                                        //         5.0,
-                                        //       ),
-                                        //       side: BorderSide(
-                                        //         color: CColors.rBrown,
-                                        //       ),
-                                        //     ),
-                                        //   ),
-                                        // ),
-                                        onPressed: () {
-                                          txnsController.showAmountIssuedField
-                                              .value = true;
-                                          txnsController.onSellItemBtnAction(
-                                              invController
-                                                  .inventoryItems[index]);
-                                        },
-                                      ),
                                       SizedBox(
                                         width: 5.0,
                                       ),
@@ -414,19 +367,6 @@ class CInventoryScreen extends StatelessWidget {
                                                 color: CColors.rBrown,
                                               ),
                                         ),
-                                        // style: ButtonStyle(
-                                        //   shape: WidgetStateProperty.all(
-                                        //     RoundedRectangleBorder(
-                                        //       borderRadius:
-                                        //           BorderRadius.circular(
-                                        //         5.0,
-                                        //       ),
-                                        //       side: BorderSide(
-                                        //         color: CColors.rBrown,
-                                        //       ),
-                                        //     ),
-                                        //   ),
-                                        // ),
                                         style: TextButton.styleFrom(
                                           padding: EdgeInsets.zero,
                                           minimumSize: Size(
@@ -543,18 +483,6 @@ class CInventoryScreen extends StatelessWidget {
                     ? Stack(
                         alignment: Alignment.centerRight,
                         children: [
-                          // FloatingActionButton.extended(
-                          //   onPressed: () {
-                          //     Get.to(() => const CCheckoutScreen());
-                          //   },
-                          //   label: const Text('checkout'),
-                          //   backgroundColor: Colors.brown,
-                          //   foregroundColor: Colors.white,
-                          //   icon: const Icon(
-                          //     Iconsax.wallet_check,
-                          //   ),
-                          //   heroTag: 'checkout',
-                          // ),
                           FloatingActionButton(
                             onPressed: () {
                               Get.to(() => const CCheckoutScreen());
@@ -594,45 +522,14 @@ class CInventoryScreen extends StatelessWidget {
                       ),
                     );
                   },
-
                   backgroundColor:
                       isConnectedToInternet ? Colors.brown : CColors.black,
                   foregroundColor: Colors.white,
-                  // icon: const Icon(
-                  //   Iconsax.additem,
-                  // ),
-
                   heroTag: 'scan',
                   child: const Icon(
                     Iconsax.scan_barcode,
                   ),
                 ),
-                // FloatingActionButton.extended(
-                //   onPressed: () {
-                //     invController.runInvScanner();
-                //     showDialog(
-                //       context: context,
-                //       useRootNavigator: false,
-                //       builder: (BuildContext context) => dialog.buildDialog(
-                //         context,
-                //         CInventoryModel(
-                //             '', '', '', '', '', 0, 0, 0.0, 0.0, 0.0, '', 0, ''),
-                //         true,
-                //       ),
-                //     );
-                //   },
-                //   // label: const Text('add item'),
-                //   label: const Text('add item'),
-                //   backgroundColor: Colors.brown,
-                //   foregroundColor: Colors.white,
-                //   // icon: const Icon(
-                //   //   Iconsax.additem,
-                //   // ),
-                //   icon: const Icon(
-                //     Iconsax.scan_barcode,
-                //   ),
-                //   heroTag: 'scan',
-                // ),
               ],
             );
           },
