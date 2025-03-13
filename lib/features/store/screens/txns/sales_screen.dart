@@ -8,6 +8,7 @@ import 'package:c_ri/common/widgets/tab_views/store_items_tabs.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
+import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
@@ -28,6 +29,7 @@ class TxnsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartController = Get.put(CCartController());
+    final checkoutController = Get.put(CCheckoutController());
     final invController = Get.put(CInventoryController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
@@ -113,15 +115,19 @@ class TxnsScreen extends StatelessWidget {
                                                             .instance
                                                             .isConnected();
                                                     if (internetIsConnected) {
+                                                      // await txnsController
+                                                      //     .addSalesDataToCloud()
+                                                      //     .then((result) {
+                                                      //   txnsController
+                                                      //       .syncIsLoading
+                                                      //       .value = false;
+                                                      //   txnsController.isLoading
+                                                      //       .value = false;
+                                                      // });
                                                       await txnsController
-                                                          .addSalesToCloud()
-                                                          .then((result) {
-                                                        txnsController
-                                                            .syncIsLoading
-                                                            .value = false;
-                                                        txnsController.isLoading
-                                                            .value = false;
-                                                      });
+                                                          .addSalesDataToCloud();
+                                                      await txnsController
+                                                          .addSalesDataToCloud();
                                                     } else {
                                                       CPopupSnackBar
                                                           .customToast(
@@ -234,8 +240,6 @@ class TxnsScreen extends StatelessWidget {
                                   .labelMedium!
                                   .apply(
                                     color: CColors.rBrown,
-                                    //fontSizeFactor: 1.2,
-                                    //fontWeightDelta: 2,
                                   ),
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
@@ -251,7 +255,6 @@ class TxnsScreen extends StatelessWidget {
                                       .labelMedium!
                                       .apply(
                                         color: CColors.rBrown,
-                                        //fontStyle: FontStyle.italic,
                                       ),
                                 ),
                                 Text(
@@ -353,33 +356,15 @@ class TxnsScreen extends StatelessWidget {
                 const SizedBox(
                   height: CSizes.spaceBtnSections / 8,
                 ),
-                // FloatingActionButton.extended(
-                //   backgroundColor:
-                //       isConnectedToInternet ? Colors.brown : CColors.black,
-                //   foregroundColor: Colors.white,
-                //   icon: const Icon(
-                //     Iconsax.scan,
-                //     size: CSizes.iconMd,
-                //   ),
-                //   label: const Text(
-                //     'transact',
-                //   ),
-                //   onPressed: () {
-                //     invController.fetchInventoryItems();
-                //     txnsController.scanItemForSale();
-                //   },
-                // ),
                 FloatingActionButton(
                   backgroundColor:
                       isConnectedToInternet ? Colors.brown : CColors.black,
                   foregroundColor: Colors.white,
                   heroTag: 'transact',
-                  // label: const Text(
-                  //   'transact',
-                  // ),
                   onPressed: () {
                     invController.fetchInventoryItems();
-                    txnsController.scanItemForSale();
+                    //txnsController.scanItemForSale();
+                    checkoutController.scanItemForCheckout();
                   },
                   child: const Icon(
                     Iconsax.scan,
@@ -390,24 +375,6 @@ class TxnsScreen extends StatelessWidget {
             );
           },
         ),
-
-        /// -- floating action button to scan item for sale --
-        // floatingActionButton: FloatingActionButton.extended(
-        //   backgroundColor:
-        //       isConnectedToInternet ? Colors.brown : CColors.rBrown,
-        //   foregroundColor: Colors.white,
-        //   icon: const Icon(
-        //     Iconsax.scan,
-        //     size: CSizes.iconMd,
-        //   ),
-        //   label: const Text(
-        //     'transact',
-        //   ),
-        //   onPressed: () {
-        //     invController.fetchInventoryItems();
-        //     txnsController.scanItemForSale();
-        //   },
-        // ),
       ),
     );
   }

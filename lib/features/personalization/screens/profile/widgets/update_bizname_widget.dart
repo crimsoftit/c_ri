@@ -126,7 +126,7 @@ class CUpdateBusinessName extends StatelessWidget {
                           }
                         },
                         label: Text(
-                          'save'.toUpperCase(),
+                          'continue'.toUpperCase(),
                           style: Theme.of(context).textTheme.bodyMedium!.apply(
                                 color: CColors.white,
                               ),

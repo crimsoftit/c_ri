@@ -1,5 +1,6 @@
 import 'package:c_ri/common/widgets/txt_widgets/product_price_txt.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
+import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
@@ -13,6 +14,7 @@ class CBillingAmountSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartController = Get.put(CCartController());
+    final checkoutController = Get.put(CCheckoutController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     return Column(
@@ -89,7 +91,9 @@ class CBillingAmountSection extends StatelessWidget {
           children: [
             Text(
               'total amount',
-              style: Theme.of(context).textTheme.bodyMedium!.apply(),
+              style: Theme.of(context).textTheme.bodyMedium!.apply(
+                    fontWeightDelta: 2,
+                  ),
             ),
             CProductPriceTxt(
               price: cartController.txnTotals.value.toStringAsFixed(2),
@@ -101,6 +105,26 @@ class CBillingAmountSection extends StatelessWidget {
 
         SizedBox(
           height: CSizes.spaceBtnItems / 2,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'customer balance',
+              style: Theme.of(context).textTheme.bodyMedium!.apply(
+                    fontWeightDelta: 2,
+                  ),
+            ),
+            Obx(
+              () {
+                return CProductPriceTxt(
+                  price: checkoutController.customerBal.toStringAsFixed(2),
+                  isLarge: true,
+                  txtColor: isDarkTheme ? CColors.white : CColors.rBrown,
+                );
+              },
+            ),
+          ],
         ),
       ],
     );

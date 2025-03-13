@@ -10,6 +10,7 @@ class TxnsSheetFields {
   static const String quantity = 'quantity';
   static const String totalAmount = 'totalAmount';
   static const String amountIssued = 'amountIssued';
+  static const String customerBalance = 'customerBalance';
   static const String unitSellingPrice = 'unitSellingPrice';
   static const String paymentMethod = 'paymentMethod';
   static const String customerName = 'customerName';

@@ -1,3 +1,5 @@
+import 'package:c_ri/common/widgets/appbar/app_bar.dart';
+import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_container.dart';
 import 'package:c_ri/common/widgets/list_tiles/menu_tile.dart';
 import 'package:c_ri/common/widgets/loaders/default_loader.dart';
 import 'package:c_ri/features/personalization/controllers/location_controller.dart';
@@ -6,6 +8,8 @@ import 'package:c_ri/main.dart';
 import 'package:c_ri/services/location_services.dart';
 import 'package:c_ri/services/permission_provider.dart';
 import 'package:c_ri/utils/constants/colors.dart';
+import 'package:c_ri/utils/constants/sizes.dart';
+import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:developer';
@@ -70,7 +74,7 @@ class _CLocationSettingsScreenState extends State<CDeviceSettingsScreen> {
 
     if (PermissionProvider.locationServiceIsOn) {
       setState(() {
-        geoSwitchIsOn == true;
+        geoSwitchIsOn = true;
       });
       CLocationServices.instance
           .getUserLocation(locationController: locationController);
@@ -108,135 +112,172 @@ class _CLocationSettingsScreenState extends State<CDeviceSettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: CColors.rBrown,
-        title: Text(
-          'device settings',
-          style: Theme.of(context).textTheme.labelLarge!.apply(
-                color: CColors.white,
-              ),
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: StreamBuilder<PermissionStatus>(
-                stream: _permissionStatusStream.stream,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const DefaultLoaderScreen(); // Display a loading indicator when waiting for data
-                  } else if (snapshot.hasError) {
-                    return Text(
-                        'Error: ${snapshot.error}'); // Display an error message if an error occurs
-                  } else if (!snapshot.hasData) {
-                    return const Text(
-                        'No Data Available'); // Display a message when no data is available
-                  } else {
-                    return Column(
-                      children: [
-                        Text(
-                          'Location Service: ${PermissionProvider.locationServiceIsOn ? "On" : "Off"}\n${snapshot.data}',
-                          style: const TextStyle(fontSize: 24),
-                        ),
-                        CMenuTile(
-                          icon: Iconsax.location,
-                          title: 'geolocation',
-                          subTitle:
-                              'rIntel requires location info to protect buyers & sellers',
-                          trailing: Switch(
-                            value: geoSwitchIsOn,
-                            activeColor: CColors.rBrown,
-                            onChanged: (value) {
-                              setState(
-                                () {
-                                  geoSwitchIsOn = value;
-                                },
-                              );
-
-                              if (geoSwitchIsOn) {
-                                CLocationServices.instance.getUserLocation(
-                                    locationController: locationController);
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                },
-              ),
-            ),
-          ),
-          Expanded(
-            child: Center(
-              child: StreamBuilder<AppLifecycleState>(
-                stream: _appCycleStateStream.stream,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const DefaultLoaderScreen(); // Display a loading indicator when waiting for data
-                  } else if (snapshot.hasError) {
-                    return Text(
-                        'Error: ${snapshot.error}'); // Display an error message if an error occurs
-                  } else if (!snapshot.hasData) {
-                    return const Text(
-                        'No data available'); // Display a message when no data is available
-                  } else {
-                    return Obx(
-                      () {
-                        //if (locationController.processingLocationAccess.value)
-                        if (locationController.processingLocationAccess.value &&
-                                locationController.uAddress.value == '' ||
-                            locationController.uCurCode.value == '') {
-                          if (!geoSwitchIsOn) {
-                            return const DeviceSettingsBtn();
-                          } else {
-                            return const DefaultLoaderScreen();
-                          }
-                        }
-
-                        if (geoSwitchIsOn) {
-                          CLocationServices.instance.getUserLocation(
-                              locationController: locationController);
-                        }
-
-                        return Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Text(
-                                'latitude: ${locationController.userLocation.value!.latitude ?? ''}',
-                              ),
-                              Text(
-                                'longitude: ${locationController.userLocation.value!.longitude ?? ''}',
-                              ),
-                              Text(
-                                'user country: ${locationController.uCountry.value}',
-                              ),
-                              Text(
-                                'user Address: ${locationController.uAddress.value}',
-                              ),
-                              Text(
-                                'user currency code: ${locationController.uCurCode.value}',
-                              ),
-                              Text(
-                                '${snapshot.data}',
-                                style: const TextStyle(fontSize: 24),
-                              ),
-                              const DeviceSettingsBtn(),
-                            ],
-                          ),
-                        );
+      body: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(),
+        child: SizedBox(
+          height: CHelperFunctions.screenHeight() * .95,
+          child: Column(
+            children: [
+              // -- header --
+              CPrimaryHeaderContainer(
+                child: Column(
+                  children: [
+                    // app bar
+                    CAppBar(
+                      title: Text(
+                        'device settings',
+                        style: Theme.of(context).textTheme.headlineSmall!.apply(
+                              color: CColors.white,
+                            ),
+                      ),
+                      backIconAction: () {
+                        Navigator.pop(context, true);
+                        //Get.back();
                       },
-                    );
-                  }
-                },
+                      showBackArrow: true,
+                      backIconColor: CColors.white,
+                    ),
+                  ],
+                ),
               ),
-            ),
+              Expanded(
+                child: Center(
+                  child: StreamBuilder<PermissionStatus>(
+                    stream: _permissionStatusStream.stream,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const DefaultLoaderScreen(); // Display a loading indicator when waiting for data
+                      } else if (snapshot.hasError) {
+                        return Text(
+                            'Error: ${snapshot.error}'); // Display an error message if an error occurs
+                      } else if (!snapshot.hasData) {
+                        return const Text(
+                            'No Data Available'); // Display a message when no data is available
+                      } else {
+                        return Column(
+                          children: [
+                            Visibility(
+                              visible: true,
+                              child: Text(
+                                'Location Service: ${PermissionProvider.locationServiceIsOn ? "On" : "Off"}\n${snapshot.data}',
+                                // style: const TextStyle(fontSize: 24),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge!
+                                    .apply(),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: CSizes.spaceBtnSections,
+                            ),
+                            CMenuTile(
+                              icon: Iconsax.location,
+                              title: 'enable location services',
+                              subTitle:
+                                  'rIntel requires location info to protect buyers & sellers',
+                              trailing: Switch(
+                                value: geoSwitchIsOn,
+                                activeColor: CColors.rBrown,
+                                onChanged: (value) {
+                                  setState(
+                                    () {
+                                      geoSwitchIsOn = value;
+                                    },
+                                  );
+
+                                  if (geoSwitchIsOn) {
+                                    CLocationServices.instance.getUserLocation(
+                                        locationController: locationController);
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Center(
+                  child: StreamBuilder<AppLifecycleState>(
+                    stream: _appCycleStateStream.stream,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const DefaultLoaderScreen(); // Display a loading indicator when waiting for data
+                      } else if (snapshot.hasError) {
+                        return Text(
+                            'Error: ${snapshot.error}'); // Display an error message if an error occurs
+                      } else if (!snapshot.hasData) {
+                        return const Text(
+                            'No data available'); // Display a message when no data is available
+                      } else {
+                        return Obx(
+                          () {
+                            //if (locationController.processingLocationAccess.value)
+                            if (locationController
+                                        .processingLocationAccess.value &&
+                                    locationController.uAddress.value == '' ||
+                                locationController.uCurCode.value == '') {
+                              if (!geoSwitchIsOn) {
+                                return const DeviceSettingsBtn();
+                              } else {
+                                return const DefaultLoaderScreen();
+                              }
+                            }
+
+                            if (geoSwitchIsOn) {
+                              CLocationServices.instance.getUserLocation(
+                                  locationController: locationController);
+                            }
+
+                            return Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Visibility(
+                                    visible: true,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          'latitude: ${locationController.userLocation.value!.latitude ?? ''}',
+                                        ),
+                                        Text(
+                                          'longitude: ${locationController.userLocation.value!.longitude ?? ''}',
+                                        ),
+                                        Text(
+                                          'user country: ${locationController.uCountry.value}',
+                                        ),
+                                        Text(
+                                          'user Address: ${locationController.uAddress.value}',
+                                        ),
+                                        Text(
+                                          'user currency code: ${locationController.uCurCode.value}',
+                                        ),
+                                        Text(
+                                          '${snapshot.data}',
+                                          style: const TextStyle(fontSize: 24),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const DeviceSettingsBtn(),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

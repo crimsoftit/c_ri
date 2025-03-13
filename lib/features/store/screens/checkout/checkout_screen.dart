@@ -177,7 +177,8 @@ class CCheckoutScreen extends StatelessWidget {
             'scan',
           ),
           icon: const Icon(
-            Iconsax.scan_barcode,
+            // Iconsax.scan_barcode,
+            Iconsax.scan,
           ),
           backgroundColor: isConnectedToInternet ? Colors.brown : CColors.black,
           foregroundColor: Colors.white,

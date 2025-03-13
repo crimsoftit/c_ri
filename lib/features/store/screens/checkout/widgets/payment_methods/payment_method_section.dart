@@ -1,5 +1,6 @@
 import 'package:c_ri/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
+import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -13,8 +14,9 @@ class CPaymentMethodSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    final cartController = Get.put(CCartController());
     final checkoutController = Get.put(CCheckoutController());
+    final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     return Column(
       children: [
@@ -74,36 +76,48 @@ class CPaymentMethodSection extends StatelessWidget {
                                 ? CColors.rBrown.withValues(alpha: 0.3)
                                 : CColors.white,
                             //height: 40.0,
-                            child: TextFormField(
-                              keyboardType:
-                                  const TextInputType.numberWithOptions(
-                                decimal: true,
-                                signed: false,
-                              ),
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.allow(
-                                    RegExp(r'^\d+(\.\d*)?')),
-                              ],
-                              autofocus: checkoutController
-                                  .setFocusOnAmtIssuedField.value,
-                              controller:
-                                  checkoutController.amtIssuedFieldController,
-                              decoration: InputDecoration(
-                                focusColor: CColors.rBrown.withValues(
-                                  alpha: 0.3,
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: CColors.rBrown.withValues(
+                            child: Obx(
+                              () {
+                                return TextFormField(
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                    signed: false,
+                                  ),
+                                  inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.allow(
+                                        RegExp(r'^\d+(\.\d*)?')),
+                                  ],
+                                  autofocus: checkoutController
+                                      .setFocusOnAmtIssuedField.value,
+                                  controller: checkoutController
+                                      .amtIssuedFieldController,
+                                  decoration: InputDecoration(
+                                    focusColor: CColors.rBrown.withValues(
                                       alpha: 0.3,
                                     ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: CColors.rBrown.withValues(
+                                          alpha: 0.3,
+                                        ),
+                                      ),
+                                    ),
+                                    labelText: 'amount issued by customer',
                                   ),
-                                ),
-                                labelText: 'amount issued by customer',
-                              ),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.normal,
-                              ),
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                  onChanged: (value) {
+                                    if (value != '') {
+                                      checkoutController.computeCustomerBal(
+                                        cartController.totalCartPrice.value,
+                                        double.parse(value),
+                                      );
+                                    }
+                                  },
+                                );
+                              },
                             ),
                           ),
                         ],

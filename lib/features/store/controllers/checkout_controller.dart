@@ -41,7 +41,7 @@ class CCheckoutController extends GetxController {
     );
     amtIssuedFieldController.text = '';
     setFocusOnAmtIssuedField.value = false;
-    //txnsController.importTxnsFromCloud();
+    resetSalesFields();
 
     super.onInit();
   }
@@ -78,6 +78,9 @@ class CCheckoutController extends GetxController {
   final RxInt itemStockCount = 0.obs;
   final RxInt checkoutItemId = 0.obs;
   final RxInt checkoutItemSales = 0.obs;
+
+  final RxDouble customerBal = 0.0.obs;
+  final RxDouble totalAmount = 0.0.obs;
 
   final RxString checkoutItemCode = ''.obs;
   final RxString checkoutItemDateAdded = ''.obs;
@@ -122,6 +125,9 @@ class CCheckoutController extends GetxController {
             selectedPaymentMethod.value.platformName == 'cash'
                 ? double.parse(amtIssuedFieldController.text.trim())
                 : 0.00,
+            selectedPaymentMethod.value.platformName == 'cash'
+                ? customerBal.value
+                : 0.00,
             cartItem.price,
             selectedPaymentMethod.value.platformName,
             '',
@@ -158,10 +164,11 @@ class CCheckoutController extends GetxController {
               await dbHelper.updateInventoryItem(invItem, cartItem.productId);
 
               if (kDebugMode) {
-                CPopupSnackBar.successSnackBar(
-                  title: 'inventory stock update',
-                  message: 'inventory stock update successful',
-                );
+                print('** inventory stock update successful **');
+                // CPopupSnackBar.successSnackBar(
+                //   title: 'inventory stock update',
+                //   message: 'inventory stock update successful',
+                // );
               }
 
               // -- update sync status/action for this inventory item --
@@ -170,10 +177,10 @@ class CCheckoutController extends GetxController {
             } else {
               result = 'ERROR ADDING SALE ITEM';
             }
-            CPopupSnackBar.customToast(
-              message: result,
-              forInternetConnectivityStatus: false,
-            );
+            // CPopupSnackBar.customToast(
+            //   message: result,
+            //   forInternetConnectivityStatus: false,
+            // );
           });
 
           // itemStockCount.value -= cartItem.quantity;
@@ -201,6 +208,7 @@ class CCheckoutController extends GetxController {
                 // clear cart
                 cartController.clearCart();
                 txnsController.fetchTransactions();
+                customerBal.value = 0.0;
 
                 Get.offAll(() => NavMenu());
               },
@@ -459,6 +467,25 @@ class CCheckoutController extends GetxController {
         title: 'Oh Snap!',
         message: e.toString(),
       );
+    }
+  }
+
+  computeCustomerBal(double cartTotals, double amtIssued) {
+    customerBal.value = amtIssued - cartTotals;
+  }
+
+  resetSalesFields() {
+    customerBal.value = 0.0;
+  }
+
+  /// -- calculate totals --
+  computeTotals(String value, double usp) {
+    if (value.isNotEmpty) {
+      totalAmount.value = int.parse(value) * usp;
+
+      txnsController.checkStockStatus(value);
+    } else {
+      totalAmount.value = 0.0;
     }
   }
 }

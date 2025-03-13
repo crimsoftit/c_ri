@@ -444,7 +444,7 @@ class CSellItemScreen extends StatelessWidget {
                                               'please enter the amount issued by customer!!',
                                         );
                                       } else {
-                                        txnsController.processTransaction();
+                                        //txnsController.processTransaction();
                                       }
                                     }
                                   },

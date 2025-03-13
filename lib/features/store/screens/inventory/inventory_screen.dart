@@ -527,7 +527,8 @@ class CInventoryScreen extends StatelessWidget {
                   foregroundColor: Colors.white,
                   heroTag: 'scan',
                   child: const Icon(
-                    Iconsax.scan_barcode,
+                    // Iconsax.scan_barcode,
+                    Iconsax.scan,
                   ),
                 ),
               ],

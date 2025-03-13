@@ -6,19 +6,13 @@ import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/models/txns_model.dart';
-import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
-import 'package:c_ri/utils/helpers/helper_functions.dart';
-import 'package:c_ri/utils/helpers/network_manager.dart';
-import 'package:c_ri/utils/popups/full_screen_loader.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
-import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:intl/intl.dart';
 import 'package:simple_barcode_scanner/enum.dart';
 import 'package:simple_barcode_scanner/flutter_barcode_scanner.dart';
 
@@ -101,137 +95,137 @@ class CTxnsController extends GetxController {
   final txnsFormKey = GlobalKey<FormState>();
 
   /// -- add sale transactions data to sqflite db --
-  Future processTransaction() async {
-    try {
-      final isConnected = await CNetworkManager.instance.isConnected();
+  // Future processTransaction() async {
+  //   try {
+  //     final isConnected = await CNetworkManager.instance.isConnected();
 
-      if (customerBal.value < 0) {
-        customerBalErrorMsg.value = 'the amount issued is not enough!!';
-        CPopupSnackBar.errorSnackBar(
-          title: 'customer still owes you!!',
-          message: 'the amount issued is not enough',
-        );
-        return;
-      } else if (txtAmountIssued.text == '' &&
-          showAmountIssuedField.value == true) {
-        amtIssuedFieldError.value =
-            'please enter the amount issued by customer!!';
-        return;
-      } else {
-        // Validate returns true if the form is valid, or false otherwise.
-        if (txnsFormKey.currentState!.validate() &&
-            customerBalErrorMsg.value == '') {
-          // start loader while products are fetched
-          isLoading.value = true;
-          // -- start loader
-          CFullScreenLoader.openLoadingDialog(
-            "we're processing your info...",
-            CImages.docerAnimation,
-          );
+  //     if (customerBal.value < 0) {
+  //       customerBalErrorMsg.value = 'the amount issued is not enough!!';
+  //       CPopupSnackBar.errorSnackBar(
+  //         title: 'customer still owes you!!',
+  //         message: 'the amount issued is not enough',
+  //       );
+  //       return;
+  //     } else if (txtAmountIssued.text == '' &&
+  //         showAmountIssuedField.value == true) {
+  //       amtIssuedFieldError.value =
+  //           'please enter the amount issued by customer!!';
+  //       return;
+  //     } else {
+  //       // Validate returns true if the form is valid, or false otherwise.
+  //       if (txnsFormKey.currentState!.validate() &&
+  //           customerBalErrorMsg.value == '') {
+  //         // start loader while products are fetched
+  //         isLoading.value = true;
+  //         // -- start loader
+  //         CFullScreenLoader.openLoadingDialog(
+  //           "we're processing your info...",
+  //           CImages.docerAnimation,
+  //         );
 
-          final newTxn = CTxnsModel(
-            CHelperFunctions.generateId(),
-            userController.user.value.id,
-            userController.user.value.email,
-            userController.user.value.fullName,
-            sellItemId.value,
-            saleItemCode.value,
-            saleItemName.value,
-            int.parse(txtSaleItemQty.text.trim()),
-            totalAmount.value,
-            selectedPaymentMethod.value == 'Cash'
-                ? double.parse(txtAmountIssued.text.trim())
-                : 0.0,
-            saleItemUsp.value,
-            selectedPaymentMethod.value,
-            txtCustomerName.text,
-            txtCustomerContacts.text,
-            txtTxnAddress.text,
-            userController.user.value.locationCoordinates,
-            DateFormat('yyyy-MM-dd - kk:mm').format(clock.now()),
-            isConnected ? 1 : 0,
-            isConnected ? 'none' : 'append',
-            'complete',
-          );
+  //         final newTxn = CTxnsModel(
+  //           CHelperFunctions.generateId(),
+  //           userController.user.value.id,
+  //           userController.user.value.email,
+  //           userController.user.value.fullName,
+  //           sellItemId.value,
+  //           saleItemCode.value,
+  //           saleItemName.value,
+  //           int.parse(txtSaleItemQty.text.trim()),
+  //           totalAmount.value,
+  //           selectedPaymentMethod.value == 'Cash'
+  //               ? double.parse(txtAmountIssued.text.trim())
+  //               : 0.0,
+  //           saleItemUsp.value,
+  //           selectedPaymentMethod.value,
+  //           txtCustomerName.text,
+  //           txtCustomerContacts.text,
+  //           txtTxnAddress.text,
+  //           userController.user.value.locationCoordinates,
+  //           DateFormat('yyyy-MM-dd - kk:mm').format(clock.now()),
+  //           isConnected ? 1 : 0,
+  //           isConnected ? 'none' : 'append',
+  //           'complete',
+  //         );
 
-          // set the updated stock count
-          qtyAvailable.value -= int.parse(txtSaleItemQty.text);
-          totalSales.value += int.parse(txtSaleItemQty.text.trim());
+  //         // set the updated stock count
+  //         qtyAvailable.value -= int.parse(txtSaleItemQty.text);
+  //         totalSales.value += int.parse(txtSaleItemQty.text.trim());
 
-          // -- check internet connectivity
-          if (isConnected) {
-            // upload txn data to cloud
-            await StoreSheetsApi.saveTxnsToGSheets([newTxn.toMap()]);
+  //         // -- check internet connectivity
+  //         if (isConnected) {
+  //           // upload txn data to cloud
+  //           await StoreSheetsApi.saveTxnsToGSheets([newTxn.toMap()]);
 
-            // update stock count for inventory item's cloud data
-            StoreSheetsApi.updateInvStockCount(
-              id: sellItemId.value,
-              key: 'quantity',
-              value: qtyAvailable.value,
-            );
+  //           // update stock count for inventory item's cloud data
+  //           StoreSheetsApi.updateInvStockCount(
+  //             id: sellItemId.value,
+  //             key: 'quantity',
+  //             value: qtyAvailable.value,
+  //           );
 
-            // update total sales for inventory item's cloud data
-            await StoreSheetsApi.updateInvItemsSalesCount(
-              id: sellItemId.value,
-              key: 'qtySold',
-              value: totalSales.value,
-            );
-          } else {
-            await dbHelper.updateInvOfflineSyncAfterStockUpdate(
-                'update', sellItemId.value);
-          }
+  //           // update total sales for inventory item's cloud data
+  //           await StoreSheetsApi.updateInvItemsSalesCount(
+  //             id: sellItemId.value,
+  //             key: 'qtySold',
+  //             value: totalSales.value,
+  //           );
+  //         } else {
+  //           await dbHelper.updateInvOfflineSyncAfterStockUpdate(
+  //               'update', sellItemId.value);
+  //         }
 
-          // save txn data into the db
-          await dbHelper.addSoldItem(newTxn);
+  //         // save txn data into the db
+  //         await dbHelper.addSoldItem(newTxn);
 
-          await dbHelper.updateStockCountAndSales(
-              qtyAvailable.value, totalSales.value, sellItemId.value);
+  //         await dbHelper.updateStockCountAndSales(
+  //             qtyAvailable.value, totalSales.value, sellItemId.value);
 
-          await fetchTransactions();
-          await invController.fetchInventoryItems();
+  //         await fetchTransactions();
+  //         await invController.fetchInventoryItems();
 
-          // stop loader
-          isLoading.value = false;
+  //         // stop loader
+  //         isLoading.value = false;
 
-          CFullScreenLoader.stopLoading();
+  //         CFullScreenLoader.stopLoading();
 
-          CPopupSnackBar.successSnackBar(
-            title: 'success!',
-            message: 'transaction successful!',
-          );
+  //         CPopupSnackBar.successSnackBar(
+  //           title: 'success!',
+  //           message: 'transaction successful!',
+  //         );
 
-          txnSuccesfull.value = true;
+  //         txnSuccesfull.value = true;
 
-          Future.delayed(
-            Duration(seconds: 2),
-            () {
-              resetSalesFields();
-              Navigator.pop(Get.overlayContext!);
-              //Get.back();
-            },
-          );
-        }
-      }
-    } catch (e) {
-      isLoading.value = false;
-      CFullScreenLoader.stopLoading();
-      if (txtAmountIssued.text == '' && showAmountIssuedField.value == true) {
-        amtIssuedFieldError.value =
-            'please enter the amount issued by customer!!';
-        CPopupSnackBar.errorSnackBar(
-          title: 'invalid value for amount issued!!',
-          message: 'please enter the amount issued by customer!!',
-        );
-        return;
-      } else {
-        CPopupSnackBar.errorSnackBar(
-          title: 'Oh Snap! error saving transaction details',
-          message: e.toString(),
-        );
-        return;
-      }
-    }
-  }
+  //         Future.delayed(
+  //           Duration(seconds: 2),
+  //           () {
+  //             resetSalesFields();
+  //             Navigator.pop(Get.overlayContext!);
+  //             //Get.back();
+  //           },
+  //         );
+  //       }
+  //     }
+  //   } catch (e) {
+  //     isLoading.value = false;
+  //     CFullScreenLoader.stopLoading();
+  //     if (txtAmountIssued.text == '' && showAmountIssuedField.value == true) {
+  //       amtIssuedFieldError.value =
+  //           'please enter the amount issued by customer!!';
+  //       CPopupSnackBar.errorSnackBar(
+  //         title: 'invalid value for amount issued!!',
+  //         message: 'please enter the amount issued by customer!!',
+  //       );
+  //       return;
+  //     } else {
+  //       CPopupSnackBar.errorSnackBar(
+  //         title: 'Oh Snap! error saving transaction details',
+  //         message: e.toString(),
+  //       );
+  //       return;
+  //     }
+  //   }
+  // }
 
   /// -- fetch transactions from sqflite db --
   Future<List<CTxnsModel>> fetchTransactions() async {
@@ -487,8 +481,9 @@ class CTxnsController extends GetxController {
   }
 
   /// -- add unsynced txns to the cloud --
-  Future<void> addSalesToCloud() async {
+  Future<void> addSalesDataToCloud() async {
     try {
+      isLoading.value = true;
       syncIsLoading.value = true;
       await fetchTransactions().then(
         (result) {
@@ -511,6 +506,7 @@ class CTxnsController extends GetxController {
                       'quantity': sale.quantity,
                       'totalAmount': sale.totalAmount,
                       'amountIssued': sale.amountIssued,
+                      'customerBalance': sale.customerBalance,
                       'unitSellingPrice': sale.unitSellingPrice,
                       'paymentMethod': sale.paymentMethod,
                       'customerName': sale.customerName,
@@ -536,6 +532,8 @@ class CTxnsController extends GetxController {
                     await dbHelper.updateTxnItemsSyncStatus(
                         1, 'none', forSyncItem.soldItemId!);
                   }
+                  isLoading.value = false;
+                  syncIsLoading.value = false;
                 } else {
                   syncIsLoading.value = false;
                   CPopupSnackBar.errorSnackBar(
@@ -546,6 +544,7 @@ class CTxnsController extends GetxController {
               });
             } else {
               syncIsLoading.value = false;
+              isLoading.value = false;
               if (kDebugMode) {
                 print('***** ALL TXNS RADA SAFI *****');
               }
@@ -556,6 +555,7 @@ class CTxnsController extends GetxController {
             }
           } else {
             syncIsLoading.value = false;
+            isLoading.value = false;
             CPopupSnackBar.customToast(
               message: 'NO SALES/TXNS FOUND!',
               forInternetConnectivityStatus: false,
@@ -565,6 +565,7 @@ class CTxnsController extends GetxController {
       );
     } catch (e) {
       syncIsLoading.value = false;
+      isLoading.value = false;
       if (kDebugMode) {
         print('***');
         print('* an error occurred while uploading txns to cloud: $e *');
@@ -576,6 +577,9 @@ class CTxnsController extends GetxController {
       }
 
       throw e.toString();
+    } finally {
+      syncIsLoading.value = false;
+      isLoading.value = false;
     }
   }
 
@@ -642,6 +646,7 @@ class CTxnsController extends GetxController {
               element.quantity,
               element.totalAmount,
               element.amountIssued,
+              element.customerBalance,
               element.unitSellingPrice,
               element.paymentMethod,
               element.customerName,

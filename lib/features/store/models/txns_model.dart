@@ -16,7 +16,9 @@ class CTxnsModel {
   String _productName = "";
   int _quantity = 0;
   double _totalAmount = 0.0;
+
   double _amountIssued = 0.0;
+  double _customerBalance = 0.0;
   double _unitSellingPrice = 0.0;
   String _paymentMethod = "";
   String _customerName = "";
@@ -39,6 +41,7 @@ class CTxnsModel {
     this._quantity,
     this._totalAmount,
     this._amountIssued,
+    this._customerBalance,
     this._unitSellingPrice,
     this._paymentMethod,
     this._customerName,
@@ -63,6 +66,7 @@ class CTxnsModel {
     this._quantity,
     this._totalAmount,
     this._amountIssued,
+    this._customerBalance,
     this._unitSellingPrice,
     this._paymentMethod,
     this._customerName,
@@ -88,6 +92,7 @@ class CTxnsModel {
       'quantity',
       'totalAmount',
       'amountIssued',
+      'customerBalance',
       'unitSellingPrice',
       'paymentMethod',
       'customerName',
@@ -113,6 +118,7 @@ class CTxnsModel {
   int get quantity => _quantity;
   double get totalAmount => _totalAmount;
   double get amountIssued => _amountIssued;
+  double get customerBalance => _customerBalance;
   double get unitSellingPrice => _unitSellingPrice;
   String get paymentMethod => _paymentMethod;
   String get customerName => _customerName;
@@ -169,9 +175,13 @@ class CTxnsModel {
   }
 
   set amountIssued(double newAmountIssued) {
-    if (newAmountIssued > 0) {
+    if (newAmountIssued >= 0) {
       _amountIssued = newAmountIssued;
     }
+  }
+
+  set customerBalance(double newCustomerBal) {
+    _customerBalance = newCustomerBal;
   }
 
   set unitSellingPrice(double newUsp) {
@@ -236,6 +246,7 @@ class CTxnsModel {
     map['quantity'] = _quantity;
     map['totalAmount'] = _totalAmount;
     map['amountIssued'] = _amountIssued;
+    map['customerBalance'] = _customerBalance;
     map['unitSellingPrice'] = _unitSellingPrice;
     map['paymentMethod'] = _paymentMethod;
     map['customerName'] = _customerName;
@@ -263,6 +274,7 @@ class CTxnsModel {
     _quantity = map['quantity'];
     _totalAmount = map['totalAmount'];
     _amountIssued = map['amountIssued'];
+    _customerBalance = map['customerBalance'];
     _unitSellingPrice = map['unitSellingPrice'];
     _paymentMethod = map['paymentMethod'];
     _customerName = map['customerName'];
@@ -289,6 +301,7 @@ class CTxnsModel {
       jsonDecode(json[TxnsSheetFields.quantity]),
       double.parse(json[TxnsSheetFields.totalAmount]),
       double.parse(json[TxnsSheetFields.amountIssued]),
+      double.parse(json[TxnsSheetFields.customerBalance]),
       double.parse(json[TxnsSheetFields.unitSellingPrice]),
       json[TxnsSheetFields.paymentMethod],
       json[TxnsSheetFields.customerName],
