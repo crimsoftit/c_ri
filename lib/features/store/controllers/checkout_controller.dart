@@ -214,6 +214,7 @@ class CCheckoutController extends GetxController {
                 // TODO: save receipts before clearing
                 // clear cart
                 cartController.clearCart();
+                RESET FIELDS
                 txnsController.fetchTransactions();
                 customerBal.value = 0.0;
 

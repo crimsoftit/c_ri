@@ -88,7 +88,19 @@ class CCartController extends GetxController {
     } else {
       cartItems.add(selectedCartItem);
 
-      SET CART ITEM QTY IN RELEVANT TEXTFIELD (FETCH CART ITEM TENA)
+      // check if selected cart item already exists in the cart
+      int newItemIndex = cartItems.indexWhere(
+          (cartItem) => cartItem.productId == selectedCartItem.productId);
+
+      if (newItemIndex >= 0) {
+        qtyFieldControllers[newItemIndex].text =
+            cartItems[newItemIndex].quantity.toString();
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          title: 'out of range exception!',
+          message: "$newItemIndex: item not found!",
+        );
+      }
     }
 
     // update cart for specific user
