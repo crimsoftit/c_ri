@@ -87,6 +87,8 @@ class CCartController extends GetxController {
       qtyFieldControllers[index].text = cartItems[index].quantity.toString();
     } else {
       cartItems.add(selectedCartItem);
+
+      SET CART ITEM QTY IN RELEVANT TEXTFIELD (FETCH CART ITEM TENA)
     }
 
     // update cart for specific user

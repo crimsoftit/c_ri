@@ -1,6 +1,7 @@
 import 'package:c_ri/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:c_ri/common/widgets/loaders/animated_loader.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_typeahead_field.dart';
+import 'package:c_ri/features/personalization/controllers/location_controller.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/checkout_controller.dart';
@@ -9,6 +10,7 @@ import 'package:c_ri/features/store/screens/checkout/widgets/billing_amount_sect
 import 'package:c_ri/features/store/screens/checkout/widgets/cart_items.dart';
 import 'package:c_ri/features/store/screens/checkout/widgets/payment_methods/payment_method_section.dart';
 import 'package:c_ri/nav_menu.dart';
+import 'package:c_ri/services/location_services.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -36,6 +38,12 @@ class CCheckoutScreen extends StatelessWidget {
         CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
 
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
+
+    final CLocationController locationController =
+        Get.put<CLocationController>(CLocationController());
+
+    CLocationServices.instance
+        .getUserLocation(locationController: locationController);
 
     return Scaffold(
         appBar: AppBar(
@@ -153,6 +161,9 @@ class CCheckoutScreen extends StatelessWidget {
                                   CPaymentMethodSection(),
                                   // addresses
                                   //CBillingAddressSection(),
+                                  Text(
+                                    'user Address: ${locationController.uAddress.value}',
+                                  ),
                                 ],
                               ),
                             ),

@@ -1,6 +1,7 @@
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:c_ri/common/widgets/success_screen/success_screen.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
+import 'package:c_ri/features/personalization/controllers/location_controller.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
@@ -12,6 +13,7 @@ import 'package:c_ri/features/store/models/txns_model.dart';
 import 'package:c_ri/features/store/screens/checkout/widgets/payment_methods/payment_methods_tile.dart';
 import 'package:c_ri/features/store/screens/inventory/inventory_details/widgets/add_to_cart_bottom_nav_bar.dart';
 import 'package:c_ri/nav_menu.dart';
+import 'package:c_ri/services/location_services.dart';
 import 'package:c_ri/services/pdf_services.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
@@ -41,6 +43,8 @@ class CCheckoutController extends GetxController {
     );
     amtIssuedFieldController.text = '';
     setFocusOnAmtIssuedField.value = false;
+    CLocationServices.instance
+        .getUserLocation(locationController: locationController);
     resetSalesFields();
 
     super.onInit();
@@ -53,6 +57,9 @@ class CCheckoutController extends GetxController {
   final pdfServices = CPdfServices.instance;
 
   RxList<CCartItemModel> itemsInCart = <CCartItemModel>[].obs;
+
+  final CLocationController locationController =
+      Get.put<CLocationController>(CLocationController());
 
   //final RxInt itemStockCount = 0.obs;
   //final RxInt totalInvSales = 0.obs;
