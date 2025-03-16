@@ -12,8 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-class CCartItems extends StatelessWidget {
-  const CCartItems({
+class CCartItemsRaw extends StatelessWidget {
+  const CCartItemsRaw({
     super.key,
   });
 
@@ -23,12 +23,12 @@ class CCartItems extends StatelessWidget {
     final invController = Get.put(CInventoryController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final scrollController = ScrollController();
-
     final txnsController = Get.put(CTxnsController());
 
-    //cartController.fetchCartItems();
     return Obx(
       () {
+        //cartController.fetchCartItems();
+        // run loader --
         if (txnsController.isLoading.value ||
             invController.isLoading.value ||
             invController.syncIsLoading.value ||

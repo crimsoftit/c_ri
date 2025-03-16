@@ -16,13 +16,13 @@ Future<void> main() async {
   final WidgetsBinding widgetsBinding =
       WidgetsFlutterBinding.ensureInitialized();
 
+  /// -- todo: init local storage (GetX Local Storage) --
+  await GetStorage.init();
+
   /// -- initialize spreadsheets --
   await StoreSheetsApi.initSpreadSheets();
 
   tz.initializeTimeZones();
-
-  /// -- todo: init local storage (GetX Local Storage) --
-  await GetStorage.init();
 
   /// -- todo: await native splash --
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);

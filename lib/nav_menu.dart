@@ -1,5 +1,7 @@
 import 'package:c_ri/features/personalization/screens/profile/profile.dart';
 import 'package:c_ri/features/personalization/screens/settings/user_settings.dart';
+import 'package:c_ri/features/store/controllers/cart_controller.dart';
+import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/screens/home/home.dart';
 import 'package:c_ri/features/store/screens/inventory/inventory_screen.dart';
 import 'package:c_ri/features/store/screens/txns/sales_screen.dart';
@@ -15,8 +17,13 @@ class NavMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartController = Get.put(CCartController());
+    final invController = Get.put(CInventoryController());
     final navController = Get.put(NavMenuController());
     final isDark = CHelperFunctions.isDarkMode(context);
+
+    invController.fetchInventoryItems();
+    cartController.fetchCartItems();
 
     GlobalKey navBarGlobalKey = GlobalKey(debugLabel: 'bottomAppBar');
 

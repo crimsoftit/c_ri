@@ -34,98 +34,186 @@ class CPaymentMethodSection extends StatelessWidget {
         SizedBox(
           height: CSizes.spaceBtnItems / 8,
         ),
-        Obx(
-          () {
-            return Row(
-              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CRoundedContainer(
-                  width: 60.0,
-                  height: 45.0,
-                  bgColor: isDarkTheme ? CColors.light : CColors.white,
-                  padding: const EdgeInsets.all(
-                    CSizes.sm / 4,
-                  ),
-                  child: Image(
-                    image: AssetImage(
-                      checkoutController
-                          .selectedPaymentMethod.value.platformLogo,
-                    ),
-                    fit: BoxFit.contain,
-                  ),
+        // Obx(
+        //   () {
+        //     return Row(
+        //       //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //       children: [
+        //         CRoundedContainer(
+        //           width: 60.0,
+        //           height: 45.0,
+        //           bgColor: isDarkTheme ? CColors.light : CColors.white,
+        //           padding: const EdgeInsets.all(
+        //             CSizes.sm / 4,
+        //           ),
+        //           child: Image(
+        //             image: AssetImage(
+        //               checkoutController
+        //                   .selectedPaymentMethod.value.platformLogo,
+        //             ),
+        //             fit: BoxFit.contain,
+        //           ),
+        //         ),
+        //         const SizedBox(
+        //           width: CSizes.spaceBtnItems / 4,
+        //         ),
+        //         Text(
+        //           checkoutController.selectedPaymentMethod.value.platformName,
+        //           style: Theme.of(context).textTheme.bodyLarge,
+        //         ),
+        //         checkoutController.selectedPaymentMethod.value.platformName ==
+        //                 'cash'
+        //             ? Row(
+        //                 children: [
+        //                   const SizedBox(
+        //                     width: CSizes.spaceBtnItems * 1.3,
+        //                     height: 38.0,
+        //                   ),
+        //                   CRoundedContainer(
+        //                     //width: 160.0,
+        //                     width: CHelperFunctions.screenWidth() * 0.5,
+        //                     bgColor: isDarkTheme
+        //                         ? CColors.rBrown.withValues(alpha: 0.3)
+        //                         : CColors.white,
+        //                     //height: 40.0,
+        //                     child: Obx(
+        //                       () {
+        //                         return TextFormField(
+        //                           keyboardType:
+        //                               const TextInputType.numberWithOptions(
+        //                             decimal: true,
+        //                             signed: false,
+        //                           ),
+        //                           inputFormatters: <TextInputFormatter>[
+        //                             FilteringTextInputFormatter.allow(
+        //                                 RegExp(r'^\d+(\.\d*)?')),
+        //                           ],
+        //                           autofocus: checkoutController
+        //                               .setFocusOnAmtIssuedField.value,
+        //                           controller: checkoutController
+        //                               .amtIssuedFieldController,
+        //                           decoration: InputDecoration(
+        //                             focusColor: CColors.rBrown.withValues(
+        //                               alpha: 0.3,
+        //                             ),
+        //                             focusedBorder: OutlineInputBorder(
+        //                               borderSide: BorderSide(
+        //                                 color: CColors.rBrown.withValues(
+        //                                   alpha: 0.3,
+        //                                 ),
+        //                               ),
+        //                             ),
+        //                             labelText: 'amount issued by customer',
+        //                           ),
+        //                           style: const TextStyle(
+        //                             fontWeight: FontWeight.normal,
+        //                           ),
+        //                           onChanged: (value) {
+        //                             if (value != '') {
+        //                               checkoutController.computeCustomerBal(
+        //                                 cartController.totalCartPrice.value,
+        //                                 double.parse(value),
+        //                               );
+        //                             }
+        //                           },
+        //                         );
+        //                       },
+        //                     ),
+        //                   ),
+        //                 ],
+        //               )
+        //             : SizedBox(),
+        //       ],
+        //     );
+        //   },
+        // ),
+        Row(
+          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CRoundedContainer(
+              width: 60.0,
+              height: 45.0,
+              bgColor: isDarkTheme ? CColors.light : CColors.white,
+              padding: const EdgeInsets.all(
+                CSizes.sm / 4,
+              ),
+              child: Image(
+                image: AssetImage(
+                  checkoutController.selectedPaymentMethod.value.platformLogo,
                 ),
-                const SizedBox(
-                  width: CSizes.spaceBtnItems / 4,
-                ),
-                Text(
-                  checkoutController.selectedPaymentMethod.value.platformName,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                checkoutController.selectedPaymentMethod.value.platformName ==
-                        'cash'
-                    ? Row(
-                        children: [
-                          const SizedBox(
-                            width: CSizes.spaceBtnItems * 1.3,
-                            height: 38.0,
-                          ),
-                          CRoundedContainer(
-                            //width: 160.0,
-                            width: CHelperFunctions.screenWidth() * 0.5,
-                            bgColor: isDarkTheme
-                                ? CColors.rBrown.withValues(alpha: 0.3)
-                                : CColors.white,
-                            //height: 40.0,
-                            child: Obx(
-                              () {
-                                return TextFormField(
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                    decimal: true,
-                                    signed: false,
-                                  ),
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.allow(
-                                        RegExp(r'^\d+(\.\d*)?')),
-                                  ],
-                                  autofocus: checkoutController
-                                      .setFocusOnAmtIssuedField.value,
-                                  controller: checkoutController
-                                      .amtIssuedFieldController,
-                                  decoration: InputDecoration(
-                                    focusColor: CColors.rBrown.withValues(
+                fit: BoxFit.contain,
+              ),
+            ),
+            const SizedBox(
+              width: CSizes.spaceBtnItems / 4,
+            ),
+            Text(
+              checkoutController.selectedPaymentMethod.value.platformName,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            checkoutController.selectedPaymentMethod.value.platformName ==
+                    'cash'
+                ? Row(
+                    children: [
+                      const SizedBox(
+                        width: CSizes.spaceBtnItems * 1.3,
+                        height: 38.0,
+                      ),
+                      CRoundedContainer(
+                        //width: 160.0,
+                        width: CHelperFunctions.screenWidth() * 0.5,
+                        bgColor: isDarkTheme
+                            ? CColors.rBrown.withValues(alpha: 0.3)
+                            : CColors.white,
+                        //height: 40.0,
+                        child: Obx(
+                          () {
+                            return TextFormField(
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                decimal: true,
+                                signed: false,
+                              ),
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.allow(
+                                    RegExp(r'^\d+(\.\d*)?')),
+                              ],
+                              autofocus: checkoutController
+                                  .setFocusOnAmtIssuedField.value,
+                              controller:
+                                  checkoutController.amtIssuedFieldController,
+                              decoration: InputDecoration(
+                                focusColor: CColors.rBrown.withValues(
+                                  alpha: 0.3,
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: CColors.rBrown.withValues(
                                       alpha: 0.3,
                                     ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: CColors.rBrown.withValues(
-                                          alpha: 0.3,
-                                        ),
-                                      ),
-                                    ),
-                                    labelText: 'amount issued by customer',
                                   ),
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                  onChanged: (value) {
-                                    if (value != '') {
-                                      checkoutController.computeCustomerBal(
-                                        cartController.totalCartPrice.value,
-                                        double.parse(value),
-                                      );
-                                    }
-                                  },
-                                );
+                                ),
+                                labelText: 'amount issued by customer',
+                              ),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.normal,
+                              ),
+                              onChanged: (value) {
+                                if (value != '') {
+                                  checkoutController.computeCustomerBal(
+                                    cartController.totalCartPrice.value,
+                                    double.parse(value),
+                                  );
+                                }
                               },
-                            ),
-                          ),
-                        ],
-                      )
-                    : SizedBox(),
-              ],
-            );
-          },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  )
+                : SizedBox(),
+          ],
         ),
       ],
     );

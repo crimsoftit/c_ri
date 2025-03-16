@@ -1,4 +1,5 @@
 import 'package:c_ri/common/widgets/products/cart/add_remove_btns.dart';
+import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
@@ -24,6 +25,7 @@ class CTypeAheadSearchField extends StatelessWidget {
     final invController = Get.put(CInventoryController());
     final searchBarController = Get.put(CSearchBarController());
     final cartController = Get.put(CCartController());
+    final txnsController = Get.put(CTxnsController());
     Get.put(CInventoryController());
     Get.put(CCartController());
     Get.put(CTxnsController());
@@ -137,6 +139,14 @@ class CTypeAheadSearchField extends StatelessWidget {
               children: [
                 Obx(
                   () {
+                    if (txnsController.isLoading.value ||
+                        invController.isLoading.value ||
+                        invController.syncIsLoading.value ||
+                        cartController.cartItemsLoading.value) {
+                      return const CVerticalProductShimmer(
+                        itemCount: 3,
+                      );
+                    }
                     return Row(
                       //crossAxisAlignment: CrossAxisAlignment.baseline,
                       children: [

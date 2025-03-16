@@ -67,7 +67,6 @@ class CCheckoutController extends GetxController {
 
   final RxBool setFocusOnAmtIssuedField = false.obs;
 
-  final cartController = Get.put(CCartController());
   final invController = Get.put(CInventoryController());
   final navController = Get.put(NavMenuController());
   final txnsController = Get.put(CTxnsController());
@@ -103,6 +102,8 @@ class CCheckoutController extends GetxController {
       );
 
       txnsController.fetchTransactions();
+
+      final cartController = Get.put(CCartController());
 
       // -- fetch cart content --
       cartController.fetchCartItems();
@@ -214,7 +215,8 @@ class CCheckoutController extends GetxController {
                 // TODO: save receipts before clearing
                 // clear cart
                 cartController.clearCart();
-                RESET FIELDS
+                resetSalesFields();
+
                 txnsController.fetchTransactions();
                 customerBal.value = 0.0;
 

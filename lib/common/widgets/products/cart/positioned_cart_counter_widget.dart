@@ -21,7 +21,6 @@ class CPositionedCartCounterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    final cartController = Get.put(CCartController());
 
     return Positioned(
       right: rightPosition ?? 0,
@@ -35,6 +34,7 @@ class CPositionedCartCounterWidget extends StatelessWidget {
         ),
         child: Center(
           child: Obx(() {
+            final cartController = Get.put(CCartController());
             return Text(
               cartController.countOfCartItems.value.toString(),
               style: Theme.of(context).textTheme.labelSmall!.apply(

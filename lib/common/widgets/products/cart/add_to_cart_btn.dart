@@ -16,11 +16,11 @@ class CAddToCartBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartController = CCartController.instance;
     final invController = Get.put(CInventoryController());
 
     return Obx(
       () {
+        final cartController = CCartController.instance;
         final pQtyInCart = cartController.getItemQtyInCart(pId);
         return InkWell(
           onTap: () {

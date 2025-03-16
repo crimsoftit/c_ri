@@ -1,11 +1,14 @@
 import 'package:c_ri/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:c_ri/common/widgets/loaders/animated_loader.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_typeahead_field.dart';
+import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/features/personalization/controllers/location_controller.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/checkout_controller.dart';
+import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
+import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/screens/checkout/widgets/billing_amount_section.dart';
 import 'package:c_ri/features/store/screens/checkout/widgets/cart_items.dart';
 import 'package:c_ri/features/store/screens/checkout/widgets/payment_methods/payment_method_section.dart';
@@ -28,16 +31,16 @@ class CCheckoutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cartController = Get.put(CCartController());
     final checkoutController = Get.put(CCheckoutController());
+    final invController = Get.put(CInventoryController());
+    final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
+    final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final navController = Get.put(NavMenuController());
     final userController = Get.put(CUserController());
     final searchBarController = Get.put(CSearchBarController());
-
-    final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    final txnsController = Get.put(CTxnsController());
 
     final currencySymbol =
         CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
-
-    final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
 
     final CLocationController locationController =
         Get.put<CLocationController>(CLocationController());
@@ -109,6 +112,15 @@ class CCheckoutScreen extends StatelessWidget {
                     },
                   );
 
+                  // run loader --
+                  if (txnsController.isLoading.value ||
+                      invController.isLoading.value ||
+                      invController.syncIsLoading.value) {
+                    return const CVerticalProductShimmer(
+                      itemCount: 7,
+                    );
+                  }
+
                   if (cartController.cartItems.isEmpty) {
                     return noDataWidget;
                   }
@@ -162,7 +174,16 @@ class CCheckoutScreen extends StatelessWidget {
                                   // addresses
                                   //CBillingAddressSection(),
                                   Text(
+                                    'latitude: ${locationController.userLocation.value!.latitude ?? ''}',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    'longitude: ${locationController.userLocation.value!.longitude ?? ''}',
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
                                     'user Address: ${locationController.uAddress.value}',
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ),
@@ -191,7 +212,11 @@ class CCheckoutScreen extends StatelessWidget {
             // Iconsax.scan_barcode,
             Iconsax.scan,
           ),
-          backgroundColor: isConnectedToInternet ? Colors.brown : CColors.black,
+          backgroundColor: isConnectedToInternet
+              ? Colors.brown
+              : CColors.rBrown.withValues(
+                  alpha: 0.3,
+                ),
           foregroundColor: Colors.white,
         ),
         bottomNavigationBar: Obx(

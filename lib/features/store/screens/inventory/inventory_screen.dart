@@ -33,9 +33,9 @@ class CInventoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartController = Get.put(CCartController());
     final invController = Get.put(CInventoryController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    //final navController = Get.put(NavMenuController());
     final searchController = Get.put(CSearchBarController());
     final syncController = Get.put(CSyncController());
     final txnsController = Get.put(CTxnsController());
@@ -203,9 +203,11 @@ class CInventoryScreen extends StatelessWidget {
                   }
 
                   // run loader --
+                  final cartController = Get.put(CCartController());
                   if (txnsController.isLoading.value ||
                       invController.isLoading.value ||
-                      invController.syncIsLoading.value) {
+                      invController.syncIsLoading.value ||
+                      cartController.cartItemsLoading.value) {
                     return const CVerticalProductShimmer(
                       itemCount: 7,
                     );
@@ -476,6 +478,7 @@ class CInventoryScreen extends StatelessWidget {
         /// -- floating action button to scan item for sale --
         floatingActionButton: Obx(
           () {
+            final cartController = Get.put(CCartController());
             return Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

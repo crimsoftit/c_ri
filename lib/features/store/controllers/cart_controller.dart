@@ -6,7 +6,6 @@ import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class CCartController extends GetxController {
   static CCartController get instance => Get.find();
@@ -16,6 +15,8 @@ class CCartController extends GetxController {
   RxDouble taxFee = 0.0.obs;
   RxDouble txnTotals = 0.0.obs;
   RxDouble totalCartPrice = 0.0.obs;
+
+  final RxBool cartItemsLoading = false.obs;
 
   RxInt countOfCartItems = 0.obs;
   RxInt itemQtyInCart = 0.obs;
@@ -29,23 +30,41 @@ class CCartController extends GetxController {
     fetchCartItems();
   }
 
-  @override
-  void onInit() async {
-    await GetStorage.init();
-    fetchCartItems();
-    qtyFieldControllers = <TextEditingController>[].obs;
-    super.onInit();
-  }
+  // @override
+  // void onInit() async {
+  //   await GetStorage.init().then((_) {
+  //     fetchCartItems();
+  //     qtyFieldControllers.value = <TextEditingController>[].obs;
+  //   });
+
+  //   super.onInit();
+  // }
 
   /// -- fetch cart items from device storage --
-  void fetchCartItems() async {
-    final cartItemsStrings =
-        CLocalStorage.instance().readData<List<dynamic>>('cartItems');
+  Future fetchCartItems() async {
+    try {
+      cartItemsLoading.value = true;
+      final cartItemsStrings =
+          CLocalStorage.instance().readData<List<dynamic>>('cartItems');
 
-    if (cartItemsStrings != null) {
-      cartItems.assignAll(cartItemsStrings.map(
-          (item) => CCartItemModel.fromJson(item as Map<String, dynamic>)));
-      updateCartTotals();
+      if (cartItemsStrings != null) {
+        cartItems.assignAll(cartItemsStrings.map(
+            (item) => CCartItemModel.fromJson(item as Map<String, dynamic>)));
+        updateCartTotals();
+        //cartItemsLoading.value = false;
+      }
+    } catch (e) {
+      cartItemsLoading.value = false;
+      if (kDebugMode) {
+        print('$e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error loading cart items',
+          message: 'an unknown error occurred while fetching cart items: $e',
+        );
+      }
+      throw e.toString();
+    } finally {
+      cartItemsLoading.value = false;
     }
   }
 

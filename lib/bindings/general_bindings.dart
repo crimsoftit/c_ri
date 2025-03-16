@@ -9,7 +9,8 @@ class CGeneralBindings extends Bindings {
     Get.put(CNetworkManager());
 
     /// -- todo: init local storage (GetX Local Storage) --
-    await GetStorage.init();
-    Get.put(CLocalStorage.instance());
+    GetStorage.init().then((_) async {
+      Get.put(CLocalStorage.instance());
+    });
   }
 }

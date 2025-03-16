@@ -79,6 +79,7 @@ class CInventoryController extends GetxController {
     }
     await initInvSync();
     fetchTopSellers();
+
     super.onInit();
   }
 

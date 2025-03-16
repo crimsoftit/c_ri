@@ -18,13 +18,13 @@ class CCartCounterIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartController = Get.put(CCartController());
     //cartController.fetchCartItems();
 
     return Stack(
       children: [
         IconButton(
           onPressed: () {
+            final cartController = Get.put(CCartController());
             cartController.fetchCartItems();
             Get.to(() => const CCheckoutScreen());
           },

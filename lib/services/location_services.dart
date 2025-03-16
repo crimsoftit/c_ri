@@ -1,4 +1,5 @@
 import 'package:c_ri/features/personalization/controllers/location_controller.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -86,22 +87,29 @@ class CLocationServices {
 
     var userAddress = placemarks.first;
 
-    // ignore: unused_local_variable
-    var myAddress =
-        'locality:${userAddress.locality}, subLocality:${userAddress.subLocality}, adminArea:${userAddress.administrativeArea}, subAdminArea:${userAddress.subAdministrativeArea}, addressLine:${userAddress.administrativeArea}, thoroughfare:${userAddress.thoroughfare}, subThoroughfare:${userAddress.subThoroughfare}, street:${userAddress.street}, name:${userAddress.name}, postalCode:${userAddress.postalCode}';
+    final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
 
-    locationController.uAddress.value =
-        'locality:${userAddress.locality} subLocality:${userAddress.subLocality}, street:${userAddress.street}';
+    if (isConnectedToInternet) {
+      // var myAddress =
+      //     'locality:${userAddress.locality}, subLocality:${userAddress.subLocality}, adminArea:${userAddress.administrativeArea}, subAdminArea:${userAddress.subAdministrativeArea}, addressLine:${userAddress.administrativeArea}, thoroughfare:${userAddress.thoroughfare}, subThoroughfare:${userAddress.subThoroughfare}, street:${userAddress.street}, name:${userAddress.name}, postalCode:${userAddress.postalCode}';
 
-    locationController.uCountry.value = userAddress.country!;
+      var myAddress =
+          'locality:${userAddress.locality}, subLocality:${userAddress.subLocality}, adminArea:${userAddress.administrativeArea}, subAdminArea:${userAddress.subAdministrativeArea}, thoroughfare:${userAddress.thoroughfare}, subThoroughfare:${userAddress.subThoroughfare}, street:${userAddress.street}, name:${userAddress.name}, postalCode:${userAddress.postalCode}';
 
-    if (locationController.uCountry.value != '') {
-      locationController
-          .fetchUserCurrencyByCountry(locationController.uCountry.value);
-    }
+      // locationController.uAddress.value =
+      //     'locality:${userAddress.locality} subLocality:${userAddress.subLocality}, street:${userAddress.street}';
+      locationController.uAddress.value = myAddress;
 
-    if (kDebugMode) {
-      print(locationController.uAddress.value);
+      locationController.uCountry.value = userAddress.country!;
+
+      if (locationController.uCountry.value != '') {
+        locationController
+            .fetchUserCurrencyByCountry(locationController.uCountry.value);
+      }
+
+      if (kDebugMode) {
+        print(locationController.uAddress.value);
+      }
     }
 
     //return userAddress;
