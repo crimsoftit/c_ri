@@ -22,7 +22,11 @@ class NavMenu extends StatelessWidget {
     final navController = Get.put(NavMenuController());
     final isDark = CHelperFunctions.isDarkMode(context);
 
-    invController.fetchInventoryItems();
+    Get.put(CCartController());
+    Get.put(CInventoryController());
+
+    invController.onInit();
+    invController.fetchTopSellers();
     cartController.fetchCartItems();
 
     GlobalKey navBarGlobalKey = GlobalKey(debugLabel: 'bottomAppBar');

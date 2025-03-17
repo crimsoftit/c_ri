@@ -11,12 +11,12 @@ import 'package:c_ri/common/widgets/txt_widgets/product_title_txt.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
+import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/controllers/sync_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
-import 'package:c_ri/features/store/screens/checkout/checkout_screen.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/inv_dialog.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
@@ -33,6 +33,7 @@ class CInventoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final checkoutController = Get.put(CCheckoutController());
     final invController = Get.put(CInventoryController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     //final navController = Get.put(NavMenuController());
@@ -42,9 +43,6 @@ class CInventoryScreen extends StatelessWidget {
     final userController = Get.put(CUserController());
 
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
-
-    final currency =
-        CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
 
     invController.fetchInventoryItems();
     txnsController.fetchTransactions();
@@ -213,13 +211,20 @@ class CInventoryScreen extends StatelessWidget {
                     );
                   }
 
-                  if (invController.inventoryItems.isEmpty) {
-                    return const Center(
-                      child: NoDataScreen(
-                        lottieImage: CImages.noDataLottie,
-                        txt: 'No data found!',
-                      ),
-                    );
+                  if (invController.inventoryItems.isEmpty &&
+                      !invController.isLoading.value) {
+                    invController.fetchInventoryItems();
+                    if (invController.inventoryItems.isEmpty &&
+                        !invController.isLoading.value &&
+                        !invController.syncIsLoading.value &&
+                        !cartController.cartItemsLoading.value) {
+                      return const Center(
+                        child: NoDataScreen(
+                          lottieImage: CImages.noDataLottie,
+                          txt: 'No data found!',
+                        ),
+                      );
+                    }
                   }
 
                   return SizedBox(
@@ -267,7 +272,7 @@ class CInventoryScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'code: ${invController.inventoryItems[index].pCode} usp: $currency.${userController.user.value.currencyCode}.${invController.inventoryItems[index].unitSellingPrice}',
+                                    'code: ${invController.inventoryItems[index].pCode} usp: ${userController.user.value.currencyCode}.${invController.inventoryItems[index].unitSellingPrice}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelSmall!
@@ -488,7 +493,15 @@ class CInventoryScreen extends StatelessWidget {
                         children: [
                           FloatingActionButton(
                             onPressed: () {
-                              Get.to(() => const CCheckoutScreen());
+                              Get.put(CCheckoutController());
+                              checkoutController.handleNavToCheckout();
+                              // cartController.fetchCartItems().then((_) {
+                              //   Future.delayed(
+                              //       const Duration(milliseconds: 250), () {
+                              //     Get.to(() => const CCheckoutScreen());
+                              //   });
+                              // });
+                              // Get.to(() => const CCheckoutScreen());
                             },
                             backgroundColor: isConnectedToInternet
                                 ? Colors.brown

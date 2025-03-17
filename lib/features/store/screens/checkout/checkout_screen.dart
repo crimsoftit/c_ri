@@ -115,7 +115,8 @@ class CCheckoutScreen extends StatelessWidget {
                   // run loader --
                   if (txnsController.isLoading.value ||
                       invController.isLoading.value ||
-                      invController.syncIsLoading.value) {
+                      invController.syncIsLoading.value ||
+                      cartController.cartItemsLoading.value) {
                     return const CVerticalProductShimmer(
                       itemCount: 7,
                     );

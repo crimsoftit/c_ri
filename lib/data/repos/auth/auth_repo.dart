@@ -31,7 +31,6 @@ class AuthRepo extends GetxController {
   final deviceStorage = GetStorage();
   final _auth = FirebaseAuth.instance;
   final signupController = Get.put(SignupController());
-  final RxBool loadHomeScreenFromInvScreen = false.obs;
 
   // -- get authenticated user data --
   User? get authUser => _auth.currentUser;
@@ -41,7 +40,6 @@ class AuthRepo extends GetxController {
   void onReady() {
     // remove the native splash screen
     FlutterNativeSplash.remove();
-    loadHomeScreenFromInvScreen.value = false;
 
     // redirect to the relevant screen
     screenRedirect();
@@ -69,7 +67,7 @@ class AuthRepo extends GetxController {
         } else {
           //DbHelper dbHelper = DbHelper.instance;
           final invController = Get.put(CInventoryController());
-          Get.put(NavMenuController());
+          //final navController = Get.put(NavMenuController());
           final txnsController = Get.put(CTxnsController());
           // check data sync status
           deviceStorage.writeIfNull('SyncInvDataWithCloud', true);
@@ -79,10 +77,11 @@ class AuthRepo extends GetxController {
           await txnsController.initTxnsSync();
           Get.put(CCheckoutController());
 
-          loadHomeScreenFromInvScreen.value = true;
-          // navController.selectedIndex.value = 1;
-          // Get.to(() => const NavMenu());
-          Get.offAll(() => const NavMenu());
+          //navController.selectedIndex.value = 1;
+          Future.delayed(const Duration(milliseconds: 250), () {
+            //Get.to(() => const NavMenu());
+            Get.offAll(() => const NavMenu());
+          });
         }
       } else {
         Get.offAll(() => VerifyEmailScreen(

@@ -10,6 +10,7 @@ import 'package:c_ri/features/store/models/cart_item_model.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/models/payment_method_model.dart';
 import 'package:c_ri/features/store/models/txns_model.dart';
+import 'package:c_ri/features/store/screens/checkout/checkout_screen.dart';
 import 'package:c_ri/features/store/screens/checkout/widgets/payment_methods/payment_methods_tile.dart';
 import 'package:c_ri/features/store/screens/inventory/inventory_details/widgets/add_to_cart_bottom_nav_bar.dart';
 import 'package:c_ri/nav_menu.dart';
@@ -140,8 +141,10 @@ class CCheckoutController extends GetxController {
             selectedPaymentMethod.value.platformName,
             '',
             '',
-            '',
-            '',
+            locationController.uAddress.value != ''
+                ? locationController.uAddress.value
+                : userController.user.value.userAddress,
+            'lat: ${locationController.userLocation.value!.latitude ?? ''} long: ${locationController.userLocation.value!.longitude ?? ''}',
             DateFormat('yyyy-MM-dd - kk:mm').format(clock.now()),
             0,
             'append',
@@ -486,6 +489,13 @@ class CCheckoutController extends GetxController {
 
   resetSalesFields() {
     customerBal.value = 0.0;
+    amtIssuedFieldController.text = '';
+    itemExists.value = false;
+    selectedPaymentMethod.value = CPaymentMethodModel(
+      platformLogo: CImages.cash6,
+      platformName: 'cash',
+    );
+    setFocusOnAmtIssuedField.value = false;
   }
 
   /// -- calculate totals --
@@ -497,5 +507,14 @@ class CCheckoutController extends GetxController {
     } else {
       totalAmount.value = 0.0;
     }
+  }
+
+  Future handleNavToCheckout() async {
+    final cartController = Get.put(CCartController());
+    cartController.fetchCartItems().then((_) {
+      Future.delayed(const Duration(milliseconds: 250), () {
+        Get.to(() => const CCheckoutScreen());
+      });
+    });
   }
 }

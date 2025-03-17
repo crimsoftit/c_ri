@@ -532,8 +532,8 @@ class CTxnsController extends GetxController {
                     await dbHelper.updateTxnItemsSyncStatus(
                         1, 'none', forSyncItem.soldItemId!);
                   }
-                  isLoading.value = false;
-                  syncIsLoading.value = false;
+                  // isLoading.value = false;
+                  // syncIsLoading.value = false;
                 } else {
                   syncIsLoading.value = false;
                   CPopupSnackBar.errorSnackBar(

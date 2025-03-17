@@ -3,10 +3,12 @@ import 'package:c_ri/common/widgets/custom_shapes/containers/rounded_container.d
 import 'package:c_ri/common/widgets/products/cart/cart_counter_icon.dart';
 import 'package:c_ri/common/widgets/products/cart/positioned_cart_counter_widget.dart';
 import 'package:c_ri/common/widgets/products/circle_avatar.dart';
+import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
+import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
-import 'package:c_ri/features/store/screens/checkout/checkout_screen.dart';
+import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/screens/home/widgets/home_appbar.dart';
 import 'package:c_ri/nav_menu.dart';
 import 'package:c_ri/utils/constants/colors.dart';
@@ -23,6 +25,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartController = Get.put(CCartController());
+
     final invController = Get.put(CInventoryController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
 
@@ -30,7 +33,7 @@ class HomeScreen extends StatelessWidget {
 
     invController.fetchInventoryItems();
     invController.fetchTopSellers();
-    cartController.fetchCartItems();
+    //cartController.fetchCartItems();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -56,6 +59,16 @@ class HomeScreen extends StatelessWidget {
                     ),
                     child: Obx(
                       () {
+                        final txnsController = Get.put(CTxnsController());
+                        // run loader --
+                        if (txnsController.isLoading.value ||
+                            invController.isLoading.value ||
+                            invController.syncIsLoading.value ||
+                            cartController.cartItemsLoading.value) {
+                          return const CVerticalProductShimmer(
+                            itemCount: 7,
+                          );
+                        }
                         return Column(
                           children: [
                             // -- top sellers category heading --
@@ -254,7 +267,17 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         FloatingActionButton(
                           onPressed: () {
-                            Get.to(() => const CCheckoutScreen());
+                            Get.put(CCheckoutController());
+                            final checkoutController =
+                                Get.put(CCheckoutController());
+                            checkoutController.handleNavToCheckout();
+                            // final cartController = Get.put(CCartController());
+                            // cartController.fetchCartItems().then((_) {
+                            //   Future.delayed(const Duration(milliseconds: 250),
+                            //       () {
+                            //     Get.to(() => const CCheckoutScreen());
+                            //   });
+                            // });
                           },
                           backgroundColor: isConnectedToInternet
                               ? Colors.brown

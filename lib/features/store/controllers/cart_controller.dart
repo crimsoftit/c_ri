@@ -44,15 +44,17 @@ class CCartController extends GetxController {
   Future fetchCartItems() async {
     try {
       cartItemsLoading.value = true;
-      final cartItemsStrings =
-          CLocalStorage.instance().readData<List<dynamic>>('cartItems');
+      Future.delayed(const Duration(milliseconds: 250), () {
+        final cartItemsStrings =
+            CLocalStorage.instance().readData<List<dynamic>>('cartItems');
 
-      if (cartItemsStrings != null) {
-        cartItems.assignAll(cartItemsStrings.map(
-            (item) => CCartItemModel.fromJson(item as Map<String, dynamic>)));
-        updateCartTotals();
-        //cartItemsLoading.value = false;
-      }
+        if (cartItemsStrings != null) {
+          cartItems.assignAll(cartItemsStrings.map(
+              (item) => CCartItemModel.fromJson(item as Map<String, dynamic>)));
+          updateCartTotals();
+          //cartItemsLoading.value = false;
+        }
+      });
     } catch (e) {
       cartItemsLoading.value = false;
       if (kDebugMode) {

@@ -12,7 +12,6 @@ import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
-import 'package:c_ri/features/store/screens/checkout/checkout_screen.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -333,7 +332,8 @@ class TxnsScreen extends StatelessWidget {
                         children: [
                           FloatingActionButton(
                             onPressed: () {
-                              Get.to(() => const CCheckoutScreen());
+                              Get.put(CCheckoutController());
+                              checkoutController.handleNavToCheckout();
                             },
                             backgroundColor: isConnectedToInternet
                                 ? Colors.brown
