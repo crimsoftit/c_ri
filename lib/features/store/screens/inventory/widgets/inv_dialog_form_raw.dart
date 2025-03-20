@@ -1,9 +1,7 @@
-import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
-import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:c_ri/utils/validators/validation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -169,18 +167,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
               ),
               Obx(
                 () {
-                  final userController = Get.put(CUserController());
-                  final currency = CHelperFunctions.formatCurrency(
-                      userController.user.value.currencyCode);
-                  return Container(
-                    width: CHelperFunctions.screenWidth() * .97,
-                    alignment: Alignment.topRight,
-                    child: Text(
-                      'unit BP: ~$currency.${invController.unitBP.value.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.labelSmall!.apply(
-                            fontStyle: FontStyle.italic,
-                          ),
-                    ),
+                  return Text(
+                    'UBP: ${invController.unitBP.value}',
                   );
                 },
               ),
@@ -254,7 +242,6 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       icon: const Icon(
                         Iconsax.undo,
                         size: CSizes.iconSm,
-                        color: CColors.rBrown,
                       ),
                       label: Text(
                         'back',

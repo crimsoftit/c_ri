@@ -172,10 +172,19 @@ class CCheckoutScreen extends StatelessWidget {
                 );
 
                 // run loader --
+                // if (txnsController.isLoading.value ||
+                //     invController.isLoading.value ||
+                //     invController.syncIsLoading.value ||
+                //     cartController.cartItemsLoading.value) {
+                //   //return const DefaultLoaderScreen();
+                //   return const CVerticalProductShimmer(
+                //     itemCount: 7,
+                //   );
+                // }
                 if (txnsController.isLoading.value ||
                     invController.isLoading.value ||
                     invController.syncIsLoading.value ||
-                    cartController.cartItemsLoading.value) {
+                    cartController.removingCartItemsLoading.value) {
                   //return const DefaultLoaderScreen();
                   return const CVerticalProductShimmer(
                     itemCount: 7,

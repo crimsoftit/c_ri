@@ -17,6 +17,7 @@ class CCartController extends GetxController {
   RxDouble totalCartPrice = 0.0.obs;
 
   final RxBool cartItemsLoading = false.obs;
+  final RxBool removingCartItemsLoading = false.obs;
 
   RxInt countOfCartItems = 0.obs;
   RxInt itemQtyInCart = 0.obs;
@@ -130,19 +131,19 @@ class CCartController extends GetxController {
       cartItems.refresh();
 
       // check if selected cart item already exists in the cart
-      int newItemIndex = cartItems.indexWhere(
-          (cartItem) => cartItem.productId == selectedCartItem.productId);
+      // int newItemIndex = cartItems.indexWhere(
+      //     (cartItem) => cartItem.productId == selectedCartItem.productId);
 
-      if (newItemIndex >= 0) {
-        cartItems[index].quantity = selectedCartItem.quantity;
-        // qtyFieldControllers[newItemIndex].text =
-        //     cartItems[newItemIndex].quantity.toString();
-      } else {
-        CPopupSnackBar.errorSnackBar(
-          title: 'out of range exception!',
-          message: "$newItemIndex: item not found!",
-        );
-      }
+      // if (newItemIndex >= 0) {
+      //   cartItems[index].quantity = selectedCartItem.quantity;
+      //   // qtyFieldControllers[newItemIndex].text =
+      //   //     cartItems[newItemIndex].quantity.toString();
+      // } else {
+      //   CPopupSnackBar.errorSnackBar(
+      //     title: 'out of range exception!',
+      //     message: "$newItemIndex: item not found!",
+      //   );
+      // }
     }
 
     // update cart for specific user
@@ -197,6 +198,7 @@ class CCartController extends GetxController {
                   cartItems[itemIndex].quantity.toString();
             } else {
               cartItems[itemIndex].quantity += 1;
+              cartItems.refresh();
             }
           }
         }
@@ -216,6 +218,8 @@ class CCartController extends GetxController {
 
   /// -- decrement cart item qty/remove a single item from the cart --
   void removeSingleItemFromCart(CCartItemModel item, bool showConfirmDialog) {
+    removingCartItemsLoading.value = true;
+
     int removeItemIndex = cartItems.indexWhere(
       (itemToRemove) {
         return itemToRemove.productId == item.productId;
@@ -244,6 +248,7 @@ class CCartController extends GetxController {
       updateCart();
       qtyFieldControllers[removeItemIndex].text =
           cartItems[removeItemIndex].quantity.toString();
+      removingCartItemsLoading.value = false;
     }
   }
 
@@ -255,7 +260,9 @@ class CCartController extends GetxController {
       onConfirm: () {
         // perform action to entirely remove this item from the cart
         cartItems.removeAt(itemIndex);
+        qtyFieldControllers.removeAt(itemIndex);
         updateCart();
+
         CPopupSnackBar.customToast(
           message: '$itemToRemove removed from the cart...',
           forInternetConnectivityStatus: false,
