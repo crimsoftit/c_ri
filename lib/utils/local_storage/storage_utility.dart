@@ -1,7 +1,7 @@
 import 'package:get_storage/get_storage.dart';
 
 class CLocalStorage {
-  late final GetStorage _storage;
+  GetStorage _storage = GetStorage();
 
   // singleton instance
   static CLocalStorage? _instance;

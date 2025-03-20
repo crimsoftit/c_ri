@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
+import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/models/cart_item_model.dart';
-import 'package:c_ri/utils/constants/img_strings.dart';
+import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -44,8 +45,8 @@ class CPdfServices extends GetxController {
   Future<Uint8List> generateReceipt(List<CCartItemModel> itemsInCart) async {
     final receipt = pdf_widget.Document();
 
-    final receiptLogo =
-        (await rootBundle.load(CImages.darkAppLogo)).buffer.asUint8List();
+    // final receiptLogo =
+    //     (await rootBundle.load(CImages.darkAppLogo)).buffer.asUint8List();
 
     receipt.addPage(
       pdf_widget.MultiPage(
@@ -53,14 +54,18 @@ class CPdfServices extends GetxController {
         build: (pdf_widget.Context context) {
           return [
             receiptTitle(),
+            pdf_widget.SizedBox(
+              height: 1.0,
+            ),
+            receiptBarCode(),
             pdf_widget.Column(
               children: [
-                pdf_widget.Image(
-                  pdf_widget.MemoryImage(receiptLogo),
-                  width: 50.0,
-                  height: 50.0,
-                  fit: pdf_widget.BoxFit.cover,
-                ),
+                // pdf_widget.Image(
+                //   pdf_widget.MemoryImage(receiptLogo),
+                //   width: 50.0,
+                //   height: 50.0,
+                //   fit: pdf_widget.BoxFit.cover,
+                // ),
                 pdf_widget.Row(
                   mainAxisAlignment: pdf_widget.MainAxisAlignment.spaceBetween,
                   children: [
@@ -125,11 +130,12 @@ class CPdfServices extends GetxController {
   }
 
   static pdf_widget.Widget receiptTitle() {
+    final userController = Get.put(CUserController());
     return pdf_widget.Column(
       crossAxisAlignment: pdf_widget.CrossAxisAlignment.start,
       children: [
         pdf_widget.Text(
-          'CUSTOMER RECEIPT',
+          userController.user.value.businessName.toUpperCase(),
           style: pdf_widget.TextStyle(
             fontBold: pdf_widget.Font.helveticaBold(),
             fontSize: 13.0,
@@ -137,6 +143,41 @@ class CPdfServices extends GetxController {
           ),
         ),
       ],
+    );
+  }
+
+  pdf_widget.Widget receiptBarCode() {
+    final checkoutController = Get.put(CCheckoutController());
+    return pdf_widget.Container(
+      decoration: pdf_widget.BoxDecoration(
+        borderRadius: pdf_widget.BorderRadius.only(
+          bottomLeft: pdf_widget.Radius.circular(21),
+          bottomRight: pdf_widget.Radius.circular(21),
+        ),
+        color: PdfColors.white,
+      ),
+      padding: const pdf_widget.EdgeInsets.symmetric(
+        vertical: CSizes.spaceBtnItems,
+      ),
+      margin: const pdf_widget.EdgeInsets.symmetric(
+        horizontal: CSizes.spaceBtnItems,
+      ),
+      child: pdf_widget.Container(
+        padding: const pdf_widget.EdgeInsets.symmetric(
+          horizontal: CSizes.spaceBtnItems,
+        ),
+        child: pdf_widget.ClipRRect(
+          horizontalRadius: 15.0,
+          verticalRadius: 15.0,
+          child: pdf_widget.BarcodeWidget(
+            barcode: pdf_widget.Barcode.code128(),
+            data: checkoutController.txnId.value.toString(),
+            drawText: false,
+            width: double.maxFinite,
+            height: 70.0,
+          ),
+        ),
+      ),
     );
   }
 

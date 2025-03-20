@@ -33,7 +33,6 @@ class HomeScreen extends StatelessWidget {
 
     invController.fetchInventoryItems();
     invController.fetchTopSellers();
-    //cartController.fetchCartItems();
 
     return Scaffold(
       body: SingleChildScrollView(

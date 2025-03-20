@@ -1,5 +1,5 @@
+import 'package:c_ri/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:c_ri/common/widgets/products/cart/add_remove_btns.dart';
-import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
@@ -143,9 +143,20 @@ class CTypeAheadSearchField extends StatelessWidget {
                         invController.isLoading.value ||
                         invController.syncIsLoading.value ||
                         cartController.cartItemsLoading.value) {
-                      return const CVerticalProductShimmer(
-                        itemCount: 3,
+                      // return const CVerticalProductShimmer(
+                      //   itemCount: 2,
+                      // );
+                      return CRoundedContainer(
+                        bgColor: CColors.rBrown,
+                        width: 100.0,
+                        height: 30.0,
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: CColors.white,
+                          ),
+                        ),
                       );
+                      // return const DefaultLoaderScreen();
                     }
                     return Row(
                       //crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -274,17 +285,6 @@ class CTypeAheadSearchField extends StatelessWidget {
                                   message:
                                       '${suggestion.name} is out of stock!!');
                             }
-
-                            // if (cartController.itemQtyInCart.value <
-                            //     suggestion.quantity) {
-                            //   cartController.itemQtyInCart.value += 1;
-                            // } else {
-                            //   CPopupSnackBar.warningSnackBar(
-                            //       title:
-                            //           'only ${suggestion.quantity} of ${suggestion.name} are stocked',
-                            //       message:
-                            //           'you can only add up to ${suggestion.quantity} ${suggestion.name} items to the cart');
-                            // }
                           },
                           qtyField: null,
                         ),

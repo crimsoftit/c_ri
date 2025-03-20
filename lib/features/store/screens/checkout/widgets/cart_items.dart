@@ -1,11 +1,15 @@
+import 'package:c_ri/common/widgets/loaders/animated_loader.dart';
 import 'package:c_ri/common/widgets/products/cart/add_remove_btns.dart';
 import 'package:c_ri/common/widgets/products/store_item.dart';
 import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/common/widgets/txt_widgets/product_price_txt.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
+import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
+import 'package:c_ri/nav_menu.dart';
 import 'package:c_ri/utils/constants/colors.dart';
+import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +26,7 @@ class CCartItems extends StatelessWidget {
     final cartController = Get.put(CCartController());
     final invController = Get.put(CInventoryController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    final navController = Get.put(NavMenuController());
     final scrollController = ScrollController();
 
     final txnsController = Get.put(CTxnsController());
@@ -33,8 +38,33 @@ class CCartItems extends StatelessWidget {
             invController.isLoading.value ||
             invController.syncIsLoading.value ||
             cartController.cartItemsLoading.value) {
+          //return const DefaultLoaderScreen();
           return const CVerticalProductShimmer(
             itemCount: 3,
+          );
+        }
+
+        /// -- empty data widget --
+        final noDataWidget = CAnimatedLoaderWidget(
+          showActionBtn: true,
+          text: 'whoops! cart is EMPTY!',
+          actionBtnText: 'let\'s fill it',
+          animation: CImages.noDataLottie,
+          onActionBtnPressed: () {
+            navController.selectedIndex.value = 1;
+            Get.to(() => const NavMenu());
+          },
+        );
+        if (cartController.cartItems.isEmpty &&
+            !cartController.cartItemsLoading.value) {
+          Get.put(CCheckoutController());
+          cartController.fetchCartItems().then(
+            (_) {
+              if (cartController.cartItems.isEmpty &&
+                  !cartController.cartItemsLoading.value) {
+                return noDataWidget;
+              }
+            },
           );
         }
         return Scrollbar(

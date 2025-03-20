@@ -51,27 +51,6 @@ class CAnimatedTypeaheadField extends StatelessWidget {
                     radius: 5.0,
                     child: const CTypeAheadSearchField(),
                   ),
-                  // Row(
-                  //   mainAxisSize: MainAxisSize.min,
-                  //   children: [
-                  //     CRoundedContainer(
-                  //       width: screenWidth * .72,
-                  //       showBorder: false,
-                  //       radius: 5.0,
-                  //       child: const CTypeAheadSearchField(),
-                  //     ),
-                  //     InkWell(
-                  //       onTap: () {
-                  //         searchBarController.onTypeAheadSearchIconTap();
-                  //       },
-                  //       child: Icon(
-                  //         Iconsax.close_circle,
-                  //         color: CColors.rBrown,
-                  //         size: CSizes.iconMd,
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                 )
               : Material(
                   type: MaterialType.transparency,

@@ -26,6 +26,9 @@ class CPaymentMethodsTile extends StatelessWidget {
       contentPadding: const EdgeInsets.all(0),
       onTap: () {
         checkoutController.selectedPaymentMethod.value = paymentMethod;
+        if (paymentMethod.platformName != 'cash') {
+          checkoutController.resetSalesFields();
+        }
         //Get.back();
         Navigator.pop(context);
       },

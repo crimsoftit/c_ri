@@ -493,7 +493,6 @@ class CInventoryScreen extends StatelessWidget {
                         children: [
                           FloatingActionButton(
                             onPressed: () {
-                              Get.put(CCheckoutController());
                               checkoutController.handleNavToCheckout();
                               // cartController.fetchCartItems().then((_) {
                               //   Future.delayed(

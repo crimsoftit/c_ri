@@ -29,7 +29,7 @@ class CVerticalProductShimmer extends StatelessWidget {
                 radius: 40.0,
               ),
               const SizedBox(
-                width: CSizes.spaceBtnItems,
+                width: CSizes.spaceBtnItems / 4,
               ),
 
               // -- text section --
@@ -42,14 +42,14 @@ class CVerticalProductShimmer extends StatelessWidget {
                     height: 15.0,
                   ),
                   const SizedBox(
-                    height: CSizes.spaceBtnItems / 2,
+                    height: CSizes.spaceBtnItems / 4,
                   ),
                   const CShimmerEffect(
-                    width: 150.0,
+                    width: 145.0,
                     height: 15.0,
                   ),
                   const SizedBox(
-                    height: CSizes.spaceBtnItems / 2,
+                    height: CSizes.spaceBtnItems / 4,
                   ),
                   const CShimmerEffect(
                     width: 140.0,
@@ -58,7 +58,7 @@ class CVerticalProductShimmer extends StatelessWidget {
                 ],
               ),
               const SizedBox(
-                width: CSizes.spaceBtnItems,
+                width: CSizes.spaceBtnItems / 4,
               ),
 
               // -- trailing icon section

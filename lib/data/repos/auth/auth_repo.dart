@@ -67,7 +67,7 @@ class AuthRepo extends GetxController {
         } else {
           //DbHelper dbHelper = DbHelper.instance;
           final invController = Get.put(CInventoryController());
-          //final navController = Get.put(NavMenuController());
+          final navController = Get.put(NavMenuController());
           final txnsController = Get.put(CTxnsController());
           // check data sync status
           deviceStorage.writeIfNull('SyncInvDataWithCloud', true);
@@ -77,7 +77,7 @@ class AuthRepo extends GetxController {
           await txnsController.initTxnsSync();
           Get.put(CCheckoutController());
 
-          //navController.selectedIndex.value = 1;
+          navController.selectedIndex.value = 1;
           Future.delayed(const Duration(milliseconds: 250), () {
             //Get.to(() => const NavMenu());
             Get.offAll(() => const NavMenu());

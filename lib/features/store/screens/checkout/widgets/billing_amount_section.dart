@@ -14,7 +14,7 @@ class CBillingAmountSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartController = Get.put(CCartController());
-    final checkoutController = Get.put(CCheckoutController());
+
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     return Column(
@@ -117,6 +117,7 @@ class CBillingAmountSection extends StatelessWidget {
             ),
             Obx(
               () {
+                final checkoutController = Get.put(CCheckoutController());
                 return CProductPriceTxt(
                   price: checkoutController.customerBal.toStringAsFixed(2),
                   isLarge: true,

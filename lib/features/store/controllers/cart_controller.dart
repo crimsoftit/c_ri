@@ -28,15 +28,13 @@ class CCartController extends GetxController {
 
   CCartController() {
     fetchCartItems();
+    // qtyFieldControllers.value = <TextEditingController>[].obs;
   }
 
   // @override
   // void onInit() async {
-  //   await GetStorage.init().then((_) {
-  //     fetchCartItems();
-  //     qtyFieldControllers.value = <TextEditingController>[].obs;
-  //   });
-
+  //   await GetStorage.init();
+  //   fetchCartItems();
   //   super.onInit();
   // }
 
@@ -44,27 +42,47 @@ class CCartController extends GetxController {
   Future fetchCartItems() async {
     try {
       cartItemsLoading.value = true;
-      Future.delayed(const Duration(milliseconds: 250), () {
-        final cartItemsStrings =
-            CLocalStorage.instance().readData<List<dynamic>>('cartItems');
 
-        if (cartItemsStrings != null) {
-          cartItems.assignAll(cartItemsStrings.map(
-              (item) => CCartItemModel.fromJson(item as Map<String, dynamic>)));
-          updateCartTotals();
-          //cartItemsLoading.value = false;
-        }
-      });
-    } catch (e) {
-      cartItemsLoading.value = false;
-      if (kDebugMode) {
-        print('$e');
-        CPopupSnackBar.errorSnackBar(
-          title: 'error loading cart items',
-          message: 'an unknown error occurred while fetching cart items: $e',
-        );
+      final cartItemsStrings =
+          CLocalStorage.instance().readData<List<dynamic>>('cartItems');
+
+      if (cartItemsStrings != null) {
+        cartItems.assignAll(cartItemsStrings.map(
+            (item) => CCartItemModel.fromJson(item as Map<String, dynamic>)));
+        updateCartTotals();
+
+        //cartItemsLoading.value = false;
       }
-      throw e.toString();
+      // Future.delayed(const Duration(milliseconds: 250), () {
+      //   final cartItemsStrings =
+      //       CLocalStorage.instance().readData<List<dynamic>>('cartItems');
+
+      //   if (cartItemsStrings != null) {
+      //     cartItems.assignAll(cartItemsStrings.map(
+      //         (item) => CCartItemModel.fromJson(item as Map<String, dynamic>)));
+      //     updateCartTotals();
+      //     //cartItemsLoading.value = false;
+      //   }
+      // });
+    } catch (e) {
+      final cartItemsStrings =
+          CLocalStorage.instance().readData<List<dynamic>>('cartItems');
+      if (cartItemsStrings != null) {
+        cartItems.assignAll(cartItemsStrings.map(
+            (item) => CCartItemModel.fromJson(item as Map<String, dynamic>)));
+        updateCartTotals();
+        //cartItemsLoading.value = false;
+      } else {
+        cartItemsLoading.value = false;
+        if (kDebugMode) {
+          print('$e');
+          CPopupSnackBar.errorSnackBar(
+            title: 'error loading cart items',
+            message: 'an unknown error occurred while fetching cart items: $e',
+          );
+        }
+        throw e.toString();
+      }
     } finally {
       cartItemsLoading.value = false;
     }
@@ -109,13 +127,16 @@ class CCartController extends GetxController {
     } else {
       cartItems.add(selectedCartItem);
 
+      cartItems.refresh();
+
       // check if selected cart item already exists in the cart
       int newItemIndex = cartItems.indexWhere(
           (cartItem) => cartItem.productId == selectedCartItem.productId);
 
       if (newItemIndex >= 0) {
-        qtyFieldControllers[newItemIndex].text =
-            cartItems[newItemIndex].quantity.toString();
+        cartItems[index].quantity = selectedCartItem.quantity;
+        // qtyFieldControllers[newItemIndex].text =
+        //     cartItems[newItemIndex].quantity.toString();
       } else {
         CPopupSnackBar.errorSnackBar(
           title: 'out of range exception!',
@@ -154,21 +175,26 @@ class CCartController extends GetxController {
             qtyFieldControllers[itemIndex].text =
                 inventoryItem.quantity.toString();
             qtyValue = qtyFieldControllers[itemIndex].text;
-            //return;
+            return;
           }
           cartItems[itemIndex].quantity = int.parse(qtyValue);
+          cartItems.refresh();
+          qtyFieldControllers[itemIndex].text =
+              cartItems[itemIndex].quantity.toString();
         } else {
           if (cartItems[itemIndex].quantity >= inventoryItem.quantity) {
             CPopupSnackBar.warningSnackBar(
               title: 'oh snap!',
               message: 'only ${inventoryItem.quantity} items are stocked!',
             );
-            // qtyFieldControllers[itemIndex].text =
-            //     inventoryItem.quantity.toString();
+            qtyFieldControllers[itemIndex].text =
+                inventoryItem.quantity.toString();
             return;
           } else {
             if (fromQtyTxtField) {
               cartItems[itemIndex].quantity = int.parse(qtyValue!);
+              qtyFieldControllers[itemIndex].text =
+                  cartItems[itemIndex].quantity.toString();
             } else {
               cartItems[itemIndex].quantity += 1;
             }
@@ -257,7 +283,7 @@ class CCartController extends GetxController {
   }
 
   /// -- update cart content --
-  void updateCart() {
+  updateCart() async {
     updateCartTotals();
     saveCartItems();
     cartItems.refresh();
@@ -323,18 +349,4 @@ class CCartController extends GetxController {
 
     super.dispose();
   }
-
-  // @override
-  // void onClose() {
-  //   for (var controller in qtyFieldControllers) {
-  //     controller.dispose();
-  //   }
-  //   qtyFieldControllers.clear();
-  //   qtyFieldControllers.close();
-
-  //   if (kDebugMode) {
-  //     print("----------\n\n TextEditingControllers CLOSED \n\n ----------");
-  //   }
-  //   super.onClose();
-  // }
 }

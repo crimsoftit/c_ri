@@ -38,22 +38,20 @@ class CCheckoutController extends GetxController {
   @override
   void onInit() async {
     await dbHelper.openDb();
-    selectedPaymentMethod.value = CPaymentMethodModel(
-      platformLogo: CImages.cash6,
-      platformName: 'cash',
-    );
+
     amtIssuedFieldController.text = '';
     setFocusOnAmtIssuedField.value = false;
     CLocationServices.instance
         .getUserLocation(locationController: locationController);
-    resetSalesFields();
 
     super.onInit();
   }
 
   /// -- variables --
-  final Rx<CPaymentMethodModel> selectedPaymentMethod =
-      CPaymentMethodModel.empty().obs;
+  final Rx<CPaymentMethodModel> selectedPaymentMethod = CPaymentMethodModel(
+    platformLogo: CImages.cash6,
+    platformName: 'cash',
+  ).obs;
 
   final pdfServices = CPdfServices.instance;
 
@@ -85,6 +83,7 @@ class CCheckoutController extends GetxController {
   final RxInt itemStockCount = 0.obs;
   final RxInt checkoutItemId = 0.obs;
   final RxInt checkoutItemSales = 0.obs;
+  final RxInt txnId = 0.obs;
 
   final RxDouble customerBal = 0.0.obs;
   final RxDouble totalAmount = 0.0.obs;
@@ -117,12 +116,12 @@ class CCheckoutController extends GetxController {
         }
       }
 
-      final txnId = CHelperFunctions.generateId();
+      final RxInt txnId = 0.obs;
 
       if (itemsInCart.isNotEmpty) {
         for (var cartItem in itemsInCart) {
           var newTxnData = CTxnsModel(
-            txnId,
+            txnId.value,
             userController.user.value.id,
             userController.user.value.email,
             userController.user.value.fullName,
@@ -209,8 +208,9 @@ class CCheckoutController extends GetxController {
               //   pdfServices.savePdfFile('receipt_1', pdfData);
               // },
               onGenerateRecieptBtnPressed: () async {
+                final receiptId = txnId.value;
                 final pdfData = await pdfServices.generateReceipt(itemsInCart);
-                pdfServices.savePdfFile('receipt_1', pdfData);
+                pdfServices.savePdfFile(receiptId.toString(), pdfData);
               },
               onContinueBtnPressed: () {
                 navController.selectedIndex.value = 2;
@@ -470,6 +470,7 @@ class CCheckoutController extends GetxController {
         itemStockCount.value = fetchedItem.first.quantity;
         checkoutItemDateAdded.value = fetchedItem.first.date;
       } else {
+        resetSalesFields();
         itemExists.value = false;
       }
       return fetchedItem;
@@ -491,10 +492,7 @@ class CCheckoutController extends GetxController {
     customerBal.value = 0.0;
     amtIssuedFieldController.text = '';
     itemExists.value = false;
-    selectedPaymentMethod.value = CPaymentMethodModel(
-      platformLogo: CImages.cash6,
-      platformName: 'cash',
-    );
+
     setFocusOnAmtIssuedField.value = false;
   }
 
@@ -511,6 +509,7 @@ class CCheckoutController extends GetxController {
 
   Future handleNavToCheckout() async {
     final cartController = Get.put(CCartController());
+    Get.put(CCheckoutController());
     cartController.fetchCartItems().then((_) {
       Future.delayed(const Duration(milliseconds: 250), () {
         Get.to(() => const CCheckoutScreen());

@@ -1,8 +1,6 @@
 import 'package:c_ri/common/widgets/icons/circular_icon.dart';
-import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
-import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -38,7 +36,7 @@ class CAddToCartBottomNavBar extends StatelessWidget {
     final cartController = Get.put(CCartController());
     final invController = Get.put(CInventoryController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    final txnsController = Get.put(CTxnsController());
+    //final txnsController = Get.put(CTxnsController());
 
     cartController.initializeItemCountInCart(inventoryItem);
 
@@ -57,14 +55,15 @@ class CAddToCartBottomNavBar extends StatelessWidget {
       ),
       child: Obx(
         () {
-          if (txnsController.isLoading.value ||
-              invController.isLoading.value ||
-              invController.syncIsLoading.value ||
-              cartController.cartItemsLoading.value) {
-            return const CVerticalProductShimmer(
-              itemCount: 3,
-            );
-          }
+          // if (txnsController.isLoading.value ||
+          //     invController.isLoading.value ||
+          //     invController.syncIsLoading.value ||
+          //     cartController.cartItemsLoading.value) {
+          //   return const CVerticalProductShimmer(
+          //     itemCount: 3,
+          //   );
+          //   //return const DefaultLoaderScreen();
+          // }
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

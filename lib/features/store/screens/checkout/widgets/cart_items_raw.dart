@@ -31,8 +31,7 @@ class CCartItemsRaw extends StatelessWidget {
         // run loader --
         if (txnsController.isLoading.value ||
             invController.isLoading.value ||
-            invController.syncIsLoading.value ||
-            cartController.cartItemsLoading.value) {
+            invController.syncIsLoading.value) {
           return const CVerticalProductShimmer(
             itemCount: 3,
           );
