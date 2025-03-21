@@ -54,6 +54,14 @@ class _CLocationSettingsScreenState extends State<CDeviceSettingsScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       checkPermissionAndListenLocation();
     });
+
+    if (PermissionProvider.locationServiceIsOn) {
+      setState(() {
+        geoSwitchIsOn = true;
+      });
+      CLocationServices.instance
+          .getUserLocation(locationController: locationController);
+    }
     // CLocationServices.instance
     //     .getUserLocation(locationController: locationController);
   }
@@ -141,6 +149,7 @@ class _CLocationSettingsScreenState extends State<CDeviceSettingsScreen> {
                 ),
               ),
               Expanded(
+                flex: 1,
                 child: Center(
                   child: StreamBuilder<PermissionStatus>(
                     stream: _permissionStatusStream.stream,
@@ -200,6 +209,7 @@ class _CLocationSettingsScreenState extends State<CDeviceSettingsScreen> {
                 ),
               ),
               Expanded(
+                flex: 1,
                 child: Center(
                   child: StreamBuilder<AppLifecycleState>(
                     stream: _appCycleStateStream.stream,

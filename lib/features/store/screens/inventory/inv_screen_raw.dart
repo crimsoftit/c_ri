@@ -28,8 +28,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class CInventoryScreen extends StatelessWidget {
-  const CInventoryScreen({super.key});
+class CInventoryScreenRaw extends StatelessWidget {
+  const CInventoryScreenRaw({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -204,7 +204,8 @@ class CInventoryScreen extends StatelessWidget {
                   final cartController = Get.put(CCartController());
                   if (txnsController.isLoading.value ||
                       invController.isLoading.value ||
-                      invController.syncIsLoading.value) {
+                      invController.syncIsLoading.value ||
+                      cartController.cartItemsLoading.value) {
                     return const CVerticalProductShimmer(
                       itemCount: 7,
                     );
@@ -492,7 +493,6 @@ class CInventoryScreen extends StatelessWidget {
                         children: [
                           FloatingActionButton(
                             onPressed: () {
-                              Get.put(CCheckoutController());
                               checkoutController.handleNavToCheckout();
                               // cartController.fetchCartItems().then((_) {
                               //   Future.delayed(

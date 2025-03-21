@@ -147,7 +147,7 @@ class CInventoryController extends GetxController {
       isLoading.value = true;
 
       // add inventory item into sqflite db
-      inventoryItem.productId = CHelperFunctions.generateId();
+      inventoryItem.productId = CHelperFunctions.generateInvId();
 
       // -- check internet connectivity
       final isConnected = await CNetworkManager.instance.isConnected();

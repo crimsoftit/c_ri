@@ -12,11 +12,11 @@ class CPaymentMethodSection extends StatelessWidget {
     super.key,
     required this.platformName,
     required this.platformLogo,
-    required this.amtIssuedTxtFieldSpace,
+    required this.txtFieldSpace,
   });
 
   final String platformName, platformLogo;
-  final Widget amtIssuedTxtFieldSpace;
+  final Widget txtFieldSpace;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class CPaymentMethodSection extends StatelessWidget {
               platformName,
               style: Theme.of(context).textTheme.bodyLarge,
             ),
-            amtIssuedTxtFieldSpace,
+            txtFieldSpace,
           ],
         ),
       ],

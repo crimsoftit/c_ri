@@ -113,7 +113,7 @@ class DbHelper extends GetxController {
     _db = await openDb();
 
     var invItem = CInventoryModel.withID(
-      CHelperFunctions.generateId(),
+      CHelperFunctions.generateInvId(),
       userController.user.value.id,
       userController.user.value.email,
       userController.user.value.fullName,

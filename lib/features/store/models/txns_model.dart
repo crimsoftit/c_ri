@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:c_ri/features/store/models/gsheet_models/txns_sheet_fields.dart';
+import 'package:c_ri/utils/popups/snackbars.dart';
 
 class CTxnsModel {
   int? _soldItemId;
@@ -135,7 +136,14 @@ class CTxnsModel {
   }
 
   set txnId(int newTxnId) {
-    _txnId = newTxnId;
+    if (newTxnId > 1000) {
+      _txnId = newTxnId;
+    } else {
+      CPopupSnackBar.errorSnackBar(
+        title: 'invalid value',
+        message: 'invalid value for txn ID!!!',
+      );
+    }
   }
 
   set userId(String newUid) {

@@ -60,8 +60,6 @@ class CCheckoutController extends GetxController {
   final CLocationController locationController =
       Get.put<CLocationController>(CLocationController());
 
-  //final RxInt itemStockCount = 0.obs;
-  //final RxInt totalInvSales = 0.obs;
   final RxString checkoutItemScanResults = ''.obs;
 
   final RxBool setFocusOnAmtIssuedField = false.obs;
@@ -71,8 +69,10 @@ class CCheckoutController extends GetxController {
   final txnsController = Get.put(CTxnsController());
   final userController = Get.put(CUserController());
 
-  final TextEditingController amtIssuedFieldController =
-      TextEditingController();
+  TextEditingController amtIssuedFieldController = TextEditingController();
+
+  TextEditingController customerNameFieldController = TextEditingController();
+
   final TextEditingController modalQtyFieldController = TextEditingController();
 
   DbHelper dbHelper = DbHelper.instance;
@@ -91,6 +91,8 @@ class CCheckoutController extends GetxController {
   final RxString checkoutItemCode = ''.obs;
   final RxString checkoutItemDateAdded = ''.obs;
   final RxString checkoutItemName = ''.obs;
+
+  final Rx<FocusNode> customerNameFocusNode = FocusNode().obs;
 
   /// -- process txn --
   void processTxn() async {
@@ -116,9 +118,8 @@ class CCheckoutController extends GetxController {
         }
       }
 
-      final RxInt txnId = 0.obs;
-
       if (itemsInCart.isNotEmpty) {
+        txnId.value = CHelperFunctions.generateTxnId();
         for (var cartItem in itemsInCart) {
           var newTxnData = CTxnsModel(
             txnId.value,
@@ -138,7 +139,7 @@ class CCheckoutController extends GetxController {
                 : 0.00,
             cartItem.price,
             selectedPaymentMethod.value.platformName,
-            '',
+            customerNameFieldController.text.trim(),
             '',
             locationController.uAddress.value != ''
                 ? locationController.uAddress.value
@@ -175,10 +176,6 @@ class CCheckoutController extends GetxController {
 
               if (kDebugMode) {
                 print('** inventory stock update successful **');
-                // CPopupSnackBar.successSnackBar(
-                //   title: 'inventory stock update',
-                //   message: 'inventory stock update successful',
-                // );
               }
 
               // -- update sync status/action for this inventory item --
@@ -187,14 +184,7 @@ class CCheckoutController extends GetxController {
             } else {
               result = 'ERROR ADDING SALE ITEM';
             }
-            // CPopupSnackBar.customToast(
-            //   message: result,
-            //   forInternetConnectivityStatus: false,
-            // );
           });
-
-          // itemStockCount.value -= cartItem.quantity;
-          // totalInvSales.value += cartItem.quantity;
         }
 
         Get.off(
@@ -203,14 +193,10 @@ class CCheckoutController extends GetxController {
               title: 'txn success',
               subTitle: 'transaction successful',
               image: CImages.paymentSuccessfulAnimation,
-              // onGenerateRecieptBtnPressed: () async {
-              //   final pdfData = await pdfServices.createHelloWorld();
-              //   pdfServices.savePdfFile('receipt_1', pdfData);
-              // },
               onGenerateRecieptBtnPressed: () async {
                 final receiptId = txnId.value;
                 final pdfData = await pdfServices.generateReceipt(itemsInCart);
-                pdfServices.savePdfFile(receiptId.toString(), pdfData);
+                pdfServices.savePdfFile('RI$receiptId', pdfData);
               },
               onContinueBtnPressed: () {
                 navController.selectedIndex.value = 2;
@@ -227,6 +213,11 @@ class CCheckoutController extends GetxController {
               },
             );
           },
+        );
+      } else {
+        CPopupSnackBar.errorSnackBar(
+          title: 'empty cart...',
+          message: 'your cart is empty',
         );
       }
     } catch (e) {
@@ -515,5 +506,12 @@ class CCheckoutController extends GetxController {
         Get.to(() => const CCheckoutScreen());
       });
     });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    customerNameFocusNode.value.dispose();
+    super.dispose();
   }
 }

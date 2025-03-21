@@ -94,8 +94,21 @@ class CHelperFunctions {
     return random.nextInt(max - min) + min;
   }
 
-  static int generateId() {
+  static int generateRandom4DigitNumber() {
+    Random random = Random();
+    int floor = 1000;
+    int ceil = 9999;
+
+    return random.nextInt(ceil - floor) + floor;
+  }
+
+  static int generateInvId() {
     final now = DateTime.now();
     return now.millisecondsSinceEpoch + generateRandom3DigitNumber();
+  }
+
+  static int generateTxnId() {
+    final now = DateTime.now();
+    return now.millisecondsSinceEpoch + generateRandom4DigitNumber();
   }
 }

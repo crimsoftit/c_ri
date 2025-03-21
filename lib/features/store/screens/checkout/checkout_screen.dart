@@ -532,10 +532,21 @@ class CCheckoutScreen extends StatelessWidget {
                                 // payment methods
                                 CPaymentMethodSection(
                                   platformName: checkoutController
-                                      .selectedPaymentMethod.value.platformName,
+                                                  .selectedPaymentMethod
+                                                  .value
+                                                  .platformName ==
+                                              'cash' ||
+                                          checkoutController
+                                                  .selectedPaymentMethod
+                                                  .value
+                                                  .platformName ==
+                                              'mPesa'
+                                      ? checkoutController.selectedPaymentMethod
+                                          .value.platformName
+                                      : '',
                                   platformLogo: checkoutController
                                       .selectedPaymentMethod.value.platformLogo,
-                                  amtIssuedTxtFieldSpace: checkoutController
+                                  txtFieldSpace: checkoutController
                                               .selectedPaymentMethod
                                               .value
                                               .platformName ==
@@ -555,26 +566,37 @@ class CCheckoutScreen extends StatelessWidget {
                                                       .withValues(alpha: 0.3)
                                                   : CColors.white,
                                               child: TextFormField(
-                                                keyboardType:
-                                                    const TextInputType
-                                                        .numberWithOptions(
-                                                  decimal: true,
-                                                  signed: false,
-                                                ),
+                                                // keyboardType:
+                                                //     const TextInputType
+                                                //         .numberWithOptions(
+                                                //   decimal: true,
+                                                //   signed: false,
+                                                // ),
                                                 inputFormatters: <TextInputFormatter>[
                                                   FilteringTextInputFormatter
                                                       .allow(RegExp(
                                                           r'^\d+(\.\d*)?')),
                                                 ],
-                                                autofocus: checkoutController
-                                                    .setFocusOnAmtIssuedField
-                                                    .value,
+                                                // autofocus: checkoutController
+                                                //     .setFocusOnAmtIssuedField
+                                                //     .value,
+                                                autofocus: false,
                                                 controller: checkoutController
                                                     .amtIssuedFieldController,
                                                 decoration: InputDecoration(
                                                   focusColor:
                                                       CColors.rBrown.withValues(
                                                     alpha: 0.3,
+                                                  ),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      CSizes.cardRadiusLg,
+                                                    ),
+                                                    borderSide: BorderSide(
+                                                      color: CColors.grey,
+                                                    ),
                                                   ),
                                                   focusedBorder:
                                                       OutlineInputBorder(
@@ -584,7 +606,12 @@ class CCheckoutScreen extends StatelessWidget {
                                                         alpha: 0.3,
                                                       ),
                                                     ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      CSizes.cardRadiusLg,
+                                                    ),
                                                   ),
+                                                  //border: InputBorder.none,
                                                   labelText:
                                                       'amount issued by customer',
                                                 ),
@@ -605,21 +632,77 @@ class CCheckoutScreen extends StatelessWidget {
                                             ),
                                           ],
                                         )
-                                      : SizedBox(),
+                                      : Row(
+                                          children: [
+                                            const SizedBox(
+                                              width: CSizes.spaceBtnItems * 1.1,
+                                              height: 38.0,
+                                            ),
+                                            CRoundedContainer(
+                                              width: CHelperFunctions
+                                                      .screenWidth() *
+                                                  0.5,
+                                              bgColor: isDarkTheme
+                                                  ? CColors.rBrown
+                                                      .withValues(alpha: 0.3)
+                                                  : CColors.white,
+                                              child: TextFormField(
+                                                keyboardType:
+                                                    TextInputType.text,
+                                                focusNode: checkoutController
+                                                    .customerNameFocusNode
+                                                    .value,
+                                                controller: checkoutController
+                                                    .customerNameFieldController,
+                                                decoration: InputDecoration(
+                                                  focusColor:
+                                                      CColors.rBrown.withValues(
+                                                    alpha: 0.3,
+                                                  ),
+                                                  disabledBorder:
+                                                      InputBorder.none,
+                                                  enabledBorder:
+                                                      InputBorder.none,
+                                                  errorBorder: InputBorder.none,
+                                                  focusedBorder:
+                                                      InputBorder.none,
+                                                  border: InputBorder.none,
+                                                  labelText: checkoutController
+                                                              .selectedPaymentMethod
+                                                              .value
+                                                              .platformName ==
+                                                          'mPesa'
+                                                      ? 'customer name'
+                                                      : 'customer name(optional)',
+                                                ),
+                                                style: const TextStyle(
+                                                  fontWeight: FontWeight.normal,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                 ),
                                 // addresses
                                 //CBillingAddressSection(),
-                                // Text(
-                                //   'latitude: ${locationController.userLocation.value!.latitude ?? ''}',
-                                //   overflow: TextOverflow.ellipsis,
-                                // ),
-                                // Text(
-                                //   'longitude: ${locationController.userLocation.value!.longitude ?? ''}',
-                                //   overflow: TextOverflow.ellipsis,
-                                // ),
-                                // Text(
-                                //   'user Address: ${locationController.uAddress.value}',
-                                //   overflow: TextOverflow.ellipsis,
+                                // Visibility(
+                                //   visible: true,
+                                //   child: Column(
+                                //     children: [
+                                //       Text(
+                                //         'latitude: ${locationController.userLocation.value!.latitude}',
+                                //         overflow: TextOverflow.ellipsis,
+                                //       ),
+                                //       Text(
+                                //         'longitude: ${locationController.userLocation.value!.longitude}',
+                                //         overflow: TextOverflow.ellipsis,
+                                //       ),
+                                //       Text(
+                                //         'user Address: ${locationController.uAddress.value}',
+                                //         overflow: TextOverflow.ellipsis,
+                                //       ),
+                                //     ],
+                                //   ),
                                 // ),
                               ],
                             ),
@@ -684,6 +767,20 @@ class CCheckoutScreen extends StatelessWidget {
                       );
                       return;
                     }
+                  }
+                  if (checkoutController
+                              .selectedPaymentMethod.value.platformName ==
+                          'mPesa' &&
+                      checkoutController.customerNameFieldController.text ==
+                          '') {
+                    checkoutController.customerNameFocusNode.value
+                        .requestFocus();
+                    CPopupSnackBar.warningSnackBar(
+                      title: 'customer details required!',
+                      message:
+                          'please provide customer\'s name for ${checkoutController.selectedPaymentMethod.value.platformName} payment verification',
+                    );
+                    return;
                   }
                   checkoutController.processTxn();
                 },

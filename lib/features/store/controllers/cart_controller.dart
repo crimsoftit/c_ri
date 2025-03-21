@@ -29,15 +29,7 @@ class CCartController extends GetxController {
 
   CCartController() {
     fetchCartItems();
-    // qtyFieldControllers.value = <TextEditingController>[].obs;
   }
-
-  // @override
-  // void onInit() async {
-  //   await GetStorage.init();
-  //   fetchCartItems();
-  //   super.onInit();
-  // }
 
   /// -- fetch cart items from device storage --
   Future fetchCartItems() async {
@@ -199,6 +191,21 @@ class CCartController extends GetxController {
             } else {
               cartItems[itemIndex].quantity += 1;
               cartItems.refresh();
+              updateCart();
+              int newItemIndex = cartItems.indexWhere(
+                  (cartItem) => cartItem.productId == item.productId);
+
+              if (newItemIndex >= 0) {
+                qtyFieldControllers[newItemIndex].text =
+                    cartItems[itemIndex].quantity.toString();
+              } else {
+                CPopupSnackBar.errorSnackBar(
+                  title: 'txtfield index out of range',
+                  message:
+                      'txtfield index for adding single item to cart is out of range',
+                );
+                return;
+              }
             }
           }
         }
@@ -290,7 +297,7 @@ class CCartController extends GetxController {
   }
 
   /// -- update cart content --
-  updateCart() async {
+  Future updateCart() async {
     updateCartTotals();
     saveCartItems();
     cartItems.refresh();
