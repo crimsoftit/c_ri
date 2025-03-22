@@ -1,6 +1,7 @@
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:c_ri/common/widgets/success_screen/success_screen.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
+import 'package:c_ri/data/repos/auth/auth_repo.dart';
 import 'package:c_ri/features/personalization/controllers/location_controller.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
@@ -112,8 +113,8 @@ class CCheckoutController extends GetxController {
 
       // -- txn details --
 
-      if (cartController.cartItems.isNotEmpty) {
-        for (var item in cartController.cartItems) {
+      if (cartController.userCartItems.isNotEmpty) {
+        for (var item in cartController.deviceCartItems) {
           itemsInCart.add(item);
         }
       }
@@ -196,11 +197,9 @@ class CCheckoutController extends GetxController {
               onGenerateRecieptBtnPressed: () async {
                 final receiptId = txnId.value;
                 final pdfData = await pdfServices.generateReceipt(itemsInCart);
-                pdfServices.savePdfFile('RI$receiptId', pdfData);
+                pdfServices.savePdfFile('rI-$receiptId', pdfData);
               },
               onContinueBtnPressed: () {
-                navController.selectedIndex.value = 2;
-
                 // TODO: save receipts before clearing
                 // clear cart
                 cartController.clearCart();
@@ -209,7 +208,9 @@ class CCheckoutController extends GetxController {
                 txnsController.fetchTransactions();
                 customerBal.value = 0.0;
 
-                Get.offAll(() => NavMenu());
+                //Get.offAll(() => NavMenu());
+                // redirect to relevant screen
+                AuthRepo.instance.screenRedirect();
               },
             );
           },

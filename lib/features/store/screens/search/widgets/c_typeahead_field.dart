@@ -220,7 +220,7 @@ class CTypeAheadSearchField extends StatelessWidget {
                           removeItemBtnAction: () {
                             invController.fetchInventoryItems();
                             cartController.fetchCartItems();
-                            int cartItemIndex = cartController.cartItems
+                            int cartItemIndex = cartController.userCartItems
                                 .indexWhere((cartItem) =>
                                     cartItem.productId == suggestion.productId);
                             if (cartItemIndex >= 0) {
@@ -237,7 +237,7 @@ class CTypeAheadSearchField extends StatelessWidget {
                                         .qtyFieldControllers[cartItemIndex]
                                         .text =
                                     cartController
-                                        .cartItems[cartItemIndex].quantity
+                                        .userCartItems[cartItemIndex].quantity
                                         .toString();
                               }
                             }
@@ -263,7 +263,7 @@ class CTypeAheadSearchField extends StatelessWidget {
                               invController.fetchInventoryItems();
                               cartController.fetchCartItems();
 
-                              int cartItemIndex = cartController.cartItems
+                              int cartItemIndex = cartController.userCartItems
                                   .indexWhere((cartItem) =>
                                       cartItem.productId ==
                                       suggestion.productId);
@@ -277,7 +277,7 @@ class CTypeAheadSearchField extends StatelessWidget {
                               cartController
                                       .qtyFieldControllers[cartItemIndex].text =
                                   cartController
-                                      .cartItems[cartItemIndex].quantity
+                                      .userCartItems[cartItemIndex].quantity
                                       .toString();
                             } else {
                               CPopupSnackBar.warningSnackBar(

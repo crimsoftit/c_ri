@@ -5,6 +5,7 @@ import 'package:c_ri/features/authentication/screens/onboarding/onboarding_scree
 import 'package:c_ri/features/authentication/screens/signup/verify_email.dart';
 import 'package:c_ri/features/personalization/screens/location_tings/device_settings_screen.dart';
 import 'package:c_ri/features/personalization/screens/profile/widgets/update_bizname_widget.dart';
+import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
@@ -358,6 +359,10 @@ class AuthRepo extends GetxController {
       deviceStorage.write('SyncInvDataWithCloud', true);
 
       deviceStorage.write('SyncTxnsDataWithCloud', true);
+
+      final cartController = Get.put(CCartController());
+
+      cartController.clearCart();
 
       Get.offAll(() => const LoginScreen());
     } on FirebaseAuthException catch (e) {

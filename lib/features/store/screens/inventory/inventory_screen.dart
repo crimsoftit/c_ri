@@ -45,7 +45,7 @@ class CInventoryScreen extends StatelessWidget {
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
     invController.fetchInventoryItems();
-    txnsController.fetchTransactions();
+    //txnsController.fetchTransactions();
 
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
 
@@ -210,8 +210,7 @@ class CInventoryScreen extends StatelessWidget {
                     );
                   }
 
-                  if (invController.inventoryItems.isEmpty &&
-                      !invController.isLoading.value) {
+                  if (invController.inventoryItems.isEmpty) {
                     invController.fetchInventoryItems();
                     if (invController.inventoryItems.isEmpty &&
                         !invController.isLoading.value &&
@@ -224,6 +223,15 @@ class CInventoryScreen extends StatelessWidget {
                         ),
                       );
                     }
+                  }
+
+                  if (invController.inventoryItems.isEmpty) {
+                    return const Center(
+                      child: NoDataScreen(
+                        lottieImage: CImages.noDataLottie,
+                        txt: 'No data found!',
+                      ),
+                    );
                   }
 
                   return SizedBox(
@@ -264,7 +272,15 @@ class CInventoryScreen extends StatelessWidget {
                                 title: invController.inventoryItems[index].name
                                     .toUpperCase(),
                                 smallSize: false,
-                                txtColor: CColors.rBrown,
+                                txtColor: invController
+                                            .inventoryItems[index].quantity ==
+                                        0
+                                    ? Colors.red
+                                    : invController.inventoryItems[index]
+                                                .quantity <=
+                                            5
+                                        ? Colors.amber
+                                        : CColors.rBrown,
                               ),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

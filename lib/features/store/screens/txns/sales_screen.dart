@@ -93,9 +93,9 @@ class TxnsScreen extends StatelessWidget {
                                       /// -- track unsynced txns --
                                       // txnsController.isLoading.value ||
                                       //         invController.isLoading.value
-                                      txnsController.syncIsLoading.value ||
-                                              invController.isLoading.value ||
-                                              txnsController.syncIsLoading.value
+                                      txnsController.isLoading.value ||
+                                              txnsController
+                                                  .txnsSyncIsLoading.value
                                           ? const CShimmerEffect(
                                               width: 40.0,
                                               height: 40.0,
@@ -123,8 +123,6 @@ class TxnsScreen extends StatelessWidget {
                                                       //   txnsController.isLoading
                                                       //       .value = false;
                                                       // });
-                                                      await txnsController
-                                                          .addSalesDataToCloud();
                                                       await txnsController
                                                           .addSalesDataToCloud();
                                                     } else {
@@ -185,7 +183,7 @@ class TxnsScreen extends StatelessWidget {
                   // run loader --
                   if (txnsController.isLoading.value ||
                       invController.isLoading.value ||
-                      txnsController.syncIsLoading.value) {
+                      txnsController.txnsSyncIsLoading.value) {
                     return const CVerticalProductShimmer(
                       itemCount: 7,
                     );

@@ -42,7 +42,7 @@ class CCartItemsRaw extends StatelessWidget {
           child: ListView.separated(
             shrinkWrap: true,
             controller: scrollController,
-            itemCount: cartController.cartItems.length,
+            itemCount: cartController.userCartItems.length,
             separatorBuilder: (_, __) {
               return SizedBox(
                 height: CSizes.spaceBtnSections / 4,
@@ -50,12 +50,13 @@ class CCartItemsRaw extends StatelessWidget {
             },
             itemBuilder: (_, index) {
               cartController.qtyFieldControllers.add(TextEditingController(
-                  text: cartController.cartItems[index].quantity.toString()));
+                  text:
+                      cartController.userCartItems[index].quantity.toString()));
 
               return Column(
                 children: [
                   CStoreItemWidget(
-                    cartItem: cartController.cartItems[index],
+                    cartItem: cartController.userCartItems[index],
                   ),
                   SizedBox(
                     height: CSizes.spaceBtnItems / 4,
@@ -83,7 +84,7 @@ class CCartItemsRaw extends StatelessWidget {
                                     .firstWhere((item) =>
                                         item.productId.toString() ==
                                         cartController
-                                            .cartItems[index].productId
+                                            .userCartItems[index].productId
                                             .toString()
                                             .toLowerCase());
                                 final thisCartItem = cartController
@@ -93,7 +94,7 @@ class CCartItemsRaw extends StatelessWidget {
                                 cartController.fetchCartItems();
 
                                 cartController.qtyFieldControllers[index].text =
-                                    cartController.cartItems[index].quantity
+                                    cartController.userCartItems[index].quantity
                                         .toString();
                               }
                             },
@@ -137,7 +138,7 @@ class CCartItemsRaw extends StatelessWidget {
                                         .firstWhere((item) =>
                                             item.productId.toString() ==
                                             cartController
-                                                .cartItems[index].productId
+                                                .userCartItems[index].productId
                                                 .toString()
                                                 .toLowerCase());
 
@@ -188,7 +189,7 @@ class CCartItemsRaw extends StatelessWidget {
                                     .firstWhere((item) =>
                                         item.productId.toString() ==
                                         cartController
-                                            .cartItems[index].productId
+                                            .userCartItems[index].productId
                                             .toString()
                                             .toLowerCase());
                                 final thisCartItem = cartController
@@ -199,7 +200,7 @@ class CCartItemsRaw extends StatelessWidget {
                                 // cartController.qtyFieldControllers[index].text =
                                 //     cartItem.quantity.toString();
                                 cartController.qtyFieldControllers[index].text =
-                                    cartController.cartItems[index].quantity
+                                    cartController.userCartItems[index].quantity
                                         .toString();
                               }
                             },
@@ -211,8 +212,8 @@ class CCartItemsRaw extends StatelessWidget {
                           right: 8.0,
                         ),
                         child: CProductPriceTxt(
-                          price: (cartController.cartItems[index].price *
-                                  cartController.cartItems[index].quantity)
+                          price: (cartController.userCartItems[index].price *
+                                  cartController.userCartItems[index].quantity)
                               .toStringAsFixed(2),
                           isLarge: true,
                           txtColor:

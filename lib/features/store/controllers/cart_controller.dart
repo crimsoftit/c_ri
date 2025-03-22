@@ -1,3 +1,4 @@
+import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/cart_item_model.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
@@ -17,12 +18,13 @@ class CCartController extends GetxController {
   RxDouble totalCartPrice = 0.0.obs;
 
   final RxBool cartItemsLoading = false.obs;
-  final RxBool removingCartItemsLoading = false.obs;
+  final userController = Get.put(CUserController());
 
-  RxInt countOfCartItems = 0.obs;
+  final RxInt countOfCartItems = 0.obs;
   RxInt itemQtyInCart = 0.obs;
 
-  RxList<CCartItemModel> cartItems = <CCartItemModel>[].obs;
+  RxList<CCartItemModel> deviceCartItems = <CCartItemModel>[].obs;
+  RxList<CCartItemModel> userCartItems = <CCartItemModel>[].obs;
 
   RxList<TextEditingController> qtyFieldControllers =
       <TextEditingController>[].obs;
@@ -40,8 +42,15 @@ class CCartController extends GetxController {
           CLocalStorage.instance().readData<List<dynamic>>('cartItems');
 
       if (cartItemsStrings != null) {
-        cartItems.assignAll(cartItemsStrings.map(
+        deviceCartItems.assignAll(cartItemsStrings.map(
             (item) => CCartItemModel.fromJson(item as Map<String, dynamic>)));
+
+        if (deviceCartItems.isNotEmpty) {
+          userCartItems.value = deviceCartItems
+              .where((userCartItem) =>
+                  userCartItem.email == userController.user.value.email)
+              .toList();
+        }
         updateCartTotals();
 
         //cartItemsLoading.value = false;
@@ -61,8 +70,15 @@ class CCartController extends GetxController {
       final cartItemsStrings =
           CLocalStorage.instance().readData<List<dynamic>>('cartItems');
       if (cartItemsStrings != null) {
-        cartItems.assignAll(cartItemsStrings.map(
+        deviceCartItems.assignAll(cartItemsStrings.map(
             (item) => CCartItemModel.fromJson(item as Map<String, dynamic>)));
+
+        if (deviceCartItems.isNotEmpty) {
+          userCartItems.value = deviceCartItems
+              .where((userCartItem) =>
+                  userCartItem.email == userController.user.value.email)
+              .toList();
+        }
         updateCartTotals();
         //cartItemsLoading.value = false;
       } else {
@@ -110,17 +126,18 @@ class CCartController extends GetxController {
     final selectedCartItem = convertInvToCartItem(item, itemQtyInCart.value);
 
     // check if selected cart item already exists in the cart
-    int index = cartItems.indexWhere(
+    int index = deviceCartItems.indexWhere(
         (cartItem) => cartItem.productId == selectedCartItem.productId);
 
     if (index >= 0) {
       // item already added to cart
-      cartItems[index].quantity = selectedCartItem.quantity;
-      qtyFieldControllers[index].text = cartItems[index].quantity.toString();
+      deviceCartItems[index].quantity = selectedCartItem.quantity;
+      qtyFieldControllers[index].text =
+          deviceCartItems[index].quantity.toString();
     } else {
-      cartItems.add(selectedCartItem);
+      deviceCartItems.add(selectedCartItem);
 
-      cartItems.refresh();
+      deviceCartItems.refresh();
 
       // check if selected cart item already exists in the cart
       // int newItemIndex = cartItems.indexWhere(
@@ -149,7 +166,7 @@ class CCartController extends GetxController {
   /// -- add a single item to cart --
   void addSingleItemToCart(
       CCartItemModel item, bool fromQtyTxtField, String? qtyValue) {
-    int itemIndex = cartItems
+    int itemIndex = deviceCartItems
         .indexWhere((cartItem) => cartItem.productId == item.productId);
 
     // -- check stock qty --
@@ -170,12 +187,12 @@ class CCartController extends GetxController {
             qtyValue = qtyFieldControllers[itemIndex].text;
             return;
           }
-          cartItems[itemIndex].quantity = int.parse(qtyValue);
-          cartItems.refresh();
+          deviceCartItems[itemIndex].quantity = int.parse(qtyValue);
+          deviceCartItems.refresh();
           qtyFieldControllers[itemIndex].text =
-              cartItems[itemIndex].quantity.toString();
+              deviceCartItems[itemIndex].quantity.toString();
         } else {
-          if (cartItems[itemIndex].quantity >= inventoryItem.quantity) {
+          if (deviceCartItems[itemIndex].quantity >= inventoryItem.quantity) {
             CPopupSnackBar.warningSnackBar(
               title: 'oh snap!',
               message: 'only ${inventoryItem.quantity} items are stocked!',
@@ -185,19 +202,19 @@ class CCartController extends GetxController {
             return;
           } else {
             if (fromQtyTxtField) {
-              cartItems[itemIndex].quantity = int.parse(qtyValue!);
+              deviceCartItems[itemIndex].quantity = int.parse(qtyValue!);
               qtyFieldControllers[itemIndex].text =
-                  cartItems[itemIndex].quantity.toString();
+                  deviceCartItems[itemIndex].quantity.toString();
             } else {
-              cartItems[itemIndex].quantity += 1;
-              cartItems.refresh();
+              deviceCartItems[itemIndex].quantity += 1;
+              deviceCartItems.refresh();
               updateCart();
-              int newItemIndex = cartItems.indexWhere(
+              int newItemIndex = deviceCartItems.indexWhere(
                   (cartItem) => cartItem.productId == item.productId);
 
               if (newItemIndex >= 0) {
                 qtyFieldControllers[newItemIndex].text =
-                    cartItems[itemIndex].quantity.toString();
+                    deviceCartItems[itemIndex].quantity.toString();
               } else {
                 CPopupSnackBar.errorSnackBar(
                   title: 'txtfield index out of range',
@@ -210,7 +227,7 @@ class CCartController extends GetxController {
           }
         }
       } else {
-        cartItems.add(item);
+        deviceCartItems.add(item);
         updateCart();
       }
 
@@ -218,33 +235,31 @@ class CCartController extends GetxController {
     } else {
       CPopupSnackBar.warningSnackBar(
         title: 'oh snap!',
-        message: '${cartItems[itemIndex].pName} is out of stock!',
+        message: '${deviceCartItems[itemIndex].pName} is out of stock!',
       );
     }
   }
 
   /// -- decrement cart item qty/remove a single item from the cart --
   void removeSingleItemFromCart(CCartItemModel item, bool showConfirmDialog) {
-    removingCartItemsLoading.value = true;
-
-    int removeItemIndex = cartItems.indexWhere(
+    int removeItemIndex = deviceCartItems.indexWhere(
       (itemToRemove) {
         return itemToRemove.productId == item.productId;
       },
     );
 
     if (removeItemIndex >= 0) {
-      if (cartItems[removeItemIndex].quantity > 1) {
-        cartItems[removeItemIndex].quantity -= 1;
+      if (deviceCartItems[removeItemIndex].quantity > 1) {
+        deviceCartItems[removeItemIndex].quantity -= 1;
       } else {
         if (showConfirmDialog) {
           // show confirm dialog before entirely removing
-          cartItems[removeItemIndex].quantity == 1
+          deviceCartItems[removeItemIndex].quantity == 1
               ? removeItemFromCartDialog(removeItemIndex, item.pName)
-              : cartItems.removeAt(removeItemIndex);
+              : deviceCartItems.removeAt(removeItemIndex);
         } else {
           // perform action to entirely remove this item from the cart
-          cartItems.removeAt(removeItemIndex);
+          deviceCartItems.removeAt(removeItemIndex);
           updateCart();
           // CPopupSnackBar.customToast(
           //   message: '$itemToRemove removed from the cart...',
@@ -254,8 +269,7 @@ class CCartController extends GetxController {
       }
       updateCart();
       qtyFieldControllers[removeItemIndex].text =
-          cartItems[removeItemIndex].quantity.toString();
-      removingCartItemsLoading.value = false;
+          deviceCartItems[removeItemIndex].quantity.toString();
     }
   }
 
@@ -266,7 +280,7 @@ class CCartController extends GetxController {
       middleText: 'are you certain you wish to remove this item from the cart?',
       onConfirm: () {
         // perform action to entirely remove this item from the cart
-        cartItems.removeAt(itemIndex);
+        deviceCartItems.removeAt(itemIndex);
         qtyFieldControllers.removeAt(itemIndex);
         updateCart();
 
@@ -287,6 +301,7 @@ class CCartController extends GetxController {
   /// -- convert a CInventoryModel to a CCartItemModel --
   CCartItemModel convertInvToCartItem(CInventoryModel item, int quantity) {
     return CCartItemModel(
+      email: item.userEmail,
       productId: item.productId!,
       pCode: item.pCode,
       pName: item.name,
@@ -300,7 +315,8 @@ class CCartController extends GetxController {
   Future updateCart() async {
     updateCartTotals();
     saveCartItems();
-    cartItems.refresh();
+    deviceCartItems.refresh();
+    userCartItems.refresh();
     fetchCartItems();
   }
 
@@ -309,19 +325,26 @@ class CCartController extends GetxController {
     double computedTotalCartPrice = 0.0;
     int computedCartItemsCount = 0;
 
-    for (var item in cartItems) {
-      computedTotalCartPrice += (item.price) * item.quantity.toDouble();
-      computedCartItemsCount += item.quantity;
-    }
+    if (userCartItems.isNotEmpty) {
+      for (var item in userCartItems) {
+        computedTotalCartPrice += (item.price) * item.quantity.toDouble();
+        computedCartItemsCount += item.quantity;
+      }
 
-    countOfCartItems.value = computedCartItemsCount;
-    totalCartPrice.value = computedTotalCartPrice;
-    txnTotals.value = totalCartPrice.value + discount.value + taxFee.value;
+      countOfCartItems.value = computedCartItemsCount;
+      totalCartPrice.value = computedTotalCartPrice;
+      txnTotals.value = totalCartPrice.value + discount.value + taxFee.value;
+    } else {
+      countOfCartItems.value = 0;
+      totalCartPrice.value = 0.0;
+      txnTotals.value = 0.0;
+    }
   }
 
   /// -- save cart items to device storage --
   void saveCartItems() async {
-    final cartItemsStrings = cartItems.map((item) => item.toJson()).toList();
+    final cartItemsStrings =
+        deviceCartItems.map((item) => item.toJson()).toList();
     //await CLocalStorage.instance().writeData('cartItems', cartItemsStrings);
     CLocalStorage.instance().writeData('cartItems', cartItemsStrings);
     //await localStorage.write('cartItems', cartItemsStrings);
@@ -329,7 +352,7 @@ class CCartController extends GetxController {
 
   /// -- get a specific item's quantity in the cart --
   int getItemQtyInCart(int pId) {
-    final foundCartItemQty = cartItems
+    final foundCartItemQty = userCartItems
         .where((item) => item.productId == pId)
         .fold(0, (previousValue, element) => previousValue + element.quantity);
 
@@ -339,7 +362,9 @@ class CCartController extends GetxController {
   /// -- clear cart content --
   void clearCart() {
     itemQtyInCart.value = 0;
-    cartItems.clear();
+    countOfCartItems.value = 0;
+    deviceCartItems.clear();
+    userCartItems.clear();
     updateCart();
   }
 

@@ -29,7 +29,11 @@ class CStoreItemWidget extends StatelessWidget {
       children: [
         CCircleAvatar(
           avatarInitial: cartItem.pName[0],
-          txtColor: isDarkTheme ? CColors.rBrown : CColors.white,
+          txtColor: invItem.quantity < 5
+              ? Colors.red
+              : isDarkTheme
+                  ? CColors.rBrown
+                  : CColors.white,
           bgColor: isDarkTheme ? CColors.white : CColors.rBrown,
         ),
         SizedBox(
@@ -51,7 +55,11 @@ class CStoreItemWidget extends StatelessWidget {
                 child: CProductTitleText(
                   title: cartItem.pName.toUpperCase(),
                   smallSize: false,
-                  txtColor: isDarkTheme ? CColors.white : CColors.rBrown,
+                  txtColor: invItem.quantity < 5
+                      ? Colors.red
+                      : isDarkTheme
+                          ? CColors.white
+                          : CColors.rBrown,
                 ),
               ),
 

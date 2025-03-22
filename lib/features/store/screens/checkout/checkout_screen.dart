@@ -183,15 +183,14 @@ class CCheckoutScreen extends StatelessWidget {
                 // }
                 if (txnsController.isLoading.value ||
                     invController.isLoading.value ||
-                    invController.syncIsLoading.value ||
-                    cartController.removingCartItemsLoading.value) {
+                    invController.syncIsLoading.value) {
                   //return const DefaultLoaderScreen();
                   return const CVerticalProductShimmer(
                     itemCount: 7,
                   );
                 }
 
-                if (cartController.cartItems.isEmpty &&
+                if (cartController.userCartItems.isEmpty &&
                     !cartController.cartItemsLoading.value) {
                   return noDataWidget;
                 }
@@ -207,7 +206,7 @@ class CCheckoutScreen extends StatelessWidget {
                         children: [
                           // -- list of items in the cart --
                           SizedBox(
-                            height: cartController.cartItems.length <= 2
+                            height: cartController.userCartItems.length <= 2
                                 ? CHelperFunctions.screenHeight() * 0.30
                                 : CHelperFunctions.screenHeight() * 0.42,
                             child: CRoundedContainer(
@@ -223,7 +222,8 @@ class CCheckoutScreen extends StatelessWidget {
                                 child: ListView.separated(
                                   shrinkWrap: true,
                                   controller: scrollController,
-                                  itemCount: cartController.cartItems.length,
+                                  itemCount:
+                                      cartController.userCartItems.length,
                                   separatorBuilder: (_, __) {
                                     return SizedBox(
                                       height: CSizes.spaceBtnSections / 4,
@@ -233,14 +233,14 @@ class CCheckoutScreen extends StatelessWidget {
                                     cartController.qtyFieldControllers.add(
                                         TextEditingController(
                                             text: cartController
-                                                .cartItems[index].quantity
+                                                .userCartItems[index].quantity
                                                 .toString()));
 
                                     return Column(
                                       children: [
                                         CStoreItemWidget(
-                                          cartItem:
-                                              cartController.cartItems[index],
+                                          cartItem: cartController
+                                              .userCartItems[index],
                                         ),
                                         SizedBox(
                                           height: CSizes.spaceBtnItems / 4,
@@ -300,7 +300,7 @@ class CCheckoutScreen extends StatelessWidget {
                                                                     item.productId
                                                                         .toString() ==
                                                                     cartController
-                                                                        .cartItems[
+                                                                        .userCartItems[
                                                                             index]
                                                                         .productId
                                                                         .toString()
@@ -322,10 +322,26 @@ class CCheckoutScreen extends StatelessWidget {
                                                                         index]
                                                                     .text =
                                                                 cartController
-                                                                    .cartItems[
+                                                                    .userCartItems[
                                                                         index]
                                                                     .quantity
                                                                     .toString();
+                                                            if (checkoutController
+                                                                    .amtIssuedFieldController
+                                                                    .text !=
+                                                                '') {
+                                                              checkoutController
+                                                                  .computeCustomerBal(
+                                                                cartController
+                                                                    .totalCartPrice
+                                                                    .value,
+                                                                double.parse(
+                                                                    checkoutController
+                                                                        .amtIssuedFieldController
+                                                                        .text
+                                                                        .trim()),
+                                                              );
+                                                            }
                                                           }
                                                         },
                                                       ),
@@ -373,8 +389,10 @@ class CCheckoutScreen extends StatelessWidget {
                                                                 .digitsOnly
                                                           ],
                                                           style: TextStyle(
-                                                            color:
-                                                                CColors.rBrown,
+                                                            color: isDarkTheme
+                                                                ? CColors.white
+                                                                : CColors
+                                                                    .rBrown,
                                                           ),
 
                                                           onChanged: (value) {
@@ -394,7 +412,7 @@ class CCheckoutScreen extends StatelessWidget {
                                                                   item.productId
                                                                       .toString() ==
                                                                   cartController
-                                                                      .cartItems[
+                                                                      .userCartItems[
                                                                           index]
                                                                       .productId
                                                                       .toString()
@@ -411,6 +429,21 @@ class CCheckoutScreen extends StatelessWidget {
                                                                       thisCartItem,
                                                                       true,
                                                                       value);
+                                                              if (checkoutController
+                                                                      .amtIssuedFieldController
+                                                                      .text !=
+                                                                  '') {
+                                                                checkoutController
+                                                                    .computeCustomerBal(
+                                                                  cartController
+                                                                      .totalCartPrice
+                                                                      .value,
+                                                                  double.parse(
+                                                                      checkoutController
+                                                                          .amtIssuedFieldController
+                                                                          .text),
+                                                                );
+                                                              }
                                                             }
                                                           },
                                                         ),
@@ -443,7 +476,7 @@ class CCheckoutScreen extends StatelessWidget {
                                                                     item.productId
                                                                         .toString() ==
                                                                     cartController
-                                                                        .cartItems[
+                                                                        .userCartItems[
                                                                             index]
                                                                         .productId
                                                                         .toString()
@@ -467,10 +500,25 @@ class CCheckoutScreen extends StatelessWidget {
                                                                         index]
                                                                     .text =
                                                                 cartController
-                                                                    .cartItems[
+                                                                    .userCartItems[
                                                                         index]
                                                                     .quantity
                                                                     .toString();
+                                                            if (checkoutController
+                                                                    .amtIssuedFieldController
+                                                                    .text !=
+                                                                '') {
+                                                              checkoutController
+                                                                  .computeCustomerBal(
+                                                                cartController
+                                                                    .totalCartPrice
+                                                                    .value,
+                                                                double.parse(
+                                                                    checkoutController
+                                                                        .amtIssuedFieldController
+                                                                        .text),
+                                                              );
+                                                            }
                                                           }
                                                         },
                                                       ),
@@ -485,10 +533,12 @@ class CCheckoutScreen extends StatelessWidget {
                                               ),
                                               child: CProductPriceTxt(
                                                 price: (cartController
-                                                            .cartItems[index]
+                                                            .userCartItems[
+                                                                index]
                                                             .price *
                                                         cartController
-                                                            .cartItems[index]
+                                                            .userCartItems[
+                                                                index]
                                                             .quantity)
                                                     .toStringAsFixed(2),
                                                 isLarge: true,
@@ -649,9 +699,11 @@ class CCheckoutScreen extends StatelessWidget {
                                               child: TextFormField(
                                                 keyboardType:
                                                     TextInputType.text,
-                                                focusNode: checkoutController
-                                                    .customerNameFocusNode
-                                                    .value,
+                                                // focusNode: checkoutController
+                                                //     .customerNameFocusNode
+                                                //     .value,
+                                                autofocus: false,
+
                                                 controller: checkoutController
                                                     .customerNameFieldController,
                                                 decoration: InputDecoration(
@@ -659,14 +711,29 @@ class CCheckoutScreen extends StatelessWidget {
                                                       CColors.rBrown.withValues(
                                                     alpha: 0.3,
                                                   ),
-                                                  disabledBorder:
-                                                      InputBorder.none,
                                                   enabledBorder:
-                                                      InputBorder.none,
-                                                  errorBorder: InputBorder.none,
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      CSizes.cardRadiusLg,
+                                                    ),
+                                                    borderSide: BorderSide(
+                                                      color: CColors.grey,
+                                                    ),
+                                                  ),
                                                   focusedBorder:
-                                                      InputBorder.none,
-                                                  border: InputBorder.none,
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color: CColors.rBrown
+                                                          .withValues(
+                                                        alpha: 0.3,
+                                                      ),
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      CSizes.cardRadiusLg,
+                                                    ),
+                                                  ),
                                                   labelText: checkoutController
                                                               .selectedPaymentMethod
                                                               .value
@@ -675,8 +742,11 @@ class CCheckoutScreen extends StatelessWidget {
                                                       ? 'customer name'
                                                       : 'customer name(optional)',
                                                 ),
-                                                style: const TextStyle(
+                                                style: TextStyle(
                                                   fontWeight: FontWeight.normal,
+                                                  color: isDarkTheme
+                                                      ? CColors.white
+                                                      : CColors.rBrown,
                                                 ),
                                               ),
                                             ),
@@ -740,7 +810,7 @@ class CCheckoutScreen extends StatelessWidget {
       ),
       bottomNavigationBar: Obx(
         () {
-          if (cartController.cartItems.isNotEmpty) {
+          if (cartController.userCartItems.isNotEmpty) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton.icon(
@@ -816,6 +886,10 @@ class CCheckoutScreen extends StatelessWidget {
               ),
             );
           } else {
+            CPopupSnackBar.errorSnackBar(
+              title: 'no user cart items',
+              message: 'no user cart items found for checkout',
+            );
             return SizedBox();
           }
         },

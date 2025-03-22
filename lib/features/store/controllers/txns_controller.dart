@@ -65,7 +65,7 @@ class CTxnsController extends GetxController {
   final RxBool itemExists = false.obs;
   final RxBool showAmountIssuedField = true.obs;
   final RxBool isLoading = false.obs;
-  final RxBool syncIsLoading = false.obs;
+  final RxBool txnsSyncIsLoading = false.obs;
   final RxBool includeCustomerDetails = false.obs;
   final RxBool txnSuccesfull = false.obs;
   final RxBool txnsFetched = false.obs;
@@ -351,8 +351,8 @@ class CTxnsController extends GetxController {
   Future<void> addSalesDataToCloud() async {
     try {
       isLoading.value = true;
-      syncIsLoading.value = true;
-      await fetchTransactions().then(
+      txnsSyncIsLoading.value = true;
+      fetchTransactions().then(
         (result) {
           if (result.isNotEmpty) {
             final unsyncedTxns = transactions.where((unsyncedTxn) =>
@@ -402,7 +402,7 @@ class CTxnsController extends GetxController {
                   // isLoading.value = false;
                   // syncIsLoading.value = false;
                 } else {
-                  syncIsLoading.value = false;
+                  txnsSyncIsLoading.value = false;
                   CPopupSnackBar.errorSnackBar(
                     title: 'ERROR SYNCING TXNS TO CLOUD...',
                     message: 'an error occurred while uploading txns to cloud',
@@ -410,7 +410,7 @@ class CTxnsController extends GetxController {
                 }
               });
             } else {
-              syncIsLoading.value = false;
+              txnsSyncIsLoading.value = false;
               isLoading.value = false;
               if (kDebugMode) {
                 print('***** ALL TXNS RADA SAFI *****');
@@ -421,7 +421,7 @@ class CTxnsController extends GetxController {
               );
             }
           } else {
-            syncIsLoading.value = false;
+            txnsSyncIsLoading.value = false;
             isLoading.value = false;
             CPopupSnackBar.customToast(
               message: 'NO SALES/TXNS FOUND!',
@@ -431,7 +431,7 @@ class CTxnsController extends GetxController {
         },
       );
     } catch (e) {
-      syncIsLoading.value = false;
+      txnsSyncIsLoading.value = false;
       isLoading.value = false;
       if (kDebugMode) {
         print('***');
@@ -445,7 +445,7 @@ class CTxnsController extends GetxController {
 
       throw e.toString();
     } finally {
-      syncIsLoading.value = false;
+      txnsSyncIsLoading.value = false;
       isLoading.value = false;
     }
   }

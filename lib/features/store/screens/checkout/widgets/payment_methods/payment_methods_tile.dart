@@ -26,23 +26,22 @@ class CPaymentMethodsTile extends StatelessWidget {
       contentPadding: const EdgeInsets.all(0),
       onTap: () {
         checkoutController.selectedPaymentMethod.value = paymentMethod;
-        if (paymentMethod.platformName != 'cash') {
-          checkoutController.amtIssuedFieldController.text = '';
-          checkoutController.amtIssuedFieldController.dispose();
+        // if (paymentMethod.platformName != 'cash') {
+        //   checkoutController.amtIssuedFieldController.text = '';
+        //   checkoutController.amtIssuedFieldController.dispose();
 
-          checkoutController.customerNameFieldController =
-              TextEditingController(
-            text: '',
-          );
-        } else {
-          checkoutController.amtIssuedFieldController = TextEditingController(
-            text: '',
-          );
-          checkoutController.customerNameFieldController.text = '';
-          checkoutController.customerNameFieldController.dispose();
-        }
-
-        //Get.back();
+        //   checkoutController.customerNameFieldController =
+        //       TextEditingController(
+        //     text: '',
+        //   );
+        // } else {
+        //   checkoutController.amtIssuedFieldController = TextEditingController(
+        //     text: '',
+        //   );
+        //   checkoutController.customerNameFieldController.text = '';
+        //   checkoutController.customerNameFieldController.dispose();
+        // }
+        
         Navigator.pop(context);
       },
       leading: CRoundedContainer(

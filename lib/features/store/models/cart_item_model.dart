@@ -1,11 +1,12 @@
 class CCartItemModel {
   int productId;
-  String pName, pCode;
+  String email, pName, pCode;
   int quantity;
   int availableStockQty;
   double price;
 
   CCartItemModel({
+    required this.email,
     required this.productId,
     this.pName = '',
     required this.pCode,
@@ -17,6 +18,7 @@ class CCartItemModel {
   /// -- empty cart --
   static CCartItemModel empty() {
     return CCartItemModel(
+      email: '',
       pCode: '',
       productId: 0,
       quantity: 0,
@@ -27,6 +29,7 @@ class CCartItemModel {
   /// -- convert a CartItem to a JSON map --
   Map<String, dynamic> toJson() {
     return {
+      'email': email,
       'productId': productId,
       'pCode': pCode,
       'pName': pName,
@@ -39,6 +42,7 @@ class CCartItemModel {
   /// -- create a CartItem from a JSON map --
   factory CCartItemModel.fromJson(Map<String, dynamic> json) {
     return CCartItemModel(
+      email: json['email'],
       productId: json['productId'],
       pCode: json['pCode'],
       pName: json['pName'],
