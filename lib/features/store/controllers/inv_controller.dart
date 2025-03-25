@@ -592,8 +592,6 @@ class CInventoryController extends GetxController {
   /// -- delete inventory item from google sheets --
   Future deleteInvSheetItem(int id) async {
     try {
-      //await StoreSheetsApi.initializeSpreadSheets();
-
       await StoreSheetsApi.deleteById(id);
     } catch (e) {
       CPopupSnackBar.errorSnackBar(

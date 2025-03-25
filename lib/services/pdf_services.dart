@@ -195,7 +195,7 @@ class CPdfServices extends GetxController {
 
     cartController.fetchCartItems();
 
-    final receiptData = cartController.userCartItems.map(
+    final receiptData = cartController.cartItems.map(
       (item) {
         final itemTotal = item.price * item.quantity * .19;
         return [

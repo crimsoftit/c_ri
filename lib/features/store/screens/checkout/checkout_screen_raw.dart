@@ -28,8 +28,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class CCheckoutScreen extends StatelessWidget {
-  const CCheckoutScreen({super.key});
+class CCheckoutScreenRaw extends StatelessWidget {
+  const CCheckoutScreenRaw({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -229,13 +229,11 @@ class CCheckoutScreen extends StatelessWidget {
                                     );
                                   },
                                   itemBuilder: (_, index) {
-                                    // cartController.qtyFieldControllers
-                                    //     .add(TextEditingController(
-                                    //   text: cartController
-                                    //       .getItemQtyInCart(cartController
-                                    //           .userCartItems[index].productId)
-                                    //       .toString(),
-                                    // ));
+                                    cartController.qtyFieldControllers.add(
+                                        TextEditingController(
+                                            text: cartController
+                                                .cartItems[index].quantity
+                                                .toString()));
 
                                     return Column(
                                       children: [
@@ -886,8 +884,8 @@ class CCheckoutScreen extends StatelessWidget {
             );
           } else {
             CPopupSnackBar.errorSnackBar(
-              title: 'no cart items',
-              message: 'no cart items found for checkout',
+              title: 'no user cart items',
+              message: 'no user cart items found for checkout',
             );
             return SizedBox();
           }

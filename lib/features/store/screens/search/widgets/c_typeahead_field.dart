@@ -141,8 +141,7 @@ class CTypeAheadSearchField extends StatelessWidget {
                   () {
                     if (txnsController.isLoading.value ||
                         invController.isLoading.value ||
-                        invController.syncIsLoading.value ||
-                        cartController.cartItemsLoading.value) {
+                        invController.syncIsLoading.value) {
                       // return const CVerticalProductShimmer(
                       //   itemCount: 2,
                       // );
@@ -220,7 +219,7 @@ class CTypeAheadSearchField extends StatelessWidget {
                           removeItemBtnAction: () {
                             invController.fetchInventoryItems();
                             cartController.fetchCartItems();
-                            int cartItemIndex = cartController.userCartItems
+                            int cartItemIndex = cartController.cartItems
                                 .indexWhere((cartItem) =>
                                     cartItem.productId == suggestion.productId);
                             if (cartItemIndex >= 0) {
@@ -237,7 +236,7 @@ class CTypeAheadSearchField extends StatelessWidget {
                                         .qtyFieldControllers[cartItemIndex]
                                         .text =
                                     cartController
-                                        .userCartItems[cartItemIndex].quantity
+                                        .cartItems[cartItemIndex].quantity
                                         .toString();
                               }
                             }
@@ -263,22 +262,22 @@ class CTypeAheadSearchField extends StatelessWidget {
                               invController.fetchInventoryItems();
                               cartController.fetchCartItems();
 
-                              int cartItemIndex = cartController.userCartItems
-                                  .indexWhere((cartItem) =>
-                                      cartItem.productId ==
-                                      suggestion.productId);
+                              // int cartItemIndex = cartController.userCartItems
+                              //     .indexWhere((cartItem) =>
+                              //         cartItem.productId ==
+                              //         suggestion.productId);
 
                               final thisCartItem = cartController
                                   .convertInvToCartItem(suggestion, 1);
                               cartController.addSingleItemToCart(
                                   thisCartItem, false, null);
-                              cartController.fetchCartItems();
+                              // cartController.fetchCartItems();
 
-                              cartController
-                                      .qtyFieldControllers[cartItemIndex].text =
-                                  cartController
-                                      .userCartItems[cartItemIndex].quantity
-                                      .toString();
+                              // cartController
+                              //         .qtyFieldControllers[cartItemIndex].text =
+                              //     cartController
+                              //         .userCartItems[cartItemIndex].quantity
+                              //         .toString();
                             } else {
                               CPopupSnackBar.warningSnackBar(
                                   title: 'item is out of stock',

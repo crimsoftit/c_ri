@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -133,13 +134,13 @@ class _CLocationSettingsScreenState extends State<CDeviceSettingsScreen> {
                     // app bar
                     CAppBar(
                       title: Text(
-                        'device settings',
+                        'app settings',
                         style: Theme.of(context).textTheme.headlineSmall!.apply(
                               color: CColors.white,
                             ),
                       ),
                       backIconAction: () {
-                        Navigator.pop(context, true);
+                        SystemNavigator.pop();
                         //Get.back();
                       },
                       showBackArrow: true,
@@ -166,7 +167,7 @@ class _CLocationSettingsScreenState extends State<CDeviceSettingsScreen> {
                         return Column(
                           children: [
                             Visibility(
-                              visible: false,
+                              visible: true,
                               child: Text(
                                 'Location Service: ${PermissionProvider.locationServiceIsOn ? "On" : "Off"}\n${snapshot.data}',
                                 // style: const TextStyle(fontSize: 24),
@@ -185,12 +186,13 @@ class _CLocationSettingsScreenState extends State<CDeviceSettingsScreen> {
                               subTitle:
                                   'rIntel requires location info to protect buyers & sellers',
                               trailing: Switch(
-                                value: geoSwitchIsOn,
+                                value: PermissionProvider.locationServiceIsOn,
                                 activeColor: CColors.rBrown,
                                 onChanged: (value) {
                                   setState(
                                     () {
-                                      geoSwitchIsOn = value;
+                                      PermissionProvider.locationServiceIsOn =
+                                          value;
                                     },
                                   );
 
@@ -249,7 +251,7 @@ class _CLocationSettingsScreenState extends State<CDeviceSettingsScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   Visibility(
-                                    visible: false,
+                                    visible: true,
                                     child: Column(
                                       children: [
                                         Text(
