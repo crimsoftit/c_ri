@@ -96,7 +96,7 @@ class CBillingAmountSection extends StatelessWidget {
                   ),
             ),
             CProductPriceTxt(
-              price: cartController.txnTotals.value.toStringAsFixed(2),
+              price: cartController.totalCartPrice.value.toStringAsFixed(2),
               isLarge: true,
               txtColor: isDarkTheme ? CColors.white : CColors.rBrown,
             ),

@@ -5,6 +5,22 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class CHelperFunctions {
+  static DateTime getStartOfWeek(DateTime date) {
+    final int daysUntilMonday = date.weekday - 1;
+    final DateTime startOfWeek = date.subtract(Duration(days: daysUntilMonday));
+
+    return DateTime(
+      startOfWeek.year,
+      startOfWeek.month,
+      startOfWeek.day,
+      0,
+      0,
+      0,
+      0,
+      0,
+    );
+  }
+
   static void showSnackBar(String message) {
     ScaffoldMessenger.of(Get.context!).showSnackBar(
       SnackBar(content: Text(message)),

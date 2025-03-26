@@ -14,7 +14,7 @@ class CCartController extends GetxController {
   /// -- variables --
   RxDouble discount = 0.0.obs;
   RxDouble taxFee = 0.0.obs;
-  RxDouble txnTotals = 0.0.obs;
+  //RxDouble txnTotals = 0.0.obs;
   RxDouble totalCartPrice = 0.0.obs;
 
   final RxBool cartItemsLoading = false.obs;
@@ -111,29 +111,16 @@ class CCartController extends GetxController {
       // item already added to cart
       // deviceCartItems[userCartItemIndex].quantity = selectedCartItem.quantity;
       cartItems[userCartItemIndex].quantity = selectedCartItem.quantity;
-      // qtyFieldControllers[userCartItemIndex].text =
-      //     userCartItems[userCartItemIndex].quantity.toString();
+      qtyFieldControllers[userCartItemIndex].text =
+          cartItems[userCartItemIndex].quantity.toString();
     } else {
       cartItems.add(selectedCartItem);
+      qtyFieldControllers.add(
+        TextEditingController(
+          text: selectedCartItem.quantity.toString(),
+        ),
+      );
       updateCart();
-
-      cartItems.refresh();
-
-      // check if selected cart item already exists in the cart
-      int newItemIndex = cartItems.indexWhere(
-          (cartItem) => cartItem.productId == selectedCartItem.productId);
-
-      if (newItemIndex >= 0) {
-        cartItems[newItemIndex].quantity = selectedCartItem.quantity;
-        //deviceCartItems[newItemIndex].quantity = selectedCartItem.quantity;
-        qtyFieldControllers[newItemIndex].text =
-            cartItems[newItemIndex].quantity.toString();
-      } else {
-        CPopupSnackBar.errorSnackBar(
-          title: 'out of range exception!',
-          message: "$newItemIndex: item not found!",
-        );
-      }
     }
 
     // update cart for specific user
@@ -169,7 +156,7 @@ class CCartController extends GetxController {
             return;
           }
           cartItems[itemIndex].quantity = int.parse(qtyValue);
-          cartItems.refresh();
+
           qtyFieldControllers[itemIndex].text =
               cartItems[itemIndex].quantity.toString();
         } else {
@@ -305,11 +292,11 @@ class CCartController extends GetxController {
 
       countOfCartItems.value = computedCartItemsCount;
       totalCartPrice.value = computedTotalCartPrice;
-      txnTotals.value = totalCartPrice.value + discount.value + taxFee.value;
+      //txnTotals.value = totalCartPrice.value;
     } else {
       countOfCartItems.value = 0;
       totalCartPrice.value = 0.0;
-      txnTotals.value = 0.0;
+      //txnTotals.value = 0.0;
     }
   }
 
@@ -334,6 +321,7 @@ class CCartController extends GetxController {
   void clearCart() {
     itemQtyInCart.value = 0;
     countOfCartItems.value = 0;
+    totalCartPrice.value = 0.0;
     cartItems.clear();
     updateCart();
   }

@@ -7,6 +7,7 @@ import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/checkout_controller.dart';
+import 'package:c_ri/features/store/controllers/dashboard_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/screens/home/widgets/home_appbar.dart';
@@ -15,6 +16,7 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/constants/txt_strings.dart';
 import 'package:c_ri/utils/helpers/network_manager.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -25,6 +27,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartController = Get.put(CCartController());
+    final dashboardController = Get.put(CDashboardController());
 
     final invController = Get.put(CInventoryController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
@@ -87,89 +90,92 @@ class HomeScreen extends StatelessWidget {
                               height: CSizes.spaceBtnItems / 4.0,
                             ),
                             // -- top sellers list of items --
-                            SizedBox(
-                              height: 100.0,
-                              child: ListView.separated(
-                                itemCount: invController.topSoldItems.length,
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                separatorBuilder: (_, __) {
-                                  return SizedBox(
-                                    width: CSizes.spaceBtnItems / 2,
-                                  );
-                                },
-                                itemBuilder: (_, index) {
-                                  return InkWell(
-                                    onTap: () {
-                                      Get.toNamed(
-                                        '/inventory/item_details/',
-                                        arguments: invController
-                                            .topSoldItems[index].productId,
-                                      );
-                                    },
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                          width: 56.0,
-                                          height: 56.0,
-                                          padding: const EdgeInsets.all(
-                                            CSizes.sm,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: CColors.white,
-                                            borderRadius: BorderRadius.circular(
-                                              100.0,
+                            if (invController.inventoryItems.isNotEmpty)
+                              SizedBox(
+                                height: 100.0,
+                                child: ListView.separated(
+                                  itemCount: invController.topSoldItems.length,
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  separatorBuilder: (_, __) {
+                                    return SizedBox(
+                                      width: CSizes.spaceBtnItems / 2,
+                                    );
+                                  },
+                                  itemBuilder: (_, index) {
+                                    return InkWell(
+                                      onTap: () {
+                                        Get.toNamed(
+                                          '/inventory/item_details/',
+                                          arguments: invController
+                                              .topSoldItems[index].productId,
+                                        );
+                                      },
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            width: 56.0,
+                                            height: 56.0,
+                                            padding: const EdgeInsets.all(
+                                              CSizes.sm,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: CColors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                100.0,
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: CCircleAvatar(
+                                                avatarInitial: invController
+                                                    .topSoldItems[index].name[0]
+                                                    .toUpperCase(),
+                                                bgColor: CColors.white,
+                                                txtColor: CColors.rBrown,
+                                              ),
                                             ),
                                           ),
-                                          child: Center(
-                                            child: CCircleAvatar(
-                                              avatarInitial: invController
-                                                  .topSoldItems[index].name[0]
-                                                  .toUpperCase(),
-                                              bgColor: CColors.white,
-                                              txtColor: CColors.rBrown,
+                                          CRoundedContainer(
+                                            bgColor: Colors.transparent,
+                                            showBorder: false,
+                                            width: 90.0,
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  invController
+                                                      .topSoldItems[index].name,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .labelMedium!
+                                                      .apply(
+                                                        fontWeightDelta: 2,
+                                                        color: CColors.white,
+                                                      ),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                ),
+                                                Text(
+                                                  '${invController.topSoldItems[index].qtySold} sold',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .labelMedium!
+                                                      .apply(
+                                                        color: CColors.white,
+                                                      ),
+                                                  overflow: TextOverflow.fade,
+                                                  maxLines: 1,
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                        ),
-                                        CRoundedContainer(
-                                          bgColor: Colors.transparent,
-                                          showBorder: false,
-                                          width: 90.0,
-                                          child: Column(
-                                            children: [
-                                              Text(
-                                                invController
-                                                    .topSoldItems[index].name,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .labelMedium!
-                                                    .apply(
-                                                      fontWeightDelta: 2,
-                                                      color: CColors.white,
-                                                    ),
-                                                overflow: TextOverflow.ellipsis,
-                                                maxLines: 1,
-                                              ),
-                                              Text(
-                                                '${invController.topSoldItems[index].qtySold} sold',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .labelMedium!
-                                                    .apply(
-                                                      color: CColors.white,
-                                                    ),
-                                                overflow: TextOverflow.fade,
-                                                maxLines: 1,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
                           ],
                         );
                       },
@@ -181,6 +187,77 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
+
+            /// -- weekly sales bar graph --
+            if (invController.inventoryItems.isNotEmpty)
+              CRoundedContainer(
+                bgColor: CColors.softGrey,
+                child: Column(
+                  children: [
+                    Text(
+                      'weekly sales...',
+                      style: Theme.of(context).textTheme.headlineSmall!.apply(
+                            color: CColors.rBrown,
+                            fontSizeFactor: 0.8,
+                          ),
+                    ),
+                    const SizedBox(
+                      height: CSizes.spaceBtnSections,
+                    ),
+
+                    // the graph
+                    SizedBox(
+                      height: 200.0,
+                      child: BarChart(
+                        BarChartData(
+                          titlesData: buildFlTitlesData(),
+                          borderData: FlBorderData(
+                            show: true,
+                            border: const Border(
+                              top: BorderSide.none,
+                              right: BorderSide.none,
+                            ),
+                          ),
+                          gridData: FlGridData(
+                            show: true,
+                            drawHorizontalLine: true,
+                            drawVerticalLine: false,
+                            horizontalInterval: 200,
+                          ),
+                          barGroups: dashboardController.weeklySales
+                              .asMap()
+                              .entries
+                              .map(
+                                (entry) => BarChartGroupData(
+                                  x: entry.key,
+                                  barRods: [
+                                    BarChartRodData(
+                                      width: 30.0,
+                                      toY: entry.value,
+                                      color: CColors.rBrown,
+                                      borderRadius: BorderRadius.circular(
+                                        CSizes.sm,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                              .toList(),
+                          groupsSpace: CSizes.spaceBtnItems,
+                          barTouchData: BarTouchData(
+                              touchTooltipData: BarTouchTooltipData(
+                                getTooltipColor: (group) {
+                                  return CColors.secondary;
+                                },
+                              ),
+                              touchCallback:
+                                  (barTouchEvent, barTouchResponse) {}),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
             // CSectionHeading(
             //               showActionBtn: true,
@@ -266,17 +343,10 @@ class HomeScreen extends StatelessWidget {
                       children: [
                         FloatingActionButton(
                           onPressed: () {
-                            Get.put(CCheckoutController());
+                            //Get.put(CCheckoutController());
                             final checkoutController =
                                 Get.put(CCheckoutController());
                             checkoutController.handleNavToCheckout();
-                            // final cartController = Get.put(CCartController());
-                            // cartController.fetchCartItems().then((_) {
-                            //   Future.delayed(const Duration(milliseconds: 250),
-                            //       () {
-                            //     Get.to(() => const CCheckoutScreen());
-                            //   });
-                            // });
                           },
                           backgroundColor: isConnectedToInternet
                               ? Colors.brown
@@ -302,6 +372,63 @@ class HomeScreen extends StatelessWidget {
             ],
           );
         },
+      ),
+    );
+  }
+
+  FlTitlesData buildFlTitlesData() {
+    return FlTitlesData(
+      show: true,
+      bottomTitles: AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: true,
+          getTitlesWidget: (value, meta) {
+            // map index to the desired day of the week
+            final days = [
+              'mon',
+              'tue',
+              'wed',
+              'thu',
+              'fri',
+              'sat',
+              'sun',
+            ];
+
+            // calculate the index and ensure it wraps around the corresponding day of the week
+            final index = value.toInt() % days.length;
+
+            // get the day corresponding to the calculated index
+            final day = days[index];
+
+            return SideTitleWidget(
+              space: 0,
+              axisSide: AxisSide.bottom,
+              child: Text(
+                day,
+                style: TextStyle(
+                  color: CColors.rBrown,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+      leftTitles: const AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: true,
+          interval: 200.0,
+          reservedSize: 50.0,
+        ),
+      ),
+      rightTitles: const AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: false,
+        ),
+      ),
+      topTitles: const AxisTitles(
+        sideTitles: SideTitles(
+          showTitles: false,
+        ),
       ),
     );
   }

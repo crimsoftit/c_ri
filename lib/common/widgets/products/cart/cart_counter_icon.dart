@@ -18,19 +18,13 @@ class CCartCounterIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //cartController.fetchCartItems();
+    final checkoutController = Get.put(CCheckoutController());
 
     return Stack(
       children: [
         IconButton(
           onPressed: () async {
-            final checkoutController = Get.put(CCheckoutController());
-
             checkoutController.handleNavToCheckout();
-            // cartController.fetchCartItems().then((_) {
-            //   Future.delayed(const Duration(milliseconds: 250), () {
-            //     Get.to(() => const CCheckoutScreen());
-            //   });
-            // });
           },
           icon: Icon(
             Iconsax.shopping_bag,

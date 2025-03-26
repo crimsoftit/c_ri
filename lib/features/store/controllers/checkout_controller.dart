@@ -28,7 +28,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:simple_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
@@ -130,7 +129,7 @@ class CCheckoutController extends GetxController {
             cartItem.pCode,
             cartItem.pName,
             cartItem.quantity,
-            cartController.txnTotals.value,
+            cartController.totalCartPrice.value,
             selectedPaymentMethod.value.platformName == 'cash'
                 ? double.parse(amtIssuedFieldController.text.trim())
                 : 0.00,
@@ -145,7 +144,8 @@ class CCheckoutController extends GetxController {
                 ? locationController.uAddress.value
                 : userController.user.value.userAddress,
             'lat: ${locationController.userLocation.value!.latitude ?? ''} long: ${locationController.userLocation.value!.longitude ?? ''}',
-            DateFormat('yyyy-MM-dd - kk:mm').format(clock.now()),
+            // DateFormat('yyyy-MM-dd kk:mm').format(clock.now()),
+            clock.now().toString(),
             0,
             'append',
             'complete',

@@ -292,15 +292,28 @@ class CInventoryScreen extends StatelessWidget {
                                         .textTheme
                                         .labelSmall!
                                         .apply(
-                                          color: CColors.rBrown
-                                              .withValues(alpha: 0.8),
+                                          color: invController
+                                                      .inventoryItems[index]
+                                                      .quantity <=
+                                                  5
+                                              ? Colors.red
+                                              : CColors.rBrown
+                                                  .withValues(alpha: 0.8),
                                           //fontStyle: FontStyle.italic,
                                         ),
                                   ),
                                   CProductTitleText(
-                                    title:
-                                        'modified: ${invController.inventoryItems[index].date}',
+                                    title: invController
+                                        .inventoryItems[index].date,
                                     smallSize: true,
+                                    txtColor: invController
+                                                .inventoryItems[index]
+                                                .quantity <=
+                                            5
+                                        ? Colors.red
+                                        : isConnectedToInternet
+                                            ? CColors.rBrown
+                                            : CColors.black,
                                   ),
                                   Text(
                                     'isSynced:${invController.inventoryItems[index].isSynced} syncAction:${invController.inventoryItems[index].syncAction}',
@@ -508,7 +521,7 @@ class CInventoryScreen extends StatelessWidget {
                         children: [
                           FloatingActionButton(
                             onPressed: () {
-                              Get.put(CCheckoutController());
+                              //Get.put(CCheckoutController());
                               checkoutController.handleNavToCheckout();
                               // cartController.fetchCartItems().then((_) {
                               //   Future.delayed(

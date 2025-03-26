@@ -5,9 +5,9 @@ import 'package:c_ri/common/widgets/products/cart/positioned_cart_counter_widget
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
+import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
-import 'package:c_ri/features/store/screens/checkout/checkout_screen.dart';
 import 'package:c_ri/features/store/screens/inventory/inventory_details/widgets/add_to_cart_bottom_nav_bar.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/inv_dialog.dart';
 import 'package:c_ri/utils/constants/colors.dart';
@@ -17,6 +17,7 @@ import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
 
 class CInventoryDetailsScreen extends StatefulWidget {
   const CInventoryDetailsScreen({
@@ -107,7 +108,7 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                             ),
                       ),
                       subtitle: Text(
-                        invItem.date,
+                        DateFormat('yyyy-MM-dd kk:mm').format(invItem.date),
                         style: Theme.of(context).textTheme.headlineSmall!.apply(
                               color: CColors.white,
                               fontSizeFactor: 0.6,
@@ -169,10 +170,25 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                         subTitle: 'sku/code',
                         onTap: () {},
                       ),
+
                       CMenuTile(
                         icon: Iconsax.shopping_cart,
                         title: '${(invItem.quantity)}',
                         subTitle: 'Qty/units available',
+                        onTap: () {},
+                      ),
+
+                      CMenuTile(
+                        icon: Iconsax.shopping_cart,
+                        title: '${(invItem.qtySold)}',
+                        subTitle: 'Qty/units sold',
+                        onTap: () {},
+                      ),
+
+                      CMenuTile(
+                        icon: Iconsax.shopping_cart,
+                        title: 'COMING SOONEST...',
+                        subTitle: 'total sales(amount)',
                         onTap: () {},
                       ),
 
@@ -195,6 +211,17 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                           //Get.to(() => const OrdersScreen());
                         },
                       ),
+
+                      CMenuTile(
+                        icon: Iconsax.card_pos,
+                        //title: '',
+                        title: '~$currency.${(invItem.unitSellingPrice)}',
+                        subTitle: '~unit buying price',
+                        onTap: () {
+                          //Get.to(() => const OrdersScreen());
+                        },
+                      ),
+
                       CMenuTile(
                         icon: Iconsax.calendar,
                         title: invItem.date,
@@ -313,7 +340,10 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                         // ),
                         FloatingActionButton(
                           onPressed: () {
-                            Get.to(() => const CCheckoutScreen());
+                            //Get.to(() => const CCheckoutScreen());
+                            final checkoutController =
+                                Get.put(CCheckoutController());
+                            checkoutController.handleNavToCheckout();
                           },
                           backgroundColor: isConnectedToInternet
                               ? Colors.brown

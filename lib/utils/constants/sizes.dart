@@ -57,12 +57,18 @@ class CSizes {
   static const cardRadiusXs = 6.0;
   static const cardElevation = 2.0;
 
-  // -- image carousel height
+  // -- image carousel height --
   static const imgCarouselHeight = 36.0;
 
-  // -- loading indicator size
+  // -- loading indicator size --
   static const loadingIndicatorSize = 36.0;
 
-  // -- grid view spacing
+  // -- grid view spacing --
   static const gridViewSpacing = 16.0;
+
+  // -- responsive screen sizes --
+  static const double desktopScreenSize = 1366.0;
+  static const double tabletScreenSize = 768.0;
+  static const double mobileScreenSize = 360.0;
+  static const double customScreenSize = 1100.0;
 }

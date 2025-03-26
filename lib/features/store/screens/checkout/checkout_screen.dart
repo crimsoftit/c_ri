@@ -229,13 +229,19 @@ class CCheckoutScreen extends StatelessWidget {
                                     );
                                   },
                                   itemBuilder: (_, index) {
-                                    // cartController.qtyFieldControllers
-                                    //     .add(TextEditingController(
-                                    //   text: cartController
-                                    //       .getItemQtyInCart(cartController
-                                    //           .userCartItems[index].productId)
-                                    //       .toString(),
-                                    // ));
+                                    cartController.qtyFieldControllers
+                                        .add(TextEditingController(
+                                      text: cartController
+                                          .getItemQtyInCart(cartController
+                                              .cartItems[index].productId)
+                                          .toString(),
+                                    ));
+
+                                    // cartController.qtyFieldControllers.add(
+                                    //     TextEditingController(
+                                    //         text: cartController
+                                    //             .cartItems[index].quantity
+                                    //             .toString()));
 
                                     return Column(
                                       children: [

@@ -30,7 +30,7 @@ class TxnsScreen extends StatelessWidget {
     final cartController = Get.put(CCartController());
     final checkoutController = Get.put(CCheckoutController());
     final invController = Get.put(CInventoryController());
-    final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
+
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final searchController = Get.put(CSearchBarController());
     //final syncController = Get.put(CSyncController());
@@ -321,6 +321,8 @@ class TxnsScreen extends StatelessWidget {
         /// -- floating action button to scan item for sale --
         floatingActionButton: Obx(
           () {
+            final isConnectedToInternet =
+                CNetworkManager.instance.hasConnection.value;
             return Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -330,11 +332,11 @@ class TxnsScreen extends StatelessWidget {
                         children: [
                           FloatingActionButton(
                             onPressed: () {
-                              Get.put(CCheckoutController());
+                              //Get.put(CCheckoutController());
                               checkoutController.handleNavToCheckout();
                             },
                             backgroundColor: isConnectedToInternet
-                                ? Colors.brown
+                                ? CColors.rBrown
                                 : CColors.black,
                             foregroundColor: Colors.white,
                             heroTag: 'checkout',
