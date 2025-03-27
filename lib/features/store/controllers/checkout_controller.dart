@@ -28,6 +28,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:simple_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
@@ -144,8 +145,9 @@ class CCheckoutController extends GetxController {
                 ? locationController.uAddress.value
                 : userController.user.value.userAddress,
             'lat: ${locationController.userLocation.value!.latitude ?? ''} long: ${locationController.userLocation.value!.longitude ?? ''}',
-            // DateFormat('yyyy-MM-dd kk:mm').format(clock.now()),
-            clock.now().toString(),
+            //DateTime.now().toString(),
+            // DateFormat('yyyy-MM-dd @ kk:mm').format(DateTime.now()),
+            DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
             0,
             'append',
             'complete',

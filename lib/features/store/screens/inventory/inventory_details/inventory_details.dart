@@ -17,7 +17,6 @@ import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:intl/intl.dart';
 
 class CInventoryDetailsScreen extends StatefulWidget {
   const CInventoryDetailsScreen({
@@ -108,7 +107,8 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                             ),
                       ),
                       subtitle: Text(
-                        DateFormat('yyyy-MM-dd kk:mm').format(invItem.date),
+                        // DateFormat('yyyy-MM-dd kk:mm').format(invItem.date),
+                        invItem.date,
                         style: Theme.of(context).textTheme.headlineSmall!.apply(
                               color: CColors.white,
                               fontSizeFactor: 0.6,

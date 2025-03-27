@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 import 'package:simple_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 
@@ -70,8 +71,6 @@ class CInventoryController extends GetxController {
     fetchInventoryItems();
     fetchInvDels();
     fetchInvUpdates();
-    //syncInvDels();
-    //syncInvUpdates();
     if (searchController.salesShowSearchField.isTrue &&
         searchController.txtSalesSearch.text == '') {
       foundInventoryItems.value = inventoryItems;
@@ -165,7 +164,7 @@ class CInventoryController extends GetxController {
           double.parse(txtBP.text),
           unitBP.value,
           double.parse(txtUnitSP.text),
-          clock.now().toString(),
+          DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
           1,
           'none',
         );
@@ -435,7 +434,8 @@ class CInventoryController extends GetxController {
       inventoryItem.buyingPrice = double.parse(txtBP.text.trim());
       inventoryItem.unitBp = unitBP.value;
       inventoryItem.unitSellingPrice = double.parse(txtUnitSP.text);
-      inventoryItem.date = clock.now().toString();
+      inventoryItem.date = DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
+      //inventoryItem.date = DateTime.now().toString();
 
       inventoryItem.syncAction = txtSyncAction.text.trim();
 

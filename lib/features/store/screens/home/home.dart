@@ -5,6 +5,7 @@ import 'package:c_ri/common/widgets/products/cart/positioned_cart_counter_widget
 import 'package:c_ri/common/widgets/products/circle_avatar.dart';
 import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
+import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/dashboard_controller.dart';
@@ -33,9 +34,14 @@ class HomeScreen extends StatelessWidget {
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
 
     final navController = Get.put(NavMenuController());
+    final txnsController = Get.put(CTxnsController());
+
+    Get.put(CDashboardController());
+    Get.put(CTxnsController());
 
     invController.fetchInventoryItems();
     invController.fetchTopSellers();
+    txnsController.fetchTransactions();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -189,7 +195,7 @@ class HomeScreen extends StatelessWidget {
             ),
 
             /// -- weekly sales bar graph --
-            if (invController.inventoryItems.isNotEmpty)
+            if (txnsController.transactions.isNotEmpty)
               CRoundedContainer(
                 bgColor: CColors.softGrey,
                 child: Column(
@@ -232,7 +238,7 @@ class HomeScreen extends StatelessWidget {
                                   x: entry.key,
                                   barRods: [
                                     BarChartRodData(
-                                      width: 30.0,
+                                      width: 25.0,
                                       toY: entry.value,
                                       color: CColors.rBrown,
                                       borderRadius: BorderRadius.circular(
@@ -413,11 +419,24 @@ class HomeScreen extends StatelessWidget {
           },
         ),
       ),
-      leftTitles: const AxisTitles(
+      leftTitles: AxisTitles(
         sideTitles: SideTitles(
           showTitles: true,
-          interval: 200.0,
-          reservedSize: 50.0,
+          interval: 50.0,
+          reservedSize: 80.0,
+          getTitlesWidget: (value, meta) {
+            final userController = Get.put(CUserController());
+            return SideTitleWidget(
+              space: 0,
+              axisSide: AxisSide.bottom,
+              child: Text(
+                '${userController.user.value.currencyCode}.$value',
+                style: TextStyle(
+                  color: CColors.rBrown,
+                ),
+              ),
+            );
+          },
         ),
       ),
       rightTitles: const AxisTitles(

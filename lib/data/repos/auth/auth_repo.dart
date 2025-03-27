@@ -79,7 +79,7 @@ class AuthRepo extends GetxController {
           Get.put(CCheckoutController());
 
           navController.selectedIndex.value = 1;
-          Future.delayed(const Duration(milliseconds: 250), () {
+          Future.delayed(const Duration(milliseconds: 200), () {
             //Get.to(() => const NavMenu());
             Get.offAll(() => const NavMenu());
           });

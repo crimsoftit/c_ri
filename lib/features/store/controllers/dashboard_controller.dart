@@ -24,18 +24,17 @@ class CDashboardController extends GetxController {
 
     txnsController.fetchTransactions().then((_) {
       for (var sale in txnsController.transactions) {
+        final String rawSaleDate = sale.date.trim();
+        var formattedDate = rawSaleDate.replaceAll(' @', '');
         final DateTime salesWeekStart =
-            CHelperFunctions.getStartOfWeek(DateTime.parse(sale.date));
-        //final salesWeekStart = CHelperFunctions.getStartOfWeek(sale.date.to);
+            CHelperFunctions.getStartOfWeek(DateTime.parse(formattedDate));
 
-
-        HII MAMBO YA DATE
         // check if sale date is within the current week
         if (salesWeekStart.isBefore(DateTime.now()) &&
             salesWeekStart
                 .add(const Duration(days: 7))
                 .isAfter(DateTime.now())) {
-          int index = (DateTime.parse(sale.date).weekday - 1) % 7;
+          int index = (DateTime.parse(formattedDate).weekday - 1) % 7;
 
           // ensure the index is non-negative
           index = index < 0 ? index + 7 : index;
@@ -43,7 +42,7 @@ class CDashboardController extends GetxController {
 
           if (kDebugMode) {
             print(
-                'date: ${sale.date}, current week day: $salesWeekStart, index: $index');
+                'date: $formattedDate, current week day: $salesWeekStart, index: $index');
           }
         }
       }
