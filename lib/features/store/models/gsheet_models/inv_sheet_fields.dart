@@ -10,6 +10,9 @@ class InvSheetFields {
   static const String buyingPrice = 'buyingPrice';
   static const String unitBp = 'unitBp';
   static const String unitSellingPrice = 'unitSellingPrice';
+  static const String lowStockNotifierLimit = 'lowStockNotifierLimit';
+  static const String supplierName = 'supplierName';
+  static const String supplierContacts = 'supplierContacts';
   static const String date = 'date';
   static const String isSynced = 'isSynced';
   static const String syncAction = 'syncAction';
@@ -27,6 +30,9 @@ class InvSheetFields {
       buyingPrice,
       unitBp,
       unitSellingPrice,
+      lowStockNotifierLimit,
+      supplierName,
+      supplierContacts,
       date,
       isSynced,
       syncAction,

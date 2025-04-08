@@ -18,6 +18,9 @@ class CInventoryModel {
   double _buyingPrice = 0.0;
   double _unitBp = 0.0;
   double _unitSellingPrice = 0.0;
+  int _lowStockNotifierLimit = 0;
+  String _supplierName = "";
+  String _supplierContacts = "";
   String _date = "";
   int _isSynced = 0;
   String _syncAction = "";
@@ -34,6 +37,9 @@ class CInventoryModel {
     this._buyingPrice,
     this._unitBp,
     this._unitSellingPrice,
+    this._lowStockNotifierLimit,
+    this._supplierName,
+    this._supplierContacts,
     this._date,
     this._isSynced,
     this._syncAction,
@@ -51,13 +57,17 @@ class CInventoryModel {
     this._buyingPrice,
     this._unitBp,
     this._unitSellingPrice,
+    this._lowStockNotifierLimit,
+    this._supplierName,
+    this._supplierContacts,
     this._date,
     this._isSynced,
     this._syncAction,
   );
 
   CInventoryModel empty() {
-    return CInventoryModel('', '', '', '', '', 0, 0, 0.0, 0.0, 0.0, '', 0, '');
+    return CInventoryModel(
+        '', '', '', '', '', 0, 0, 0.0, 0.0, 0.0, 0, '', '', '', 0, '');
   }
 
   int? get productId => _productId;
@@ -72,6 +82,11 @@ class CInventoryModel {
   double get buyingPrice => _buyingPrice;
   double get unitBp => _unitBp;
   double get unitSellingPrice => _unitSellingPrice;
+
+  int get lowStockNotifierLimit => _lowStockNotifierLimit;
+
+  String get supplierName => _supplierName;
+  String get supplierContacts => _supplierContacts;
   String get date => _date;
   int get isSynced => _isSynced;
   String get syncAction => _syncAction;
@@ -135,6 +150,18 @@ class CInventoryModel {
     // }
   }
 
+  set lowStockNotifierLimit(int newLimit) {
+    _lowStockNotifierLimit = newLimit;
+  }
+
+  set supplierName(String supName) {
+    _supplierName = supName;
+  }
+
+  set supplierContacts(String supContacts) {
+    _supplierContacts = supContacts;
+  }
+
   set date(String newDate) {
     _date = newDate;
   }
@@ -164,6 +191,9 @@ class CInventoryModel {
     map['buyingPrice'] = _buyingPrice;
     map['unitBp'] = _unitBp;
     map['unitSellingPrice'] = _unitSellingPrice;
+    map['lowStockNotifierLimit'] = _lowStockNotifierLimit;
+    map['supplierName'] = _supplierName;
+    map['supplierContacts'] = _supplierContacts;
     map['date'] = _date;
     map['isSynced'] = _isSynced;
     map['syncAction'] = _syncAction;
@@ -185,6 +215,9 @@ class CInventoryModel {
     _buyingPrice = map['buyingPrice'];
     _unitBp = map['unitBp'];
     _unitSellingPrice = map['unitSellingPrice'];
+    _lowStockNotifierLimit = map['lowStockNotifierLimit'];
+    _supplierName = map['supplierName'];
+    _supplierContacts = map['supplierContacts'];
     _date = map['date'];
     _isSynced = map['isSynced'];
     _syncAction = map['syncAction'];
@@ -204,6 +237,9 @@ class CInventoryModel {
       double.parse(json[InvSheetFields.buyingPrice]),
       double.parse(json[InvSheetFields.unitBp]),
       double.parse(json[InvSheetFields.unitSellingPrice]),
+      jsonDecode(json[InvSheetFields.lowStockNotifierLimit]),
+      json[InvSheetFields.supplierName],
+      json[InvSheetFields.supplierContacts],
       json[InvSheetFields.date],
       jsonDecode(json[InvSheetFields.isSynced]),
       json[InvSheetFields.syncAction],

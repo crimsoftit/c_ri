@@ -54,6 +54,7 @@ class CInventoryController extends GetxController {
   final txtQty = TextEditingController();
   final txtBP = TextEditingController();
   final txtUnitSP = TextEditingController();
+  final txtStockNotifierLimit = TextEditingController();
   final txtSyncAction = TextEditingController();
 
   final addInvItemFormKey = GlobalKey<FormState>();
@@ -161,9 +162,14 @@ class CInventoryController extends GetxController {
           txtName.text,
           int.parse(txtQty.text),
           0,
-          double.parse(txtBP.text),
+          double.parse(txtBP.text.trim()),
           unitBP.value,
-          double.parse(txtUnitSP.text),
+          double.parse(txtUnitSP.text.trim()),
+          txtStockNotifierLimit.text != ''
+              ? int.parse(txtStockNotifierLimit.text.trim())
+              : (int.parse(txtQty.text) / 5).toInt(),
+          '',
+          '',
           DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
           1,
           'none',
@@ -225,6 +231,9 @@ class CInventoryController extends GetxController {
                 'buyingPrice': e.buyingPrice,
                 'unitBp': e.unitBp,
                 'unitSellingPrice': e.unitSellingPrice,
+                'lowStockNotifierLimit': e.lowStockNotifierLimit,
+                'supplierName': e.supplierName,
+                'supplierContacts': e.supplierContacts,
                 'date': e.date,
                 'isSynced': 1,
                 'syncAction': 'none',
@@ -272,6 +281,9 @@ class CInventoryController extends GetxController {
               element.buyingPrice,
               element.unitBp,
               element.unitSellingPrice,
+              element.lowStockNotifierLimit,
+              element.supplierName,
+              element.supplierContacts,
               element.date,
               1,
               'none',
@@ -315,6 +327,9 @@ class CInventoryController extends GetxController {
         unitBP.value = fetchedItem.first.unitBp;
         txtUnitSP.text = (fetchedItem.first.unitSellingPrice).toString();
 
+        txtStockNotifierLimit.text =
+            (fetchedItem.first.lowStockNotifierLimit).toString();
+
         txtSyncAction.text = 'update';
       } else {
         itemExists.value = false;
@@ -324,6 +339,7 @@ class CInventoryController extends GetxController {
         txtBP.text = '';
         unitBP.value = 0.0;
         txtUnitSP.text = '';
+        txtStockNotifierLimit.text = '';
         txtSyncAction.text = 'append';
       }
       isLoading.value = false;
@@ -345,6 +361,7 @@ class CInventoryController extends GetxController {
     txtBP.text = "";
     unitBP.value = 0.0;
     txtUnitSP.text = "";
+    txtStockNotifierLimit.text = "";
     scanBarcodeNormal();
   }
 
@@ -434,6 +451,11 @@ class CInventoryController extends GetxController {
       inventoryItem.buyingPrice = double.parse(txtBP.text.trim());
       inventoryItem.unitBp = unitBP.value;
       inventoryItem.unitSellingPrice = double.parse(txtUnitSP.text);
+      inventoryItem.lowStockNotifierLimit = txtStockNotifierLimit.text != ''
+          ? int.parse(txtStockNotifierLimit.text.trim())
+          : (int.parse(txtQty.text.trim()) / 5).toInt();
+      inventoryItem.supplierName = '';
+      inventoryItem.supplierContacts = '';
       inventoryItem.date = DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
       //inventoryItem.date = DateTime.now().toString();
 
@@ -447,7 +469,7 @@ class CInventoryController extends GetxController {
           //fetchInvSheetItemById(int.parse(txtId.text));
           inventoryItem.isSynced = 1;
           inventoryItem.syncAction = 'none';
-          updateInvSheetItem(int.parse(txtId.text), inventoryItem);
+          updateInvSheetItem(int.parse(txtId.text.trim()), inventoryItem);
         } else {
           //inventoryItem.isSynced = 0;
           inventoryItem.syncAction =
@@ -648,6 +670,9 @@ class CInventoryController extends GetxController {
               element.buyingPrice,
               element.unitBp,
               element.unitSellingPrice,
+              element.lowStockNotifierLimit,
+              element.supplierName,
+              element.supplierContacts,
               element.date,
               element.isSynced,
               element.syncAction,
@@ -763,6 +788,9 @@ class CInventoryController extends GetxController {
             element.buyingPrice,
             element.unitBp,
             element.unitSellingPrice,
+            element.lowStockNotifierLimit,
+            element.supplierName,
+            element.supplierContacts,
             element.date,
             0,
             'append',

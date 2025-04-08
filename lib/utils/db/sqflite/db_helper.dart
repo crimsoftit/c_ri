@@ -4,6 +4,7 @@ import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/models/txns_model.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
+import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart';
@@ -60,6 +61,9 @@ class DbHelper extends GetxController {
             buyingPrice REAL NOT NULL,
             unitBp REAL NOT NULL,
             unitSellingPrice REAL NOT NULL,
+            lowStockNotifierLimit INTEGER NOT NULL,
+            supplierName TEXT NOT NULL,
+            supplierContacts TEXT NOT NULL,
             date CHAR(30) NOT NULL,
             isSynced INTEGER NOT NULL,
             syncAction TEXT NOT NULL
@@ -124,7 +128,10 @@ class DbHelper extends GetxController {
       1400.00,
       7.0,
       10.0,
-      DateTime.now().toString(),
+      10,
+      'pabari',
+      '0114 567 890',
+      clock.now().toString(),
       1,
       'none',
     );
@@ -191,6 +198,9 @@ class DbHelper extends GetxController {
         maps[i]['buyingPrice'],
         maps[i]['unitBp'],
         maps[i]['unitSellingPrice'],
+        maps[i]['lowStockNotifierLimit'],
+        maps[i]['supplierName'],
+        maps[i]['supplierContacts'],
         maps[i]['date'],
         maps[i]['isSynced'],
         maps[i]['syncAction'],

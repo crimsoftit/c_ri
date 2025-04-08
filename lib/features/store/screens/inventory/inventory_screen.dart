@@ -106,6 +106,9 @@ class CInventoryScreen extends StatelessWidget {
                                                   0.0,
                                                   0.0,
                                                   0.0,
+                                                  0,
+                                                  '',
+                                                  '',
                                                   '',
                                                   0,
                                                   ''),
@@ -459,6 +462,15 @@ class CInventoryScreen extends StatelessWidget {
                                                       .unitSellingPrice,
                                                   invController
                                                       .inventoryItems[index]
+                                                      .lowStockNotifierLimit,
+                                                  invController
+                                                      .inventoryItems[index]
+                                                      .supplierName,
+                                                  invController
+                                                      .inventoryItems[index]
+                                                      .supplierContacts,
+                                                  invController
+                                                      .inventoryItems[index]
                                                       .date,
                                                   invController
                                                       .inventoryItems[index]
@@ -560,8 +572,8 @@ class CInventoryScreen extends StatelessWidget {
                       useRootNavigator: false,
                       builder: (BuildContext context) => dialog.buildDialog(
                         context,
-                        CInventoryModel(
-                            '', '', '', '', '', 0, 0, 0.0, 0.0, 0.0, '', 0, ''),
+                        CInventoryModel('', '', '', '', '', 0, 0, 0.0, 0.0, 0.0,
+                            0, '', '', '', 0, ''),
                         true,
                       ),
                     );
