@@ -13,6 +13,7 @@ import 'package:c_ri/features/store/screens/txns/sales_screen.dart';
 import 'package:c_ri/features/store/screens/txns/txn_details/txn_details.dart';
 import 'package:c_ri/features/store/screens/search/search_results.dart';
 import 'package:c_ri/features/store/screens/txns/sell_item_screen/sell_item_screen.dart';
+import 'package:c_ri/features/store/screens/txns/txns_screen.dart';
 import 'package:get/get.dart';
 
 import 'routes.dart';
@@ -33,7 +34,11 @@ class CAppRoutes {
     ),
     GetPage(
       name: CRoutes.sales,
-      page: () => const TxnsScreen(),
+      page: () => const CSalesScreen(),
+    ),
+    GetPage(
+      name: CRoutes.txns,
+      page: () => const CTxnsScreen(),
     ),
     GetPage(
       name: CRoutes.sellItemScreen,

@@ -13,7 +13,7 @@ class TxnsForAppends extends StatelessWidget {
   Widget build(BuildContext context) {
     final txnsController = Get.put(CTxnsController());
 
-    txnsController.fetchTransactions();
+    txnsController.fetchSoldItems();
     return Scaffold(
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -31,7 +31,7 @@ class TxnsForAppends extends StatelessWidget {
                 );
               }
 
-              txnsController.fetchTransactions();
+              txnsController.fetchSoldItems();
               return SizedBox(
                 child: ListView.builder(
                   shrinkWrap: true,

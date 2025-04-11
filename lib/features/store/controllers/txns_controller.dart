@@ -25,7 +25,7 @@ class CTxnsController extends GetxController {
   void onInit() async {
     await dbHelper.openDb();
 
-    await fetchTransactions();
+    await fetchSoldItems();
     await initTxnsSync();
 
     showAmountIssuedField.value = true;
@@ -39,7 +39,7 @@ class CTxnsController extends GetxController {
       await importTxnsFromCloud();
       localStorage.write('SyncTxnsDataWithCloud', false);
 
-      await fetchTransactions();
+      await fetchSoldItems();
     }
   }
 
@@ -48,7 +48,7 @@ class CTxnsController extends GetxController {
 
   DbHelper dbHelper = DbHelper.instance;
 
-  final RxList<CTxnsModel> transactions = <CTxnsModel>[].obs;
+  final RxList<CTxnsModel> sales = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> foundTxns = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> unsyncedTxnAppends = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> allGsheetTxnsData = <CTxnsModel>[].obs;
@@ -85,6 +85,7 @@ class CTxnsController extends GetxController {
 
   final RxDouble saleItemBp = 0.0.obs;
   final RxDouble saleItemUsp = 0.0.obs;
+  final RxDouble deposit = 0.0.obs;
   final RxDouble totalAmount = 0.0.obs;
   final RxDouble customerBal = 0.0.obs;
 
@@ -94,8 +95,8 @@ class CTxnsController extends GetxController {
 
   final txnsFormKey = GlobalKey<FormState>();
 
-  /// -- fetch transactions from sqflite db --
-  Future<List<CTxnsModel>> fetchTransactions() async {
+  /// -- fetch sold items from sqflite db --
+  Future<List<CTxnsModel>> fetchSoldItems() async {
     try {
       // start loader while txns are fetched
       isLoading.value = true;
@@ -103,15 +104,59 @@ class CTxnsController extends GetxController {
 
       // fetch
       final txns =
-          await dbHelper.fetchTransactions(userController.user.value.email);
+          await dbHelper.fetchAllSoldItems(userController.user.value.email);
 
       // assign txns to soldItemsList
-      transactions.assignAll(txns);
+      sales.assignAll(txns);
 
-      foundTxns.value = transactions;
+      foundTxns.value = sales;
 
       // assign values for unsynced txn appends
-      unsyncedTxnAppends.value = transactions
+      unsyncedTxnAppends.value = sales
+          .where((unAppendedTxn) =>
+              unAppendedTxn.syncAction.toLowerCase().contains('append'))
+          .toList();
+
+      // stop loader
+      isLoading.value = false;
+      txnsFetched.value = true;
+
+      return txns;
+    } catch (e) {
+      isLoading.value = false;
+      txnsFetched.value = false;
+
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'Oh Snap!',
+          message: e.toString(),
+        );
+      }
+      throw e.toString();
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  /// -- fetch sold items from sqflite db --
+  Future<List<CTxnsModel>> fetchTxns() async {
+    try {
+      // start loader while txns are fetched
+      isLoading.value = true;
+      await dbHelper.openDb();
+
+      // fetch
+      final txns = await dbHelper
+          .fetchSoldItemsGroupedByTxnId(userController.user.value.email);
+
+      // assign txns to soldItemsList
+      sales.assignAll(txns);
+
+      foundTxns.value = sales;
+
+      // assign values for unsynced txn appends
+      unsyncedTxnAppends.value = sales
           .where((unAppendedTxn) =>
               unAppendedTxn.syncAction.toLowerCase().contains('append'))
           .toList();
@@ -156,7 +201,7 @@ class CTxnsController extends GetxController {
       if (sellItemScanResults.value != '' &&
           sellItemScanResults.value != '-1') {
         //fetchForSaleItemByCode(sellItemScanResults.value);
-        await fetchTransactions();
+        await fetchSoldItems();
         await fetchForSaleItemByCode(barcodeScanRes);
       }
 
@@ -169,7 +214,7 @@ class CTxnsController extends GetxController {
           message: 'item not found! please scan again or search inventory',
           forInternetConnectivityStatus: false,
         );
-        await fetchTransactions();
+        await fetchSoldItems();
       }
     } on PlatformException catch (platformException) {
       if (platformException.code == BarcodeScanner.cameraAccessDenied) {
@@ -247,7 +292,7 @@ class CTxnsController extends GetxController {
   }
 
   onSearchTransactions(String value) {
-    foundTxns.value = transactions
+    foundTxns.value = sales
         .where((txn) =>
             txn.productName.toLowerCase().contains(value.toLowerCase()))
         .toList();
@@ -343,6 +388,7 @@ class CTxnsController extends GetxController {
     totalSales.value = 0;
     saleItemBp.value = 0.0;
     saleItemUsp.value = 0.0;
+    deposit.value = 0.0;
     totalAmount.value = 0.0;
     customerBal.value = 0.0;
   }
@@ -352,10 +398,10 @@ class CTxnsController extends GetxController {
     try {
       isLoading.value = true;
       txnsSyncIsLoading.value = true;
-      fetchTransactions().then(
+      fetchSoldItems().then(
         (result) {
           if (result.isNotEmpty) {
-            final unsyncedTxns = transactions.where((unsyncedTxn) =>
+            final unsyncedTxns = sales.where((unsyncedTxn) =>
                 unsyncedTxn.syncAction.toLowerCase() == 'append'.toLowerCase());
 
             if (unsyncedTxns.isNotEmpty) {
@@ -375,6 +421,7 @@ class CTxnsController extends GetxController {
                       'amountIssued': sale.amountIssued,
                       'customerBalance': sale.customerBalance,
                       'unitSellingPrice': sale.unitSellingPrice,
+                      'deposit': sale.deposit,
                       'paymentMethod': sale.paymentMethod,
                       'customerName': sale.customerName,
                       'customerContacts': sale.customerContacts,
@@ -494,12 +541,12 @@ class CTxnsController extends GetxController {
     try {
       isLoading.value = true;
 
-      await fetchTransactions();
+      await fetchSoldItems();
 
       await fetchUserTxnsSheetData();
 
       if (userGsheetTxnsData.isNotEmpty) {
-        if (transactions.isEmpty) {
+        if (sales.isEmpty) {
           for (var element in userGsheetTxnsData) {
             var dbTxnImports = CTxnsModel.withId(
               element.soldItemId,
@@ -528,7 +575,7 @@ class CTxnsController extends GetxController {
             );
 
             await dbHelper.addSoldItem(dbTxnImports);
-            await fetchTransactions();
+            await fetchSoldItems();
             isLoading.value = false;
 
             if (kDebugMode) {

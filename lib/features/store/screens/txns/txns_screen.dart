@@ -22,8 +22,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class CSalesScreen extends StatelessWidget {
-  const CSalesScreen({super.key});
+class CTxnsScreen extends StatelessWidget {
+  const CTxnsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +38,7 @@ class CSalesScreen extends StatelessWidget {
     final userController = Get.put(CUserController());
 
     Get.put(CInventoryController());
-    txnsController.fetchSoldItems();
+    txnsController.fetchTxns();
 
     return DefaultTabController(
       length: 2,

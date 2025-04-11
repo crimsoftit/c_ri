@@ -45,7 +45,7 @@ class CInventoryScreenRaw extends StatelessWidget {
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
     invController.fetchInventoryItems();
-    txnsController.fetchTransactions();
+    txnsController.fetchSoldItems();
 
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
 

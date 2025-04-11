@@ -22,8 +22,8 @@ class CDashboardController extends GetxController {
     // reset weeklySales values to zero
     weeklySales.value = List<double>.filled(7, 0.0);
 
-    txnsController.fetchTransactions().then((_) {
-      for (var sale in txnsController.transactions) {
+    txnsController.fetchSoldItems().then((_) {
+      for (var sale in txnsController.sales) {
         final String rawSaleDate = sale.date.trim();
         var formattedDate = rawSaleDate.replaceAll(' @', '');
         final DateTime salesWeekStart =

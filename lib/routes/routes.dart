@@ -3,6 +3,7 @@ class CRoutes {
   static const inventory = '/inventory';
   static const inventoryDetails = '/inventory/item_details/';
   static const sales = '/sales';
+  static const txns = '/txns';
   static const sellItemScreen = '/sales/sell_item/';
   static const txnDetailsScreen = '/sales/txn_details';
   static const checkoutScreen = '/checkout';

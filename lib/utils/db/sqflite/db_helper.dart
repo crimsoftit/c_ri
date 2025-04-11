@@ -398,12 +398,24 @@ class DbHelper extends GetxController {
     }
   }
 
-  /// -- fetch transactions --
-  Future<List<CTxnsModel>> fetchTransactions(String email) async {
+  /// -- fetch sold items --
+  Future<List<CTxnsModel>> fetchAllSoldItems(String email) async {
     final db = _db;
 
     final transactions = await db!.rawQuery(
         'SELECT * from $txnsTable where userEmail = ? ORDER BY date DESC',
+        [email]);
+
+    // Convert the List<Map<String, dynamic> into a List<Note>.
+    return transactions.map((json) => CTxnsModel.fromMapObject(json)).toList();
+  }
+
+  /// -- fetch transactions --
+  Future<List<CTxnsModel>> fetchSoldItemsGroupedByTxnId(String email) async {
+    final db = _db;
+
+    final transactions = await db!.rawQuery(
+        'SELECT * from $txnsTable where userEmail = ? GROUP BY txnId ORDER BY date DESC',
         [email]);
 
     // Convert the List<Map<String, dynamic> into a List<Note>.

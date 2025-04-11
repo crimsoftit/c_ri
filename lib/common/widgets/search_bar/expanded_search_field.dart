@@ -94,7 +94,7 @@ class CExpandedSearchField extends StatelessWidget {
             onTap: () {
               searchController.onSearchIconTap(hintTxt);
               invController.fetchInventoryItems();
-              salesController.fetchTransactions();
+              salesController.fetchSoldItems();
             },
             child: Padding(
               padding: const EdgeInsets.all(10.0),

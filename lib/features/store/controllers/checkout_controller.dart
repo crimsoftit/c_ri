@@ -103,7 +103,7 @@ class CCheckoutController extends GetxController {
         CImages.docerAnimation,
       );
 
-      txnsController.fetchTransactions();
+      txnsController.fetchSoldItems();
 
       final cartController = Get.put(CCartController());
 
@@ -207,7 +207,7 @@ class CCheckoutController extends GetxController {
                 cartController.clearCart();
                 resetSalesFields();
 
-                txnsController.fetchTransactions();
+                txnsController.fetchSoldItems();
                 customerBal.value = 0.0;
 
                 navController.selectedIndex.value = 2;

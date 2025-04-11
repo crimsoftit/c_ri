@@ -30,7 +30,7 @@ class _CTxnDetailsScreenState extends State<CTxnDetailsScreen> {
 
     //salesList = .toList();
 
-    var txnDetail = salesController.transactions.firstWhere(
+    var txnDetail = salesController.sales.firstWhere(
       (element) => element.txnId.toString() == txnId.toString(),
     );
 

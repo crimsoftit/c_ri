@@ -71,7 +71,7 @@ class CAnimatedSearchBar extends StatelessWidget {
                         onTap: () {
                           searchController.onSearchIconTap(hintTxt);
                           invController.fetchInventoryItems();
-                          salesController.fetchTransactions();
+                          salesController.fetchSoldItems();
                         },
                         child: const Icon(
                           Iconsax.search_normal,
@@ -98,7 +98,7 @@ class CAnimatedSearchBar extends StatelessWidget {
                         onTap: () {
                           searchController.onSearchIconTap(hintTxt);
                           invController.fetchInventoryItems();
-                          salesController.fetchTransactions();
+                          salesController.fetchSoldItems();
                         },
                         child: const Icon(
                           Iconsax.search_normal,

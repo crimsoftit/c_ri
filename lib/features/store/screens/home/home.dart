@@ -41,7 +41,7 @@ class HomeScreen extends StatelessWidget {
 
     invController.fetchInventoryItems();
     invController.fetchTopSellers();
-    txnsController.fetchTransactions();
+    txnsController.fetchSoldItems();
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -195,7 +195,7 @@ class HomeScreen extends StatelessWidget {
             ),
 
             /// -- weekly sales bar graph --
-            if (txnsController.transactions.isNotEmpty)
+            if (txnsController.sales.isNotEmpty)
               CRoundedContainer(
                 bgColor: CColors.softGrey,
                 child: Column(
