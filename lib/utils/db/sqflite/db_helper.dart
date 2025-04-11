@@ -85,6 +85,7 @@ class DbHelper extends GetxController {
             amountIssued REAL NOT NULL,
             customerBalance REAL NOT NULL,
             unitSellingPrice REAL NOT NULL,
+            deposit REAL NOT NULL,
             paymentMethod TEXT NOT NULL,
             customerName TEXT,
             customerContacts TEXT,

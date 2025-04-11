@@ -138,6 +138,7 @@ class CCheckoutController extends GetxController {
                 ? customerBal.value
                 : 0.00,
             cartItem.price,
+            0.00,
             selectedPaymentMethod.value.platformName,
             customerNameFieldController.text.trim(),
             '',

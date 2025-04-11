@@ -16,11 +16,13 @@ class CTxnsModel {
   String _productCode = "";
   String _productName = "";
   int _quantity = 0;
-  double _totalAmount = 0.0;
 
+  double _totalAmount = 0.0;
   double _amountIssued = 0.0;
   double _customerBalance = 0.0;
   double _unitSellingPrice = 0.0;
+  double _deposit = 0.0;
+
   String _paymentMethod = "";
   String _customerName = "";
   String _customerContacts = "";
@@ -44,6 +46,7 @@ class CTxnsModel {
     this._amountIssued,
     this._customerBalance,
     this._unitSellingPrice,
+    this._deposit,
     this._paymentMethod,
     this._customerName,
     this._customerContacts,
@@ -69,6 +72,7 @@ class CTxnsModel {
     this._amountIssued,
     this._customerBalance,
     this._unitSellingPrice,
+    this._deposit,
     this._paymentMethod,
     this._customerName,
     this._customerContacts,
@@ -95,6 +99,7 @@ class CTxnsModel {
       'amountIssued',
       'customerBalance',
       'unitSellingPrice',
+      'deposit',
       'paymentMethod',
       'customerName',
       'customerContacts',
@@ -117,10 +122,13 @@ class CTxnsModel {
   String get productCode => _productCode;
   String get productName => _productName;
   int get quantity => _quantity;
+
   double get totalAmount => _totalAmount;
   double get amountIssued => _amountIssued;
   double get customerBalance => _customerBalance;
   double get unitSellingPrice => _unitSellingPrice;
+  double get deposit => _deposit;
+
   String get paymentMethod => _paymentMethod;
   String get customerName => _customerName;
   String get customerContacts => _customerContacts;
@@ -193,8 +201,14 @@ class CTxnsModel {
   }
 
   set unitSellingPrice(double newUsp) {
-    if (newUsp >= 0) {
+    if (newUsp >= 0.0) {
       _unitSellingPrice = newUsp;
+    }
+  }
+
+  set deposit(double newDeposit) {
+    if (newDeposit >= 0) {
+      _deposit = newDeposit;
     }
   }
 
@@ -256,6 +270,7 @@ class CTxnsModel {
     map['amountIssued'] = _amountIssued;
     map['customerBalance'] = _customerBalance;
     map['unitSellingPrice'] = _unitSellingPrice;
+    map['deposit'] = _deposit;
     map['paymentMethod'] = _paymentMethod;
     map['customerName'] = _customerName;
     map['customerContacts'] = _customerContacts;
@@ -284,6 +299,7 @@ class CTxnsModel {
     _amountIssued = map['amountIssued'];
     _customerBalance = map['customerBalance'];
     _unitSellingPrice = map['unitSellingPrice'];
+    _deposit = map['deposit'];
     _paymentMethod = map['paymentMethod'];
     _customerName = map['customerName'];
     _customerContacts = map['customerContacts'];
@@ -311,6 +327,7 @@ class CTxnsModel {
       double.parse(json[TxnsSheetFields.amountIssued]),
       double.parse(json[TxnsSheetFields.customerBalance]),
       double.parse(json[TxnsSheetFields.unitSellingPrice]),
+      double.parse(json[TxnsSheetFields.deposit]),
       json[TxnsSheetFields.paymentMethod],
       json[TxnsSheetFields.customerName],
       json[TxnsSheetFields.customerContacts],

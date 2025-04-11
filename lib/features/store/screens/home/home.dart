@@ -422,8 +422,8 @@ class HomeScreen extends StatelessWidget {
       leftTitles: AxisTitles(
         sideTitles: SideTitles(
           showTitles: true,
-          interval: 50.0,
-          reservedSize: 80.0,
+          interval: 500.0,
+          reservedSize: 70.0,
           getTitlesWidget: (value, meta) {
             final userController = Get.put(CUserController());
             return SideTitleWidget(

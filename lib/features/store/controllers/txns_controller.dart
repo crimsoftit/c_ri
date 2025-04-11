@@ -515,6 +515,7 @@ class CTxnsController extends GetxController {
               element.amountIssued,
               element.customerBalance,
               element.unitSellingPrice,
+              element.deposit,
               element.paymentMethod,
               element.customerName,
               element.customerContacts,
