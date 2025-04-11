@@ -64,7 +64,7 @@ class CTxnsScreen extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       Text(
-                                        'sales',
+                                        'transactions',
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyLarge!
@@ -147,7 +147,7 @@ class CTxnsScreen extends StatelessWidget {
                           backIconColor:
                               isDarkTheme ? CColors.white : CColors.rBrown,
                           title: CAnimatedSearchBar(
-                            hintTxt: 'inventory, transactions',
+                            hintTxt: 'transactions',
                             boxColor:
                                 searchController.salesShowSearchField.value
                                     ? CColors.white
@@ -191,7 +191,7 @@ class CTxnsScreen extends StatelessWidget {
 
                   // -- no data widget --
                   if (invController.inventoryItems.isEmpty ||
-                      txnsController.sales.isEmpty) {
+                      txnsController.txns.isEmpty) {
                     return const Center(
                       child: NoDataScreen(
                         lottieImage: CImages.noDataLottie,
@@ -205,7 +205,7 @@ class CTxnsScreen extends StatelessWidget {
                     child: ListView.builder(
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
-                      itemCount: txnsController.sales.length,
+                      itemCount: txnsController.txns.length,
                       itemBuilder: (context, index) {
                         return Card(
                           color: CColors.lightGrey,
@@ -219,7 +219,7 @@ class CTxnsScreen extends StatelessWidget {
                               backgroundColor: Colors.brown[300],
                               radius: 16.0,
                               child: Text(
-                                txnsController.sales[index].productName[0]
+                                txnsController.txns[index].productName[0]
                                     .toUpperCase(),
                                 style: Theme.of(context)
                                     .textTheme
@@ -230,7 +230,7 @@ class CTxnsScreen extends StatelessWidget {
                               ),
                             ),
                             title: Text(
-                              '${txnsController.sales[index].productName.toUpperCase()} ',
+                              '${txnsController.txns[index].productName.toUpperCase()} ',
                               style: Theme.of(context)
                                   .textTheme
                                   .labelMedium!
@@ -245,7 +245,7 @@ class CTxnsScreen extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
-                                  'soldItemId: ${txnsController.sales[index].soldItemId}',
+                                  'soldItemId: ${txnsController.txns[index].soldItemId}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelMedium!
@@ -254,7 +254,7 @@ class CTxnsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  'pCode: ${txnsController.sales[index].productCode} t.Amount: ${userController.user.value.currencyCode}.${txnsController.sales[index].totalAmount}',
+                                  'pCode: ${txnsController.txns[index].productCode} t.Amount: ${userController.user.value.currencyCode}.${txnsController.sales[index].totalAmount}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelMedium!
@@ -265,7 +265,7 @@ class CTxnsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  'payment method: ${txnsController.sales[index].paymentMethod} qty: ${txnsController.sales[index].quantity} ',
+                                  'payment method: ${txnsController.txns[index].paymentMethod} qty: ${txnsController.sales[index].quantity} ',
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelMedium!
@@ -276,7 +276,7 @@ class CTxnsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  'modified: ${txnsController.sales[index].date} (txn id: #${txnsController.sales[index].txnId})',
+                                  'modified: ${txnsController.txns[index].date} (txn id: #${txnsController.sales[index].txnId})',
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelSmall!
@@ -287,7 +287,7 @@ class CTxnsScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  'isSynced:${txnsController.sales[index].isSynced} syncAction:${txnsController.sales[index].syncAction}',
+                                  'isSynced:${txnsController.txns[index].isSynced} syncAction:${txnsController.sales[index].syncAction}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelSmall!
@@ -302,7 +302,7 @@ class CTxnsScreen extends StatelessWidget {
                             onTap: () {
                               Get.toNamed(
                                 '/sales/txn_details',
-                                arguments: txnsController.sales[index].txnId,
+                                arguments: txnsController.txns[index].txnId,
                               );
                             },
                           ),

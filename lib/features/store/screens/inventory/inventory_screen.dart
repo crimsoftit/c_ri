@@ -178,8 +178,7 @@ class CInventoryScreen extends StatelessWidget {
                             controller: searchController.txtSalesSearch,
                           ),
                           backIconAction: () {
-                            Navigator.pop(context, true);
-                            // Get.back();
+                            // Navigator.pop(context, true);
                           },
                         );
                       },
@@ -199,7 +198,7 @@ class CInventoryScreen extends StatelessWidget {
                     //invController.fetchInventoryItems();
                     return const CStoreItemsTabs(
                       tab1Title: 'inventory',
-                      tab2Title: 'transactions',
+                      tab2Title: 'sold items',
                     );
                   }
 

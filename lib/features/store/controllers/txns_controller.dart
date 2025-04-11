@@ -26,6 +26,7 @@ class CTxnsController extends GetxController {
     await dbHelper.openDb();
 
     await fetchSoldItems();
+    await fetchTxns();
     await initTxnsSync();
 
     showAmountIssuedField.value = true;
@@ -49,7 +50,11 @@ class CTxnsController extends GetxController {
   DbHelper dbHelper = DbHelper.instance;
 
   final RxList<CTxnsModel> sales = <CTxnsModel>[].obs;
+  final RxList<CTxnsModel> foundSales = <CTxnsModel>[].obs;
+
+  final RxList<CTxnsModel> txns = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> foundTxns = <CTxnsModel>[].obs;
+
   final RxList<CTxnsModel> unsyncedTxnAppends = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> allGsheetTxnsData = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> userGsheetTxnsData = <CTxnsModel>[].obs;
@@ -109,7 +114,7 @@ class CTxnsController extends GetxController {
       // assign txns to soldItemsList
       sales.assignAll(txns);
 
-      foundTxns.value = sales;
+      foundSales.value = sales;
 
       // assign values for unsynced txn appends
       unsyncedTxnAppends.value = sales
@@ -146,20 +151,14 @@ class CTxnsController extends GetxController {
       isLoading.value = true;
       await dbHelper.openDb();
 
-      // fetch
-      final txns = await dbHelper
+      // fetch txns from sqflite db
+      final transactions = await dbHelper
           .fetchSoldItemsGroupedByTxnId(userController.user.value.email);
 
       // assign txns to soldItemsList
-      sales.assignAll(txns);
+      txns.assignAll(transactions);
 
-      foundTxns.value = sales;
-
-      // assign values for unsynced txn appends
-      unsyncedTxnAppends.value = sales
-          .where((unAppendedTxn) =>
-              unAppendedTxn.syncAction.toLowerCase().contains('append'))
-          .toList();
+      foundTxns.value = txns;
 
       // stop loader
       isLoading.value = false;
@@ -291,10 +290,10 @@ class CTxnsController extends GetxController {
     }
   }
 
-  onSearchTransactions(String value) {
-    foundTxns.value = sales
-        .where((txn) =>
-            txn.productName.toLowerCase().contains(value.toLowerCase()))
+  onSearchSalesAction(String value) {
+    foundSales.value = sales
+        .where((soldItem) =>
+            soldItem.productName.toLowerCase().contains(value.toLowerCase()))
         .toList();
   }
 

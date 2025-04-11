@@ -41,7 +41,7 @@ class CExpandedSearchField extends StatelessWidget {
                   invController.onSearchInventory(value);
                 } else if (hintTxt == 'inventory, transactions') {
                   invController.onSearchInventory(value);
-                  salesController.onSearchTransactions(value);
+                  salesController.onSearchSalesAction(value);
                 }
               },
               onFieldSubmitted: (value) {
@@ -50,7 +50,7 @@ class CExpandedSearchField extends StatelessWidget {
                   invController.onSearchInventory(value);
                 } else if (hintTxt == 'inventory, transactions') {
                   invController.onSearchInventory(value);
-                  salesController.onSearchTransactions(value);
+                  salesController.onSearchSalesAction(value);
                 }
               },
               style: TextStyle(

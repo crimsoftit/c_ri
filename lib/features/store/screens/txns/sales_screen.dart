@@ -176,7 +176,7 @@ class CSalesScreen extends StatelessWidget {
                     //invController.fetchInventoryItems();
                     return const CStoreItemsTabs(
                       tab1Title: 'inventory',
-                      tab2Title: 'transactions',
+                      tab2Title: 'sold items',
                     );
                   }
 
