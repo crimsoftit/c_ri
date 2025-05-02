@@ -37,11 +37,19 @@ dependencies:
 
   #android_intent: any # discontinued for security concerns
   android_intent_plus: ^5.0.2
+  #android_intent_plus: any
 
   ## -- location services -- ##
   location: any
   geolocator: any
   geocoding: any
+
+  # -- payment integration tings --
+  #mpesa_flutter_plugin: any
+  #mpesa_flutter_plugin: ^1.0.0
+  mpesa_flutter_plugin: ^1.6.1
+  flutter_mpesa_package: ^0.0.4
+  #flutter_mpesa_package: any
 
 
   # -- firebase packages

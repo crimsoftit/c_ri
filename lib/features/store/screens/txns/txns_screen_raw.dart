@@ -22,8 +22,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class CTxnsScreen extends StatelessWidget {
-  const CTxnsScreen({super.key});
+class CTxnsScreenRaw extends StatelessWidget {
+  const CTxnsScreenRaw({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -194,99 +194,104 @@ class CTxnsScreen extends StatelessWidget {
                       scrollDirection: Axis.vertical,
                       itemCount: txnsController.txns.length,
                       itemBuilder: (context, index) {
-                        txnsController
-                            .fetchTxnItems(txnsController.txns[index].txnId);
                         return Card(
                           color: CColors.lightGrey,
                           elevation: 0.3,
-                          child: SingleChildScrollView(
-                            //physics: BouncingScrollPhysics(),
-                            physics: ClampingScrollPhysics(),
-                            child: ExpansionTile(
-                              leading: CircleAvatar(
-                                backgroundColor: Colors.brown[300],
-                                radius: 16.0,
-                                child: Text(
-                                  txnsController.txns[index].productName[0]
-                                      .toUpperCase(),
+                          child: ListTile(
+                            horizontalTitleGap: 10,
+                            contentPadding: const EdgeInsets.all(
+                              5.0,
+                            ),
+                            leading: CircleAvatar(
+                              backgroundColor: Colors.brown[300],
+                              radius: 16.0,
+                              child: Text(
+                                txnsController.txns[index].productName[0]
+                                    .toUpperCase(),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge!
+                                    .apply(
+                                      color: CColors.white,
+                                    ),
+                              ),
+                            ),
+                            title: Text(
+                              '${txnsController.txns[index].productName.toUpperCase()} ',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium!
+                                  .apply(
+                                    color: CColors.rBrown,
+                                  ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'soldItemId: ${txnsController.txns[index].soldItemId}',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .labelLarge!
+                                      .labelMedium!
                                       .apply(
-                                        color: CColors.white,
+                                        color: CColors.rBrown,
                                       ),
                                 ),
-                              ),
-                              title: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      'reciept #: ${txnsController.txns[index].txnId}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelMedium!
-                                          .apply(
-                                            color: CColors.rBrown,
-                                          ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      '${userController.user.value.currencyCode}.${txnsController.txns[index].totalAmount}',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelMedium!
-                                          .apply(
-                                            color: CColors.rBrown,
-                                          ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              children: [
-                                ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: ClampingScrollPhysics(),
-                                  scrollDirection: Axis.vertical,
-                                  itemCount: txnsController.receiptItems.length,
-                                  itemBuilder: (context, index) {
-                                    return Text(
-                                      txnsController
-                                          .receiptItems[index].productName,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelMedium!
-                                          .apply(
-                                            color: CColors.rBrown,
-                                          ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    );
-
-                                    // Card(
-                                    //   child: ListTile(
-                                    //     horizontalTitleGap: 10,
-                                    //     contentPadding: const EdgeInsets.all(
-                                    //       5.0,
-                                    //     ),
-                                    //     title: Text(
-                                    //       txnsController
-                                    //           .receiptItems[index].productName,
-                                    //       style: Theme.of(context)
-                                    //           .textTheme
-                                    //           .labelMedium!
-                                    //           .apply(
-                                    //             color: CColors.rBrown,
-                                    //           ),
-                                    //       overflow: TextOverflow.ellipsis,
-                                    //       maxLines: 1,
-                                    //     ),
-                                    //   ),
-                                    // );
-                                  },
+                                Text(
+                                  'pCode: ${txnsController.txns[index].productCode} t.Amount: ${userController.user.value.currencyCode}.${txnsController.sales[index].totalAmount}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .apply(
+                                        color: CColors.rBrown
+                                            .withValues(alpha: 0.8),
+                                        //fontStyle: FontStyle.italic,
+                                      ),
+                                ),
+                                Text(
+                                  'payment method: ${txnsController.txns[index].paymentMethod} qty: ${txnsController.sales[index].quantity} ',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .apply(
+                                        color: CColors.rBrown
+                                            .withValues(alpha: 0.8),
+                                        //fontStyle: FontStyle.italic,
+                                      ),
+                                ),
+                                Text(
+                                  'modified: ${txnsController.txns[index].date} (txn id: #${txnsController.sales[index].txnId})',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall!
+                                      .apply(
+                                        color: CColors.rBrown
+                                            .withValues(alpha: 0.7),
+                                        //fontStyle: FontStyle.italic,
+                                      ),
+                                ),
+                                Text(
+                                  'isSynced:${txnsController.txns[index].isSynced} syncAction:${txnsController.sales[index].syncAction}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall!
+                                      .apply(
+                                        color: CColors.rBrown
+                                            .withValues(alpha: 0.7),
+                                        //fontStyle: FontStyle.italic,
+                                      ),
                                 ),
                               ],
                             ),
+                            onTap: () {
+                              Get.toNamed(
+                                '/sales/txn_details',
+                                arguments: txnsController.txns[index].txnId,
+                              );
+                            },
                           ),
                         );
                       },

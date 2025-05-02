@@ -54,6 +54,7 @@ class CTxnsController extends GetxController {
 
   final RxList<CTxnsModel> txns = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> foundTxns = <CTxnsModel>[].obs;
+  final RxList<CTxnsModel> receiptItems = <CTxnsModel>[].obs;
 
   final RxList<CTxnsModel> unsyncedTxnAppends = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> allGsheetTxnsData = <CTxnsModel>[].obs;
@@ -70,6 +71,7 @@ class CTxnsController extends GetxController {
   final RxBool itemExists = false.obs;
   final RxBool showAmountIssuedField = true.obs;
   final RxBool isLoading = false.obs;
+  final RxBool txnItemsLoading = false.obs;
   final RxBool txnsSyncIsLoading = false.obs;
   final RxBool includeCustomerDetails = false.obs;
   final RxBool txnSuccesfull = false.obs;
@@ -179,6 +181,34 @@ class CTxnsController extends GetxController {
       throw e.toString();
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  /// -- fetch txn items by txn id --
+  Future<List<CTxnsModel>> fetchTxnItems(int txnId) async {
+    try {
+      // start loader while txns are fetched
+      txnItemsLoading.value = true;
+
+      var txnItems =
+          sales.where((soldItem) => soldItem.txnId == txnId).toList();
+      receiptItems.assignAll(txnItems);
+
+      // stop loader
+      txnItemsLoading.value = false;
+      return receiptItems;
+    } catch (e) {
+      txnItemsLoading.value = false;
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'Oh Snap! error fetching txn items',
+          message: e.toString(),
+        );
+      }
+      throw e.toString();
+    } finally {
+      txnItemsLoading.value = false;
     }
   }
 

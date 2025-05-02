@@ -93,26 +93,26 @@ packages:
     dependency: "direct main"
     description:
       name: cached_network_image
-      sha256: "7c1183e361e5c8b0a0f21a28401eecdbde252441106a9816400dd4c2b2424916"
+      sha256: "28ea9690a8207179c319965c13cd8df184d5ee721ae2ce60f398ced1219cea1f"
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.1"
+    version: "3.3.1"
   cached_network_image_platform_interface:
     dependency: transitive
     description:
       name: cached_network_image_platform_interface
-      sha256: "35814b016e37fbdc91f7ae18c8caf49ba5c88501813f73ce8a07027a395e2829"
+      sha256: "9e90e78ae72caa874a323d78fa6301b3fb8fa7ea76a8f96dc5b5bf79f283bf2f"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.1"
+    version: "4.0.0"
   cached_network_image_web:
     dependency: transitive
     description:
       name: cached_network_image_web
-      sha256: "980842f4e8e2535b8dbd3d5ca0b1f0ba66bf61d14cc3a17a9b4788a3685ba062"
+      sha256: "205d6a9f1862de34b93184f22b9d2d94586b2f05c581d546695e3d8f6a805cd7"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.1"
+    version: "1.2.0"
   carousel_slider:
     dependency: "direct main"
     description:
@@ -442,10 +442,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_cache_manager
-      sha256: "400b6592f16a4409a7f2bb929a9a7e38c72cceb8ffb99ee57bbf2cb2cecf8386"
+      sha256: ceff65d74d907b1b772e22cf04daad60fb472461638977d9fae8b00a63e01e3d
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.1"
+    version: "3.3.3"
   flutter_keyboard_visibility:
     dependency: transitive
     description:
@@ -502,6 +502,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.0"
+  flutter_mpesa_package:
+    dependency: "direct main"
+    description:
+      name: flutter_mpesa_package
+      sha256: a3eb10dbcbff24053f219a5373e9745bd84f5978e01fd3423e708c1ba2072c65
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   flutter_native_splash:
     dependency: "direct main"
     description:
@@ -740,10 +748,10 @@ packages:
     dependency: "direct main"
     description:
       name: http
-      sha256: b9c29a161230ee03d3ccf545097fccd9b87a5264228c5d348202e0f0c28f9010
+      sha256: "759d1a329847dd0f39226c688d3e06a6b8679668e350e2891a6474f8b4bb8525"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.2"
+    version: "1.1.0"
   http_parser:
     dependency: transitive
     description:
@@ -852,10 +860,10 @@ packages:
     dependency: "direct main"
     description:
       name: intl
-      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
+      sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
       url: "https://pub.dev"
     source: hosted
-    version: "0.18.1"
+    version: "0.17.0"
   intl_phone_field:
     dependency: "direct main"
     description:
@@ -992,6 +1000,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  mpesa_flutter_plugin:
+    dependency: "direct main"
+    description:
+      name: mpesa_flutter_plugin
+      sha256: "8032b0bcd1cf3f37aa9a8c961527e2c48317b4966015aef0543ff1010685cfa0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.6.1"
   nested:
     dependency: transitive
     description:
@@ -1425,18 +1441,18 @@ packages:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_charts
-      sha256: "117823c9e2ffcb7fb9868c73263df88751e3bb1f3d81f617cbaf63112f530e9c"
+      sha256: bdb7cc5814ceb187793cea587f4a5946afcffd96726b219cee79df8460f44b7b
       url: "https://pub.dev"
     source: hosted
-    version: "28.1.39"
+    version: "21.2.4"
   syncfusion_flutter_core:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "794870919ca73e29c6cb25392a097cdfe58da4d6f3f3d3eccc529ecf52f78752"
+      sha256: "8db8f55c77f56968681447d3837c10f27a9e861e238a898fda116c7531def979"
       url: "https://pub.dev"
     source: hosted
-    version: "28.1.39"
+    version: "21.2.10"
   synchronized:
     dependency: transitive
     description:
@@ -1465,10 +1481,10 @@ packages:
     dependency: "direct main"
     description:
       name: timezone
-      sha256: ffc9d5f4d1193534ef051f9254063fa53d588609418c84299956c3db9383587d
+      sha256: "2236ec079a174ce07434e89fcd3fcda430025eb7692244139a9cf54fdcf1fc7d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.10.0"
+    version: "0.9.4"
   typed_data:
     dependency: transitive
     description:
