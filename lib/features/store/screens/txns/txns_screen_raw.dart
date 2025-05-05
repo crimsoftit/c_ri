@@ -54,84 +54,86 @@ class CTxnsScreenRaw extends StatelessWidget {
                     Obx(
                       () {
                         return CAppBar(
-                          leadingWidget: searchController
-                                  .salesShowSearchField.value
-                              ? null
-                              : Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 8.0, left: 10.0),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'transactions',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge!
-                                            .apply(
-                                              color: CColors.white,
-                                            ),
-                                      ),
-                                      const SizedBox(
-                                        width: CSizes.spaceBtnSections,
-                                      ),
-
-                                      /// -- scan item for sale --
-                                      IconButton(
-                                        onPressed: () {
-                                          invController.fetchInventoryItems();
-                                          txnsController.scanItemForSale();
-                                        },
-                                        icon: const Icon(
-                                          Iconsax.scan,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: CSizes.spaceBtnSections / 4,
-                                      ),
-
-                                      /// -- track unsynced txns --
-                                      // txnsController.isLoading.value ||
-                                      //         invController.isLoading.value
-                                      txnsController.isLoading.value ||
-                                              txnsController
-                                                  .txnsSyncIsLoading.value
-                                          ? const CShimmerEffect(
-                                              width: 40.0,
-                                              height: 40.0,
-                                              radius: 40.0,
-                                            )
-                                          : txnsController
-                                                  .unsyncedTxnAppends.isEmpty
-                                              ? const Icon(
-                                                  Iconsax.cloud_add,
-                                                )
-                                              : IconButton(
-                                                  onPressed: () async {
-                                                    // -- check internet connectivity --
-                                                    final internetIsConnected =
-                                                        await CNetworkManager
-                                                            .instance
-                                                            .isConnected();
-                                                    if (internetIsConnected) {
-                                                      await txnsController
-                                                          .addSalesDataToCloud();
-                                                    } else {
-                                                      CPopupSnackBar
-                                                          .customToast(
-                                                        message:
-                                                            'internet connection required for cloud sync!',
-                                                        forInternetConnectivityStatus:
-                                                            true,
-                                                      );
-                                                    }
-                                                  },
-                                                  icon: const Icon(
-                                                    Iconsax.cloud_change,
-                                                  ),
+                          leadingWidget:
+                              searchController.salesShowSearchField.value
+                                  ? null
+                                  : Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8.0, left: 10.0),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'transactions',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .apply(
+                                                  color: CColors.white,
                                                 ),
-                                    ],
-                                  ),
-                                ),
+                                          ),
+                                          const SizedBox(
+                                            width: CSizes.spaceBtnSections,
+                                          ),
+
+                                          /// -- scan item for sale --
+                                          IconButton(
+                                            onPressed: () {
+                                              invController
+                                                  .fetchUserInventoryItems();
+                                              txnsController.scanItemForSale();
+                                            },
+                                            icon: const Icon(
+                                              Iconsax.scan,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: CSizes.spaceBtnSections / 4,
+                                          ),
+
+                                          /// -- track unsynced txns --
+                                          // txnsController.isLoading.value ||
+                                          //         invController.isLoading.value
+                                          txnsController.isLoading.value ||
+                                                  txnsController
+                                                      .txnsSyncIsLoading.value
+                                              ? const CShimmerEffect(
+                                                  width: 40.0,
+                                                  height: 40.0,
+                                                  radius: 40.0,
+                                                )
+                                              : txnsController
+                                                      .unsyncedTxnAppends
+                                                      .isEmpty
+                                                  ? const Icon(
+                                                      Iconsax.cloud_add,
+                                                    )
+                                                  : IconButton(
+                                                      onPressed: () async {
+                                                        // -- check internet connectivity --
+                                                        final internetIsConnected =
+                                                            await CNetworkManager
+                                                                .instance
+                                                                .isConnected();
+                                                        if (internetIsConnected) {
+                                                          await txnsController
+                                                              .addSalesDataToCloud();
+                                                        } else {
+                                                          CPopupSnackBar
+                                                              .customToast(
+                                                            message:
+                                                                'internet connection required for cloud sync!',
+                                                            forInternetConnectivityStatus:
+                                                                true,
+                                                          );
+                                                        }
+                                                      },
+                                                      icon: const Icon(
+                                                        Iconsax.cloud_change,
+                                                      ),
+                                                    ),
+                                        ],
+                                      ),
+                                    ),
                           horizontalPadding: 1.0,
                           showBackArrow: false,
                           backIconColor:
@@ -346,7 +348,7 @@ class CTxnsScreenRaw extends StatelessWidget {
                   foregroundColor: Colors.white,
                   heroTag: 'transact',
                   onPressed: () {
-                    invController.fetchInventoryItems();
+                    invController.fetchUserInventoryItems();
                     //txnsController.scanItemForSale();
                     checkoutController.scanItemForCheckout();
                   },

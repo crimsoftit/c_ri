@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
     Get.put(CDashboardController());
     Get.put(CTxnsController());
 
-    invController.fetchInventoryItems();
+    invController.fetchUserInventoryItems();
     invController.fetchTopSellers();
     txnsController.fetchSoldItems();
 

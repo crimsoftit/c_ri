@@ -255,7 +255,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                         backgroundColor: CColors.white, // background color
                       ),
                       onPressed: () {
-                        invController.fetchInventoryItems();
+                        invController.fetchUserInventoryItems();
                         Navigator.pop(context, true);
                       },
                     ),

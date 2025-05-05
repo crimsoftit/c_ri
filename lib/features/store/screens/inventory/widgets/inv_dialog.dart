@@ -1,6 +1,7 @@
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/inv_dialog_form.dart';
+import 'package:c_ri/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,22 +31,41 @@ class AddUpdateItemDialog {
           return AlertDialog(
             insetPadding: const EdgeInsets.all(10.0),
             title: Obx(
-              () =>
-                  // IconButton(
-                  //   icon: Icon(
-                  //     Iconsax.arrow_left,
-                  //     color: CColors.rBrown,
-                  //   ),
-                  //   onPressed: () {
-                  //     Get.back();
-                  //   },
+              () => Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      (invController.itemExists.value)
+                          ? 'update ${invController.txtName.text}'
+                          : 'new entry...',
+                      style: Theme.of(context).textTheme.labelLarge,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  // const SizedBox(
+                  //   width: CSizes.spaceBtnInputFields / 2,
                   // ),
-                  Text(
-                (invController.itemExists.value)
-                    ? 'update ${invController.txtName.text}'
-                    : 'new entry...',
-                style: Theme.of(context).textTheme.labelLarge,
-                overflow: TextOverflow.ellipsis,
+                  Visibility(
+                    visible:
+                        invController.supplierDetailsExist.value ? false : true,
+                    child: Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          invController.toggleSupplierDetsFieldsVisibility();
+                        },
+                        child: Text(
+                          invController.includeSupplierDetails.value
+                              ? 'exclude supplier details?'
+                              : 'include supplier details?',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium!
+                              .apply(color: CColors.rBrown),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             shape: RoundedRectangleBorder(

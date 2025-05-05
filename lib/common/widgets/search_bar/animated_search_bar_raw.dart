@@ -30,9 +30,6 @@ class CAnimatedSearchBarRaw extends StatelessWidget {
       () {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          // width: searchController.showSearchField.value
-          //     ? CHelperFunctions.screenWidth()
-          //     : 50.0,
           width: hintTxt == 'inventory'
               ? searchController.invShowSearchField.value
                   ? double.maxFinite
@@ -70,7 +67,7 @@ class CAnimatedSearchBarRaw extends StatelessWidget {
                         ),
                         onTap: () {
                           searchController.onSearchIconTap(hintTxt);
-                          invController.fetchInventoryItems();
+                          invController.fetchUserInventoryItems();
                           salesController.fetchSoldItems();
                         },
                         child: const Icon(
@@ -97,7 +94,7 @@ class CAnimatedSearchBarRaw extends StatelessWidget {
                         ),
                         onTap: () {
                           searchController.onSearchIconTap(hintTxt);
-                          invController.fetchInventoryItems();
+                          invController.fetchUserInventoryItems();
                           salesController.fetchSoldItems();
                         },
                         child: const Icon(

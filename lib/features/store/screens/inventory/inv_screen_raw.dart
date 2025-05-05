@@ -44,7 +44,7 @@ class CInventoryScreenRaw extends StatelessWidget {
 
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
-    invController.fetchInventoryItems();
+    invController.fetchUserInventoryItems();
     txnsController.fetchSoldItems();
 
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
@@ -216,7 +216,7 @@ class CInventoryScreenRaw extends StatelessWidget {
 
                   if (invController.inventoryItems.isEmpty &&
                       !invController.isLoading.value) {
-                    invController.fetchInventoryItems();
+                    invController.fetchUserInventoryItems();
                     if (invController.inventoryItems.isEmpty &&
                         !invController.isLoading.value &&
                         !invController.syncIsLoading.value &&

@@ -77,7 +77,7 @@ class CCartItemsRaw extends StatelessWidget {
                               if (cartController
                                       .qtyFieldControllers[index].text !=
                                   '') {
-                                invController.fetchInventoryItems();
+                                invController.fetchUserInventoryItems();
                                 cartController.fetchCartItems();
                                 var invItem = invController.inventoryItems
                                     .firstWhere((item) =>
@@ -125,10 +125,7 @@ class CCartItemsRaw extends StatelessWidget {
                                 ),
 
                                 onChanged: (value) {
-                                  // value = cartController
-                                  //     .qtyFieldControllers[index].text
-                                  //     .trim();
-                                  invController.fetchInventoryItems();
+                                  invController.fetchUserInventoryItems();
                                   cartController.fetchCartItems();
                                   if (cartController
                                           .qtyFieldControllers[index].text !=
@@ -145,31 +142,6 @@ class CCartItemsRaw extends StatelessWidget {
                                         cartController.convertInvToCartItem(
                                             invItem, int.parse(value));
 
-                                    // if (int.parse(value) > invItem.quantity) {
-                                    //   CPopupSnackBar.customToast(
-                                    //     message:
-                                    //         'only ${invItem.quantity} of ${invItem.name} are stocked',
-                                    //     forInternetConnectivityStatus: false,
-                                    //   );
-                                    //   cartController.qtyFieldControllers[index]
-                                    //       .text = invItem.quantity.toString();
-                                    //   // value = cartController
-                                    //   //     .qtyFieldControllers[index].text
-                                    //   //     .trim();
-                                    //   // cartController.addSingleItemToCart(
-                                    //   //     thisCartItem,
-                                    //   //     true,
-                                    //   //     cartController
-                                    //   //         .qtyFieldControllers[index].text
-                                    //   //         .trim());
-                                    //   cartController.addSingleItemToCart(
-                                    //       thisCartItem,
-                                    //       true,
-                                    //       cartController
-                                    //           .qtyFieldControllers[index].text
-                                    //           .trim());
-                                    //   //return;
-                                    // }
                                     cartController.addSingleItemToCart(
                                         thisCartItem, true, value);
                                   }
@@ -182,7 +154,7 @@ class CCartItemsRaw extends StatelessWidget {
                               if (cartController
                                       .qtyFieldControllers[index].text !=
                                   '') {
-                                invController.fetchInventoryItems();
+                                invController.fetchUserInventoryItems();
                                 cartController.fetchCartItems();
                                 var invItem = invController.inventoryItems
                                     .firstWhere((item) =>

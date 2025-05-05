@@ -121,8 +121,7 @@ class CCheckoutScreen extends StatelessWidget {
                                     onTap: () {
                                       searchBarController
                                           .onTypeAheadSearchIconTap();
-                                      invController.fetchInventoryItems();
-                                      // salesController.fetchTransactions();
+                                      invController.fetchUserInventoryItems();
                                     },
                                     child: const Icon(
                                       Iconsax.search_normal,
@@ -171,16 +170,6 @@ class CCheckoutScreen extends StatelessWidget {
                   },
                 );
 
-                // run loader --
-                // if (txnsController.isLoading.value ||
-                //     invController.isLoading.value ||
-                //     invController.syncIsLoading.value ||
-                //     cartController.cartItemsLoading.value) {
-                //   //return const DefaultLoaderScreen();
-                //   return const CVerticalProductShimmer(
-                //     itemCount: 7,
-                //   );
-                // }
                 if (txnsController.isLoading.value ||
                     invController.isLoading.value ||
                     invController.syncIsLoading.value) {
@@ -237,12 +226,6 @@ class CCheckoutScreen extends StatelessWidget {
                                           .toString(),
                                     ));
 
-                                    // cartController.qtyFieldControllers.add(
-                                    //     TextEditingController(
-                                    //         text: cartController
-                                    //             .cartItems[index].quantity
-                                    //             .toString()));
-
                                     return Column(
                                       children: [
                                         CStoreItemWidget(
@@ -298,7 +281,7 @@ class CCheckoutScreen extends StatelessWidget {
                                                                   .text !=
                                                               '') {
                                                             invController
-                                                                .fetchInventoryItems();
+                                                                .fetchUserInventoryItems();
                                                             cartController
                                                                 .fetchCartItems();
                                                             var invItem = invController
@@ -403,11 +386,8 @@ class CCheckoutScreen extends StatelessWidget {
                                                           ),
 
                                                           onChanged: (value) {
-                                                            // value = cartController
-                                                            //     .qtyFieldControllers[index].text
-                                                            //     .trim();
                                                             invController
-                                                                .fetchInventoryItems();
+                                                                .fetchUserInventoryItems();
                                                             cartController
                                                                 .fetchCartItems();
                                                             if (cartController
@@ -455,9 +435,6 @@ class CCheckoutScreen extends StatelessWidget {
                                                           },
                                                         ),
                                                       ),
-                                                      // Text(
-                                                      //   '2',
-                                                      // ),
 
                                                       CCircularIcon(
                                                         icon: Iconsax.add,
@@ -474,7 +451,7 @@ class CCheckoutScreen extends StatelessWidget {
                                                                   .text !=
                                                               '') {
                                                             invController
-                                                                .fetchInventoryItems();
+                                                                .fetchUserInventoryItems();
                                                             cartController
                                                                 .fetchCartItems();
                                                             var invItem = invController
@@ -500,8 +477,6 @@ class CCheckoutScreen extends StatelessWidget {
                                                                     null);
                                                             cartController
                                                                 .fetchCartItems();
-                                                            // cartController.qtyFieldControllers[index].text =
-                                                            //     cartItem.quantity.toString();
                                                             cartController
                                                                     .qtyFieldControllers[
                                                                         index]

@@ -43,6 +43,8 @@ class CInventoryController extends GetxController {
 
   final RxBool itemExists = false.obs;
   final RxBool gSheetInvItemExists = false.obs;
+  final RxBool includeSupplierDetails = false.obs;
+  final RxBool supplierDetailsExist = false.obs;
 
   final RxInt currentItemId = 0.obs;
 
@@ -55,6 +57,8 @@ class CInventoryController extends GetxController {
   final txtBP = TextEditingController();
   final txtUnitSP = TextEditingController();
   final txtStockNotifierLimit = TextEditingController();
+  final txtSupplierName = TextEditingController();
+  final txtSupplierContacts = TextEditingController();
   final txtSyncAction = TextEditingController();
 
   final addInvItemFormKey = GlobalKey<FormState>();
@@ -69,7 +73,7 @@ class CInventoryController extends GetxController {
   void onInit() async {
     dbHelper.openDb();
 
-    fetchInventoryItems();
+    fetchUserInventoryItems();
     fetchInvDels();
     fetchInvUpdates();
     if (searchController.salesShowSearchField.isTrue &&
@@ -90,12 +94,12 @@ class CInventoryController extends GetxController {
       importInvDataFromCloud();
       localStorage.write('SyncInvDataWithCloud', false);
 
-      fetchInventoryItems();
+      fetchUserInventoryItems();
     }
   }
 
   /// -- fetch list of inventory items from sqflite db --
-  Future<List<CInventoryModel>> fetchInventoryItems() async {
+  Future<List<CInventoryModel>> fetchUserInventoryItems() async {
     try {
       // start loader while products are fetched
       isLoading.value = true;
@@ -168,8 +172,8 @@ class CInventoryController extends GetxController {
           txtStockNotifierLimit.text != ''
               ? int.parse(txtStockNotifierLimit.text.trim())
               : (int.parse(txtQty.text) / 5).toInt(),
-          '',
-          '',
+          txtSupplierName.text.trim(),
+          txtSupplierContacts.text.trim(),
           DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
           1,
           'none',
@@ -190,7 +194,7 @@ class CInventoryController extends GetxController {
       }
 
       await dbHelper.addInventoryItem(inventoryItem);
-      await fetchInventoryItems();
+      await fetchUserInventoryItems();
 
       isLoading.value = false;
 
@@ -212,7 +216,7 @@ class CInventoryController extends GetxController {
   /// -- upload unsynced data to the cloud --
   Future<void> addUnsyncedInvToCloud() async {
     isLoading.value = true;
-    await fetchInventoryItems();
+    await fetchUserInventoryItems();
 
     // -- check internet connectivity
     final isConnectedToInternet = await CNetworkManager.instance.isConnected();
@@ -320,6 +324,7 @@ class CInventoryController extends GetxController {
         currentItemId.value = fetchedItem.first.productId!;
 
         itemExists.value = true;
+
         txtId.text = currentItemId.value.toString();
         txtName.text = fetchedItem.first.name;
         txtQty.text = (fetchedItem.first.quantity).toString();
@@ -329,10 +334,20 @@ class CInventoryController extends GetxController {
 
         txtStockNotifierLimit.text =
             (fetchedItem.first.lowStockNotifierLimit).toString();
+        txtSupplierName.text = fetchedItem.first.supplierName;
+        txtSupplierContacts.text = fetchedItem.first.supplierContacts;
+
+        if (fetchedItem.first.supplierName != '' ||
+            fetchedItem.first.supplierContacts != '') {
+          supplierDetailsExist.value = true;
+        } else {
+          supplierDetailsExist.value = false;
+        }
 
         txtSyncAction.text = 'update';
       } else {
         itemExists.value = false;
+        supplierDetailsExist.value = false;
         txtId.text = '';
         txtName.text = '';
         txtQty.text = '';
@@ -340,6 +355,8 @@ class CInventoryController extends GetxController {
         unitBP.value = 0.0;
         txtUnitSP.text = '';
         txtStockNotifierLimit.text = '';
+        txtSupplierName.text = '';
+        txtSupplierContacts.text = '';
         txtSyncAction.text = 'append';
       }
       isLoading.value = false;
@@ -362,11 +379,13 @@ class CInventoryController extends GetxController {
     unitBP.value = 0.0;
     txtUnitSP.text = "";
     txtStockNotifierLimit.text = "";
+    txtSupplierName.text = "";
+    txtSupplierContacts.text = '';
     scanBarcodeNormal();
   }
 
   onSearchInventory(String value) {
-    fetchInventoryItems();
+    fetchUserInventoryItems();
 
     foundInventoryItems.value = inventoryItems
         .where((element) =>
@@ -384,7 +403,7 @@ class CInventoryController extends GetxController {
       await dbHelper.updateInventoryItem(inventoryItem, int.parse(txtId.text));
 
       // -- refresh inventory list
-      fetchInventoryItems();
+      fetchUserInventoryItems();
 
       // -- stop loader
       isLoading.value = false;
@@ -417,7 +436,7 @@ class CInventoryController extends GetxController {
       await dbHelper.deleteInventoryItem(inventoryItem);
 
       // -- refresh inventory list
-      fetchInventoryItems();
+      fetchUserInventoryItems();
 
       searchController.txtInvSearchField.text = '';
 
@@ -454,10 +473,9 @@ class CInventoryController extends GetxController {
       inventoryItem.lowStockNotifierLimit = txtStockNotifierLimit.text != ''
           ? int.parse(txtStockNotifierLimit.text.trim())
           : (int.parse(txtQty.text.trim()) / 5).toInt();
-      inventoryItem.supplierName = '';
-      inventoryItem.supplierContacts = '';
+      inventoryItem.supplierName = txtSupplierName.text.trim();
+      inventoryItem.supplierContacts = txtSupplierContacts.text.trim();
       inventoryItem.date = DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
-      //inventoryItem.date = DateTime.now().toString();
 
       inventoryItem.syncAction = txtSyncAction.text.trim();
 
@@ -547,7 +565,7 @@ class CInventoryController extends GetxController {
             await dbHelper.saveDelForSync(delItem);
           }
           deleteInventoryItem(inventoryItem);
-          fetchInventoryItems();
+          fetchUserInventoryItems();
 
           Navigator.of(Get.overlayContext!).pop();
         },
@@ -566,7 +584,7 @@ class CInventoryController extends GetxController {
       ),
       cancel: OutlinedButton(
         onPressed: () {
-          fetchInventoryItems();
+          fetchUserInventoryItems();
           Navigator.of(Get.overlayContext!).pop();
         },
         child: const Text('cancel'),
@@ -679,7 +697,7 @@ class CInventoryController extends GetxController {
             );
 
             dbHelper.addInventoryItem(dbData);
-            fetchInventoryItems();
+            fetchUserInventoryItems();
 
             isLoading.value = false;
           }
@@ -765,7 +783,7 @@ class CInventoryController extends GetxController {
   }
 
   Future syncInvUpdates() async {
-    await fetchInventoryItems();
+    await fetchUserInventoryItems();
 
     // -- check internet connectivity
     final isConnectedToInternet = await CNetworkManager.instance.isConnected();
@@ -807,7 +825,7 @@ class CInventoryController extends GetxController {
           );
           await dbHelper.updateDel(delItem);
 
-          fetchInventoryItems();
+          fetchUserInventoryItems();
         }
       } else {
         if (kDebugMode) {
@@ -821,7 +839,7 @@ class CInventoryController extends GetxController {
     try {
       // start loader
       syncIsLoading.value = true;
-      await fetchInventoryItems();
+      await fetchUserInventoryItems();
       await fetchInvDels();
 
       // -- check internet connectivity
@@ -885,5 +903,13 @@ class CInventoryController extends GetxController {
   /// -- compute unitBP --
   computeUnitBP(double bp, int qty) {
     unitBP.value = bp / qty;
+  }
+
+  toggleSupplierDetsFieldsVisibility() {
+    if (includeSupplierDetails.value) {
+      includeSupplierDetails.value = false;
+    } else {
+      includeSupplierDetails.value = true;
+    }
   }
 }

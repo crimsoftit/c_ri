@@ -1,4 +1,3 @@
-import 'package:c_ri/common/widgets/list_tiles/menu_tile.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
@@ -211,40 +210,63 @@ class AddUpdateInventoryForm extends StatelessWidget {
               const SizedBox(
                 height: CSizes.spaceBtnInputFields / 2,
               ),
-              TextFormField(
-                controller: invController.txtStockNotifierLimit,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: false,
-                  signed: false,
-                ),
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d+(\.\d*)?')),
-                ],
-                decoration: InputDecoration(
-                  labelText: 'notify if stock count falls below:',
-                  labelStyle: textStyle,
-                ),
-                style: const TextStyle(
-                  fontWeight: FontWeight.normal,
-                ),
-                validator: (value) {
-                  return CValidator.validateNumber(
-                      'low stock notification limit', value);
+              // TextFormField(
+              //   controller: invController.txtStockNotifierLimit,
+              //   keyboardType: const TextInputType.numberWithOptions(
+              //     decimal: false,
+              //     signed: false,
+              //   ),
+              //   inputFormatters: <TextInputFormatter>[
+              //     FilteringTextInputFormatter.allow(RegExp(r'^\d+(\.\d*)?')),
+              //   ],
+              //   decoration: InputDecoration(
+              //     labelText: 'notify if stock count falls below:',
+              //     labelStyle: textStyle,
+              //   ),
+              //   style: const TextStyle(
+              //     fontWeight: FontWeight.normal,
+              //   ),
+              //   validator: (value) {
+              //     return CValidator.validateNumber(
+              //         'low stock notification limit', value);
+              //   },
+              // ),
+
+              Obx(
+                () {
+                  return Visibility(
+                    visible: invController.includeSupplierDetails.value,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: invController.txtSupplierName,
+                          decoration: InputDecoration(
+                            labelText: 'supplier name (optional)',
+                            labelStyle: textStyle,
+                          ),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: CSizes.spaceBtnInputFields / 2,
+                        ),
+                        TextFormField(
+                          controller: invController.txtSupplierContacts,
+                          decoration: InputDecoration(
+                            labelText: 'supplier contacts (optional)',
+                            labelStyle: textStyle,
+                          ),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 },
               ),
-              const SizedBox(
-                height: CSizes.spaceBtnSections,
-              ),
-              CMenuTile(
-                icon: Iconsax.add_circle,
-                title: 'include supplier details',
-                subTitle: 'add name and contacts of your supplier',
-                trailing: Switch(
-                  value: false,
-                  activeColor: CColors.rBrown,
-                  onChanged: (value) {},
-                ),
-              ),
+
               const SizedBox(
                 height: CSizes.spaceBtnInputFields,
               ),
@@ -306,7 +328,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                         backgroundColor: CColors.white, // background color
                       ),
                       onPressed: () {
-                        invController.fetchInventoryItems();
+                        invController.fetchUserInventoryItems();
                         Navigator.pop(context, true);
                       },
                     ),

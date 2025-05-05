@@ -217,7 +217,7 @@ class CTypeAheadSearchField extends StatelessWidget {
                                     },
 
                           removeItemBtnAction: () {
-                            invController.fetchInventoryItems();
+                            invController.fetchUserInventoryItems();
                             cartController.fetchCartItems();
                             int cartItemIndex = cartController.cartItems
                                 .indexWhere((cartItem) =>
@@ -259,7 +259,7 @@ class CTypeAheadSearchField extends StatelessWidget {
                           // button to increment item qty in the cart
                           addItemBtnAction: () {
                             if (suggestion.quantity > 0) {
-                              invController.fetchInventoryItems();
+                              invController.fetchUserInventoryItems();
                               cartController.fetchCartItems();
 
                               // int cartItemIndex = cartController.userCartItems

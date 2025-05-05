@@ -76,20 +76,13 @@ class CCheckoutScreenRaw extends StatelessWidget {
             () {
               final screenWidth = CHelperFunctions.screenWidth();
               return searchBarController.showAnimatedTypeAheadField.value
-                  ?
-                  // ? CAnimatedTypeaheadField(
-                  //     boxColor: CColors.white,
-                  //   )
-                  AnimatedContainer(
+                  ? AnimatedContainer(
                       padding: const EdgeInsets.all(CSizes.defaultSpace / 4),
                       duration: const Duration(milliseconds: 200),
                       width:
                           searchBarController.showAnimatedTypeAheadField.value
                               ? screenWidth * .93
                               : 50.0,
-                      // width: searchBarController.showAnimatedTypeAheadField.value
-                      //     ? double.maxFinite
-                      //     : 40.0,
                       height: 50.0,
                       decoration: BoxDecoration(
                         borderRadius:
@@ -121,8 +114,7 @@ class CCheckoutScreenRaw extends StatelessWidget {
                                     onTap: () {
                                       searchBarController
                                           .onTypeAheadSearchIconTap();
-                                      invController.fetchInventoryItems();
-                                      // salesController.fetchTransactions();
+                                      invController.fetchUserInventoryItems();
                                     },
                                     child: const Icon(
                                       Iconsax.search_normal,
@@ -171,16 +163,6 @@ class CCheckoutScreenRaw extends StatelessWidget {
                   },
                 );
 
-                // run loader --
-                // if (txnsController.isLoading.value ||
-                //     invController.isLoading.value ||
-                //     invController.syncIsLoading.value ||
-                //     cartController.cartItemsLoading.value) {
-                //   //return const DefaultLoaderScreen();
-                //   return const CVerticalProductShimmer(
-                //     itemCount: 7,
-                //   );
-                // }
                 if (txnsController.isLoading.value ||
                     invController.isLoading.value ||
                     invController.syncIsLoading.value) {
@@ -257,7 +239,6 @@ class CCheckoutScreenRaw extends StatelessWidget {
                                                 // -- buttons to increment, decrement qty --
                                                 CRoundedContainer(
                                                   showBorder: true,
-                                                  // bgColor: bgColor.isBlank ?? isDarkTheme ? CColors.dark : CColors.white,
                                                   bgColor: isDarkTheme
                                                       ? CColors.dark
                                                       : CColors.white,
@@ -290,7 +271,7 @@ class CCheckoutScreenRaw extends StatelessWidget {
                                                                   .text !=
                                                               '') {
                                                             invController
-                                                                .fetchInventoryItems();
+                                                                .fetchUserInventoryItems();
                                                             cartController
                                                                 .fetchCartItems();
                                                             var invItem = invController
@@ -395,11 +376,8 @@ class CCheckoutScreenRaw extends StatelessWidget {
                                                           ),
 
                                                           onChanged: (value) {
-                                                            // value = cartController
-                                                            //     .qtyFieldControllers[index].text
-                                                            //     .trim();
                                                             invController
-                                                                .fetchInventoryItems();
+                                                                .fetchUserInventoryItems();
                                                             cartController
                                                                 .fetchCartItems();
                                                             if (cartController
@@ -447,9 +425,6 @@ class CCheckoutScreenRaw extends StatelessWidget {
                                                           },
                                                         ),
                                                       ),
-                                                      // Text(
-                                                      //   '2',
-                                                      // ),
 
                                                       CCircularIcon(
                                                         icon: Iconsax.add,
@@ -466,7 +441,7 @@ class CCheckoutScreenRaw extends StatelessWidget {
                                                                   .text !=
                                                               '') {
                                                             invController
-                                                                .fetchInventoryItems();
+                                                                .fetchUserInventoryItems();
                                                             cartController
                                                                 .fetchCartItems();
                                                             var invItem = invController
@@ -492,8 +467,6 @@ class CCheckoutScreenRaw extends StatelessWidget {
                                                                     null);
                                                             cartController
                                                                 .fetchCartItems();
-                                                            // cartController.qtyFieldControllers[index].text =
-                                                            //     cartItem.quantity.toString();
                                                             cartController
                                                                     .qtyFieldControllers[
                                                                         index]

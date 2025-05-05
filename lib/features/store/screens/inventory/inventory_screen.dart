@@ -36,7 +36,6 @@ class CInventoryScreen extends StatelessWidget {
     final checkoutController = Get.put(CCheckoutController());
     final invController = Get.put(CInventoryController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    //final navController = Get.put(NavMenuController());
     final searchController = Get.put(CSearchBarController());
     final syncController = Get.put(CSyncController());
     final txnsController = Get.put(CTxnsController());
@@ -44,8 +43,7 @@ class CInventoryScreen extends StatelessWidget {
 
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
-    invController.fetchInventoryItems();
-    //txnsController.fetchTransactions();
+    invController.fetchUserInventoryItems();
 
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
 
@@ -213,7 +211,7 @@ class CInventoryScreen extends StatelessWidget {
                   }
 
                   if (invController.inventoryItems.isEmpty) {
-                    invController.fetchInventoryItems();
+                    invController.fetchUserInventoryItems();
                     if (invController.inventoryItems.isEmpty &&
                         !invController.isLoading.value &&
                         !invController.syncIsLoading.value &&

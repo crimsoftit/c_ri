@@ -146,8 +146,6 @@ class CCheckoutController extends GetxController {
                 ? locationController.uAddress.value
                 : userController.user.value.userAddress,
             'lat: ${locationController.userLocation.value!.latitude ?? ''} long: ${locationController.userLocation.value!.longitude ?? ''}',
-            //DateTime.now().toString(),
-            // DateFormat('yyyy-MM-dd @ kk:mm').format(DateTime.now()),
             DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
             0,
             'append',
@@ -161,14 +159,12 @@ class CCheckoutController extends GetxController {
 
               // -- update stock count & total sales for this inventory item --
               final invController = Get.put(CInventoryController());
-              invController.fetchInventoryItems();
+              invController.fetchUserInventoryItems();
               var invItem = invController.inventoryItems
                   .firstWhere((item) => item.productId == cartItem.productId);
 
               invItem.qtySold += cartItem.quantity;
 
-              // await dbHelper.updateStockCountAndSales(
-              //     invItem.quantity, invItem.qtySold, cartItem.productId);
               if (invItem.quantity == cartItem.quantity) {
                 invItem.quantity = 0;
               } else {
@@ -329,7 +325,7 @@ class CCheckoutController extends GetxController {
       // -- set inventory item details to fields --
       if (checkoutItemScanResults.value != '' &&
           checkoutItemScanResults.value != '-1') {
-        await invController.fetchInventoryItems();
+        await invController.fetchUserInventoryItems();
         fetchForSaleItemByCode(checkoutItemScanResults.value);
 
         await fetchForSaleItemByCode(barcodeScanRes);

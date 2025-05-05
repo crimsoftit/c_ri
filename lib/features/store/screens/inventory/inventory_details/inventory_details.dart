@@ -186,8 +186,9 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                       ),
 
                       CMenuTile(
-                        icon: Iconsax.shopping_cart,
-                        title: 'COMING SOONEST...',
+                        icon: Iconsax.bitcoin_card,
+                        title:
+                            '$currency.${(invItem.qtySold * invItem.unitSellingPrice).toStringAsFixed(2)}',
                         subTitle: 'total sales(amount)',
                         onTap: () {},
                       ),
@@ -195,7 +196,7 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                       CMenuTile(
                         icon: Iconsax.bitcoin_card,
                         //title: '',
-                        title: '$currency. ${(invItem.buyingPrice)}',
+                        title: '$currency.${(invItem.buyingPrice)}',
                         subTitle: 'buying price',
                         onTap: () {
                           //Get.to(() => const UserAddressesScreen());
@@ -215,8 +216,8 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                       CMenuTile(
                         icon: Iconsax.card_pos,
                         //title: '',
-                        title: '~$currency.${(invItem.unitSellingPrice)}',
-                        subTitle: '~unit buying price',
+                        title: '$currency.${(invItem.unitSellingPrice)}',
+                        subTitle: '~ unit buying price',
                         onTap: () {
                           //Get.to(() => const OrdersScreen());
                         },
@@ -231,7 +232,19 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                       CMenuTile(
                         icon: Iconsax.card_tick,
                         title: invItem.qtySold.toString(),
-                        subTitle: 'total sales',
+                        subTitle: 'total units sold',
+                        onTap: () {},
+                      ),
+                      CMenuTile(
+                        icon: Iconsax.user,
+                        title: invItem.supplierName,
+                        subTitle: 'supplier name',
+                        onTap: () {},
+                      ),
+                      CMenuTile(
+                        icon: Icons.contact_mail,
+                        title: invItem.supplierContacts,
+                        subTitle: 'supplier contacts',
                         onTap: () {},
                       ),
                       CMenuTile(

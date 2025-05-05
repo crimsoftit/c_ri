@@ -54,84 +54,86 @@ class CTxnsScreen extends StatelessWidget {
                     Obx(
                       () {
                         return CAppBar(
-                          leadingWidget: searchController
-                                  .salesShowSearchField.value
-                              ? null
-                              : Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 8.0, left: 10.0),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        'transactions',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyLarge!
-                                            .apply(
-                                              color: CColors.white,
-                                            ),
-                                      ),
-                                      const SizedBox(
-                                        width: CSizes.spaceBtnSections,
-                                      ),
-
-                                      /// -- scan item for sale --
-                                      IconButton(
-                                        onPressed: () {
-                                          invController.fetchInventoryItems();
-                                          txnsController.scanItemForSale();
-                                        },
-                                        icon: const Icon(
-                                          Iconsax.scan,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        width: CSizes.spaceBtnSections / 4,
-                                      ),
-
-                                      /// -- track unsynced txns --
-                                      // txnsController.isLoading.value ||
-                                      //         invController.isLoading.value
-                                      txnsController.isLoading.value ||
-                                              txnsController
-                                                  .txnsSyncIsLoading.value
-                                          ? const CShimmerEffect(
-                                              width: 40.0,
-                                              height: 40.0,
-                                              radius: 40.0,
-                                            )
-                                          : txnsController
-                                                  .unsyncedTxnAppends.isEmpty
-                                              ? const Icon(
-                                                  Iconsax.cloud_add,
-                                                )
-                                              : IconButton(
-                                                  onPressed: () async {
-                                                    // -- check internet connectivity --
-                                                    final internetIsConnected =
-                                                        await CNetworkManager
-                                                            .instance
-                                                            .isConnected();
-                                                    if (internetIsConnected) {
-                                                      await txnsController
-                                                          .addSalesDataToCloud();
-                                                    } else {
-                                                      CPopupSnackBar
-                                                          .customToast(
-                                                        message:
-                                                            'internet connection required for cloud sync!',
-                                                        forInternetConnectivityStatus:
-                                                            true,
-                                                      );
-                                                    }
-                                                  },
-                                                  icon: const Icon(
-                                                    Iconsax.cloud_change,
-                                                  ),
+                          leadingWidget:
+                              searchController.salesShowSearchField.value
+                                  ? null
+                                  : Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 8.0, left: 10.0),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'transactions',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge!
+                                                .apply(
+                                                  color: CColors.white,
                                                 ),
-                                    ],
-                                  ),
-                                ),
+                                          ),
+                                          const SizedBox(
+                                            width: CSizes.spaceBtnSections,
+                                          ),
+
+                                          /// -- scan item for sale --
+                                          IconButton(
+                                            onPressed: () {
+                                              invController
+                                                  .fetchUserInventoryItems();
+                                              txnsController.scanItemForSale();
+                                            },
+                                            icon: const Icon(
+                                              Iconsax.scan,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            width: CSizes.spaceBtnSections / 4,
+                                          ),
+
+                                          /// -- track unsynced txns --
+                                          // txnsController.isLoading.value ||
+                                          //         invController.isLoading.value
+                                          txnsController.isLoading.value ||
+                                                  txnsController
+                                                      .txnsSyncIsLoading.value
+                                              ? const CShimmerEffect(
+                                                  width: 40.0,
+                                                  height: 40.0,
+                                                  radius: 40.0,
+                                                )
+                                              : txnsController
+                                                      .unsyncedTxnAppends
+                                                      .isEmpty
+                                                  ? const Icon(
+                                                      Iconsax.cloud_add,
+                                                    )
+                                                  : IconButton(
+                                                      onPressed: () async {
+                                                        // -- check internet connectivity --
+                                                        final internetIsConnected =
+                                                            await CNetworkManager
+                                                                .instance
+                                                                .isConnected();
+                                                        if (internetIsConnected) {
+                                                          await txnsController
+                                                              .addSalesDataToCloud();
+                                                        } else {
+                                                          CPopupSnackBar
+                                                              .customToast(
+                                                            message:
+                                                                'internet connection required for cloud sync!',
+                                                            forInternetConnectivityStatus:
+                                                                true,
+                                                          );
+                                                        }
+                                                      },
+                                                      icon: const Icon(
+                                                        Iconsax.cloud_change,
+                                                      ),
+                                                    ),
+                                        ],
+                                      ),
+                                    ),
                           horizontalPadding: 1.0,
                           showBackArrow: false,
                           backIconColor:
@@ -182,7 +184,7 @@ class CTxnsScreen extends StatelessWidget {
                     return const Center(
                       child: NoDataScreen(
                         lottieImage: CImages.noDataLottie,
-                        txt: 'No data found!',
+                        txt: 'no data found!',
                       ),
                     );
                   }
@@ -203,20 +205,20 @@ class CTxnsScreen extends StatelessWidget {
                             //physics: BouncingScrollPhysics(),
                             physics: ClampingScrollPhysics(),
                             child: ExpansionTile(
-                              leading: CircleAvatar(
-                                backgroundColor: Colors.brown[300],
-                                radius: 16.0,
-                                child: Text(
-                                  txnsController.txns[index].productName[0]
-                                      .toUpperCase(),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelLarge!
-                                      .apply(
-                                        color: CColors.white,
-                                      ),
-                                ),
-                              ),
+                              // leading: CircleAvatar(
+                              //   backgroundColor: Colors.brown[300],
+                              //   radius: 16.0,
+                              //   child: Text(
+                              //     txnsController.txns[index].productName[0]
+                              //         .toUpperCase(),
+                              //     style: Theme.of(context)
+                              //         .textTheme
+                              //         .labelLarge!
+                              //         .apply(
+                              //           color: CColors.white,
+                              //         ),
+                              //   ),
+                              // ),
                               title: Row(
                                 children: [
                                   Expanded(
@@ -250,39 +252,43 @@ class CTxnsScreen extends StatelessWidget {
                                   scrollDirection: Axis.vertical,
                                   itemCount: txnsController.receiptItems.length,
                                   itemBuilder: (context, index) {
-                                    return Text(
-                                      txnsController
-                                          .receiptItems[index].productName,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelMedium!
-                                          .apply(
+                                    return Row(
+                                      children: [
+                                        Text(
+                                          txnsController
+                                              .receiptItems[index].productName,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .labelMedium!
+                                              .apply(
+                                                color: CColors.rBrown,
+                                              ),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
+                                        TextButton.icon(
+                                          icon: const Icon(
+                                            Iconsax.undo,
+                                            size: CSizes.iconSm / 2,
                                             color: CColors.rBrown,
                                           ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
+                                          label: Text(
+                                            'refund',
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelMedium!
+                                                .apply(color: Colors.red),
+                                          ),
+                                          style: ElevatedButton.styleFrom(
+                                            foregroundColor: Colors
+                                                .red, // foreground (text) color
+                                            backgroundColor: CColors
+                                                .white, // background color
+                                          ),
+                                          onPressed: () {},
+                                        ),
+                                      ],
                                     );
-
-                                    // Card(
-                                    //   child: ListTile(
-                                    //     horizontalTitleGap: 10,
-                                    //     contentPadding: const EdgeInsets.all(
-                                    //       5.0,
-                                    //     ),
-                                    //     title: Text(
-                                    //       txnsController
-                                    //           .receiptItems[index].productName,
-                                    //       style: Theme.of(context)
-                                    //           .textTheme
-                                    //           .labelMedium!
-                                    //           .apply(
-                                    //             color: CColors.rBrown,
-                                    //           ),
-                                    //       overflow: TextOverflow.ellipsis,
-                                    //       maxLines: 1,
-                                    //     ),
-                                    //   ),
-                                    // );
                                   },
                                 ),
                               ],
@@ -341,8 +347,7 @@ class CTxnsScreen extends StatelessWidget {
                   foregroundColor: Colors.white,
                   heroTag: 'transact',
                   onPressed: () {
-                    invController.fetchInventoryItems();
-                    //txnsController.scanItemForSale();
+                    invController.fetchUserInventoryItems();
                     checkoutController.scanItemForCheckout();
                   },
                   child: const Icon(

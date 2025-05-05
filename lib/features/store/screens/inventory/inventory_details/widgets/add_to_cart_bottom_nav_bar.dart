@@ -129,7 +129,7 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                 onPressed: cartController.itemQtyInCart.value < 1
                     ? null
                     : () {
-                        invController.fetchInventoryItems();
+                        invController.fetchUserInventoryItems();
                         cartController.fetchCartItems();
                         cartController.addToCart(inventoryItem);
                         cartController.fetchCartItems();

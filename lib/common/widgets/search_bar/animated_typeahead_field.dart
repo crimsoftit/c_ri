@@ -32,9 +32,6 @@ class CAnimatedTypeaheadField extends StatelessWidget {
           width: searchBarController.showAnimatedTypeAheadField.value
               ? screenWidth * .93
               : 50.0,
-          // width: searchBarController.showAnimatedTypeAheadField.value
-          //     ? double.maxFinite
-          //     : 40.0,
           height: 50.0,
           decoration: BoxDecoration(
             borderRadius: searchBarController.showAnimatedTypeAheadField.value
@@ -63,8 +60,7 @@ class CAnimatedTypeaheadField extends StatelessWidget {
                     ),
                     onTap: () {
                       searchBarController.onTypeAheadSearchIconTap();
-                      invController.fetchInventoryItems();
-                      // salesController.fetchTransactions();
+                      invController.fetchUserInventoryItems();
                     },
                     child: const Icon(
                       Iconsax.search_normal,
