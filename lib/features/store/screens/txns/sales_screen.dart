@@ -303,8 +303,9 @@ class CSalesScreen extends StatelessWidget {
                             ),
                             onTap: () {
                               Get.toNamed(
-                                '/sales/txn_details',
-                                arguments: txnsController.sales[index].txnId,
+                                '/sales/sold_item_details',
+                                arguments:
+                                    txnsController.sales[index].soldItemId,
                               );
                             },
                           ),

@@ -197,7 +197,7 @@ class CTxnsScreen extends StatelessWidget {
                       itemCount: txnsController.txns.length,
                       itemBuilder: (context, index) {
                         txnsController
-                            .fetchTxnItems(txnsController.txns[index].txnId);
+                            .fetchTxnItems(txnsController.sales[index].txnId);
                         return Card(
                           color: CColors.lightGrey,
                           elevation: 0.3,
@@ -205,23 +205,10 @@ class CTxnsScreen extends StatelessWidget {
                             //physics: BouncingScrollPhysics(),
                             physics: ClampingScrollPhysics(),
                             child: ExpansionTile(
-                              // leading: CircleAvatar(
-                              //   backgroundColor: Colors.brown[300],
-                              //   radius: 16.0,
-                              //   child: Text(
-                              //     txnsController.txns[index].productName[0]
-                              //         .toUpperCase(),
-                              //     style: Theme.of(context)
-                              //         .textTheme
-                              //         .labelLarge!
-                              //         .apply(
-                              //           color: CColors.white,
-                              //         ),
-                              //   ),
-                              // ),
                               title: Row(
                                 children: [
                                   Expanded(
+                                    flex: 6,
                                     child: Text(
                                       'reciept #: ${txnsController.txns[index].txnId}',
                                       style: Theme.of(context)
@@ -233,6 +220,7 @@ class CTxnsScreen extends StatelessWidget {
                                     ),
                                   ),
                                   Expanded(
+                                    flex: 2,
                                     child: Text(
                                       '${userController.user.value.currencyCode}.${txnsController.txns[index].totalAmount}',
                                       style: Theme.of(context)
@@ -246,6 +234,15 @@ class CTxnsScreen extends StatelessWidget {
                                 ],
                               ),
                               children: [
+                                Text(
+                                  'receipt items',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .apply(
+                                        color: CColors.rBrown,
+                                      ),
+                                ),
                                 ListView.builder(
                                   shrinkWrap: true,
                                   physics: ClampingScrollPhysics(),
@@ -254,39 +251,94 @@ class CTxnsScreen extends StatelessWidget {
                                   itemBuilder: (context, index) {
                                     return Row(
                                       children: [
-                                        Text(
-                                          txnsController
-                                              .receiptItems[index].productName,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .labelMedium!
-                                              .apply(
-                                                color: CColors.rBrown,
-                                              ),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                        ),
-                                        TextButton.icon(
-                                          icon: const Icon(
-                                            Iconsax.undo,
-                                            size: CSizes.iconSm / 2,
-                                            color: CColors.rBrown,
-                                          ),
-                                          label: Text(
-                                            'refund',
+                                        Expanded(
+                                          child: Text(
+                                            txnsController.receiptItems[index]
+                                                .productName,
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .labelMedium!
-                                                .apply(color: Colors.red),
+                                                .apply(
+                                                  color: CColors.rBrown,
+                                                ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
                                           ),
-                                          style: ElevatedButton.styleFrom(
-                                            foregroundColor: Colors
-                                                .red, // foreground (text) color
-                                            backgroundColor: CColors
-                                                .white, // background color
-                                          ),
-                                          onPressed: () {},
                                         ),
+                                        const SizedBox(
+                                          width: CSizes.spaceBtnInputFields,
+                                        ),
+                                        Expanded(
+                                          child: IconButton(
+                                            onPressed: () {
+                                              Get.toNamed(
+                                                '/sales/sold_item_details',
+                                                arguments: txnsController
+                                                    .receiptItems[index]
+                                                    .soldItemId,
+                                              );
+                                            },
+                                            icon: const Icon(
+                                              Iconsax.information,
+                                              size: CSizes.iconSm,
+                                              color: CColors.rBrown,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: CSizes.spaceBtnInputFields,
+                                        ),
+                                        Expanded(
+                                          child: TextButton.icon(
+                                            icon: const Icon(
+                                              Iconsax.undo,
+                                              size: CSizes.iconSm,
+                                              color: CColors.rBrown,
+                                            ),
+                                            label: Text(
+                                              'refund',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelMedium!
+                                                  .apply(color: Colors.red),
+                                            ),
+                                            style: TextButton.styleFrom(
+                                              padding: EdgeInsets.zero,
+                                              minimumSize: Size(
+                                                30,
+                                                20,
+                                              ),
+                                              alignment: Alignment.centerLeft,
+                                            ),
+                                            onPressed: () {},
+                                          ),
+                                        ),
+
+                                        // TextButton.icon(
+                                        //   icon: const Icon(
+                                        //     Iconsax.information,
+                                        //     size: CSizes.iconSm,
+                                        //     color: CColors.rBrown,
+                                        //   ),
+                                        //   label: Text(
+                                        //     'info',
+                                        //     style: Theme.of(context)
+                                        //         .textTheme
+                                        //         .labelMedium!
+                                        //         .apply(
+                                        //           color: CColors.rBrown,
+                                        //         ),
+                                        //   ),
+                                        //   style: TextButton.styleFrom(
+                                        //     padding: EdgeInsets.zero,
+                                        //     minimumSize: Size(
+                                        //       30,
+                                        //       20,
+                                        //     ),
+                                        //     alignment: Alignment.centerLeft,
+                                        //   ),
+                                        //   onPressed: () {},
+                                        // ),
                                       ],
                                     );
                                   },

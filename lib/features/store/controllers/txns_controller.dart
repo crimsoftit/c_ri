@@ -76,6 +76,7 @@ class CTxnsController extends GetxController {
   final RxBool includeCustomerDetails = false.obs;
   final RxBool txnSuccesfull = false.obs;
   final RxBool txnsFetched = false.obs;
+  final RxBool soldItemsFetched = false.obs;
 
   final txtSaleItemQty = TextEditingController();
   final txtAmountIssued = TextEditingController();
@@ -110,11 +111,11 @@ class CTxnsController extends GetxController {
       await dbHelper.openDb();
 
       // fetch
-      final txns =
+      final soldItems =
           await dbHelper.fetchAllSoldItems(userController.user.value.email);
 
       // assign txns to soldItemsList
-      sales.assignAll(txns);
+      sales.assignAll(soldItems);
 
       foundSales.value = sales;
 
@@ -126,12 +127,12 @@ class CTxnsController extends GetxController {
 
       // stop loader
       isLoading.value = false;
-      txnsFetched.value = true;
+      soldItemsFetched.value = true;
 
-      return txns;
+      return sales;
     } catch (e) {
       isLoading.value = false;
-      txnsFetched.value = false;
+      soldItemsFetched.value = false;
 
       if (kDebugMode) {
         print(e.toString());
@@ -190,9 +191,17 @@ class CTxnsController extends GetxController {
       // start loader while txns are fetched
       txnItemsLoading.value = true;
 
-      var txnItems =
-          sales.where((soldItem) => soldItem.txnId == txnId).toList();
-      receiptItems.assignAll(txnItems);
+      var txnItems;
+
+      if (sales.isNotEmpty && !isLoading.value) {
+        txnItems = sales.where((soldItem) => soldItem.txnId == txnId).toList();
+        receiptItems.assignAll(txnItems);
+      } else {
+        // await fetchSoldItems().then((result) {
+        //   txnItems = sales.where((soldItem) => soldItem.txnId == txnId).toList();
+        // receiptItems.assignAll(txnItems);
+        // });
+      }
 
       // stop loader
       txnItemsLoading.value = false;

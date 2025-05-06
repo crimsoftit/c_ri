@@ -6,6 +6,7 @@ class CRoutes {
   static const txns = '/txns';
   static const sellItemScreen = '/sales/sell_item/';
   static const txnDetailsScreen = '/sales/txn_details';
+  static const soldItemDetailsScreen = '/sales/sold_item_details';
   static const checkoutScreen = '/checkout';
   static const settings = '/settings';
   static const userProfile = '/user_profile';
