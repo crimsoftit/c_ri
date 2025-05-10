@@ -178,18 +178,18 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                         onTap: () {},
                       ),
 
-                      CMenuTile(
-                        icon: Iconsax.shopping_cart,
-                        title: '${(invItem.qtySold)}',
-                        subTitle: 'Qty/units sold',
-                        onTap: () {},
-                      ),
+                      // CMenuTile(
+                      //   icon: Iconsax.shopping_cart,
+                      //   title: '${(invItem.qtySold)}',
+                      //   subTitle: 'Qty/units sold',
+                      //   onTap: () {},
+                      // ),
 
                       CMenuTile(
                         icon: Iconsax.bitcoin_card,
                         title:
-                            '$currency.${(invItem.qtySold * invItem.unitSellingPrice).toStringAsFixed(2)}',
-                        subTitle: 'total sales(amount)',
+                            '$currency.${(invItem.qtySold * invItem.unitSellingPrice).toStringAsFixed(2)} (${(invItem.qtySold)} units)',
+                        subTitle: 'total sales',
                         onTap: () {},
                       ),
 

@@ -191,16 +191,16 @@ class CTxnsController extends GetxController {
       // start loader while txns are fetched
       txnItemsLoading.value = true;
 
-      var txnItems;
+      List<CTxnsModel> txnItems;
 
       if (sales.isNotEmpty && !isLoading.value) {
         txnItems = sales.where((soldItem) => soldItem.txnId == txnId).toList();
         receiptItems.assignAll(txnItems);
       } else {
-        // await fetchSoldItems().then((result) {
-        //   txnItems = sales.where((soldItem) => soldItem.txnId == txnId).toList();
-        // receiptItems.assignAll(txnItems);
-        // });
+        CPopupSnackBar.warningSnackBar(
+          title: 'items not found',
+          message: 'items NOT found for this txn',
+        );
       }
 
       // stop loader
