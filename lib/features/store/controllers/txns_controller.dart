@@ -1,18 +1,25 @@
 import 'dart:async';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:c_ri/api/sheets/store_sheets_api.dart';
+import 'package:c_ri/common/widgets/custom_shapes/containers/rounded_container.dart';
+import 'package:c_ri/common/widgets/icons/circular_icon.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/models/txns_model.dart';
+import 'package:c_ri/utils/constants/colors.dart';
+import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
+import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:simple_barcode_scanner/enum.dart';
 import 'package:simple_barcode_scanner/flutter_barcode_scanner.dart';
 
@@ -54,7 +61,7 @@ class CTxnsController extends GetxController {
 
   final RxList<CTxnsModel> txns = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> foundTxns = <CTxnsModel>[].obs;
-  final RxList<CTxnsModel> receiptItems = <CTxnsModel>[].obs;
+  RxList<CTxnsModel> receiptItems = <CTxnsModel>[].obs;
 
   final RxList<CTxnsModel> unsyncedTxnAppends = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> allGsheetTxnsData = <CTxnsModel>[].obs;
@@ -153,6 +160,7 @@ class CTxnsController extends GetxController {
       // start loader while txns are fetched
       isLoading.value = true;
       await dbHelper.openDb();
+      await fetchSoldItems();
 
       // fetch txns from sqflite db
       final transactions = await dbHelper
@@ -191,23 +199,33 @@ class CTxnsController extends GetxController {
       // start loader while txns are fetched
       txnItemsLoading.value = true;
 
-      List<CTxnsModel> txnItems;
+      await fetchTxns();
+      receiptItems.clear();
 
-      if (sales.isNotEmpty && !isLoading.value) {
-        txnItems = sales.where((soldItem) => soldItem.txnId == txnId).toList();
+      if (txns.isNotEmpty &&
+          sales.isNotEmpty &&
+          soldItemsFetched.value &&
+          txnsFetched.value) {
+        var txnItems = sales
+            .where((soldItem) =>
+                soldItem.txnId.toString().contains(txnId.toString()))
+            .toList();
+
         receiptItems.assignAll(txnItems);
       } else {
+        // stop loader
+        txnItemsLoading.value = false;
+        receiptItems.clear();
         CPopupSnackBar.warningSnackBar(
           title: 'items not found',
           message: 'items NOT found for this txn',
         );
       }
 
-      // stop loader
-      txnItemsLoading.value = false;
       return receiptItems;
     } catch (e) {
       txnItemsLoading.value = false;
+      receiptItems.clear();
       if (kDebugMode) {
         print(e.toString());
         CPopupSnackBar.errorSnackBar(
@@ -630,5 +648,106 @@ class CTxnsController extends GetxController {
         message: e.toString(),
       );
     }
+  }
+
+  /// -- popup for item refund --
+  void refundItemWarningPopup(CTxnsModel soldItem) {
+    final userCurrency =
+        CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
+
+    Get.defaultDialog(
+      contentPadding: const EdgeInsets.all(CSizes.sm),
+      title: 'refund ${soldItem.productName}?',
+      // middleText:
+      //     'Are you certain you want to refund ${soldItem.productName} for $userCurrency.${soldItem.unitSellingPrice * soldItem.quantity}? This action can\'t be undone!',
+      middleText: 'Are you certain you want to refund ${soldItem.productName}?',
+      confirm: ElevatedButton(
+        onPressed: () async {},
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red,
+          side: const BorderSide(
+            color: Colors.red,
+          ),
+        ),
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: CSizes.sm),
+          child: Text('confirm refund'),
+        ),
+      ),
+      cancel: OutlinedButton(
+        onPressed: () {
+          Navigator.of(Get.overlayContext!).pop();
+        },
+        child: const Text('cancel'),
+      ),
+    );
+  }
+
+  Future<dynamic> refundItemActionModal(
+      BuildContext context, CTxnsModel soldItem) {
+    final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    return showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return SingleChildScrollView(
+          child: CRoundedContainer(
+            padding: const EdgeInsets.all(
+              CSizes.lg / 3,
+            ),
+            bgColor: isDarkTheme ? CColors.rBrown : CColors.white,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  'refund ${soldItem.productName}',
+                  style: Theme.of(context).textTheme.labelMedium!.apply(
+                        color: isDarkTheme ? CColors.white : CColors.rBrown,
+                      ),
+                ),
+                Divider(
+                  color: isDarkTheme ? CColors.white : CColors.rBrown,
+                ),
+                Row(
+                  children: [
+                    CCircularIcon(
+                      icon: Iconsax.minus,
+                      iconBorderRadius: 100,
+                      bgColor: CColors.black.withValues(alpha: 0.5),
+                      width: 40.0,
+                      height: 40.0,
+                      color: CColors.white,
+                      onPressed: () {},
+                    ),
+                    //const CFavoriteIcon(),
+                    const SizedBox(
+                      width: CSizes.spaceBtnItems,
+                    ),
+                    Text(
+                      soldItem.quantity.toString(),
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    const SizedBox(
+                      width: CSizes.spaceBtnItems,
+                    ),
+
+                    CCircularIcon(
+                      iconBorderRadius: 100,
+                      bgColor: (CNetworkManager.instance.hasConnection.value
+                          ? CColors.rBrown
+                          : CColors.black),
+                      icon: Iconsax.add,
+                      color: CColors.white,
+                      width: 40.0,
+                      height: 40.0,
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

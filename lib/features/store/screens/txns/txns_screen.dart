@@ -199,8 +199,6 @@ class CTxnsScreen extends StatelessWidget {
                       scrollDirection: Axis.vertical,
                       itemCount: txnsController.txns.length,
                       itemBuilder: (context, index) {
-                        txnsController
-                            .fetchTxnItems(txnsController.sales[index].txnId);
                         return Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
@@ -256,7 +254,10 @@ class CTxnsScreen extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  onExpansionChanged: (isExpanded) {},
+                                  onExpansionChanged: (isExpanded) {
+                                    txnsController.fetchTxnItems(
+                                        txnsController.txns[index].txnId);
+                                  },
                                   children: [
                                     Text(
                                       'receipt items',
@@ -276,7 +277,7 @@ class CTxnsScreen extends StatelessWidget {
                                       itemBuilder: (context, index) {
                                         return ExpansionTile(
                                           title: Text(
-                                            '${txnsController.receiptItems[index].productName} ${txnsController.receiptItems[index].quantity} items @ $currency.${(txnsController.receiptItems[index].quantity * txnsController.receiptItems[index].unitSellingPrice)}',
+                                            '${txnsController.receiptItems[index].productName} ${txnsController.receiptItems[index].quantity} items @ $currency.${(txnsController.receiptItems[index].quantity * txnsController.receiptItems[index].unitSellingPrice)} usp:${txnsController.receiptItems[index].unitSellingPrice}',
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .labelMedium!
@@ -331,7 +332,14 @@ class CTxnsScreen extends StatelessWidget {
                                                     alignment:
                                                         Alignment.centerLeft,
                                                   ),
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    txnsController
+                                                        .refundItemActionModal(
+                                                            context,
+                                                            txnsController
+                                                                    .receiptItems[
+                                                                index]);
+                                                  },
                                                 ),
                                               ],
                                             ),

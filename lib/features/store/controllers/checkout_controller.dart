@@ -186,7 +186,7 @@ class CCheckoutController extends GetxController {
           });
         }
 
-        Get.off(
+        Get.offAll(
           () {
             return CSuccessScreen(
               title: 'txn success',
@@ -201,6 +201,8 @@ class CCheckoutController extends GetxController {
                 // TODO: save receipts before clearing
                 // clear cart
                 cartController.clearCart();
+                itemsInCart.clear();
+
                 resetSalesFields();
 
                 txnsController.fetchSoldItems();
@@ -482,6 +484,9 @@ class CCheckoutController extends GetxController {
     customerBal.value = 0.0;
     amtIssuedFieldController.text = '';
     itemExists.value = false;
+
+    // clear cart
+    //cartController.clearCart();
 
     setFocusOnAmtIssuedField.value = false;
   }
