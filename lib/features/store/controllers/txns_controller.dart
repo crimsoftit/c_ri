@@ -12,7 +12,6 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
-import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -94,6 +93,7 @@ class CTxnsController extends GetxController {
   final RxInt sellItemId = 0.obs;
   final RxInt qtyAvailable = 0.obs;
   final RxInt totalSales = 0.obs;
+  final RxInt refundQty = 1.obs;
 
   final RxString saleItemName = ''.obs;
   final RxString saleItemCode = ''.obs;
@@ -718,51 +718,78 @@ class CTxnsController extends GetxController {
                 Divider(
                   color: isDarkTheme ? CColors.white : CColors.rBrown,
                 ),
-                Row(
-                  children: [
-                    Text('quantity'),
-                    const SizedBox(
-                      width: CSizes.spaceBtnInputFields,
-                    ),
-                    CCircularIcon(
-                      icon: Iconsax.minus,
-                      iconBorderRadius: 100,
-                      bgColor: CColors.black.withValues(alpha: 0.5),
-                      width: 40.0,
-                      height: 40.0,
-                      color: CColors.white,
-                      onPressed: () {},
-                    ),
-                    //const CFavoriteIcon(),
-                    const SizedBox(
-                      width: CSizes.spaceBtnItems,
-                    ),
-                    Text(
-                      soldItem.quantity.toString(),
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
-                    const SizedBox(
-                      width: CSizes.spaceBtnItems,
-                    ),
+                Obx(
+                  () {
+                    return Row(
+                      children: [
+                        Text('quantity'),
+                        const SizedBox(
+                          width: CSizes.spaceBtnInputFields,
+                        ),
+                        CCircularIcon(
+                          icon: Iconsax.minus,
+                          iconBorderRadius: 100,
+                          bgColor: CColors.black.withValues(alpha: 0.5),
+                          width: 45.0,
+                          height: 45.0,
+                          color: CColors.white,
+                          onPressed: () {
+                            if (refundQty.value > 0 &&
+                                refundQty.value <= soldItem.quantity) {
+                              refundQty.value -= 1;
+                            }
+                          },
+                        ),
+                        //const CFavoriteIcon(),
+                        const SizedBox(
+                          width: CSizes.spaceBtnItems,
+                        ),
+                        Text(
+                          refundQty.value > soldItem.quantity
+                              ? soldItem.quantity.toString()
+                              : refundQty.value.toString(),
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        const SizedBox(
+                          width: CSizes.spaceBtnItems,
+                        ),
 
-                    CCircularIcon(
-                      iconBorderRadius: 100,
-                      bgColor: (CNetworkManager.instance.hasConnection.value
-                          ? CColors.rBrown
-                          : CColors.black),
-                      icon: Iconsax.add,
-                      color: CColors.white,
-                      width: 40.0,
-                      height: 40.0,
-                      onPressed: () {},
-                    ),
-                  ],
+                        CCircularIcon(
+                          iconBorderRadius: 100,
+                          // bgColor: (CNetworkManager.instance.hasConnection.value
+                          //     ? CColors.rBrown
+                          //     : CColors.black),
+                          bgColor: CColors.black,
+                          icon: Iconsax.add,
+                          color: CColors.white,
+                          width: 45.0,
+                          height: 45.0,
+                          onPressed: () {
+                            if (refundQty.value < soldItem.quantity) {
+                              refundQty.value += 1;
+                            }
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                ),
+                Divider(
+                  color: isDarkTheme ? CColors.white : CColors.rBrown,
                 ),
               ],
             ),
           ),
         );
       },
-    );
+    ).whenComplete(onBottomSheetClosed);
+  }
+
+  /// -- reset refundQty to 1 when bottom sheet is closed --
+  void onBottomSheetClosed() {
+    refundQty.value = 1;
+    if (kDebugMode) {
+      print('bottomSheet closed');
+    }
   }
 }

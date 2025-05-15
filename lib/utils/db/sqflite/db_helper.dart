@@ -403,7 +403,7 @@ class DbHelper extends GetxController {
     final db = _db;
 
     final transactions = await db!.rawQuery(
-        'SELECT * from $txnsTable where userEmail = ? ORDER BY date DESC',
+        'SELECT * from $txnsTable where userEmail = ? ORDER BY soldItemId DESC',
         [email]);
 
     // Convert the List<Map<String, dynamic> into a List<Note>.
