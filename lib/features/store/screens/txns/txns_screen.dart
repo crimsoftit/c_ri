@@ -3,7 +3,6 @@ import 'package:c_ri/common/widgets/custom_shapes/containers/primary_header_cont
 import 'package:c_ri/common/widgets/products/cart/positioned_cart_counter_widget.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
 import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
-import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/common/widgets/tab_views/store_items_tabs.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
@@ -173,17 +172,19 @@ class CTxnsScreen extends StatelessWidget {
                   }
 
                   // run loader --
-                  if (txnsController.isLoading.value ||
-                      invController.isLoading.value ||
-                      txnsController.txnsSyncIsLoading.value) {
-                    return const CVerticalProductShimmer(
-                      itemCount: 7,
-                    );
-                  }
+                  // if (txnsController.isLoading.value ||
+                  //     invController.isLoading.value ||
+                  //     txnsController.txnsSyncIsLoading.value) {
+                  //   return const CVerticalProductShimmer(
+                  //     itemCount: 7,
+                  //   );
+                  // }
 
                   // -- no data widget --
                   if (invController.inventoryItems.isEmpty ||
-                      txnsController.txns.isEmpty) {
+                      txnsController.txns.isEmpty &&
+                          (!txnsController.isLoading.value ||
+                              !invController.isLoading.value)) {
                     return const Center(
                       child: NoDataScreen(
                         lottieImage: CImages.noDataLottie,
@@ -255,6 +256,10 @@ class CTxnsScreen extends StatelessWidget {
                                     ],
                                   ),
                                   onExpansionChanged: (isExpanded) {
+                                    // if (isExpanded) {
+                                    //   txnsController.fetchTxnItems(
+                                    //       txnsController.txns[index].txnId);
+                                    // }
                                     txnsController.fetchTxnItems(
                                         txnsController.txns[index].txnId);
                                   },

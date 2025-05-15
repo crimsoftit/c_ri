@@ -198,7 +198,6 @@ class CCheckoutController extends GetxController {
                 pdfServices.savePdfFile('rI-$receiptId', pdfData);
               },
               onContinueBtnPressed: () {
-                // TODO: save receipts before clearing
                 // clear cart
                 cartController.clearCart();
                 itemsInCart.clear();

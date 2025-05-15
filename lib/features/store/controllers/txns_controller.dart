@@ -149,9 +149,10 @@ class CTxnsController extends GetxController {
         );
       }
       throw e.toString();
-    } finally {
-      isLoading.value = false;
     }
+    // finally {
+    //   isLoading.value = false;
+    // }
   }
 
   /// -- fetch sold items from sqflite db --
@@ -171,14 +172,15 @@ class CTxnsController extends GetxController {
 
       foundTxns.value = txns;
 
+      txnsFetched.value = true;
+
       // stop loader
       isLoading.value = false;
-      txnsFetched.value = true;
 
       return txns;
     } catch (e) {
-      isLoading.value = false;
       txnsFetched.value = false;
+      isLoading.value = false;
 
       if (kDebugMode) {
         print(e.toString());
@@ -188,9 +190,10 @@ class CTxnsController extends GetxController {
         );
       }
       throw e.toString();
-    } finally {
-      isLoading.value = false;
     }
+    // finally {
+    //   isLoading.value = false;
+    // }
   }
 
   /// -- fetch txn items by txn id --
@@ -198,33 +201,41 @@ class CTxnsController extends GetxController {
     try {
       // start loader while txns are fetched
       txnItemsLoading.value = true;
+      isLoading.value = true;
 
-      await fetchTxns();
       receiptItems.clear();
+      fetchTxns().then(
+        (_) {
+          if (txns.isNotEmpty &&
+              sales.isNotEmpty &&
+              soldItemsFetched.value &&
+              txnsFetched.value) {
+            var txnItems = sales
+                .where((soldItem) =>
+                    soldItem.txnId.toString().contains(txnId.toString()))
+                .toList();
 
-      if (txns.isNotEmpty &&
-          sales.isNotEmpty &&
-          soldItemsFetched.value &&
-          txnsFetched.value) {
-        var txnItems = sales
-            .where((soldItem) =>
-                soldItem.txnId.toString().contains(txnId.toString()))
-            .toList();
+            receiptItems.assignAll(txnItems);
+          } else {
+            // stop loader
+            txnItemsLoading.value = false;
+            isLoading.value = false;
+            receiptItems.clear();
+            return CPopupSnackBar.warningSnackBar(
+              title: 'items not found',
+              message: 'items NOT found for this txn',
+            );
+          }
+        },
+      );
 
-        receiptItems.assignAll(txnItems);
-      } else {
-        // stop loader
-        txnItemsLoading.value = false;
-        receiptItems.clear();
-        CPopupSnackBar.warningSnackBar(
-          title: 'items not found',
-          message: 'items NOT found for this txn',
-        );
-      }
+      txnItemsLoading.value = false;
+      isLoading.value = false;
 
       return receiptItems;
     } catch (e) {
       txnItemsLoading.value = false;
+      isLoading.value = false;
       receiptItems.clear();
       if (kDebugMode) {
         print(e.toString());
@@ -234,9 +245,11 @@ class CTxnsController extends GetxController {
         );
       }
       throw e.toString();
-    } finally {
-      txnItemsLoading.value = false;
     }
+    // finally {
+    //   txnItemsLoading.value = false;
+    //   isLoading.value = false;
+    // }
   }
 
   /// -- barcode scanner using flutter_barcode_scanner package --
@@ -502,8 +515,8 @@ class CTxnsController extends GetxController {
                     await dbHelper.updateTxnItemsSyncStatus(
                         1, 'none', forSyncItem.soldItemId!);
                   }
-                  // isLoading.value = false;
-                  // syncIsLoading.value = false;
+                  isLoading.value = false;
+                  txnsSyncIsLoading.value = false;
                 } else {
                   txnsSyncIsLoading.value = false;
                   CPopupSnackBar.errorSnackBar(
@@ -547,10 +560,11 @@ class CTxnsController extends GetxController {
       }
 
       throw e.toString();
-    } finally {
-      txnsSyncIsLoading.value = false;
-      isLoading.value = false;
     }
+    // finally {
+    //   txnsSyncIsLoading.value = false;
+    //   isLoading.value = false;
+    // }
   }
 
   /// -- fetch txns from google sheets by userEmail --
@@ -652,9 +666,6 @@ class CTxnsController extends GetxController {
 
   /// -- popup for item refund --
   void refundItemWarningPopup(CTxnsModel soldItem) {
-    final userCurrency =
-        CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
-
     Get.defaultDialog(
       contentPadding: const EdgeInsets.all(CSizes.sm),
       title: 'refund ${soldItem.productName}?',
@@ -709,6 +720,10 @@ class CTxnsController extends GetxController {
                 ),
                 Row(
                   children: [
+                    Text('quantity'),
+                    const SizedBox(
+                      width: CSizes.spaceBtnInputFields,
+                    ),
                     CCircularIcon(
                       icon: Iconsax.minus,
                       iconBorderRadius: 100,
