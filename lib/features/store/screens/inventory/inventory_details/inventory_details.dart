@@ -178,12 +178,12 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                         onTap: () {},
                       ),
 
-                      // CMenuTile(
-                      //   icon: Iconsax.shopping_cart,
-                      //   title: '${(invItem.qtySold)}',
-                      //   subTitle: 'Qty/units sold',
-                      //   onTap: () {},
-                      // ),
+                      CMenuTile(
+                        icon: Iconsax.shopping_cart,
+                        title: '${(invItem.qtyRefunded)}',
+                        subTitle: 'Qty/units refunded',
+                        onTap: () {},
+                      ),
 
                       CMenuTile(
                         icon: Iconsax.bitcoin_card,
@@ -403,6 +403,7 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                           invItem.name,
                           invItem.quantity,
                           invItem.qtySold,
+                          invItem.qtyRefunded,
                           invItem.buyingPrice,
                           invItem.unitBp,
                           invItem.unitSellingPrice,

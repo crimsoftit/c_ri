@@ -16,6 +16,7 @@ class CTxnsModel {
   String _productCode = "";
   String _productName = "";
   int _quantity = 0;
+  int _qtyRefunded = 0;
 
   double _totalAmount = 0.0;
   double _amountIssued = 0.0;
@@ -30,6 +31,7 @@ class CTxnsModel {
   String _txnAddressCoordinates = "";
   String _date = "";
   int _isSynced = 0;
+
   String _syncAction = "";
   String _txnStatus = "";
 
@@ -42,6 +44,7 @@ class CTxnsModel {
     this._productCode,
     this._productName,
     this._quantity,
+    this._qtyRefunded,
     this._totalAmount,
     this._amountIssued,
     this._customerBalance,
@@ -68,6 +71,7 @@ class CTxnsModel {
     this._productCode,
     this._productName,
     this._quantity,
+    this._qtyRefunded,
     this._totalAmount,
     this._amountIssued,
     this._customerBalance,
@@ -95,6 +99,7 @@ class CTxnsModel {
       'productCode',
       'productName',
       'quantity',
+      'qtyRefunded',
       'totalAmount',
       'amountIssued',
       'customerBalance',
@@ -122,6 +127,7 @@ class CTxnsModel {
   String get productCode => _productCode;
   String get productName => _productName;
   int get quantity => _quantity;
+  int get qtyRefunded => _qtyRefunded;
 
   double get totalAmount => _totalAmount;
   double get amountIssued => _amountIssued;
@@ -182,6 +188,10 @@ class CTxnsModel {
     if (newQty >= 1) {
       _quantity = newQty;
     }
+  }
+
+  set qtyRefunded(int newQtyRefunded) {
+    _qtyRefunded = newQtyRefunded;
   }
 
   set totalAmount(double newtotalAmount) {
@@ -266,6 +276,7 @@ class CTxnsModel {
     map['productCode'] = _productCode;
     map['productName'] = _productName;
     map['quantity'] = _quantity;
+    map['qtyRefunded'] = _qtyRefunded;
     map['totalAmount'] = _totalAmount;
     map['amountIssued'] = _amountIssued;
     map['customerBalance'] = _customerBalance;
@@ -295,6 +306,7 @@ class CTxnsModel {
     _productCode = map['productCode'];
     _productName = map['productName'];
     _quantity = map['quantity'];
+    _qtyRefunded = map['qtyRefunded'];
     _totalAmount = map['totalAmount'];
     _amountIssued = map['amountIssued'];
     _customerBalance = map['customerBalance'];
@@ -323,6 +335,7 @@ class CTxnsModel {
       json[TxnsSheetFields.productCode],
       json[TxnsSheetFields.productName],
       jsonDecode(json[TxnsSheetFields.quantity]),
+      jsonDecode(json[TxnsSheetFields.qtyRefunded]),
       double.parse(json[TxnsSheetFields.totalAmount]),
       double.parse(json[TxnsSheetFields.amountIssued]),
       double.parse(json[TxnsSheetFields.customerBalance]),

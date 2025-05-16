@@ -166,6 +166,7 @@ class CInventoryController extends GetxController {
           txtName.text,
           int.parse(txtQty.text),
           0,
+          0,
           double.parse(txtBP.text.trim()),
           unitBP.value,
           double.parse(txtUnitSP.text.trim()),
@@ -232,6 +233,7 @@ class CInventoryController extends GetxController {
                 'name': e.name,
                 'quantity': e.quantity,
                 'qtySold': e.qtySold,
+                'qtyRefunded': e.qtyRefunded,
                 'buyingPrice': e.buyingPrice,
                 'unitBp': e.unitBp,
                 'unitSellingPrice': e.unitSellingPrice,
@@ -282,6 +284,7 @@ class CInventoryController extends GetxController {
               element.name,
               element.quantity,
               element.qtySold,
+              element.qtyRefunded,
               element.buyingPrice,
               element.unitBp,
               element.unitSellingPrice,
@@ -595,7 +598,6 @@ class CInventoryController extends GetxController {
   /// -- fetch list of inventory items from google sheets --
   Future fetchAllInvSheetItems() async {
     try {
-      //await StoreSheetsApi.initializeSpreadSheets();
       // fetch items from sqflite db
       var gsheetItemsList = (await StoreSheetsApi.fetchAllGsheetInvItems())!;
 
@@ -685,6 +687,7 @@ class CInventoryController extends GetxController {
               element.name,
               element.quantity,
               element.qtySold,
+              element.qtyRefunded,
               element.buyingPrice,
               element.unitBp,
               element.unitSellingPrice,
@@ -803,6 +806,7 @@ class CInventoryController extends GetxController {
             element.name,
             element.quantity,
             element.qtySold,
+            element.qtyRefunded,
             element.buyingPrice,
             element.unitBp,
             element.unitSellingPrice,

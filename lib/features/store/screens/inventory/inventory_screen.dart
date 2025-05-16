@@ -101,6 +101,7 @@ class CInventoryScreen extends StatelessWidget {
                                                   '',
                                                   0,
                                                   0,
+                                                  0,
                                                   0.0,
                                                   0.0,
                                                   0.0,
@@ -327,7 +328,7 @@ class CInventoryScreen extends StatelessWidget {
                                         ),
                                   ),
                                   Text(
-                                    'total sales:${invController.inventoryItems[index].qtySold} (in stock:${invController.inventoryItems[index].quantity})',
+                                    'qty sold:${invController.inventoryItems[index].qtySold} (in stock:${invController.inventoryItems[index].quantity})',
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelSmall!
@@ -337,6 +338,28 @@ class CInventoryScreen extends StatelessWidget {
                                           //fontStyle: FontStyle.italic,
                                         ),
                                   ),
+                                  Text(
+                                    'total refunds:${invController.inventoryItems[index].qtyRefunded * invController.inventoryItems[index].unitSellingPrice} (refunded items:${invController.inventoryItems[index].qtyRefunded} )',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall!
+                                        .apply(
+                                          color: CColors.rBrown
+                                              .withValues(alpha: 0.7),
+                                          //fontStyle: FontStyle.italic,
+                                        ),
+                                  ),
+                                  // Text(
+                                  //   'total refunds:${invController.inventoryItems[index].qtySold} (in stock:${invController.inventoryItems[index].quantity})',
+                                  //   style: Theme.of(context)
+                                  //       .textTheme
+                                  //       .labelSmall!
+                                  //       .apply(
+                                  //         color: CColors.rBrown
+                                  //             .withValues(alpha: 0.7),
+                                  //         //fontStyle: FontStyle.italic,
+                                  //       ),
+                                  // ),
                                   Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -450,6 +473,9 @@ class CInventoryScreen extends StatelessWidget {
                                                       .qtySold,
                                                   invController
                                                       .inventoryItems[index]
+                                                      .qtyRefunded,
+                                                  invController
+                                                      .inventoryItems[index]
                                                       .buyingPrice,
                                                   invController
                                                       .inventoryItems[index]
@@ -530,15 +556,7 @@ class CInventoryScreen extends StatelessWidget {
                         children: [
                           FloatingActionButton(
                             onPressed: () {
-                              //Get.put(CCheckoutController());
                               checkoutController.handleNavToCheckout();
-                              // cartController.fetchCartItems().then((_) {
-                              //   Future.delayed(
-                              //       const Duration(milliseconds: 250), () {
-                              //     Get.to(() => const CCheckoutScreen());
-                              //   });
-                              // });
-                              // Get.to(() => const CCheckoutScreen());
                             },
                             backgroundColor: isConnectedToInternet
                                 ? Colors.brown
@@ -569,8 +587,8 @@ class CInventoryScreen extends StatelessWidget {
                       useRootNavigator: false,
                       builder: (BuildContext context) => dialog.buildDialog(
                         context,
-                        CInventoryModel('', '', '', '', '', 0, 0, 0.0, 0.0, 0.0,
-                            0, '', '', '', 0, ''),
+                        CInventoryModel('', '', '', '', '', 0, 0, 0, 0.0, 0.0,
+                            0.0, 0, '', '', '', 0, ''),
                         true,
                       ),
                     );

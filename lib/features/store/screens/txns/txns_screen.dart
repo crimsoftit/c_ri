@@ -256,12 +256,21 @@ class CTxnsScreen extends StatelessWidget {
                                     ],
                                   ),
                                   onExpansionChanged: (isExpanded) {
+                                    txnsController.receiptItems.clear();
+                                    if (isExpanded) {
+                                      if (txnsController.receiptItems.isEmpty) {
+                                        txnsController.fetchTxnItems(
+                                            txnsController.txns[index].txnId);
+                                      }
+                                    }
                                     // if (isExpanded) {
-                                    //   txnsController.fetchTxnItems(
-                                    //       txnsController.txns[index].txnId);
+                                    //   if (txnsController.receiptItems.isEmpty) {
+                                    //     txnsController.fetchTxnItems(
+                                    //         txnsController.txns[index].txnId);
+                                    //   }
+                                    // } else {
+                                    //   txnsController.receiptItems.clear();
                                     // }
-                                    txnsController.fetchTxnItems(
-                                        txnsController.txns[index].txnId);
                                   },
                                   children: [
                                     Text(
@@ -272,6 +281,12 @@ class CTxnsScreen extends StatelessWidget {
                                           .apply(
                                             color: CColors.rBrown,
                                           ),
+                                    ),
+                                    Divider(
+                                      // color: isDarkTheme
+                                      //     ? CColors.grey
+                                      //    : CColors.rBrown,
+                                      color: CColors.grey,
                                     ),
                                     ListView.builder(
                                       shrinkWrap: true,
@@ -292,6 +307,14 @@ class CTxnsScreen extends StatelessWidget {
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 2,
                                           ),
+                                          onExpansionChanged: (isExpanded) {
+                                            // txnsController.receiptItems.clear();
+                                            // if (isExpanded) {
+                                            //   txnsController.fetchTxnItems(
+                                            //       txnsController
+                                            //           .txns[index].txnId);
+                                            // }
+                                          },
                                           children: [
                                             Row(
                                               children: [

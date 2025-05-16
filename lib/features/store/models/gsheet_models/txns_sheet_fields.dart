@@ -8,6 +8,7 @@ class TxnsSheetFields {
   static const String productCode = 'productCode';
   static const String productName = 'productName';
   static const String quantity = 'quantity';
+  static const String qtyRefunded = 'qtyRefunded';
   static const String totalAmount = 'totalAmount';
   static const String amountIssued = 'amountIssued';
   static const String customerBalance = 'customerBalance';

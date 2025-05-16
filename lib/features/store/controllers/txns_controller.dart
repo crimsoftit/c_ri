@@ -150,9 +150,6 @@ class CTxnsController extends GetxController {
       }
       throw e.toString();
     }
-    // finally {
-    //   isLoading.value = false;
-    // }
   }
 
   /// -- fetch sold items from sqflite db --
@@ -191,9 +188,6 @@ class CTxnsController extends GetxController {
       }
       throw e.toString();
     }
-    // finally {
-    //   isLoading.value = false;
-    // }
   }
 
   /// -- fetch txn items by txn id --
@@ -246,10 +240,6 @@ class CTxnsController extends GetxController {
       }
       throw e.toString();
     }
-    // finally {
-    //   txnItemsLoading.value = false;
-    //   isLoading.value = false;
-    // }
   }
 
   /// -- barcode scanner using flutter_barcode_scanner package --
@@ -486,6 +476,7 @@ class CTxnsController extends GetxController {
                       'productCode': sale.productCode,
                       'productName': sale.productName,
                       'quantity': sale.quantity,
+                      'qtyRefunded': sale.qtyRefunded,
                       'totalAmount': sale.totalAmount,
                       'amountIssued': sale.amountIssued,
                       'customerBalance': sale.customerBalance,
@@ -628,6 +619,7 @@ class CTxnsController extends GetxController {
               element.productCode,
               element.productName,
               element.quantity,
+              element.qtyRefunded,
               element.totalAmount,
               element.amountIssued,
               element.customerBalance,
@@ -718,11 +710,15 @@ class CTxnsController extends GetxController {
                 Divider(
                   color: isDarkTheme ? CColors.white : CColors.rBrown,
                 ),
+                const SizedBox(
+                  height: CSizes.spaceBtnInputFields,
+                ),
                 Obx(
                   () {
                     return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('quantity'),
+                        Text('qty'),
                         const SizedBox(
                           width: CSizes.spaceBtnInputFields,
                         ),
@@ -748,7 +744,9 @@ class CTxnsController extends GetxController {
                           refundQty.value > soldItem.quantity
                               ? soldItem.quantity.toString()
                               : refundQty.value.toString(),
-                          style: Theme.of(context).textTheme.titleSmall,
+                          style: Theme.of(context).textTheme.titleSmall!.apply(
+                                color: CColors.white,
+                              ),
                         ),
                         const SizedBox(
                           width: CSizes.spaceBtnItems,
@@ -774,8 +772,60 @@ class CTxnsController extends GetxController {
                     );
                   },
                 ),
+                const SizedBox(
+                  height: CSizes.spaceBtnInputFields,
+                ),
                 Divider(
                   color: isDarkTheme ? CColors.white : CColors.rBrown,
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: CHelperFunctions.screenWidth() * 0.45,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          //refundItem();
+                        },
+                        label: Text(
+                          'REFUND',
+                          style: Theme.of(context).textTheme.bodyMedium!.apply(
+                                color: Colors.red,
+                              ),
+                        ),
+                        icon: Icon(
+                          Iconsax.wallet_check,
+                          color: Colors.red,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: CColors.black.withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: CSizes.spaceBtnInputFields,
+                    ),
+                    SizedBox(
+                      width: CHelperFunctions.screenWidth() * 0.45,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                        },
+                        label: Text(
+                          'cancel',
+                          style: Theme.of(context).textTheme.bodyMedium!.apply(
+                                color: CColors.white,
+                              ),
+                        ),
+                        icon: Icon(
+                          Iconsax.undo,
+                          color: CColors.rBrown,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: CColors.black.withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -785,11 +835,13 @@ class CTxnsController extends GetxController {
     ).whenComplete(onBottomSheetClosed);
   }
 
-  /// -- reset refundQty to 1 when bottom sheet is closed --
+  /// -- reset refundQty to 1 when bottomSheetModal dismisses --
   void onBottomSheetClosed() {
     refundQty.value = 1;
     if (kDebugMode) {
       print('bottomSheet closed');
     }
   }
+
+  //Future refundItem() {}
 }

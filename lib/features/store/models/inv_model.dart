@@ -15,6 +15,7 @@ class CInventoryModel {
   String _name = "";
   int _quantity = 0;
   int _qtySold = 0;
+  int _qtyRefunded = 0;
   double _buyingPrice = 0.0;
   double _unitBp = 0.0;
   double _unitSellingPrice = 0.0;
@@ -34,6 +35,7 @@ class CInventoryModel {
     this._name,
     this._quantity,
     this._qtySold,
+    this._qtyRefunded,
     this._buyingPrice,
     this._unitBp,
     this._unitSellingPrice,
@@ -54,6 +56,7 @@ class CInventoryModel {
     this._name,
     this._quantity,
     this._qtySold,
+    this._qtyRefunded,
     this._buyingPrice,
     this._unitBp,
     this._unitSellingPrice,
@@ -67,7 +70,7 @@ class CInventoryModel {
 
   CInventoryModel empty() {
     return CInventoryModel(
-        '', '', '', '', '', 0, 0, 0.0, 0.0, 0.0, 0, '', '', '', 0, '');
+        '', '', '', '', '', 0, 0, 0, 0.0, 0.0, 0.0, 0, '', '', '', 0, '');
   }
 
   int? get productId => _productId;
@@ -77,8 +80,11 @@ class CInventoryModel {
 
   String get pCode => _pCode;
   String get name => _name;
+
   int get quantity => _quantity;
   int get qtySold => _qtySold;
+  int get qtyRefunded => _qtyRefunded;
+
   double get buyingPrice => _buyingPrice;
   double get unitBp => _unitBp;
   double get unitSellingPrice => _unitSellingPrice;
@@ -113,9 +119,6 @@ class CInventoryModel {
 
   set name(String newName) {
     _name = newName;
-    // if (newName.length <= 255 || newName.length >= 3) {
-    //   _name = newName;
-    // }
   }
 
   set quantity(int newQty) {
@@ -129,25 +132,20 @@ class CInventoryModel {
     _qtySold = newQtySold;
   }
 
+  set qtyRefunded(int newQtyRefunded) {
+    _qtyRefunded = newQtyRefunded;
+  }
+
   set buyingPrice(double newBP) {
     _buyingPrice = newBP;
-    // if (newBP >= 1.0) {
-    //   _buyingPrice = newBP;
-    // }
   }
 
   set unitBp(double newUBP) {
     _unitBp = newUBP;
-    // if (newUBP >= 1.0) {
-    //   _unitBp = newUBP;
-    // }
   }
 
   set unitSellingPrice(double newUSP) {
     _unitSellingPrice = newUSP;
-    // if (newUSP >= 1.0) {
-    //   _unitSellingPrice = newUSP;
-    // }
   }
 
   set lowStockNotifierLimit(int newLimit) {
@@ -186,15 +184,20 @@ class CInventoryModel {
 
     map['pCode'] = _pCode;
     map['name'] = _name;
+
     map['quantity'] = _quantity;
     map['qtySold'] = _qtySold;
+    map['qtyRefunded'] = _qtyRefunded;
+
     map['buyingPrice'] = _buyingPrice;
     map['unitBp'] = _unitBp;
     map['unitSellingPrice'] = _unitSellingPrice;
     map['lowStockNotifierLimit'] = _lowStockNotifierLimit;
+
     map['supplierName'] = _supplierName;
     map['supplierContacts'] = _supplierContacts;
     map['date'] = _date;
+
     map['isSynced'] = _isSynced;
     map['syncAction'] = _syncAction;
 
@@ -212,6 +215,8 @@ class CInventoryModel {
     _pCode = map['pCode'];
     _quantity = map['quantity'];
     _qtySold = map['qtySold'];
+    _qtyRefunded = map['qtyRefunded'];
+
     _buyingPrice = map['buyingPrice'];
     _unitBp = map['unitBp'];
     _unitSellingPrice = map['unitSellingPrice'];
@@ -234,6 +239,7 @@ class CInventoryModel {
       json[InvSheetFields.name],
       jsonDecode(json[InvSheetFields.quantity]),
       jsonDecode(json[InvSheetFields.qtySold]),
+      jsonDecode(json[InvSheetFields.qtyRefunded]),
       double.parse(json[InvSheetFields.buyingPrice]),
       double.parse(json[InvSheetFields.unitBp]),
       double.parse(json[InvSheetFields.unitSellingPrice]),

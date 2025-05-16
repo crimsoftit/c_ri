@@ -58,6 +58,7 @@ class DbHelper extends GetxController {
             name TEXT NOT NULL,
             quantity INTEGER NOT NULL,
             qtySold INTEGER NOT NULL,
+            qtyRefunded INTEGER NOT NULL,
             buyingPrice REAL NOT NULL,
             unitBp REAL NOT NULL,
             unitSellingPrice REAL NOT NULL,
@@ -81,6 +82,7 @@ class DbHelper extends GetxController {
             productCode LONGTEXT NOT NULL,
             productName TEXT NOT NULL,
             quantity INTEGER NOT NULL,
+            qtyRefunded INTEGER NOT NULL,
             totalAmount  REAL NOT NULL,
             amountIssued REAL NOT NULL,
             customerBalance REAL NOT NULL,
@@ -126,6 +128,7 @@ class DbHelper extends GetxController {
       'njugu',
       200,
       10,
+      3,
       1400.00,
       7.0,
       10.0,
@@ -196,6 +199,7 @@ class DbHelper extends GetxController {
         maps[i]['name'],
         maps[i]['quantity'],
         maps[i]['qtySold'],
+        maps[i]['qtyRefunded'],
         maps[i]['buyingPrice'],
         maps[i]['unitBp'],
         maps[i]['unitSellingPrice'],
@@ -469,4 +473,6 @@ class DbHelper extends GetxController {
       throw e.toString();
     }
   }
+
+  /// -- update data on txns table after a refund --
 }

@@ -130,6 +130,7 @@ class CCheckoutController extends GetxController {
             cartItem.pCode,
             cartItem.pName,
             cartItem.quantity,
+            0,
             cartController.totalCartPrice.value,
             selectedPaymentMethod.value.platformName == 'cash'
                 ? double.parse(amtIssuedFieldController.text.trim())
@@ -500,16 +501,6 @@ class CCheckoutController extends GetxController {
       totalAmount.value = 0.0;
     }
   }
-
-  // Future handleNavToCheckout() async {
-  //   final cartController = Get.put(CCartController());
-  //   Get.put(CCheckoutController());
-  //   cartController.fetchCartItems().then((_) {
-  //     Future.delayed(const Duration(milliseconds: 250), () {
-  //       Get.to(() => const CCheckoutScreen());
-  //     });
-  //   });
-  // }
 
   Future handleNavToCheckout() async {
     final cartController = Get.put(CCartController());
