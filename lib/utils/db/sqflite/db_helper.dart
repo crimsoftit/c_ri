@@ -246,7 +246,7 @@ class DbHelper extends GetxController {
   }
 
   /// -- update inventory upon sale --
-  Future<int> updateStockCountAndSales(
+  Future<int> updateStockCountAndSale(
       int newStockCount, int newTotalSales, int pId) async {
     try {
       int updateResult = await _db!.rawUpdate(
@@ -424,6 +424,27 @@ class DbHelper extends GetxController {
 
     // Convert the List<Map<String, dynamic> into a List<Note>.
     return transactions.map((json) => CTxnsModel.fromMapObject(json)).toList();
+  }
+
+  /// -- defines a function to update a receipt/sold item --
+  Future<int> updateReceiptItem(CTxnsModel receiptItem, int pID) async {
+    try {
+      // Update the given receipt item.
+      var updateResult = await _db!.update(txnsTable, receiptItem.toMap(),
+
+          // ensure that the receipt item has a matching product id.
+          where: 'productId = ?',
+
+          // pass the item's pCode as a whereArg to prevent SQL injection
+          whereArgs: [pID]);
+      return updateResult;
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'Oh Snap! error updating receipt item',
+        message: e.toString(),
+      );
+      return 0;
+    }
   }
 
   /// -- defines a function to update a transaction's details --

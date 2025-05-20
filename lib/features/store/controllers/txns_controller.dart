@@ -13,12 +13,14 @@ import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
+import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
 import 'package:simple_barcode_scanner/enum.dart';
 import 'package:simple_barcode_scanner/flutter_barcode_scanner.dart';
 
@@ -36,6 +38,8 @@ class CTxnsController extends GetxController {
     await initTxnsSync();
 
     showAmountIssuedField.value = true;
+    invUpdatedOnRefund.value = false;
+    recieptItemUpdatedOnRefund.value = false;
 
     super.onInit();
   }
@@ -83,6 +87,8 @@ class CTxnsController extends GetxController {
   final RxBool txnSuccesfull = false.obs;
   final RxBool txnsFetched = false.obs;
   final RxBool soldItemsFetched = false.obs;
+  final RxBool invUpdatedOnRefund = false.obs;
+  final RxBool recieptItemUpdatedOnRefund = false.obs;
 
   final txtSaleItemQty = TextEditingController();
   final txtAmountIssued = TextEditingController();
@@ -93,7 +99,7 @@ class CTxnsController extends GetxController {
   final RxInt sellItemId = 0.obs;
   final RxInt qtyAvailable = 0.obs;
   final RxInt totalSales = 0.obs;
-  final RxInt refundQty = 1.obs;
+  final RxInt refundQty = 0.obs;
 
   final RxString saleItemName = ''.obs;
   final RxString saleItemCode = ''.obs;
@@ -314,6 +320,8 @@ class CTxnsController extends GetxController {
           code, userController.user.value.email);
 
       //fetchInventoryItems();
+      invUpdatedOnRefund.value = false;
+      recieptItemUpdatedOnRefund.value = false;
 
       if (fetchedItem.isNotEmpty) {
         itemExists.value = true;
@@ -438,7 +446,10 @@ class CTxnsController extends GetxController {
     selectedPaymentMethod.value == 'Cash';
     itemExists.value = false;
     showAmountIssuedField.value = true;
+    invUpdatedOnRefund.value = false;
+    recieptItemUpdatedOnRefund.value = false;
     isLoading.value = false;
+
     txtSaleItemQty.text = '';
     txtAmountIssued.text = '';
     saleItemName.value = '';
@@ -784,7 +795,28 @@ class CTxnsController extends GetxController {
                       width: CHelperFunctions.screenWidth() * 0.45,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          //refundItem();
+                          // refund item actions - inventory & txn item updates;
+                          invController.fetchUserInventoryItems();
+                          var invItem = invController.inventoryItems.firstWhere(
+                              (item) => item.productId == soldItem.productId);
+                          updateInvOnRefund(invItem);
+                          if (invUpdatedOnRefund.value) {
+                            if (kDebugMode) {
+                              print("** ========== **\n");
+                              print(
+                                  "*** inventory refund updates successful ***");
+                              print("** ========== **\n");
+                            }
+                            updateReceiptItem(soldItem, soldItem.productId);
+                          }
+                          if (recieptItemUpdatedOnRefund.value) {
+                            if (kDebugMode) {
+                              print("** ========== **\n");
+                              print("*** txn refund updates successful ***");
+                              print("** ========== **\n");
+                            }
+                            Navigator.of(context).pop(true);
+                          }
                         },
                         label: Text(
                           'REFUND',
@@ -835,13 +867,76 @@ class CTxnsController extends GetxController {
     ).whenComplete(onBottomSheetClosed);
   }
 
-  /// -- reset refundQty to 1 when bottomSheetModal dismisses --
+  /// -- reset refundQty to 0 when bottomSheetModal dismisses --
   void onBottomSheetClosed() {
-    refundQty.value = 1;
+    refundQty.value = 0;
+    invUpdatedOnRefund.value = false;
+    recieptItemUpdatedOnRefund.value = false;
     if (kDebugMode) {
       print('bottomSheet closed');
     }
   }
 
-  //Future refundItem() {}
+  /// -- update stock count and qtySold on refund --
+  Future<bool> updateInvOnRefund(
+    CInventoryModel inventoryItem,
+  ) async {
+    final currency =
+        CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
+    try {
+      if (inventoryItem.productId != null) {
+// -- update stock count & total sales for this inventory item --
+        inventoryItem.quantity += refundQty.value;
+        inventoryItem.qtyRefunded += refundQty.value;
+        inventoryItem.qtySold -= refundQty.value;
+
+        await dbHelper.updateInventoryItem(
+            inventoryItem, inventoryItem.productId!);
+
+        // -- update sync status/action for this inventory item --
+        dbHelper.updateInvOfflineSyncAfterStockUpdate(
+            'update', inventoryItem.productId!);
+
+        invUpdatedOnRefund.value = true;
+        CPopupSnackBar.successSnackBar(
+          title: 'success',
+          message:
+              'refund of ${inventoryItem.name} (${refundQty.value} item(s)@$currency.${(inventoryItem.unitSellingPrice * refundQty.value)}) SUCCESSFUL!!',
+        );
+      } else {
+        invUpdatedOnRefund.value = false;
+      }
+
+      return invUpdatedOnRefund.value;
+    } catch (e) {
+      invUpdatedOnRefund.value = false;
+      CPopupSnackBar.errorSnackBar(
+        title: 'Oh Snap! refund inventory updates failed',
+        message: e.toString(),
+      );
+      return false;
+    }
+  }
+
+  Future<bool> updateReceiptItem(CTxnsModel receiptItem, int soldItemId) async {
+    try {
+      receiptItem.quantity -= refundQty.value;
+      receiptItem.qtyRefunded += refundQty.value;
+      receiptItem.date = DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
+      receiptItem.isSynced = 0;
+      receiptItem.syncAction = 'append';
+      receiptItem.txnStatus = 'refunded';
+
+      await dbHelper.updateReceiptItem(receiptItem, soldItemId);
+      recieptItemUpdatedOnRefund.value = true;
+
+      return recieptItemUpdatedOnRefund.value;
+    } catch (e) {
+      recieptItemUpdatedOnRefund.value = false;
+      throw CPopupSnackBar.errorSnackBar(
+        title: 'error updating receipt item!',
+        message: e.toString(),
+      );
+    }
+  }
 }
