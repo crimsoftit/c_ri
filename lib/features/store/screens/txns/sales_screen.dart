@@ -289,7 +289,18 @@ class CSalesScreen extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  'isSynced:${txnsController.sales[index].isSynced} syncAction:${txnsController.sales[index].syncAction}',
+                                  'qtyRefunded:${txnsController.sales[index].qtyRefunded} amountRefunded:${userController.user.value.currencyCode}.${(txnsController.sales[index].qtyRefunded * txnsController.sales[index].unitSellingPrice)} txnStatus:${txnsController.sales[index].txnStatus}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall!
+                                      .apply(
+                                        color: CColors.rBrown
+                                            .withValues(alpha: 0.7),
+                                        //fontStyle: FontStyle.italic,
+                                      ),
+                                ),
+                                Text(
+                                  'isSynced:${txnsController.sales[index].isSynced} syncAction:${txnsController.sales[index].syncAction} txnStatus:${txnsController.sales[index].txnStatus}',
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelSmall!
