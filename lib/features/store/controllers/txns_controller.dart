@@ -65,8 +65,9 @@ class CTxnsController extends GetxController {
   final RxList<CTxnsModel> foundTxns = <CTxnsModel>[].obs;
   RxList<CTxnsModel> receiptItems = <CTxnsModel>[].obs;
 
-  final RxList<CTxnsModel> unsyncedTxnAppends = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> allGsheetTxnsData = <CTxnsModel>[].obs;
+  final RxList<CTxnsModel> unsyncedTxnAppends = <CTxnsModel>[].obs;
+  final RxList<CTxnsModel> unsyncedTxnUpdates = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> userGsheetTxnsData = <CTxnsModel>[].obs;
 
   RxList txnDets = [].obs;
@@ -135,6 +136,13 @@ class CTxnsController extends GetxController {
           .where((unAppendedTxn) =>
               unAppendedTxn.syncAction.toLowerCase().contains('append'))
           .toList();
+
+      // assign values for unsynced txn updates
+      var txnsForUpdates = sales
+          .where((unUpdatedTxn) =>
+              unUpdatedTxn.syncAction.toLowerCase().contains('update'))
+          .toList();
+      unsyncedTxnUpdates.assignAll(txnsForUpdates);
 
       // stop loader
       isLoading.value = false;
@@ -467,11 +475,13 @@ class CTxnsController extends GetxController {
       fetchSoldItems().then(
         (result) {
           if (result.isNotEmpty) {
-            final unsyncedTxns = sales.where((unsyncedTxn) =>
-                unsyncedTxn.syncAction.toLowerCase() == 'append'.toLowerCase());
+            final unsyncedTxnsForAppends = sales.where((unsyncedTxn) =>
+                unsyncedTxn.syncAction.toLowerCase() ==
+                    'append'.toLowerCase() &&
+                unsyncedTxn.isSynced == 0);
 
-            if (unsyncedTxns.isNotEmpty) {
-              var gSheetTxnAppends = unsyncedTxns
+            if (unsyncedTxnsForAppends.isNotEmpty) {
+              var gSheetTxnAppends = unsyncedTxnsForAppends
                   .map(
                     (sale) => {
                       'soldItemId': sale.soldItemId,
@@ -509,7 +519,7 @@ class CTxnsController extends GetxController {
                 if (result) {
                   // -- update txns status locally --
 
-                  for (var forSyncItem in unsyncedTxns) {
+                  for (var forSyncItem in unsyncedTxnsForAppends) {
                     await dbHelper.updateTxnItemsSyncStatus(
                         1, 'none', forSyncItem.soldItemId!);
                   }
@@ -523,6 +533,12 @@ class CTxnsController extends GetxController {
                   );
                 }
               });
+
+              // -- update refunds data
+              final unsyncedTxnsForUpdates = sales.where((refundUpdateItem) =>
+                  refundUpdateItem.syncAction.toLowerCase() ==
+                      'update'.toLowerCase() &&
+                  refundUpdateItem.isSynced == 1);
             } else {
               txnsSyncIsLoading.value = false;
               isLoading.value = false;
@@ -800,7 +816,7 @@ class CTxnsController extends GetxController {
 
                           var txnItem = sales.firstWhere((txnItem) =>
                               txnItem.productId == soldItem.productId);
-                          await updateInvOnRefund(invItem, txnItem);
+                          await updateDataOnRefund(invItem, txnItem);
                           if (updatesOnRefundDone.value) {
                             if (kDebugMode) {
                               print("** ========== **\n");
@@ -870,7 +886,7 @@ class CTxnsController extends GetxController {
   }
 
   /// -- update stock count and qtySold on refund --
-  Future<bool> updateInvOnRefund(
+  Future<bool> updateDataOnRefund(
       CInventoryModel inventoryItem, CTxnsModel receiptItem) async {
     final currency =
         CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
@@ -895,11 +911,14 @@ class CTxnsController extends GetxController {
         receiptItem.totalAmount -=
             refundQty.value * receiptItem.unitSellingPrice;
         receiptItem.date = DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
-        receiptItem.isSynced = 0;
-        receiptItem.syncAction = 'append';
+        receiptItem.syncAction =
+            receiptItem.isSynced == 0 ? 'append' : 'update';
         receiptItem.txnStatus = 'refunded';
 
-        dbHelper.updateReceiptItem(receiptItem, inventoryItem.productId!);
+        fetchTxns();
+        fetchSoldItems();
+
+        dbHelper.updateReceiptItem(receiptItem, receiptItem.soldItemId!);
 
         updatesOnRefundDone.value = true;
         CPopupSnackBar.successSnackBar(
@@ -907,6 +926,7 @@ class CTxnsController extends GetxController {
           message:
               'refund of ${inventoryItem.name} (${refundQty.value} item(s)@$currency.${(inventoryItem.unitSellingPrice * refundQty.value)}) SUCCESSFUL!!',
         );
+
         Navigator.of(Get.overlayContext!).pop(true);
       } else {
         updatesOnRefundDone.value = false;
@@ -923,26 +943,16 @@ class CTxnsController extends GetxController {
     }
   }
 
-  // Future<bool> updateReceiptItems(
-  //     CTxnsModel receiptItem, int soldItemId) async {
-  //   try {
-  //     receiptItem.quantity -= refundQty.value;
-  //     receiptItem.qtyRefunded += refundQty.value;
-  //     receiptItem.date = DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
-  //     receiptItem.isSynced = 0;
-  //     receiptItem.syncAction = 'append';
-  //     receiptItem.txnStatus = 'refunded';
+  Future updateReceiptItemCloudData(int itemId, CTxnsModel itemModel) async {
+    try {
+      await StoreSheetsApi.updateReceiptItem(itemId, itemModel.toMap());
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'error updating sheet data',
+        message: e.toString(),
+      );
 
-  //     await dbHelper.updateReceiptItem(receiptItem, soldItemId);
-  //     recieptItemUpdatedOnRefund.value = true;
-
-  //     return recieptItemUpdatedOnRefund.value;
-  //   } catch (e) {
-  //     recieptItemUpdatedOnRefund.value = false;
-  //     throw CPopupSnackBar.errorSnackBar(
-  //       title: 'error updating receipt item!',
-  //       message: e.toString(),
-  //     );
-  //   }
-  // }
+      throw e.toString();
+    }
+  }
 }

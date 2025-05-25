@@ -12,6 +12,7 @@ import 'package:c_ri/features/store/controllers/dashboard_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/screens/home/widgets/home_appbar.dart';
+import 'package:c_ri/features/store/screens/txns/txns_for_updates.dart';
 import 'package:c_ri/nav_menu.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -308,17 +309,17 @@ class HomeScreen extends StatelessWidget {
             // const SizedBox(
             //   height: CSizes.spaceBtnItems,
             // ),
-            // CSectionHeading(
-            //   showActionBtn: true,
-            //   title: 'pending updates',
-            //   txtColor: CColors.white,
-            //   btnTitle: 'view all',
-            //   btnTxtColor: CColors.grey,
-            //   editFontSize: true,
-            //   onPressed: () {
-            //     Get.to(() => const InvForUpdates());
-            //   },
-            // ),
+            CSectionHeading(
+              showActionBtn: true,
+              title: 'pending txn updates',
+              txtColor: CColors.white,
+              btnTitle: 'view all',
+              btnTxtColor: CColors.grey,
+              editFontSize: true,
+              onPressed: () {
+                Get.to(() => const CTxnsForUpdates());
+              },
+            ),
             // const SizedBox(
             //   height: CSizes.spaceBtnItems,
             // ),

@@ -1,5 +1,5 @@
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
-import 'package:c_ri/features/store/models/dels_model.dart';
+import 'package:c_ri/features/store/models/inv_dels_model.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/models/txns_model.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
@@ -31,7 +31,8 @@ class DbHelper extends GetxController {
 
   final invTable = 'inventory';
   final txnsTable = 'txns';
-  final delsForSyncTable = 'delsForSync';
+  final invDelsForSyncTable = 'invDelsForSyncTable';
+  final salesDelsForSyncTable = 'salesDelsForSyncTable';
 
   final RxBool saleItemAddedToDb = false.obs;
 
@@ -102,10 +103,19 @@ class DbHelper extends GetxController {
           ''');
 
       database.execute('''
-          CREATE TABLE IF NOT EXISTS $delsForSyncTable (
+          CREATE TABLE IF NOT EXISTS $invDelsForSyncTable (
             itemId INTEGER NOT NULL,
             itemName TEXT NOT NULL,
             itemCategory TEXT NOT NULL,
+            isSynced INTEGER NOT NULL,
+            syncAction TEXT NOT NULL
+          )
+        ''');
+
+      database.execute('''
+          CREATE TABLE IF NOT EXISTS $salesDelsForSyncTable (
+            itemId INTEGER NOT NULL,
+            itemName TEXT NOT NULL,
             isSynced INTEGER NOT NULL,
             syncAction TEXT NOT NULL
           )
@@ -292,13 +302,13 @@ class DbHelper extends GetxController {
   }
 
   /// -- fetch all deletionForSyncItems --
-  Future<List<CDelsModel>> fetchAllInvDels() async {
+  Future<List<CInvDelsModel>> fetchAllInvDels() async {
     // get a reference to the database.
     final db = _db;
 
     // raw query
     final dels = await db!.rawQuery(
-        'SELECT * FROM delsForSync where syncAction = ? and itemCategory = ?',
+        'SELECT * FROM $invDelsForSyncTable where syncAction = ? and itemCategory = ?',
         ['delete', 'inventory']);
 
     if (dels.isEmpty) {
@@ -306,18 +316,18 @@ class DbHelper extends GetxController {
       return [];
     } else {
       final result =
-          dels.map((json) => CDelsModel.fromMapObject(json)).toList();
+          dels.map((json) => CInvDelsModel.fromMapObject(json)).toList();
 
       return result;
     }
   }
 
-  Future<void> saveDelForSync(CDelsModel delItem) async {
+  Future<void> saveInvDelsForSync(CInvDelsModel delItem) async {
     try {
       // get a reference to the local database.
       final db = _db;
       await db!.insert(
-        delsForSyncTable,
+        invDelsForSyncTable,
         delItem.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
@@ -331,24 +341,24 @@ class DbHelper extends GetxController {
   }
 
   /// -- fetch all updatesForSyncItems --
-  Future<List<CDelsModel>> fetchAllInvUpdates() async {
+  Future<List<CInvDelsModel>> fetchAllInvUpdates() async {
     // get a reference to the database.
     final db = _db;
 
     // raw query
     final forUpdates = await db!.rawQuery(
-        'SELECT * FROM delsForSync where syncAction = ? and itemCategory = ?',
+        'SELECT * FROM $invDelsForSyncTable where syncAction = ? and itemCategory = ?',
         ['update', 'inventory']);
 
     final result =
-        forUpdates.map((json) => CDelsModel.fromMapObject(json)).toList();
+        forUpdates.map((json) => CInvDelsModel.fromMapObject(json)).toList();
 
     return result;
   }
 
-  Future<int> updateDel(CDelsModel delItem) async {
+  Future<int> updateDel(CInvDelsModel delItem) async {
     int delRes = await _db!.update(
-      delsForSyncTable,
+      invDelsForSyncTable,
       delItem.toMap(),
       where: 'itemId = ?',
       whereArgs: [delItem.itemId],
@@ -427,16 +437,16 @@ class DbHelper extends GetxController {
   }
 
   /// -- defines a function to update a receipt/sold item --
-  Future<int> updateReceiptItem(CTxnsModel receiptItem, int pID) async {
+  Future<int> updateReceiptItem(CTxnsModel receiptItem, int soldItemId) async {
     try {
       // Update the given receipt item.
       var updateResult = await _db!.update(txnsTable, receiptItem.toMap(),
 
           // ensure that the receipt item has a matching product id.
-          where: 'productId = ?',
+          where: 'soldItemId = ?',
 
           // pass the item's pCode as a whereArg to prevent SQL injection
-          whereArgs: [pID]);
+          whereArgs: [soldItemId]);
       return updateResult;
     } catch (e) {
       CPopupSnackBar.errorSnackBar(

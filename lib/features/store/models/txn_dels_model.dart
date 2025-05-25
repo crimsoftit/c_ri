@@ -1,13 +1,11 @@
-// ignore_for_file: unnecessary_getters_setters
-
-class CDelsModel {
+class CTxnDelsModel {
   int? _itemId;
   String _itemName = "";
   String _itemCategory = "";
   int _isSynced = 0;
   String _syncAction = '';
 
-  CDelsModel(
+  CTxnDelsModel(
     this._itemId,
     this._itemName,
     this._itemCategory,
@@ -52,7 +50,7 @@ class CDelsModel {
     return map;
   }
 
-  CDelsModel.fromMapObject(Map<String, dynamic> map) {
+  CTxnDelsModel.fromMapObject(Map<String, dynamic> map) {
     _itemId = map['itemId'];
     _itemName = map['itemName'];
     _itemCategory = map['itemCategory'];

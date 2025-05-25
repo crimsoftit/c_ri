@@ -136,7 +136,7 @@ class CPopupSnackBar extends GetxController {
       colorText: CColors.white,
       backgroundColor: Colors.orange,
       snackPosition: SnackPosition.BOTTOM,
-      duration: const Duration(seconds: 6),
+      duration: const Duration(seconds: 10),
       margin: const EdgeInsets.all(20.0),
       icon: const Icon(
         Iconsax.warning_2,
@@ -157,7 +157,7 @@ class CPopupSnackBar extends GetxController {
       colorText: CColors.white,
       backgroundColor: Colors.red.shade600,
       snackPosition: SnackPosition.BOTTOM,
-      duration: const Duration(seconds: 4),
+      duration: const Duration(seconds: 420),
       margin: const EdgeInsets.all(20.0),
       icon: const Icon(
         Iconsax.warning_2,

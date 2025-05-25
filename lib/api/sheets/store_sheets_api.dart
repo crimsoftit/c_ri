@@ -91,33 +91,6 @@ class StoreSheetsApi {
         : invList.map(CInventoryModel.gSheetFromJson).toList();
   }
 
-  /// -- fetch user's gsheet inventory data --
-  // static Future<List<CInventoryModel?>?> fetchUserGsheetInvData(String userEmail) async {
-  //   try {
-  //     if (invSheet == null) return null;
-
-  //     final userInvMap =
-  //         await invSheet!.values.map.rowByKey(userEmail, fromColumn: 3);
-
-  //     return userInvMap == null
-  //       ? <CInventoryModel>[]
-  //       : userInvMap.map(CInventoryModel.gSheetFromJson).toList()\;
-  //   } catch (e) {
-  //     CPopupSnackBar.errorSnackBar(
-  //       title: 'error syncing inventory'.toUpperCase(),
-  //       message: 'an error occurred while uploading inventory to cloud',
-  //     );
-  //     if (kDebugMode) {
-  //       print(e.toString());
-  //       CPopupSnackBar.errorSnackBar(
-  //         title: 'error syncing inventory'.toUpperCase(),
-  //         message: '$e',
-  //       );
-  //     }
-  //     throw 'ERROR SYNCING INVENTORY: $e';
-  //   }
-  // }
-
   /// -- update data (entire row) in google sheets --
   static Future<bool> updateInvData(
       int id, Map<String, dynamic> itemModel) async {
@@ -126,7 +99,7 @@ class StoreSheetsApi {
       return invSheet!.values.map.insertRowByKey(id, itemModel);
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
-        title: 'error updating sheet data',
+        title: 'error updating cloud inventory data',
         message: e.toString(),
       );
       throw e.toString();
@@ -148,7 +121,7 @@ class StoreSheetsApi {
       );
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
-        title: 'error updating cell data in google sheet',
+        title: 'error updating stockCount data in cloud',
         message: e.toString(),
       );
       throw e.toString();
@@ -170,15 +143,15 @@ class StoreSheetsApi {
       );
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
-        title: 'error updating cell data in google sheet',
+        title: 'error updating sales count data in cloud',
         message: e.toString(),
       );
       throw e.toString();
     }
   }
 
-  /// -- delete data in google sheets by its id --
-  static Future<bool> deleteById(int id) async {
+  /// -- delete inventory data in google sheets by its id --
+  static Future<bool> deleteInvItemById(int id) async {
     try {
       //initializeSpreadSheets();
       // ignore: prefer_typing_uninitialized_variables
@@ -199,7 +172,7 @@ class StoreSheetsApi {
       return returnCmd;
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
-        title: 'error deleting data in google sheet',
+        title: 'error deleting INVENTORY data from cloud!',
         message: e.toString(),
       );
       throw e.toString();
@@ -244,5 +217,48 @@ class StoreSheetsApi {
     return txnsList == null
         ? <CTxnsModel>[]
         : txnsList.map(CTxnsModel.gSheetFromJson).toList();
+  }
+
+  /// -- delete txn data from cloud by it's id --
+  static Future<bool> deleteReceiptIte(int id) async {
+    try {
+      // ignore: prefer_typing_uninitialized_variables
+      var returnCmd;
+
+      if (txnsSheet == null) return false;
+
+      final receiptItemIndex =
+          await txnsSheet!.values.rowIndexOf(id.toString().toLowerCase());
+
+      if (receiptItemIndex.isNegative) {
+        returnCmd = false;
+        return returnCmd;
+      } else {
+        returnCmd = txnsSheet!.deleteRow(receiptItemIndex);
+      }
+
+      return returnCmd;
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'error deleting data in google sheet',
+        message: e.toString(),
+      );
+      throw e.toString();
+    }
+  }
+
+  /// -- update receipt item --
+  static Future<bool> updateReceiptItem(
+      int soldItemId, Map<String, dynamic> receiptItemModel) async {
+    try {
+      if (txnsSheet == null) return false;
+      return txnsSheet!.values.map.insertRowByKey(soldItemId, receiptItemModel);
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'error updating receipt item\'s cloud data',
+        message: e.toString(),
+      );
+      throw e.toString();
+    }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:c_ri/api/sheets/store_sheets_api.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
-import 'package:c_ri/features/store/models/dels_model.dart';
+import 'package:c_ri/features/store/models/inv_dels_model.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
@@ -31,8 +31,8 @@ class CInventoryController extends GetxController {
 
   final RxList<CInventoryModel> foundInventoryItems = <CInventoryModel>[].obs;
 
-  final RxList<CDelsModel> dItems = <CDelsModel>[].obs;
-  final RxList<CDelsModel> pendingUpdates = <CDelsModel>[].obs;
+  final RxList<CInvDelsModel> dItems = <CInvDelsModel>[].obs;
+  final RxList<CInvDelsModel> pendingUpdates = <CInvDelsModel>[].obs;
   final RxList<CInventoryModel> allGSheetData = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> topSoldItems = <CInventoryModel>[].obs;
   final RxList<CInventoryModel> unSyncedAppends = <CInventoryModel>[].obs;
@@ -496,14 +496,14 @@ class CInventoryController extends GetxController {
           inventoryItem.syncAction =
               inventoryItem.isSynced == 1 ? 'update' : 'append';
 
-          final updateItem = CDelsModel(
+          final updateItem = CInvDelsModel(
             inventoryItem.productId!,
             inventoryItem.name,
             'inventory',
             inventoryItem.isSynced,
             inventoryItem.syncAction,
           );
-          await dbHelper.saveDelForSync(updateItem);
+          await dbHelper.saveInvDelsForSync(updateItem);
           CPopupSnackBar.customToast(
             message:
                 'while this works offline, consider using an internet connection to back up your data online!',
@@ -558,14 +558,14 @@ class CInventoryController extends GetxController {
               deleteInvSheetItem(inventoryItem.productId!);
             }
           } else {
-            final delItem = CDelsModel(
+            final delItem = CInvDelsModel(
               inventoryItem.productId!,
               inventoryItem.name,
               'inventory',
               inventoryItem.isSynced,
               'delete',
             );
-            await dbHelper.saveDelForSync(delItem);
+            await dbHelper.saveInvDelsForSync(delItem);
           }
           deleteInventoryItem(inventoryItem);
           fetchUserInventoryItems();
@@ -613,7 +613,7 @@ class CInventoryController extends GetxController {
     }
   }
 
-  /// -- update single item data in google sheets --
+  /// -- update single item cloud data --
   Future updateInvSheetItem(int id, CInventoryModel itemModel) async {
     try {
       //await StoreSheetsApi.initializeSpreadSheets();
@@ -631,7 +631,7 @@ class CInventoryController extends GetxController {
   /// -- delete inventory item from google sheets --
   Future deleteInvSheetItem(int id) async {
     try {
-      await StoreSheetsApi.deleteById(id);
+      await StoreSheetsApi.deleteInvItemById(id);
     } catch (e) {
       CPopupSnackBar.errorSnackBar(
         title: 'delete error',
@@ -719,7 +719,7 @@ class CInventoryController extends GetxController {
     }
   }
 
-  Future<List<CDelsModel>> fetchInvDels() async {
+  Future<List<CInvDelsModel>> fetchInvDels() async {
     try {
       await dbHelper.openDb();
 
@@ -753,7 +753,7 @@ class CInventoryController extends GetxController {
         for (var element in dItems) {
           await deleteInvSheetItem(element.itemId!);
 
-          final delItem = CDelsModel(
+          final delItem = CInvDelsModel(
             element.itemId,
             element.itemName,
             'inventory',
@@ -768,7 +768,7 @@ class CInventoryController extends GetxController {
   }
 
   /// -- fetch items with pending updates --
-  Future<List<CDelsModel>> fetchInvUpdates() async {
+  Future<List<CInvDelsModel>> fetchInvUpdates() async {
     try {
       await dbHelper.openDb();
 
@@ -820,7 +820,7 @@ class CInventoryController extends GetxController {
 
           await dbHelper.updateInventoryItem(invUpdateItem, element.productId!);
 
-          final delItem = CDelsModel(
+          final delItem = CInvDelsModel(
             element.productId,
             element.name,
             'inventory',
