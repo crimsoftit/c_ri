@@ -309,16 +309,19 @@ class HomeScreen extends StatelessWidget {
             // const SizedBox(
             //   height: CSizes.spaceBtnItems,
             // ),
-            CSectionHeading(
-              showActionBtn: true,
-              title: 'pending txn updates',
-              txtColor: CColors.white,
-              btnTitle: 'view all',
-              btnTxtColor: CColors.grey,
-              editFontSize: true,
-              onPressed: () {
-                Get.to(() => const CTxnsForUpdates());
-              },
+            Visibility(
+              visible: false,
+              child: CSectionHeading(
+                showActionBtn: true,
+                title: 'pending txn updates(especially refunds)',
+                txtColor: CColors.white,
+                btnTitle: 'view all',
+                btnTxtColor: CColors.grey,
+                editFontSize: true,
+                onPressed: () {
+                  Get.to(() => const CTxnsForUpdates());
+                },
+              ),
             ),
             // const SizedBox(
             //   height: CSizes.spaceBtnItems,

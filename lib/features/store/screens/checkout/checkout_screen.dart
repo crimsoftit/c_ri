@@ -793,136 +793,135 @@ class CCheckoutScreen extends StatelessWidget {
           if (cartController.cartItems.isNotEmpty) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
+              child:
+
                   /// -- button to complete txn --
                   SizedBox(
-                    width: CHelperFunctions.screenWidth() * 0.45,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        if (checkoutController
+                width: CHelperFunctions.screenWidth() * 0.98,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    if (checkoutController
+                            .selectedPaymentMethod.value.platformName ==
+                        'cash') {
+                      if (checkoutController.amtIssuedFieldController.text ==
+                          '') {
+                        CPopupSnackBar.customToast(
+                          message:
+                              'please enter the amount issued by customer!!',
+                          forInternetConnectivityStatus: false,
+                        );
+                        checkoutController.setFocusOnAmtIssuedField.value =
+                            true;
+                        return;
+                      }
+                      if (double.parse(checkoutController
+                              .amtIssuedFieldController.text
+                              .trim()) <
+                          cartController.totalCartPrice.value) {
+                        CPopupSnackBar.errorSnackBar(
+                          title: 'customer still owes you!!',
+                          message: 'the amount issued is not enough',
+                        );
+                        return;
+                      }
+                    }
+                    if (checkoutController
                                 .selectedPaymentMethod.value.platformName ==
-                            'cash') {
-                          if (checkoutController
-                                  .amtIssuedFieldController.text ==
-                              '') {
-                            CPopupSnackBar.customToast(
-                              message:
-                                  'please enter the amount issued by customer!!',
-                              forInternetConnectivityStatus: false,
-                            );
-                            checkoutController.setFocusOnAmtIssuedField.value =
-                                true;
-                            return;
-                          }
-                          if (double.parse(checkoutController
-                                  .amtIssuedFieldController.text
-                                  .trim()) <
-                              cartController.totalCartPrice.value) {
-                            CPopupSnackBar.errorSnackBar(
-                              title: 'customer still owes you!!',
-                              message: 'the amount issued is not enough',
-                            );
-                            return;
-                          }
-                        }
-                        if (checkoutController
-                                    .selectedPaymentMethod.value.platformName ==
-                                'mPesa' &&
-                            checkoutController
-                                    .customerNameFieldController.text ==
-                                '') {
-                          checkoutController.customerNameFocusNode.value
-                              .requestFocus();
-                          CPopupSnackBar.warningSnackBar(
-                            title: 'customer details required!',
-                            message:
-                                'please provide customer\'s name for ${checkoutController.selectedPaymentMethod.value.platformName} payment verification',
-                          );
-                          return;
-                        }
-                        checkoutController.processTxn();
-                      },
-                      label: SizedBox(
-                        height: 34.1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              'CHECKOUT',
-                              style:
-                                  Theme.of(context).textTheme.bodyMedium!.apply(
-                                        color: CColors.white,
-                                        fontSizeFactor: 0.88,
-                                        fontWeightDelta: 1,
-                                      ),
-                            ),
-                            Text(
-                              '$currencySymbol.${cartController.totalCartPrice.value.toStringAsFixed(2)}',
-                              style:
-                                  Theme.of(context).textTheme.bodyMedium!.apply(
-                                        color: CColors.white,
-                                        fontSizeFactor: 1.10,
-                                        fontWeightDelta: 2,
-                                      ),
-                            ),
-                          ],
+                            'mPesa' &&
+                        checkoutController.customerNameFieldController.text ==
+                            '') {
+                      checkoutController.customerNameFocusNode.value
+                          .requestFocus();
+                      CPopupSnackBar.warningSnackBar(
+                        title: 'customer details required!',
+                        message:
+                            'please provide customer\'s name for ${checkoutController.selectedPaymentMethod.value.platformName} payment verification',
+                      );
+                      return;
+                    }
+                    checkoutController.processTxn();
+                  },
+                  label: SizedBox(
+                    height: 34.1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          'CHECKOUT',
+                          style: Theme.of(context).textTheme.bodyMedium!.apply(
+                                color: CColors.white,
+                                fontSizeFactor: 0.88,
+                                fontWeightDelta: 1,
+                              ),
                         ),
-                      ),
-                      icon: Icon(
-                        Iconsax.wallet_check,
-                        color: CColors.white,
-                      ),
+                        Text(
+                          '$currencySymbol.${cartController.totalCartPrice.value.toStringAsFixed(2)}',
+                          style: Theme.of(context).textTheme.bodyMedium!.apply(
+                                color: CColors.white,
+                                fontSizeFactor: 1.10,
+                                fontWeightDelta: 2,
+                              ),
+                        ),
+                      ],
                     ),
                   ),
-
-                  const SizedBox(
-                    width: CSizes.spaceBtnInputFields,
+                  icon: Icon(
+                    Iconsax.wallet_check,
+                    color: CColors.white,
                   ),
-
-                  /// -- button to mark txn as pending --
-                  SizedBox(
-                    width: CHelperFunctions.screenWidth() * 0.45,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        //checkoutController.suspendTxn();
-                      },
-                      label: SizedBox(
-                        height: 34.1,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              'SUSPEND',
-                              style:
-                                  Theme.of(context).textTheme.bodyMedium!.apply(
-                                        color: CColors.white,
-                                        fontSizeFactor: 0.88,
-                                        fontWeightDelta: 1,
-                                      ),
-                            ),
-                            Text(
-                              '$currencySymbol.${cartController.totalCartPrice.value.toStringAsFixed(2)}',
-                              style:
-                                  Theme.of(context).textTheme.bodyMedium!.apply(
-                                        color: CColors.white,
-                                        fontSizeFactor: 1.10,
-                                        fontWeightDelta: 2,
-                                      ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      icon: Icon(
-                        Iconsax.money_time,
-                        color: CColors.white,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
+              // TODO: IMPLEMENT ABILITY TO SUSPEND TXN USING THIS BUTTON BELOW
+              // Row(
+              //   children: [
+
+              //     const SizedBox(
+              //       width: CSizes.spaceBtnInputFields,
+              //     ),
+
+              //     /// -- button to mark txn as pending --
+              //     SizedBox(
+              //       width: CHelperFunctions.screenWidth() * 0.45,
+              //       child: ElevatedButton.icon(
+              //         onPressed: () {
+              //           //checkoutController.suspendTxn();
+              //         },
+              //         label: SizedBox(
+              //           height: 34.1,
+              //           child: Column(
+              //             crossAxisAlignment: CrossAxisAlignment.center,
+              //             mainAxisAlignment: MainAxisAlignment.end,
+              //             children: [
+              //               Text(
+              //                 'SUSPEND',
+              //                 style:
+              //                     Theme.of(context).textTheme.bodyMedium!.apply(
+              //                           color: CColors.white,
+              //                           fontSizeFactor: 0.88,
+              //                           fontWeightDelta: 1,
+              //                         ),
+              //               ),
+              //               Text(
+              //                 '$currencySymbol.${cartController.totalCartPrice.value.toStringAsFixed(2)}',
+              //                 style:
+              //                     Theme.of(context).textTheme.bodyMedium!.apply(
+              //                           color: CColors.white,
+              //                           fontSizeFactor: 1.10,
+              //                           fontWeightDelta: 2,
+              //                         ),
+              //               ),
+              //             ],
+              //           ),
+              //         ),
+              //         icon: Icon(
+              //           Iconsax.money_time,
+              //           color: CColors.white,
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
             );
           } else {
             CPopupSnackBar.errorSnackBar(

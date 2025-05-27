@@ -104,8 +104,11 @@ class CTxnsScreen extends StatelessWidget {
                                                   radius: 40.0,
                                                 )
                                               : txnsController
-                                                      .unsyncedTxnAppends
-                                                      .isEmpty
+                                                          .unsyncedTxnAppends
+                                                          .isEmpty &&
+                                                      txnsController
+                                                          .unsyncedTxnUpdates
+                                                          .isEmpty
                                                   ? const Icon(
                                                       Iconsax.cloud_add,
                                                     )

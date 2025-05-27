@@ -140,7 +140,8 @@ class CTxnsController extends GetxController {
       // assign values for unsynced txn updates
       var txnsForUpdates = sales
           .where((unUpdatedTxn) =>
-              unUpdatedTxn.syncAction.toLowerCase().contains('update'))
+              unUpdatedTxn.syncAction.toLowerCase().contains('update') &&
+              unUpdatedTxn.isSynced == 1)
           .toList();
       unsyncedTxnUpdates.assignAll(txnsForUpdates);
 
@@ -454,8 +455,6 @@ class CTxnsController extends GetxController {
     updatesOnRefundDone.value = false;
     isLoading.value = false;
 
-    txtSaleItemQty.text = '';
-    txtAmountIssued.text = '';
     saleItemName.value = '';
     saleItemCode.value = '';
     qtyAvailable.value = 0;
@@ -465,6 +464,12 @@ class CTxnsController extends GetxController {
     deposit.value = 0.0;
     totalAmount.value = 0.0;
     customerBal.value = 0.0;
+
+    txtSaleItemQty.text = '';
+    txtAmountIssued.text = '';
+    txtCustomerName.text = '';
+    txtCustomerContacts.text = '';
+    txtTxnAddress.text = '';
   }
 
   /// -- add unsynced txns to the cloud --
@@ -479,6 +484,20 @@ class CTxnsController extends GetxController {
                 unsyncedTxn.syncAction.toLowerCase() ==
                     'append'.toLowerCase() &&
                 unsyncedTxn.isSynced == 0);
+
+            // -- update refunds data
+            if (unsyncedTxnUpdates.isNotEmpty) {
+              for (var updateItem in unsyncedTxnUpdates) {
+                updateItem.syncAction = 'none';
+                updateItem.txnStatus = 'complete';
+
+                // -- update sales data on the cloud
+                updateReceiptItemCloudData(updateItem.soldItemId!, updateItem);
+
+                // -- update sales data locally
+                dbHelper.updateReceiptItem(updateItem, updateItem.soldItemId!);
+              }
+            }
 
             if (unsyncedTxnsForAppends.isNotEmpty) {
               var gSheetTxnAppends = unsyncedTxnsForAppends
@@ -533,12 +552,6 @@ class CTxnsController extends GetxController {
                   );
                 }
               });
-
-              // -- update refunds data
-              final unsyncedTxnsForUpdates = sales.where((refundUpdateItem) =>
-                  refundUpdateItem.syncAction.toLowerCase() ==
-                      'update'.toLowerCase() &&
-                  refundUpdateItem.isSynced == 1);
             } else {
               txnsSyncIsLoading.value = false;
               isLoading.value = false;
@@ -913,7 +926,6 @@ class CTxnsController extends GetxController {
         receiptItem.date = DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
         receiptItem.syncAction =
             receiptItem.isSynced == 0 ? 'append' : 'update';
-        receiptItem.txnStatus = 'refunded';
 
         fetchTxns();
         fetchSoldItems();
