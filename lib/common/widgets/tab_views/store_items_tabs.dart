@@ -17,6 +17,7 @@ class CStoreItemsTabs extends StatelessWidget {
 
     return Column(
       children: [
+        /// -- tabs --
         SizedBox(
           child: TabBar(
             tabs: [
