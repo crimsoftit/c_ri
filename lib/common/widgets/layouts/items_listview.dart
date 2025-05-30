@@ -44,8 +44,8 @@ class CItemsListView extends StatelessWidget {
           return const NoSearchResultsScreen();
         }
 
-        if (searchController.txtSalesSearch.text.isNotEmpty &&
-            salesController.foundTxns.isEmpty &&
+        if (searchController.txtSearchField.text.isNotEmpty &&
+            salesController.foundSales.isEmpty &&
             space == 'sales') {
           return const NoSearchResultsScreen();
         }
@@ -56,11 +56,11 @@ class CItemsListView extends StatelessWidget {
           scrollDirection: Axis.vertical,
           itemCount: space == 'inventory'
               ? invController.foundInventoryItems.length
-              : salesController.foundTxns.length,
+              : salesController.foundSales.length,
           itemBuilder: (context, index) {
             var id = space == 'inventory'
                 ? '#${invController.foundInventoryItems[index].productId}'
-                : 'txn id: #${salesController.foundTxns[index].txnId}';
+                : 'txn id: #${salesController.foundSales[index].txnId}';
 
             // var pCode = space == 'inventory'
             //     ? invController.foundInventoryItems[index].pCode
@@ -68,15 +68,15 @@ class CItemsListView extends StatelessWidget {
 
             var amount = space == 'inventory'
                 ? 'bp: $userCurrencyCode.${invController.foundInventoryItems[index].buyingPrice}'
-                : 't.Amount: $userCurrencyCode.${salesController.foundTxns[index].totalAmount}';
+                : 't.Amount: $userCurrencyCode.${salesController.foundSales[index].totalAmount}';
 
             var qty = space == 'inventory'
                 ? '(${invController.foundInventoryItems[index].quantity} stocked)'
-                : 'qty: ${salesController.foundTxns[index].quantity}';
+                : 'qty: ${salesController.foundSales[index].quantity}';
 
             var date = space == 'inventory'
                 ? invController.foundInventoryItems[index].date
-                : salesController.foundTxns[index].date;
+                : salesController.foundSales[index].date;
 
             return Card(
               color: isDarkTheme
@@ -87,18 +87,18 @@ class CItemsListView extends StatelessWidget {
                 avatarTxt: space == 'inventory'
                     ? invController.foundInventoryItems[index].name[0]
                         .toUpperCase()
-                    : salesController.foundTxns[index].productName[0]
+                    : salesController.foundSales[index].productName[0]
                         .toUpperCase(),
                 titleTxt: space == 'inventory'
                     ? invController.foundInventoryItems[index].name
                         .toUpperCase()
-                    : salesController.foundTxns[index].productName
+                    : salesController.foundSales[index].productName
                         .toUpperCase(),
                 subTitleTxt1Item1: '$amount ',
                 subTitleTxt1Item2: qty,
                 subTitleTxt2Item1: space == 'inventory'
                     ? 'usp: $userCurrencyCode.${invController.foundInventoryItems[index].unitSellingPrice}'
-                    : 'payment method: ${salesController.foundTxns[index].paymentMethod}',
+                    : 'payment method: ${salesController.foundSales[index].paymentMethod}',
                 subTitleTxt2Item2: '',
                 subTitleTxt3Item1: date,
                 subTitleTxt3Item2: id,
@@ -126,7 +126,7 @@ class CItemsListView extends StatelessWidget {
                   if (space == 'sales') {
                     Get.toNamed(
                       '/sales/txn_details',
-                      arguments: salesController.foundTxns[index].txnId,
+                      arguments: salesController.foundSales[index].txnId,
                     );
                   }
                 },

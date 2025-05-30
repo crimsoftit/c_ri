@@ -154,7 +154,7 @@ class CSalesScreenRaw extends StatelessWidget {
                             boxColor: searchController.showSearchField.value
                                 ? CColors.white
                                 : Colors.transparent,
-                            controller: searchController.txtSalesSearch,
+                            controller: searchController.txtSearchField,
                           ),
                           backIconAction: () {
                             // Navigator.pop(context, true);

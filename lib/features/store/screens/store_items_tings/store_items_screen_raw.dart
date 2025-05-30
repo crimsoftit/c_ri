@@ -61,7 +61,7 @@ class CStoreItemsScreenRaw extends StatelessWidget {
                                               ? CColors.white
                                               : Colors.transparent,
                                       controller:
-                                          searchController.txtSalesSearch,
+                                          searchController.txtSearchField,
                                     )
                                   : Container(),
                             ),

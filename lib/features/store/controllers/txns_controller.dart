@@ -127,10 +127,12 @@ class CTxnsController extends GetxController {
       final soldItems =
           await dbHelper.fetchAllSoldItems(userController.user.value.email);
 
-      // assign txns to soldItemsList
+      // assign txns to sales list
       sales.assignAll(soldItems);
-
-      foundSales.value = sales;
+      if (searchController.showSearchField.isTrue &&
+          searchController.txtSearchField.text == '') {
+        foundSales.assignAll(soldItems);
+      }
 
       // assign values for unsynced txn appends
       unsyncedTxnAppends.value = sales

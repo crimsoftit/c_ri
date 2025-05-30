@@ -12,8 +12,8 @@ class CSearchBarController extends GetxController {
   //RxBool salesShowSearchField = false.obs;
   RxBool showAnimatedTypeAheadField = false.obs;
 
-  final txtInvSearchField = TextEditingController();
-  final txtSalesSearch = TextEditingController();
+  // final txtInvSearchField = TextEditingController();
+  final txtSearchField = TextEditingController();
   final txtTypeAheadFieldController = TextEditingController();
 
   final cartController = Get.put(CCartController());
@@ -22,8 +22,8 @@ class CSearchBarController extends GetxController {
     showSearchField.value = false;
     //salesShowSearchField.value = false;
     showAnimatedTypeAheadField.value = false;
-    txtInvSearchField.text = '';
-    txtSalesSearch.text = '';
+    txtSearchField.text = '';
+    // txtSalesSearch.text = '';
     super.onInit();
   }
 

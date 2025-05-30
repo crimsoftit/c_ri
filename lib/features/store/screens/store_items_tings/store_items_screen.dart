@@ -74,7 +74,7 @@ class CStoreItemsScreen extends StatelessWidget {
                                                     ? CColors.white
                                                     : Colors.transparent,
                                                 controller: searchController
-                                                    .txtSalesSearch,
+                                                    .txtSearchField,
                                               )
                                             : Container(),
                                       ),
@@ -99,7 +99,7 @@ class CStoreItemsScreen extends StatelessWidget {
                             boxColor: searchController.showSearchField.value
                                 ? CColors.white
                                 : Colors.transparent,
-                            controller: searchController.txtSalesSearch,
+                            controller: searchController.txtSearchField,
                           ),
                           backIconAction: () {
                             // Navigator.pop(context, true);

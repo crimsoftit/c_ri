@@ -77,7 +77,7 @@ class CInventoryController extends GetxController {
     fetchInvDels();
     fetchInvUpdates();
     if (searchController.showSearchField.isTrue &&
-        searchController.txtSalesSearch.text == '') {
+        searchController.txtSearchField.text == '') {
       foundInventoryItems.value = inventoryItems;
     }
     await initInvSync();
@@ -112,12 +112,11 @@ class CInventoryController extends GetxController {
 
       // assign inventory items
       inventoryItems.assignAll(fetchedItems);
-      foundInventoryItems.value = inventoryItems;
 
-      // if (searchController.salesShowSearchField.isTrue &&
-      //     searchController.txtSalesSearch.text == '') {
-      //   foundInventoryItems.value = inventoryItems;
-      // }
+      if (searchController.showSearchField.isTrue &&
+          searchController.txtSearchField.text == '') {
+        foundInventoryItems.assignAll(fetchedItems);
+      }
 
       // unsynced appends
       unSyncedAppends.value = inventoryItems
@@ -445,7 +444,7 @@ class CInventoryController extends GetxController {
       // -- refresh inventory list
       fetchUserInventoryItems();
 
-      searchController.txtInvSearchField.text = '';
+      searchController.txtSearchField.text = '';
 
       // -- stop loader
       isLoading.value = false;
