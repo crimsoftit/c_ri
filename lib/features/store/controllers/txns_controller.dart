@@ -370,11 +370,13 @@ class CTxnsController extends GetxController {
     }
   }
 
-  onSearchSalesAction(String value) {
-    foundSales.value = sales
+  searchReceipts(String value) {
+    fetchSoldItems();
+    var salesFound = sales
         .where((soldItem) =>
             soldItem.productName.toLowerCase().contains(value.toLowerCase()))
         .toList();
+    foundSales.assignAll(salesFound);
   }
 
   /// -- when search result item is selected --

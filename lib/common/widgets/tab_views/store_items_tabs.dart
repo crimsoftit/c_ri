@@ -23,10 +23,10 @@ class CStoreItemsTabs extends StatelessWidget {
           child: TabBar(
             isScrollable: true,
             labelColor: CColors.rBrown,
-            labelPadding: const EdgeInsets.only(
-              left: 10.0,
-              right: 10.0,
-            ),
+            // labelPadding: const EdgeInsets.only(
+            //   left: 10.0,
+            //   right: 10.0,
+            // ),
             unselectedLabelColor: CColors.darkGrey,
             tabs: [
               Tab(

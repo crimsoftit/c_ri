@@ -8,8 +8,8 @@ class CSearchBarController extends GetxController {
   }
 
   /// -- variables --
-  RxBool invShowSearchField = false.obs;
-  RxBool salesShowSearchField = false.obs;
+  RxBool showSearchField = false.obs;
+  //RxBool salesShowSearchField = false.obs;
   RxBool showAnimatedTypeAheadField = false.obs;
 
   final txtInvSearchField = TextEditingController();
@@ -19,8 +19,8 @@ class CSearchBarController extends GetxController {
   final cartController = Get.put(CCartController());
   @override
   void onInit() {
-    invShowSearchField.value = false;
-    salesShowSearchField.value = false;
+    showSearchField.value = false;
+    //salesShowSearchField.value = false;
     showAnimatedTypeAheadField.value = false;
     txtInvSearchField.text = '';
     txtSalesSearch.text = '';
@@ -36,13 +36,14 @@ class CSearchBarController extends GetxController {
   // }
 
   onSearchIconTap(String searchSpace) {
-    if (searchSpace == 'inventory') {
-      txtInvSearchField.text = '';
-      invShowSearchField.value = !invShowSearchField.value;
-    } else if (searchSpace == 'inventory, transactions') {
-      txtSalesSearch.text = '';
-      salesShowSearchField.value = !salesShowSearchField.value;
-    }
+    showSearchField.value = !showSearchField.value;
+    // if (searchSpace == 'inventory') {
+    //   txtInvSearchField.text = '';
+    //   invShowSearchField.value = !invShowSearchField.value;
+    // } else if (searchSpace == 'inventory, transactions') {
+    //   txtSalesSearch.text = '';
+    //   salesShowSearchField.value = !salesShowSearchField.value;
+    // }
 
     //invShowSearchField.value = !invShowSearchField.value;
   }

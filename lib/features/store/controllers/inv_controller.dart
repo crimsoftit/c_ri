@@ -76,7 +76,7 @@ class CInventoryController extends GetxController {
     fetchUserInventoryItems();
     fetchInvDels();
     fetchInvUpdates();
-    if (searchController.salesShowSearchField.isTrue &&
+    if (searchController.showSearchField.isTrue &&
         searchController.txtSalesSearch.text == '') {
       foundInventoryItems.value = inventoryItems;
     }
@@ -388,13 +388,16 @@ class CInventoryController extends GetxController {
     scanBarcodeNormal();
   }
 
-  onSearchInventory(String value) {
+  searchInventory(String value) {
     fetchUserInventoryItems();
+    foundInventoryItems.clear();
 
-    foundInventoryItems.value = inventoryItems
+    var invSearchItems = inventoryItems
         .where((element) =>
             element.name.toLowerCase().contains(value.toLowerCase()))
         .toList();
+
+    foundInventoryItems.assignAll(invSearchItems);
   }
 
   /// -- update inventory item --

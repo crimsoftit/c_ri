@@ -62,8 +62,7 @@ class CInventoryScreen extends StatelessWidget {
                     Obx(
                       () {
                         return CAppBar(
-                          leadingWidget: searchController
-                                  .salesShowSearchField.value
+                          leadingWidget: searchController.showSearchField.value
                               ? null
                               : Padding(
                                   padding: const EdgeInsets.only(
@@ -170,10 +169,9 @@ class CInventoryScreen extends StatelessWidget {
                               isDarkTheme ? CColors.white : CColors.rBrown,
                           title: CAnimatedSearchBar(
                             hintTxt: 'inventory, transactions',
-                            boxColor:
-                                searchController.salesShowSearchField.value
-                                    ? CColors.white
-                                    : Colors.transparent,
+                            boxColor: searchController.showSearchField.value
+                                ? CColors.white
+                                : Colors.transparent,
                             controller: searchController.txtSalesSearch,
                           ),
                           backIconAction: () {
@@ -193,7 +191,7 @@ class CInventoryScreen extends StatelessWidget {
               /// -- tab bars for inventory & transactions lists --
               Obx(
                 () {
-                  if (searchController.salesShowSearchField.value) {
+                  if (searchController.showSearchField.value) {
                     //invController.fetchInventoryItems();
                     return const CStoreItemsTabs(
                       tab1Title: 'inventory',

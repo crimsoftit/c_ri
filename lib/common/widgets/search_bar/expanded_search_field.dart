@@ -37,21 +37,25 @@ class CExpandedSearchField extends StatelessWidget {
               controller: controller,
               autofocus: true,
               onChanged: (value) {
-                if (hintTxt == 'inventory') {
-                  invController.onSearchInventory(value);
-                } else if (hintTxt == 'inventory, transactions') {
-                  invController.onSearchInventory(value);
-                  salesController.onSearchSalesAction(value);
-                }
+                // if (hintTxt == 'inventory') {
+                //   invController.onSearchInventory(value);
+                // } else if (hintTxt == 'inventory, transactions') {
+                //   invController.onSearchInventory(value);
+                //   salesController.onSearchSalesAction(value);
+                // }
+                invController.searchInventory(value);
+                salesController.searchReceipts(value);
               },
               onFieldSubmitted: (value) {
                 //searchController.onSearchBtnPressed();
-                if (hintTxt == 'inventory') {
-                  invController.onSearchInventory(value);
-                } else if (hintTxt == 'inventory, transactions') {
-                  invController.onSearchInventory(value);
-                  salesController.onSearchSalesAction(value);
-                }
+                // if (hintTxt == 'inventory') {
+                //   invController.searchInventory(value);
+                // } else if (hintTxt == 'inventory, transactions') {
+                //   invController.searchInventory(value);
+                //   salesController.onSearchSalesAction(value);
+                // }
+                invController.searchInventory(value);
+                salesController.searchReceipts(value);
               },
               style: TextStyle(
                 //color: CColors.rBrown.withOpacity(0.6),

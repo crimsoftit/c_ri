@@ -30,80 +30,57 @@ class CAnimatedSearchBar extends StatelessWidget {
       () {
         return AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          width: hintTxt == 'inventory'
-              ? searchController.invShowSearchField.value
-                  ? double.maxFinite
-                  : 40.0
-              : searchController.salesShowSearchField.value
-                  ? double.maxFinite
-                  : 40.0,
+          width:
+              searchController.showSearchField.value ? double.maxFinite : 40.0,
+          // width: hintTxt == 'inventory'
+          //     ? searchController.invShowSearchField.value
+          //         ? double.maxFinite
+          //         : 40.0
+          //     : searchController.salesShowSearchField.value
+          //         ? double.maxFinite
+          //         : 40.0,
           height: 40.0,
           decoration: BoxDecoration(
-            borderRadius: hintTxt == 'inventory'
-                ? searchController.invShowSearchField.value
-                    ? BorderRadius.circular(5.0)
-                    : BorderRadius.circular(20.0)
-                : searchController.salesShowSearchField.value
-                    ? BorderRadius.circular(5.0)
-                    : BorderRadius.circular(20.0),
+            borderRadius: searchController.showSearchField.value
+                ? BorderRadius.circular(5.0)
+                : BorderRadius.circular(20.0),
+            // borderRadius: hintTxt == 'inventory'
+            //     ? searchController.showSearchField.value
+            //         ? BorderRadius.circular(5.0)
+            //         : BorderRadius.circular(20.0)
+            //     : searchController.salesShowSearchField.value
+            //         ? BorderRadius.circular(5.0)
+            //         : BorderRadius.circular(20.0),
             color: boxColor,
-            boxShadow: kElevationToShadow[2],
+            //boxShadow: kElevationToShadow[2],
           ),
-          child: hintTxt == 'inventory'
-              ? searchController.invShowSearchField.value
-                  ? CExpandedSearchField(
-                      hintTxt: hintTxt,
-                      txtColor: CColors.rBrown,
-                      controller: controller,
-                    )
-                  : Material(
-                      type: MaterialType.transparency,
-                      child: InkWell(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(0),
-                          topRight: Radius.circular(32),
-                          bottomLeft: Radius.circular(0),
-                          bottomRight: Radius.circular(32),
-                        ),
-                        onTap: () {
-                          searchController.onSearchIconTap(hintTxt);
-                          invController.fetchUserInventoryItems();
-                          salesController.fetchSoldItems();
-                        },
-                        child: const Icon(
-                          Iconsax.search_normal,
-                          color: CColors.white,
-                          size: CSizes.iconMd,
-                        ),
-                      ),
-                    )
-              : searchController.salesShowSearchField.value
-                  ? CExpandedSearchField(
-                      hintTxt: hintTxt,
-                      txtColor: CColors.rBrown,
-                      controller: controller,
-                    )
-                  : Material(
-                      type: MaterialType.transparency,
-                      child: InkWell(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(0),
-                          topRight: Radius.circular(32),
-                          bottomLeft: Radius.circular(0),
-                          bottomRight: Radius.circular(32),
-                        ),
-                        onTap: () {
-                          searchController.onSearchIconTap(hintTxt);
-                          invController.fetchUserInventoryItems();
-                          salesController.fetchSoldItems();
-                        },
-                        child: const Icon(
-                          Iconsax.search_normal,
-                          color: CColors.white,
-                          size: CSizes.iconMd,
-                        ),
-                      ),
+          child: searchController.showSearchField.value
+              ? CExpandedSearchField(
+                  hintTxt: hintTxt,
+                  txtColor: CColors.rBrown,
+                  controller: controller,
+                )
+              : Material(
+                  type: MaterialType.transparency,
+                  child: InkWell(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(0),
+                      topRight: Radius.circular(32),
+                      bottomLeft: Radius.circular(0),
+                      bottomRight: Radius.circular(32),
                     ),
+                    onTap: () {
+                      searchController.onSearchIconTap(hintTxt);
+                      invController.fetchUserInventoryItems();
+                      salesController.fetchSoldItems();
+                    },
+                    child: const Icon(
+                      Iconsax.search_normal,
+                      color: CColors.white,
+                      size: CSizes.iconMd,
+                    ),
+                  ),
+                ),
         );
       },
     );
