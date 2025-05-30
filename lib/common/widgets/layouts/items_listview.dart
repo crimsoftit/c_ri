@@ -22,11 +22,13 @@ class CItemsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final invController = Get.put(CInventoryController());
     final salesController = Get.put(CTxnsController());
-    final userController = Get.put(CUserController());
     final searchController = Get.put(CSearchBarController());
-    final currency =
+    final userController = Get.put(CUserController());
+
+    final userCurrencyCode =
         CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
 
     return Obx(
@@ -65,8 +67,8 @@ class CItemsListView extends StatelessWidget {
             //     : salesController.foundTxns[index].productCode;
 
             var amount = space == 'inventory'
-                ? 'bp: $currency.${invController.foundInventoryItems[index].buyingPrice}'
-                : 't.Amount: $currency.${salesController.foundTxns[index].totalAmount}';
+                ? 'bp: $userCurrencyCode.${invController.foundInventoryItems[index].buyingPrice}'
+                : 't.Amount: $userCurrencyCode.${salesController.foundTxns[index].totalAmount}';
 
             var qty = space == 'inventory'
                 ? '(${invController.foundInventoryItems[index].quantity} stocked)'
@@ -77,7 +79,9 @@ class CItemsListView extends StatelessWidget {
                 : salesController.foundTxns[index].date;
 
             return Card(
-              color: CColors.white,
+              color: isDarkTheme
+                  ? CColors.rBrown.withValues(alpha: 0.3)
+                  : CColors.lightGrey,
               elevation: 0.3,
               child: CExpansionTile(
                 avatarTxt: space == 'inventory'
@@ -93,7 +97,7 @@ class CItemsListView extends StatelessWidget {
                 subTitleTxt1Item1: '$amount ',
                 subTitleTxt1Item2: qty,
                 subTitleTxt2Item1: space == 'inventory'
-                    ? 'usp: $currency.${invController.foundInventoryItems[index].unitSellingPrice}'
+                    ? 'usp: $userCurrencyCode.${invController.foundInventoryItems[index].unitSellingPrice}'
                     : 'payment method: ${salesController.foundTxns[index].paymentMethod}',
                 subTitleTxt2Item2: '',
                 subTitleTxt3Item1: date,

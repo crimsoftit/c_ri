@@ -22,8 +22,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class CSalesScreen extends StatelessWidget {
-  const CSalesScreen({super.key});
+class CSalesScreenRaw extends StatelessWidget {
+  const CSalesScreenRaw({super.key});
 
   @override
   Widget build(BuildContext context) {

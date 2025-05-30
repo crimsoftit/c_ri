@@ -112,11 +112,12 @@ class CInventoryController extends GetxController {
 
       // assign inventory items
       inventoryItems.assignAll(fetchedItems);
+      foundInventoryItems.value = inventoryItems;
 
-      if (searchController.salesShowSearchField.isTrue &&
-          searchController.txtSalesSearch.text == '') {
-        foundInventoryItems.value = inventoryItems;
-      }
+      // if (searchController.salesShowSearchField.isTrue &&
+      //     searchController.txtSalesSearch.text == '') {
+      //   foundInventoryItems.value = inventoryItems;
+      // }
 
       // unsynced appends
       unSyncedAppends.value = inventoryItems

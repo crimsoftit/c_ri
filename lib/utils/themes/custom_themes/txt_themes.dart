@@ -51,7 +51,7 @@ class CTextTheme {
       color: Colors.brown,
     ),
     labelLarge: const TextStyle().copyWith(
-      fontSize: 30.0,
+      fontSize: 14.0,
       fontWeight: FontWeight.normal,
       color: Colors.brown,
     ),

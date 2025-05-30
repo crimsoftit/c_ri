@@ -64,6 +64,7 @@ class CTxnsController extends GetxController {
   final RxList<CTxnsModel> txns = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> foundTxns = <CTxnsModel>[].obs;
   RxList<CTxnsModel> receiptItems = <CTxnsModel>[].obs;
+  final RxList<CTxnsModel> refunds = <CTxnsModel>[].obs;
 
   final RxList<CTxnsModel> allGsheetTxnsData = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> unsyncedTxnAppends = <CTxnsModel>[].obs;
@@ -144,6 +145,11 @@ class CTxnsController extends GetxController {
               unUpdatedTxn.isSynced == 1)
           .toList();
       unsyncedTxnUpdates.assignAll(txnsForUpdates);
+
+      // assign values for refunded items
+      var refundedItems =
+          sales.where((refundedItem) => refundedItem.qtyRefunded >= 1).toList();
+      refunds.assignAll(refundedItems);
 
       // stop loader
       isLoading.value = false;

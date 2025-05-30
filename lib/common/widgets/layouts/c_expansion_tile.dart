@@ -1,5 +1,6 @@
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
+import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -36,6 +37,8 @@ class CExpansionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = CHelperFunctions.isDarkMode(context);
+
     return ExpansionTile(
       title: ListTile(
         horizontalTitleGap: 10,
@@ -55,7 +58,7 @@ class CExpansionTile extends StatelessWidget {
         title: Text(
           titleTxt,
           style: Theme.of(context).textTheme.labelMedium!.apply(
-                color: CColors.rBrown,
+                color: isDarkTheme ? CColors.white : CColors.rBrown,
                 //fontSizeFactor: 1.2,
                 //fontWeightDelta: 2,
               ),
@@ -69,21 +72,27 @@ class CExpansionTile extends StatelessWidget {
             Text(
               '$subTitleTxt1Item1 $subTitleTxt1Item2',
               style: Theme.of(context).textTheme.labelMedium!.apply(
-                    color: CColors.rBrown.withValues(alpha: 0.8),
+                    color: isDarkTheme
+                        ? CColors.white
+                        : CColors.rBrown.withValues(alpha: 0.8),
                     //fontStyle: FontStyle.italic,
                   ),
             ),
             Text(
               '$subTitleTxt2Item1 $subTitleTxt2Item2',
               style: Theme.of(context).textTheme.labelMedium!.apply(
-                    color: CColors.rBrown.withValues(alpha: 0.8),
+                    color: isDarkTheme
+                        ? CColors.white
+                        : CColors.rBrown.withValues(alpha: 0.8),
                     //fontStyle: FontStyle.italic,
                   ),
             ),
             Text(
               '$subTitleTxt3Item1 $subTitleTxt3Item2',
               style: Theme.of(context).textTheme.labelSmall!.apply(
-                    color: CColors.rBrown.withValues(alpha: 0.7),
+                    color: isDarkTheme
+                        ? CColors.white
+                        : CColors.rBrown.withValues(alpha: 0.7),
                     //fontStyle: FontStyle.italic,
                   ),
             ),
@@ -102,12 +111,12 @@ class CExpansionTile extends StatelessWidget {
                   label: Text(
                     btn1Txt,
                     style: Theme.of(context).textTheme.labelMedium!.apply(
-                          color: CColors.rBrown,
+                          color: isDarkTheme ? CColors.white : CColors.rBrown,
                         ),
                   ),
-                  icon: const Icon(
+                  icon: Icon(
                     Iconsax.info_circle,
-                    color: CColors.rBrown,
+                    color: isDarkTheme ? CColors.white : CColors.rBrown,
                   ),
                   onPressed: btn1NavAction,
                 ),
@@ -120,7 +129,7 @@ class CExpansionTile extends StatelessWidget {
                   label: Text(
                     btn2Txt,
                     style: Theme.of(context).textTheme.labelMedium!.apply(
-                          color: CColors.rBrown,
+                          color: isDarkTheme ? CColors.white : CColors.rBrown,
                         ),
                   ),
                   icon: btn2Icon,

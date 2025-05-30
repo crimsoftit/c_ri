@@ -4,8 +4,7 @@ import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/screens/home/home.dart';
 import 'package:c_ri/features/store/screens/inventory/inventory_screen.dart';
-import 'package:c_ri/features/store/screens/txns/sales_screen.dart';
-import 'package:c_ri/features/store/screens/txns/txns_screen.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/store_items_screen.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:c_ri/utils/helpers/network_manager.dart';
@@ -64,13 +63,21 @@ class NavMenu extends StatelessWidget {
               label: 'inventory',
             ),
             NavigationDestination(
-              icon: Icon(Iconsax.empty_wallet_time),
-              label: 'sales',
+              icon: Icon(Iconsax.shop),
+              label: 'store',
             ),
-            NavigationDestination(
-              icon: Icon(Iconsax.wallet_check),
-              label: 'txns',
-            ),
+            // NavigationDestination(
+            //   icon: Icon(Iconsax.empty_wallet_time),
+            //   label: 'sales',
+            // ),
+            // NavigationDestination(
+            //   icon: Icon(Iconsax.empty_wallet_time),
+            //   label: 'sales_raw',
+            // ),
+            // NavigationDestination(
+            //   icon: Icon(Iconsax.wallet_check),
+            //   label: 'txns',
+            // ),
             NavigationDestination(
               icon: Icon(Iconsax.setting),
               label: 'account',
@@ -99,8 +106,10 @@ class NavMenuController extends GetxController {
   final screens = [
     const HomeScreen(),
     const CInventoryScreen(),
-    const CSalesScreen(),
-    const CTxnsScreen(),
+    const CStoreItemsScreen(),
+    // const CSalesScreen(),
+    // const CSalesScreenRaw(),
+    // const CTxnsScreen(),
     const SettingsScreen(),
     const ProfileScreen(),
   ];

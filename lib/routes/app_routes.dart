@@ -9,7 +9,9 @@ import 'package:c_ri/features/store/screens/checkout/checkout_screen.dart';
 import 'package:c_ri/features/store/screens/home/home.dart';
 import 'package:c_ri/features/store/screens/inventory/inventory_details/inventory_details.dart';
 import 'package:c_ri/features/store/screens/inventory/inventory_screen.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/store_items_screen.dart';
 import 'package:c_ri/features/store/screens/txns/sales_screen.dart';
+import 'package:c_ri/features/store/screens/txns/sales_screen_raw.dart';
 import 'package:c_ri/features/store/screens/txns/txn_details/sold_item_details.dart';
 import 'package:c_ri/features/store/screens/txns/txn_details/txn_details_revamp_pending.dart';
 import 'package:c_ri/features/store/screens/search/search_results.dart';
@@ -26,6 +28,10 @@ class CAppRoutes {
       page: () => const HomeScreen(),
     ),
     GetPage(
+      name: CRoutes.store,
+      page: () => const CStoreItemsScreen(),
+    ),
+    GetPage(
       name: CRoutes.inventory,
       page: () => const CInventoryScreen(),
     ),
@@ -36,6 +42,10 @@ class CAppRoutes {
     GetPage(
       name: CRoutes.sales,
       page: () => const CSalesScreen(),
+    ),
+    GetPage(
+      name: CRoutes.salesRaw,
+      page: () => const CSalesScreenRaw(),
     ),
     GetPage(
       name: CRoutes.txns,
