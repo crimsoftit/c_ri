@@ -96,7 +96,7 @@ class CExpandedSearchField extends StatelessWidget {
               bottomRight: Radius.circular(32),
             ),
             onTap: () {
-              searchController.onSearchIconTap(hintTxt);
+              searchController.toggleSearchFieldVisibility();
               invController.fetchUserInventoryItems();
               salesController.fetchSoldItems();
             },

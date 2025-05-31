@@ -3,10 +3,7 @@ import 'package:c_ri/common/widgets/tab_views/store_items_tabs.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
-import 'package:c_ri/features/store/screens/inventory/widgets/inv_dialog.dart';
 import 'package:c_ri/utils/constants/colors.dart';
-import 'package:c_ri/utils/helpers/helper_functions.dart';
-import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,15 +13,15 @@ class CStoreItemsScreenRaw extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final invController = Get.put(CInventoryController());
-    final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    //final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final txnsController = Get.put(CTxnsController());
 
     txnsController.fetchTxns();
-    AddUpdateItemDialog dialog = AddUpdateItemDialog();
+    //AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
     invController.fetchUserInventoryItems();
 
-    final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
+    //final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final searchController = Get.put(CSearchBarController());
 
     return DefaultTabController(

@@ -121,6 +121,7 @@ class CTxnsController extends GetxController {
     try {
       // start loader while txns are fetched
       isLoading.value = true;
+      foundSales.clear();
       await dbHelper.openDb();
 
       // fetch

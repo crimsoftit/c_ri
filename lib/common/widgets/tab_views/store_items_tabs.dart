@@ -1,4 +1,4 @@
-import 'package:c_ri/common/widgets/layouts/items_listview.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/items_listview.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';

@@ -35,17 +35,8 @@ class CSearchBarController extends GetxController {
   //   }
   // }
 
-  onSearchIconTap(String searchSpace) {
+  toggleSearchFieldVisibility() {
     showSearchField.value = !showSearchField.value;
-    // if (searchSpace == 'inventory') {
-    //   txtInvSearchField.text = '';
-    //   invShowSearchField.value = !invShowSearchField.value;
-    // } else if (searchSpace == 'inventory, transactions') {
-    //   txtSalesSearch.text = '';
-    //   salesShowSearchField.value = !salesShowSearchField.value;
-    // }
-
-    //invShowSearchField.value = !invShowSearchField.value;
   }
 
   onTypeAheadSearchIconTap() {

@@ -10,7 +10,7 @@ class CSalesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final invController = Get.put(CInventoryController());
+    //final invController = Get.put(CInventoryController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final txnsController = Get.put(CTxnsController());
 

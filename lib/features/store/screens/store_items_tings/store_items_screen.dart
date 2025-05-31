@@ -1,19 +1,15 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
-import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:c_ri/common/widgets/tab_views/store_items_tabs.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
-import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/inv_dialog.dart';
 import 'package:c_ri/utils/constants/colors.dart';
-import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 
 class CStoreItemsScreen extends StatelessWidget {
   const CStoreItemsScreen({super.key});
@@ -116,7 +112,7 @@ class CStoreItemsScreen extends StatelessWidget {
                                 Theme.of(context).textTheme.labelLarge!.apply(
                                       color: CColors.rBrown,
                                       fontSizeFactor: 2.5,
-                                      fontWeightDelta: -2,
+                                      fontWeightDelta: -3,
                                     ),
                           ),
                         ),

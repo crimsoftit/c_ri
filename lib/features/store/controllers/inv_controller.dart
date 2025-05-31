@@ -72,14 +72,10 @@ class CInventoryController extends GetxController {
   @override
   void onInit() async {
     dbHelper.openDb();
-
     fetchUserInventoryItems();
     fetchInvDels();
     fetchInvUpdates();
-    if (searchController.showSearchField.isTrue &&
-        searchController.txtSearchField.text == '') {
-      foundInventoryItems.value = inventoryItems;
-    }
+
     await initInvSync();
     fetchTopSellers();
 
@@ -103,6 +99,7 @@ class CInventoryController extends GetxController {
     try {
       // start loader while products are fetched
       isLoading.value = true;
+      foundInventoryItems.clear();
 
       await dbHelper.openDb();
 
