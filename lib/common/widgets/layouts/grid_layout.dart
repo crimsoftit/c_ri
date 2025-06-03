@@ -1,3 +1,4 @@
+import 'package:c_ri/common/widgets/products/product_cards/product_card_vertical.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,9 @@ class CGridLayout extends StatelessWidget {
         crossAxisSpacing: CSizes.gridViewSpacing,
         mainAxisExtent: mainAxisExtent,
       ),
-      itemBuilder: itemBuilder,
+      itemBuilder: (_, index) {
+        return CProductCardVertical();
+      },
     );
   }
 }

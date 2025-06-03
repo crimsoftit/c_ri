@@ -168,6 +168,7 @@ class CTxnsScreen extends StatelessWidget {
                     return const CStoreItemsTabs(
                       tab1Title: 'inventory',
                       tab2Title: 'transactions',
+                      tab3Title: 'refunds',
                     );
                   }
 

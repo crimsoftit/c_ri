@@ -45,7 +45,7 @@ class CAnimatedTypeaheadField extends StatelessWidget {
                   child: CRoundedContainer(
                     width: screenWidth * .88,
                     showBorder: false,
-                    radius: 5.0,
+                    borderRadius: 5.0,
                     child: const CTypeAheadSearchField(),
                   ),
                 )

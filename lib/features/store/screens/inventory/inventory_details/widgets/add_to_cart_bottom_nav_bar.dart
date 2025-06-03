@@ -1,4 +1,4 @@
-import 'package:c_ri/common/widgets/icons/circular_icon.dart';
+import 'package:c_ri/common/widgets/icon_buttons/circular_icon_btn.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
@@ -69,7 +69,7 @@ class CAddToCartBottomNavBar extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  CCircularIcon(
+                  CCircularIconBtn(
                     icon: Iconsax.minus,
                     iconBorderRadius: 100,
                     // bgColor: addIconBtnColor ??
@@ -100,7 +100,7 @@ class CAddToCartBottomNavBar extends StatelessWidget {
                     width: CSizes.spaceBtnItems,
                   ),
 
-                  CCircularIcon(
+                  CCircularIconBtn(
                     iconBorderRadius: 100,
                     bgColor: addIconBtnColor ??
                         (CNetworkManager.instance.hasConnection.value

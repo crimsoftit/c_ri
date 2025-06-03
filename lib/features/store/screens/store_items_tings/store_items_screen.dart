@@ -29,7 +29,7 @@ class CStoreItemsScreen extends StatelessWidget {
     final searchController = Get.put(CSearchBarController());
 
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         backgroundColor: CColors.rBrown.withValues(alpha: 0.2),
         body: SingleChildScrollView(
@@ -123,10 +123,11 @@ class CStoreItemsScreen extends StatelessWidget {
                           children: [
                             SizedBox(
                               child: Align(
-                                alignment: Alignment.centerLeft,
+                                alignment: Alignment.topLeft,
                                 child: const CStoreItemsTabs(
                                   tab1Title: 'inventory',
                                   tab2Title: 'sales',
+                                  tab3Title: 'refunds',
                                 ),
                               ),
                             ),

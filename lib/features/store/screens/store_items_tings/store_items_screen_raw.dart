@@ -98,6 +98,7 @@ class CStoreItemsScreenRaw extends StatelessWidget {
                                 child: const CStoreItemsTabs(
                                   tab1Title: 'inventory',
                                   tab2Title: 'sales',
+                                  tab3Title: 'refunds',
                                 ),
                               ),
                             ),

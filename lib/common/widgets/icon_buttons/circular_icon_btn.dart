@@ -2,20 +2,20 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
 
-class CCircularIcon extends StatelessWidget {
-  const CCircularIcon({
+class CCircularIconBtn extends StatelessWidget {
+  const CCircularIconBtn({
     super.key,
     this.width,
     this.height,
-    this.size,
-    required this.iconBorderRadius,
+    this.iconSize,
+    this.iconBorderRadius = 100.0,
     required this.icon,
     this.color,
     this.bgColor,
     this.onPressed,
   });
 
-  final double? width, height, size;
+  final double? width, height, iconSize;
   final double iconBorderRadius;
   final IconData icon;
   final Color? color, bgColor;
@@ -47,7 +47,7 @@ class CCircularIcon extends StatelessWidget {
         icon: Icon(
           icon,
           color: color,
-          size: size,
+          size: iconSize,
         ),
       ),
     );

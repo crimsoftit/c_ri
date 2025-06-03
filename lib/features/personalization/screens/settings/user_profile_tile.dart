@@ -24,7 +24,7 @@ class CUserProfileTile extends StatelessWidget {
     return ListTile(
       leading: CRoundedContainer(
         showBorder: true,
-        radius: 120,
+        borderRadius: 120,
         borderColor: CColors.rBrown.withValues(alpha: 0.3),
         child: Stack(
           children: [

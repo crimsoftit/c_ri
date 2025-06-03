@@ -1,5 +1,5 @@
 import 'package:c_ri/common/widgets/custom_shapes/containers/rounded_container.dart';
-import 'package:c_ri/common/widgets/icons/circular_icon.dart';
+import 'package:c_ri/common/widgets/icon_buttons/circular_icon_btn.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
@@ -58,12 +58,12 @@ class CItemQtyWithAddRemoveBtns extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CCircularIcon(
+          CCircularIconBtn(
             icon: Iconsax.minus,
             width: iconWidth,
             height: iconHeight,
             iconBorderRadius: useSmallIcons ? 60 : 100,
-            size: CSizes.md,
+            iconSize: CSizes.md,
             color: isDarkTheme ? CColors.white : CColors.rBrown,
             bgColor: isDarkTheme ? CColors.darkerGrey : CColors.light,
             onPressed: removeItemBtnAction,
@@ -82,12 +82,12 @@ class CItemQtyWithAddRemoveBtns extends StatelessWidget {
                 ? 0
                 : horizontalSpacing ?? CSizes.spaceBtnItems,
           ),
-          CCircularIcon(
+          CCircularIconBtn(
             icon: Iconsax.add,
             iconBorderRadius: useSmallIcons ? 60 : 100,
             width: iconWidth,
             height: iconHeight,
-            size: CSizes.md,
+            iconSize: CSizes.md,
             color: CColors.white,
             bgColor: CColors.rBrown,
             onPressed: addItemBtnAction,

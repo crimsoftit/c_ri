@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:c_ri/api/sheets/store_sheets_api.dart';
 import 'package:c_ri/common/widgets/custom_shapes/containers/rounded_container.dart';
-import 'package:c_ri/common/widgets/icons/circular_icon.dart';
+import 'package:c_ri/common/widgets/icon_buttons/circular_icon_btn.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
@@ -769,7 +769,7 @@ class CTxnsController extends GetxController {
                         const SizedBox(
                           width: CSizes.spaceBtnInputFields,
                         ),
-                        CCircularIcon(
+                        CCircularIconBtn(
                           icon: Iconsax.minus,
                           iconBorderRadius: 100,
                           bgColor: CColors.black.withValues(alpha: 0.5),
@@ -799,7 +799,7 @@ class CTxnsController extends GetxController {
                           width: CSizes.spaceBtnItems,
                         ),
 
-                        CCircularIcon(
+                        CCircularIconBtn(
                           iconBorderRadius: 100,
                           // bgColor: (CNetworkManager.instance.hasConnection.value
                           //     ? CColors.rBrown

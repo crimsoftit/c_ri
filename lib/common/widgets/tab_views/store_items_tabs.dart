@@ -1,3 +1,4 @@
+import 'package:c_ri/features/store/screens/store_items_tings/inv_gridview_screen.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/items_listview.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
@@ -8,14 +9,13 @@ class CStoreItemsTabs extends StatelessWidget {
     super.key,
     required this.tab1Title,
     required this.tab2Title,
+    required this.tab3Title,
   });
 
-  final String tab1Title, tab2Title;
+  final String tab1Title, tab2Title, tab3Title;
 
   @override
   Widget build(BuildContext context) {
-    //final invController = Get.put(CInventoryController());
-
     return Column(
       children: [
         /// -- tabs --
@@ -35,6 +35,9 @@ class CStoreItemsTabs extends StatelessWidget {
               Tab(
                 text: tab2Title,
               ),
+              Tab(
+                text: tab3Title,
+              ),
             ],
           ),
         ),
@@ -46,11 +49,13 @@ class CStoreItemsTabs extends StatelessWidget {
             physics: BouncingScrollPhysics(),
             children: [
               /// -- inventory list items --
+              CInvGridviewScreen(),
+
+              /// -- transactions list view --
               CItemsListView(
                 space: 'inventory',
               ),
 
-              /// -- transactions list view --
               CItemsListView(
                 space: 'sales',
               ),

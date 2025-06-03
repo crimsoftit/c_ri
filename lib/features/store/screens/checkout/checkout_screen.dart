@@ -1,5 +1,5 @@
 import 'package:c_ri/common/widgets/custom_shapes/containers/rounded_container.dart';
-import 'package:c_ri/common/widgets/icons/circular_icon.dart';
+import 'package:c_ri/common/widgets/icon_buttons/circular_icon_btn.dart';
 import 'package:c_ri/common/widgets/loaders/animated_loader.dart';
 import 'package:c_ri/common/widgets/products/store_item.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_typeahead_field.dart';
@@ -105,7 +105,7 @@ class CCheckoutScreen extends StatelessWidget {
                                   child: CRoundedContainer(
                                     width: screenWidth * .88,
                                     showBorder: false,
-                                    radius: 5.0,
+                                    borderRadius: 5.0,
                                     child: const CTypeAheadSearchField(),
                                   ),
                                 )
@@ -262,12 +262,12 @@ class CCheckoutScreen extends StatelessWidget {
                                                     mainAxisSize:
                                                         MainAxisSize.min,
                                                     children: [
-                                                      CCircularIcon(
+                                                      CCircularIconBtn(
                                                         icon: Iconsax.minus,
                                                         width: 32.0,
                                                         height: 32.0,
                                                         iconBorderRadius: 100,
-                                                        size: CSizes.md,
+                                                        iconSize: CSizes.md,
                                                         color: isDarkTheme
                                                             ? CColors.white
                                                             : CColors.rBrown,
@@ -436,12 +436,12 @@ class CCheckoutScreen extends StatelessWidget {
                                                         ),
                                                       ),
 
-                                                      CCircularIcon(
+                                                      CCircularIconBtn(
                                                         icon: Iconsax.add,
                                                         iconBorderRadius: 100,
                                                         width: 32.0,
                                                         height: 32.0,
-                                                        size: CSizes.md,
+                                                        iconSize: CSizes.md,
                                                         color: CColors.white,
                                                         bgColor: CColors.rBrown,
                                                         onPressed: () {

@@ -61,7 +61,7 @@ class ProfileScreen extends StatelessWidget {
                     CRoundedContainer(
                       bgColor: CColors.rBrown,
                       showBorder: true,
-                      radius: 100,
+                      borderRadius: 100,
                       borderColor: CColors.rBrown.withValues(alpha: 0.3),
                       child: Stack(
                         children: [

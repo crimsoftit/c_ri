@@ -196,6 +196,7 @@ class CInventoryScreen extends StatelessWidget {
                     return const CStoreItemsTabs(
                       tab1Title: 'inventory',
                       tab2Title: 'sold items',
+                      tab3Title: 'refunds',
                     );
                   }
 
