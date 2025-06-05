@@ -76,7 +76,7 @@ class CAnimatedSearchBar extends StatelessWidget {
                     },
                     child: const Icon(
                       Iconsax.search_normal,
-                      color: CColors.white,
+                      color: CColors.rBrown,
                       size: CSizes.iconMd,
                     ),
                   ),

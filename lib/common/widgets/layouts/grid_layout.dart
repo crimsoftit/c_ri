@@ -28,7 +28,9 @@ class CGridLayout extends StatelessWidget {
         mainAxisExtent: mainAxisExtent,
       ),
       itemBuilder: (_, index) {
-        return CProductCardVertical();
+        return CProductCardVertical(
+          itemName: '',
+        );
       },
     );
   }

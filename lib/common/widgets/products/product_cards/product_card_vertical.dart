@@ -10,7 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
 class CProductCardVertical extends StatelessWidget {
-  const CProductCardVertical({super.key});
+  const CProductCardVertical({
+    super.key,
+    this.itemAvatar,
+    required this.itemName,
+  });
+
+  final String? itemAvatar;
+  final String itemName;
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +42,13 @@ class CProductCardVertical extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: CSizes.spaceBtnInputFields,
+              height: CSizes.spaceBtnInputFields / 4,
             ),
             CRoundedContainer(
               width: CHelperFunctions.screenWidth() * 0.45,
-              height: 200.0,
-              padding: const EdgeInsets.all(
-                CSizes.sm,
+              height: 180.0,
+              padding: const EdgeInsets.only(
+                left: CSizes.sm,
               ),
               bgColor: isDarkTheme
                   ? CColors.rBrown.withValues(alpha: 0.3)
@@ -120,7 +127,7 @@ class CProductCardVertical extends StatelessWidget {
                         ),
                         CProductTitleText(
                           //smallSize: true,
-                          title: 'KIFARU MATCHES',
+                          title: itemName,
                           txtColor:
                               isDarkTheme ? CColors.white : CColors.rBrown,
                           maxLines: 1,

@@ -40,8 +40,8 @@ class CStoreItemsScreen extends StatelessWidget {
                 children: [
                   Container(
                     padding: const EdgeInsets.only(
-                      left: 15.0,
-                      top: 20.0,
+                      left: 10.0,
+                      top: 15.0,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,7 +102,7 @@ class CStoreItemsScreen extends StatelessWidget {
                           },
                         ),
                         SizedBox(
-                          height: 25.0,
+                          height: 10.0,
                         ),
                         Container(
                           padding: const EdgeInsets.only(left: 2.0),
@@ -117,13 +117,13 @@ class CStoreItemsScreen extends StatelessWidget {
                           ),
                         ),
                         SizedBox(
-                          height: 5.0,
+                          height: 1.0,
                         ),
                         Column(
                           children: [
                             SizedBox(
                               child: Align(
-                                alignment: Alignment.topLeft,
+                                //alignment: Alignment.topLeft,
                                 child: const CStoreItemsTabs(
                                   tab1Title: 'inventory',
                                   tab2Title: 'sales',

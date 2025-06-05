@@ -1,5 +1,5 @@
-import 'package:c_ri/features/store/screens/store_items_tings/inv_gridview_screen.dart';
-import 'package:c_ri/features/store/screens/store_items_tings/items_listview.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/widgets/inv_gridview_screen.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/widgets/items_listview.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
