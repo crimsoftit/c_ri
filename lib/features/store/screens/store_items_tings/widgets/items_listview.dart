@@ -101,8 +101,8 @@ class CItemsListView extends StatelessWidget {
                         ? '#${invController.inventoryItems[index].productId}'
                         : space == 'sales' &&
                                 salesController.foundSales.isNotEmpty
-                            ? 'txn id: #${salesController.foundSales[index].txnId}'
-                            : 'txn id: #${salesController.sales[index].txnId}';
+                            ? 'receip#: ${salesController.foundSales[index].txnId}'
+                            : 'receipt#: ${salesController.sales[index].txnId}';
 
                 var pName = space == 'inventory' &&
                         invController.foundInventoryItems.isNotEmpty

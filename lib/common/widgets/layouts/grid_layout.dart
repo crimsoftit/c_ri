@@ -27,9 +27,11 @@ class CGridLayout extends StatelessWidget {
         crossAxisSpacing: CSizes.gridViewSpacing,
         mainAxisExtent: mainAxisExtent,
       ),
-      itemBuilder: (_, index) {
+      itemBuilder: (context, index) {
         return CProductCardVertical(
           itemName: '',
+          pId: 0,
+          pCode: '',
         );
       },
     );

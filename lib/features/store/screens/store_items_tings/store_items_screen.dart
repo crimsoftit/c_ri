@@ -41,7 +41,7 @@ class CStoreItemsScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.only(
                       left: 10.0,
-                      top: 15.0,
+                      top: 10.0,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,7 +112,7 @@ class CStoreItemsScreen extends StatelessWidget {
                                 Theme.of(context).textTheme.labelLarge!.apply(
                                       color: CColors.rBrown,
                                       fontSizeFactor: 2.5,
-                                      fontWeightDelta: -3,
+                                      fontWeightDelta: -5,
                                     ),
                           ),
                         ),
