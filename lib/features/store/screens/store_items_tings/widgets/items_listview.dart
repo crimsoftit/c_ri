@@ -10,6 +10,7 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -63,6 +64,12 @@ class CItemsListView extends StatelessWidget {
           return const NoSearchResultsScreen();
         }
 
+        if (searchController.txtSearchField.text.isNotEmpty &&
+            salesController.foundSales.isEmpty &&
+            space == 'sales') {
+          return const NoSearchResultsScreen();
+        }
+
         if (!searchController.showSearchField.value &&
             salesController.sales.isEmpty &&
             space == 'sales') {
@@ -74,6 +81,34 @@ class CItemsListView extends StatelessWidget {
           );
         }
 
+        if (!searchController.showSearchField.value &&
+            salesController.refunds.isEmpty &&
+            space == 'refunds') {
+          return const Center(
+            child: NoDataScreen(
+              lottieImage: CImages.noDataLottie,
+              txt: 'No data found!',
+            ),
+          );
+        }
+
+        /// -- compute ListView.builder's itemCount --
+        var itemsCount = 0;
+        switch (space) {
+          case "sales":
+            itemsCount = salesController.foundSales.isNotEmpty
+                ? salesController.foundSales.length
+                : salesController.sales.length;
+            break;
+          case "refunds":
+            itemsCount = salesController.refunds.length;
+          default:
+            itemsCount = 0;
+            CPopupSnackBar.errorSnackBar(
+              title: 'invalid tab space',
+            );
+        }
+
         return SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(),
           child: SizedBox(
@@ -82,28 +117,17 @@ class CItemsListView extends StatelessWidget {
               padding: const EdgeInsets.all(2.0),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              itemCount:
-                  space == 'inventory' && searchController.showSearchField.value
-                      ? invController.foundInventoryItems.length
-                      : space == 'inventory' &&
-                              invController.foundInventoryItems.isEmpty
-                          ? invController.inventoryItems.length
-                          : space == 'sales' &&
-                                  salesController.foundSales.isNotEmpty
-                              ? salesController.foundSales.length
-                              : salesController.sales.length,
+              itemCount: itemsCount,
               itemBuilder: (context, index) {
-                var id = space == 'inventory' &&
-                        invController.foundInventoryItems.isNotEmpty
-                    ? '#${invController.foundInventoryItems[index].productId}'
-                    : space == 'inventory' &&
-                            invController.foundInventoryItems.isEmpty
-                        ? '#${invController.inventoryItems[index].productId}'
+                var itemId = space == 'refunds' &&
+                        salesController.foundRefunds.isNotEmpty
+                    ? '#${salesController.foundRefunds[index].productId}'
+                    : space == 'refunds' && salesController.refunds.isEmpty
+                        ? '#${salesController.refunds[index].productId}'
                         : space == 'sales' &&
                                 salesController.foundSales.isNotEmpty
-                            ? 'receip#: ${salesController.foundSales[index].txnId}'
+                            ? 'receipt#: ${salesController.foundSales[index].txnId}'
                             : 'receipt#: ${salesController.sales[index].txnId}';
-
                 var pName = space == 'inventory' &&
                         invController.foundInventoryItems.isNotEmpty
                     ? invController.foundInventoryItems[index].name
@@ -186,7 +210,7 @@ class CItemsListView extends StatelessWidget {
                     subTitleTxt2Item1: usp,
                     subTitleTxt2Item2: '',
                     subTitleTxt3Item1: date,
-                    subTitleTxt3Item2: id,
+                    subTitleTxt3Item2: itemId,
                     btn1Txt: 'info',
                     btn2Txt: space == 'inventory' ? 'sell' : 'update',
                     btn2Icon: space == 'inventory'

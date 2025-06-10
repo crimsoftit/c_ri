@@ -32,25 +32,11 @@ class CAnimatedSearchBar extends StatelessWidget {
           duration: const Duration(milliseconds: 200),
           width:
               searchController.showSearchField.value ? double.maxFinite : 40.0,
-          // width: hintTxt == 'inventory'
-          //     ? searchController.invShowSearchField.value
-          //         ? double.maxFinite
-          //         : 40.0
-          //     : searchController.salesShowSearchField.value
-          //         ? double.maxFinite
-          //         : 40.0,
           height: 40.0,
           decoration: BoxDecoration(
             borderRadius: searchController.showSearchField.value
                 ? BorderRadius.circular(5.0)
                 : BorderRadius.circular(20.0),
-            // borderRadius: hintTxt == 'inventory'
-            //     ? searchController.showSearchField.value
-            //         ? BorderRadius.circular(5.0)
-            //         : BorderRadius.circular(20.0)
-            //     : searchController.salesShowSearchField.value
-            //         ? BorderRadius.circular(5.0)
-            //         : BorderRadius.circular(20.0),
             color: boxColor,
             //boxShadow: kElevationToShadow[2],
           ),

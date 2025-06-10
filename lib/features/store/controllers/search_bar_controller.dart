@@ -37,6 +37,9 @@ class CSearchBarController extends GetxController {
 
   toggleSearchFieldVisibility() {
     showSearchField.value = !showSearchField.value;
+    if (!showSearchField.value) {
+      txtSearchField.text = '';
+    }
   }
 
   onTypeAheadSearchIconTap() {

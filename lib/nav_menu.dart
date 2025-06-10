@@ -59,13 +59,14 @@ class NavMenu extends StatelessWidget {
               label: 'home',
             ),
             NavigationDestination(
-              icon: Icon(Iconsax.card_tick),
-              label: 'inventory',
-            ),
-            NavigationDestination(
               icon: Icon(Iconsax.shop),
               label: 'store',
             ),
+            NavigationDestination(
+              icon: Icon(Iconsax.card_tick),
+              label: 'inventory',
+            ),
+
             // NavigationDestination(
             //   icon: Icon(Iconsax.empty_wallet_time),
             //   label: 'sales',
@@ -105,8 +106,9 @@ class NavMenuController extends GetxController {
 
   final screens = [
     const HomeScreen(),
-    const CInventoryScreen(),
     const CStoreItemsScreen(),
+    const CInventoryScreen(),
+
     // const CSalesScreen(),
     // const CSalesScreenRaw(),
     // const CTxnsScreen(),

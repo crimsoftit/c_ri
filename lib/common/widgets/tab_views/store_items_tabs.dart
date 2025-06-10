@@ -53,11 +53,11 @@ class CStoreItemsTabs extends StatelessWidget {
 
               /// -- transactions list view --
               CItemsListView(
-                space: 'inventory',
+                space: 'sales',
               ),
 
               CItemsListView(
-                space: 'sales',
+                space: 'refunds',
               ),
             ],
           ),

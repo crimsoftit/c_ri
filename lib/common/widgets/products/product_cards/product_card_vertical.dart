@@ -56,20 +56,21 @@ class CProductCardVertical extends StatelessWidget {
               height: CSizes.spaceBtnInputFields / 5,
             ),
             CRoundedContainer(
-              width: CHelperFunctions.screenWidth() * 0.46,
-              height: 168.0,
-              padding: const EdgeInsets.only(
-                left: CSizes.sm,
-              ),
               bgColor: isDarkTheme
                   ? CColors.rBrown.withValues(alpha: 0.3)
                   : CColors.lightGrey,
+              borderRadius: CSizes.pImgRadius - 4,
+              height: 157.0,
+              padding: const EdgeInsets.only(
+                left: CSizes.sm,
+              ),
+              width: CHelperFunctions.screenWidth() * 0.46,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CRoundedContainer(
                     width: CHelperFunctions.screenWidth() * 0.45,
-                    height: 70.0,
+                    height: 50.0,
                     bgColor: Colors.transparent,
                     boxShadow: [],
                     child: Stack(
@@ -79,6 +80,9 @@ class CProductCardVertical extends StatelessWidget {
                           top: 0,
                           left: 0,
                           child: CCircularIconBtn(
+                            bgColor: isDarkTheme
+                                ? CColors.transparent
+                                : CColors.white,
                             color: isDarkTheme ? CColors.white : CColors.rBrown,
                             icon: Iconsax.heart_add,
                             iconSize: CSizes.md,
@@ -185,6 +189,7 @@ class CProductCardVertical extends StatelessWidget {
                                 color: isDarkTheme
                                     ? CColors.white
                                     : CColors.darkGrey,
+                                fontSizeFactor: 1.3,
                               ),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
@@ -214,31 +219,63 @@ class CProductCardVertical extends StatelessWidget {
                           maxLines: 1,
                           isLarge: true,
                           txtColor:
-                              isDarkTheme ? CColors.white : CColors.rBrown,
+                              isDarkTheme ? CColors.white : CColors.darkGrey,
                           fSizeFactor: 0.7,
                         ),
-                        Row(
-                          spacing: 0,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            /// -- prices --
 
-                            CProductPriceTxt(
-                              priceCategory: 'usp: ',
-                              price: usp!,
-                              maxLines: 1,
-                              isLarge: true,
-                              txtColor:
-                                  isDarkTheme ? CColors.white : CColors.rBrown,
-                              fSizeFactor: 0.7,
-                            ),
+                        SizedBox(
+                          width: 170,
+                          height: 30,
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                bottom: 2,
+                                child: CProductPriceTxt(
+                                  priceCategory: 'price: ',
+                                  price: usp!,
+                                  maxLines: 1,
+                                  isLarge: true,
+                                  txtColor: isDarkTheme
+                                      ? CColors.white
+                                      : CColors.rBrown,
+                                  fSizeFactor: 0.9,
+                                ),
+                              ),
 
-                            /// -- add item to cart button --
-                            CAddToCartBtn(
-                              pId: pId,
-                            ),
-                          ],
+                              /// -- add item to cart button --
+                              Positioned(
+                                right: 0,
+                                bottom: 0,
+                                child: CAddToCartBtn(
+                                  pId: pId,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
+                        // Row(
+                        //   spacing: 0,
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   mainAxisSize: MainAxisSize.min,
+                        //   children: [
+                        //     /// -- prices (usp)--
+
+                        // CProductPriceTxt(
+                        //   priceCategory: 'usp: ',
+                        //   price: usp!,
+                        //   maxLines: 1,
+                        //   isLarge: true,
+                        //   txtColor:
+                        //       isDarkTheme ? CColors.white : CColors.rBrown,
+                        //   fSizeFactor: 0.7,
+                        // ),
+
+                        /// -- add item to cart button --
+                        // CAddToCartBtn(
+                        //   pId: pId,
+                        // ),
+                        //   ],
+                        // ),
                       ],
                     ),
                   ),

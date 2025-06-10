@@ -65,6 +65,7 @@ class CTxnsController extends GetxController {
   final RxList<CTxnsModel> foundTxns = <CTxnsModel>[].obs;
   RxList<CTxnsModel> receiptItems = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> refunds = <CTxnsModel>[].obs;
+  final RxList<CTxnsModel> foundRefunds = <CTxnsModel>[].obs;
 
   final RxList<CTxnsModel> allGsheetTxnsData = <CTxnsModel>[].obs;
   final RxList<CTxnsModel> unsyncedTxnAppends = <CTxnsModel>[].obs;
@@ -122,6 +123,7 @@ class CTxnsController extends GetxController {
       // start loader while txns are fetched
       isLoading.value = true;
       foundSales.clear();
+      foundRefunds.clear();
       await dbHelper.openDb();
 
       // fetch
@@ -130,10 +132,6 @@ class CTxnsController extends GetxController {
 
       // assign txns to sales list
       sales.assignAll(soldItems);
-      if (searchController.showSearchField.isTrue &&
-          searchController.txtSearchField.text == '') {
-        foundSales.assignAll(soldItems);
-      }
 
       // assign values for unsynced txn appends
       unsyncedTxnAppends.value = sales
@@ -153,6 +151,12 @@ class CTxnsController extends GetxController {
       var refundedItems =
           sales.where((refundedItem) => refundedItem.qtyRefunded >= 1).toList();
       refunds.assignAll(refundedItems);
+
+      if (searchController.showSearchField.isTrue &&
+          searchController.txtSearchField.text == '') {
+        foundSales.assignAll(soldItems);
+        foundRefunds.assignAll(refundedItems);
+      }
 
       // stop loader
       isLoading.value = false;
@@ -373,13 +377,29 @@ class CTxnsController extends GetxController {
     }
   }
 
-  searchReceipts(String value) {
+  searchSales(String value) {
     fetchSoldItems();
     var salesFound = sales
         .where((soldItem) =>
-            soldItem.productName.toLowerCase().contains(value.toLowerCase()))
+            soldItem.productName.toLowerCase().contains(value.toLowerCase()) ||
+            soldItem.txnId
+                .toString()
+                .toLowerCase()
+                .contains(value.toLowerCase()))
         .toList();
     foundSales.assignAll(salesFound);
+
+    var refundsFound = refunds
+        .where((refundedItem) =>
+            refundedItem.productName
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            refundedItem.txnId
+                .toString()
+                .toLowerCase()
+                .contains(value.toLowerCase()))
+        .toList();
+    foundRefunds.assignAll(refundsFound);
   }
 
   /// -- when search result item is selected --

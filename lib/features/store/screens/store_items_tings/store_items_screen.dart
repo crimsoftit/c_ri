@@ -1,21 +1,28 @@
 import 'package:c_ri/common/widgets/appbar/app_bar.dart';
+import 'package:c_ri/common/widgets/products/cart/positioned_cart_counter_widget.dart';
 import 'package:c_ri/common/widgets/search_bar/animated_search_bar.dart';
 import 'package:c_ri/common/widgets/tab_views/store_items_tabs.dart';
+import 'package:c_ri/features/store/controllers/cart_controller.dart';
+import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
+import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/screens/inventory/widgets/inv_dialog.dart';
 import 'package:c_ri/utils/constants/colors.dart';
+import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 
 class CStoreItemsScreen extends StatelessWidget {
   const CStoreItemsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final checkoutController = Get.put(CCheckoutController());
     final invController = Get.put(CInventoryController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final txnsController = Get.put(CTxnsController());
@@ -140,6 +147,70 @@ class CStoreItemsScreen extends StatelessWidget {
               );
             },
           ),
+        ),
+
+        /// -- floating action button to scan item for sale --
+        floatingActionButton: Obx(
+          () {
+            final cartController = Get.put(CCartController());
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                cartController.countOfCartItems.value >= 1
+                    ? Stack(
+                        alignment: Alignment.centerRight,
+                        children: [
+                          FloatingActionButton(
+                            onPressed: () {
+                              checkoutController.handleNavToCheckout();
+                            },
+                            backgroundColor: isConnectedToInternet
+                                ? Colors.brown
+                                : CColors.black,
+                            foregroundColor: Colors.white,
+                            heroTag: 'checkout',
+                            child: const Icon(
+                              Iconsax.wallet_check,
+                            ),
+                          ),
+                          CPositionedCartCounterWidget(
+                            counterBgColor: CColors.white,
+                            counterTxtColor: CColors.rBrown,
+                            rightPosition: 10.0,
+                            topPosition: 8.0,
+                          ),
+                        ],
+                      )
+                    : SizedBox(),
+                const SizedBox(
+                  height: CSizes.spaceBtnSections / 8,
+                ),
+                FloatingActionButton(
+                  onPressed: () {
+                    invController.runInvScanner();
+                    showDialog(
+                      context: context,
+                      useRootNavigator: false,
+                      builder: (BuildContext context) => dialog.buildDialog(
+                        context,
+                        CInventoryModel('', '', '', '', '', 0, 0, 0, 0.0, 0.0,
+                            0.0, 0, '', '', '', 0, ''),
+                        true,
+                      ),
+                    );
+                  },
+                  backgroundColor:
+                      isConnectedToInternet ? Colors.brown : CColors.black,
+                  foregroundColor: Colors.white,
+                  heroTag: 'scan',
+                  child: const Icon(
+                    // Iconsax.scan_barcode,
+                    Iconsax.scan,
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

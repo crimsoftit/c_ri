@@ -44,7 +44,7 @@ class CExpandedSearchField extends StatelessWidget {
                 //   salesController.onSearchSalesAction(value);
                 // }
                 invController.searchInventory(value);
-                salesController.searchReceipts(value);
+                salesController.searchSales(value);
               },
               onFieldSubmitted: (value) {
                 //searchController.onSearchBtnPressed();
@@ -55,7 +55,7 @@ class CExpandedSearchField extends StatelessWidget {
                 //   salesController.onSearchSalesAction(value);
                 // }
                 invController.searchInventory(value);
-                salesController.searchReceipts(value);
+                salesController.searchSales(value);
               },
               style: TextStyle(
                 //color: CColors.rBrown.withOpacity(0.6),
