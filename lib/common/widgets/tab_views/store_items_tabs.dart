@@ -2,6 +2,7 @@ import 'package:c_ri/features/store/screens/store_items_tings/widgets/inv_gridvi
 import 'package:c_ri/features/store/screens/store_items_tings/widgets/items_listview.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 
 class CStoreItemsTabs extends StatelessWidget {
@@ -21,12 +22,21 @@ class CStoreItemsTabs extends StatelessWidget {
         /// -- tabs --
         SizedBox(
           child: TabBar(
+            dividerColor: CColors.rBrown.withValues(
+              alpha: 0.5,
+            ),
             isScrollable: true,
             labelColor: CColors.rBrown,
             // labelPadding: const EdgeInsets.only(
             //   left: 10.0,
             //   right: 10.0,
             // ),
+            onTap: (value) {
+              CPopupSnackBar.customToast(
+                message: '$value',
+                forInternetConnectivityStatus: false,
+              );
+            },
             unselectedLabelColor: CColors.darkGrey,
             tabs: [
               Tab(

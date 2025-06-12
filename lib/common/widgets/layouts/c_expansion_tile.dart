@@ -1,3 +1,4 @@
+import 'package:c_ri/utils/constants/app_icons.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
@@ -21,8 +22,13 @@ class CExpansionTile extends StatelessWidget {
     this.btn1Icon,
     this.btn2Icon,
     this.btn2NavAction,
+    this.includeRefundBtn = false,
+    this.refundBtnAction,
+    this.refundBtn,
   });
 
+  final bool includeRefundBtn;
+  final Icon? btn1Icon, btn2Icon;
   final String avatarTxt;
   final String titleTxt;
   final String subTitleTxt1Item1;
@@ -32,8 +38,8 @@ class CExpansionTile extends StatelessWidget {
   final String subTitleTxt3Item1;
   final String subTitleTxt3Item2;
   final String btn1Txt, btn2Txt;
-  final VoidCallback? btn1NavAction, btn2NavAction;
-  final Icon? btn1Icon, btn2Icon;
+  final VoidCallback? btn1NavAction, btn2NavAction, refundBtnAction;
+  final Widget? refundBtn;
 
   @override
   Widget build(BuildContext context) {
@@ -103,8 +109,11 @@ class CExpansionTile extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(
             left: 20.0,
+            top: 0,
+            bottom: 0,
           ),
           child: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(
                 child: TextButton.icon(
@@ -136,6 +145,36 @@ class CExpansionTile extends StatelessWidget {
                   onPressed: btn2NavAction,
                 ),
               ),
+              SizedBox(
+                width: includeRefundBtn ? CSizes.spaceBtnInputFields : 0,
+              ),
+              includeRefundBtn
+                  ? SizedBox(
+                      child: TextButton.icon(
+                        icon: Icon(
+                          CAppIcons.refundIcon,
+                          size: CSizes.iconSm,
+                          color: CColors.rBrown,
+                        ),
+                        label: Text(
+                          'refund',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium!
+                              .apply(color: Colors.red),
+                        ),
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size(
+                            30,
+                            20,
+                          ),
+                          alignment: Alignment.centerLeft,
+                        ),
+                        onPressed: refundBtnAction,
+                      ),
+                    )
+                  : SizedBox(),
             ],
           ),
         ),

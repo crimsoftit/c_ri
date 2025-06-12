@@ -60,7 +60,7 @@ class CProductCardVertical extends StatelessWidget {
                   ? CColors.rBrown.withValues(alpha: 0.3)
                   : CColors.lightGrey,
               borderRadius: CSizes.pImgRadius - 4,
-              height: 157.0,
+              height: 156.0,
               padding: const EdgeInsets.only(
                 left: CSizes.sm,
               ),
@@ -231,7 +231,8 @@ class CProductCardVertical extends StatelessWidget {
                               Positioned(
                                 bottom: 2,
                                 child: CProductPriceTxt(
-                                  priceCategory: 'price: ',
+                                  // priceCategory: 'price: ',
+                                  priceCategory: '@',
                                   price: usp!,
                                   maxLines: 1,
                                   isLarge: true,

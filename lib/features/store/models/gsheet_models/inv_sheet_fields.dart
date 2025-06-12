@@ -5,6 +5,7 @@ class InvSheetFields {
   static const String userName = 'userName';
   static const String pCode = 'pCode';
   static const String name = 'name';
+  static const String markedAsFavorite = 'markedAsFavorite';
   static const String quantity = 'quantity';
   static const String qtySold = 'qtySold';
   static const String qtyRefunded = 'qtyRefunded';
@@ -26,6 +27,7 @@ class InvSheetFields {
       userName,
       pCode,
       name,
+      markedAsFavorite,
       quantity,
       qtySold,
       qtyRefunded,

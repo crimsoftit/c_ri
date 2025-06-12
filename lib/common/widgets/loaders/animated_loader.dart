@@ -20,10 +20,13 @@ class CAnimatedLoaderWidget extends StatelessWidget {
     required this.animation,
     this.showActionBtn = false,
     this.actionBtnText,
+    this.actionBtnWidth = 250.0,
+    this.lottieAssetWidth,
     this.onActionBtnPressed,
   });
 
   final bool showActionBtn;
+  final double? actionBtnWidth, lottieAssetWidth;
   final String text, animation;
   final String? actionBtnText;
   final VoidCallback? onActionBtnPressed;
@@ -36,7 +39,7 @@ class CAnimatedLoaderWidget extends StatelessWidget {
         children: [
           Lottie.asset(
             animation,
-            width: MediaQuery.of(context).size.width * 0.8,
+            width: lottieAssetWidth ?? MediaQuery.of(context).size.width * 0.8,
           ),
           const SizedBox(
             height: CSizes.defaultSpace,
@@ -51,7 +54,7 @@ class CAnimatedLoaderWidget extends StatelessWidget {
           ),
           showActionBtn
               ? SizedBox(
-                  width: 250.0,
+                  width: actionBtnWidth,
                   child: OutlinedButton(
                     onPressed: onActionBtnPressed,
                     style: OutlinedButton.styleFrom(

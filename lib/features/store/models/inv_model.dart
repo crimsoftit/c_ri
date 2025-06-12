@@ -13,6 +13,7 @@ class CInventoryModel {
 
   String _pCode = "";
   String _name = "";
+  int _markedAsFavorite = 0;
   int _quantity = 0;
   int _qtySold = 0;
   int _qtyRefunded = 0;
@@ -33,6 +34,7 @@ class CInventoryModel {
     this._userName,
     this._pCode,
     this._name,
+    this._markedAsFavorite,
     this._quantity,
     this._qtySold,
     this._qtyRefunded,
@@ -54,6 +56,7 @@ class CInventoryModel {
     this._userName,
     this._pCode,
     this._name,
+    this._markedAsFavorite,
     this._quantity,
     this._qtySold,
     this._qtyRefunded,
@@ -70,7 +73,7 @@ class CInventoryModel {
 
   CInventoryModel empty() {
     return CInventoryModel(
-        '', '', '', '', '', 0, 0, 0, 0.0, 0.0, 0.0, 0, '', '', '', 0, '');
+        '', '', '', '', '', 0, 0, 0, 0, 0.0, 0.0, 0.0, 0, '', '', '', 0, '');
   }
 
   int? get productId => _productId;
@@ -80,6 +83,8 @@ class CInventoryModel {
 
   String get pCode => _pCode;
   String get name => _name;
+
+  int get markedAsFavorite => _markedAsFavorite;
 
   int get quantity => _quantity;
   int get qtySold => _qtySold;
@@ -119,6 +124,10 @@ class CInventoryModel {
 
   set name(String newName) {
     _name = newName;
+  }
+
+  set markedAsFavorite(int isMarkedAsFavorite) {
+    _markedAsFavorite = isMarkedAsFavorite;
   }
 
   set quantity(int newQty) {
@@ -184,6 +193,7 @@ class CInventoryModel {
 
     map['pCode'] = _pCode;
     map['name'] = _name;
+    map['markedAsFavorite'] = _markedAsFavorite;
 
     map['quantity'] = _quantity;
     map['qtySold'] = _qtySold;
@@ -212,6 +222,7 @@ class CInventoryModel {
     _userName = map['userName'];
 
     _name = map['name'];
+    _markedAsFavorite = map['markedAsFavorite'];
     _pCode = map['pCode'];
     _quantity = map['quantity'];
     _qtySold = map['qtySold'];
@@ -237,6 +248,7 @@ class CInventoryModel {
       json[InvSheetFields.userName],
       json[InvSheetFields.pCode],
       json[InvSheetFields.name],
+      jsonDecode(json[InvSheetFields.markedAsFavorite]),
       jsonDecode(json[InvSheetFields.quantity]),
       jsonDecode(json[InvSheetFields.qtySold]),
       jsonDecode(json[InvSheetFields.qtyRefunded]),

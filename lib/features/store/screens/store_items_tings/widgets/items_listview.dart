@@ -1,5 +1,4 @@
 import 'package:c_ri/common/widgets/layouts/c_expansion_tile.dart';
-import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
@@ -37,26 +36,20 @@ class CItemsListView extends StatelessWidget {
     return Obx(
       () {
         // run loader --
-        if (invController.isLoading.value || salesController.isLoading.value) {
-          return const CVerticalProductShimmer(
-            itemCount: 7,
-          );
-        }
+        // if (invController.isLoading.value || salesController.isLoading.value) {
+        //   return const CVerticalProductShimmer(
+        //     itemCount: 7,
+        //   );
+        // }
 
-        if (invController.foundInventoryItems.isEmpty &&
-            space == 'inventory' &&
-            searchController.showSearchField.value) {
-          return const NoSearchResultsScreen();
-        }
-
-        if (invController.inventoryItems.isEmpty && space == 'inventory') {
-          return const Center(
-            child: NoDataScreen(
-              lottieImage: CImages.noDataLottie,
-              txt: 'No data found!',
-            ),
-          );
-        }
+        // if (invController.inventoryItems.isEmpty && space == 'inventory') {
+        //   return const Center(
+        //     child: NoDataScreen(
+        //       lottieImage: CImages.noDataLottie,
+        //       txt: 'No data found!',
+        //     ),
+        //   );
+        // }
 
         if (searchController.txtSearchField.text.isNotEmpty &&
             salesController.foundSales.isEmpty &&
@@ -67,6 +60,12 @@ class CItemsListView extends StatelessWidget {
         if (searchController.txtSearchField.text.isNotEmpty &&
             salesController.foundSales.isEmpty &&
             space == 'sales') {
+          return const NoSearchResultsScreen();
+        }
+
+        if (searchController.txtSearchField.text.isNotEmpty &&
+            salesController.foundRefunds.isEmpty &&
+            space == 'refunds') {
           return const NoSearchResultsScreen();
         }
 
@@ -101,7 +100,9 @@ class CItemsListView extends StatelessWidget {
                 : salesController.sales.length;
             break;
           case "refunds":
-            itemsCount = salesController.refunds.length;
+            itemsCount = salesController.foundRefunds.isNotEmpty
+                ? salesController.foundRefunds.length
+                : salesController.refunds.length;
           default:
             itemsCount = 0;
             CPopupSnackBar.errorSnackBar(
@@ -119,69 +120,92 @@ class CItemsListView extends StatelessWidget {
               scrollDirection: Axis.vertical,
               itemCount: itemsCount,
               itemBuilder: (context, index) {
-                var itemId = space == 'refunds' &&
-                        salesController.foundRefunds.isNotEmpty
-                    ? '#${salesController.foundRefunds[index].productId}'
-                    : space == 'refunds' && salesController.refunds.isEmpty
-                        ? '#${salesController.refunds[index].productId}'
-                        : space == 'sales' &&
-                                salesController.foundSales.isNotEmpty
-                            ? 'receipt#: ${salesController.foundSales[index].txnId}'
-                            : 'receipt#: ${salesController.sales[index].txnId}';
-                var pName = space == 'inventory' &&
-                        invController.foundInventoryItems.isNotEmpty
-                    ? invController.foundInventoryItems[index].name
-                    : space == 'inventory' &&
-                            invController.foundInventoryItems.isEmpty
-                        ? '#${invController.inventoryItems[index].name}'
-                        : space == 'sales' &&
-                                salesController.foundSales.isNotEmpty
-                            ? salesController.foundSales[index].productName
-                            : salesController.sales[index].productName;
+                var avatarTxt = '';
+                var itemProductId = 0;
+                var itemName = '';
+                var qtyRefunded = 0;
+                var qtySold = 0;
+                var txnAmount = 0.0;
+                var txnDate = '';
+                var unitSellingPrice = 0.0;
 
-                var amount = space == 'inventory' &&
-                        invController.foundInventoryItems.isNotEmpty
-                    ? 'bp: $userCurrencyCode.${invController.foundInventoryItems[index].buyingPrice}'
-                    : space == 'inventory' &&
-                            invController.foundInventoryItems.isEmpty
-                        ? 'bp: $userCurrencyCode.${invController.inventoryItems[index].buyingPrice}'
-                        : space == 'sales' &&
-                                salesController.foundSales.isNotEmpty
-                            ? 't.Amount: $userCurrencyCode.${salesController.foundSales[index].totalAmount}'
-                            : 't.Amount: $userCurrencyCode.${salesController.sales[index].totalAmount}';
+                switch (space) {
+                  case "refunds":
+                    itemProductId = salesController.foundRefunds.isNotEmpty
+                        ? salesController.foundRefunds[index].productId
+                        : salesController.refunds[index].productId;
 
-                var qty = space == 'inventory' &&
-                        invController.foundInventoryItems.isNotEmpty
-                    ? '(${invController.foundInventoryItems[index].quantity} stocked)'
-                    : space == 'inventory' &&
-                            invController.foundInventoryItems.isEmpty
-                        ? '(${invController.inventoryItems[index].quantity} stocked)'
-                        : space == 'sales' &&
-                                salesController.foundSales.isNotEmpty
-                            ? 'qty: ${salesController.foundSales[index].quantity}'
-                            : 'qty: ${salesController.sales[index].quantity}';
+                    itemName = salesController.foundRefunds.isNotEmpty
+                        ? salesController.foundRefunds[index].productName
+                        : salesController.refunds[index].productName;
 
-                var usp = space == 'inventory' &&
-                        invController.foundInventoryItems.isNotEmpty
-                    ? 'usp: $userCurrencyCode.${invController.foundInventoryItems[index].unitSellingPrice}'
-                    : space == 'inventory' &&
-                            invController.foundInventoryItems.isEmpty
-                        ? 'usp: $userCurrencyCode.${invController.inventoryItems[index].unitSellingPrice}'
-                        : space == 'sales' &&
-                                salesController.foundSales.isNotEmpty
-                            ? 'usp: ${salesController.foundSales[index].unitSellingPrice}'
-                            : 'usp: ${salesController.sales[index].unitSellingPrice}';
+                    qtyRefunded = salesController.foundRefunds.isNotEmpty
+                        ? salesController.foundRefunds[index].qtyRefunded
+                        : salesController.refunds[index].qtyRefunded;
 
-                var date = space == 'inventory' &&
-                        invController.foundInventoryItems.isNotEmpty
-                    ? invController.foundInventoryItems[index].date
-                    : space == 'inventory' &&
-                            invController.foundInventoryItems.isEmpty
-                        ? invController.inventoryItems[index].date
-                        : space == 'sales' &&
-                                salesController.foundSales.isNotEmpty
-                            ? salesController.foundSales[index].date
-                            : salesController.sales[index].date;
+                    qtySold = salesController.foundRefunds.isNotEmpty
+                        ? salesController.foundRefunds[index].quantity
+                        : salesController.refunds[index].quantity;
+
+                    txnAmount = salesController.foundRefunds.isNotEmpty
+                        ? salesController.foundRefunds[index].totalAmount
+                        : salesController.refunds[index].totalAmount;
+
+                    txnDate = salesController.foundRefunds.isNotEmpty
+                        ? salesController.foundRefunds[index].date
+                        : salesController.refunds[index].date;
+
+                    unitSellingPrice = salesController.foundRefunds.isNotEmpty
+                        ? salesController.foundRefunds[index].unitSellingPrice
+                        : salesController.refunds[index].unitSellingPrice;
+                    break;
+                  case "sales":
+                    avatarTxt = salesController.foundSales.isNotEmpty
+                        ? salesController.foundSales[index].productName[0]
+                            .toUpperCase()
+                        : salesController.sales[index].productName[0]
+                            .toUpperCase();
+
+                    itemProductId = salesController.foundSales.isNotEmpty
+                        ? salesController.foundSales[index].productId
+                        : salesController.sales[index].productId;
+
+                    itemName = salesController.foundSales.isNotEmpty
+                        ? salesController.foundSales[index].productName
+                        : salesController.sales[index].productName;
+
+                    qtyRefunded = salesController.foundSales.isNotEmpty
+                        ? salesController.foundSales[index].qtyRefunded
+                        : salesController.sales[index].qtyRefunded;
+
+                    qtySold = salesController.foundSales.isNotEmpty
+                        ? salesController.foundSales[index].quantity
+                        : salesController.sales[index].quantity;
+
+                    txnAmount = salesController.foundSales.isNotEmpty
+                        ? salesController.foundSales[index].totalAmount
+                        : salesController.sales[index].totalAmount;
+
+                    txnDate = salesController.foundSales.isNotEmpty
+                        ? salesController.foundSales[index].date
+                        : salesController.sales[index].date;
+
+                    unitSellingPrice = salesController.foundSales.isNotEmpty
+                        ? salesController.foundSales[index].unitSellingPrice
+                        : salesController.sales[index].unitSellingPrice;
+                  default:
+                    avatarTxt = '';
+                    itemsCount = 0;
+                    itemName = '';
+                    qtyRefunded = 0;
+                    qtySold = 0;
+                    txnAmount = 0.0;
+                    txnDate = '';
+                    unitSellingPrice = 0.0;
+                    CPopupSnackBar.errorSnackBar(
+                      title: 'invalid tab space',
+                    );
+                }
 
                 return Card(
                   color: isDarkTheme
@@ -189,28 +213,32 @@ class CItemsListView extends StatelessWidget {
                       : CColors.lightGrey,
                   elevation: 0.3,
                   child: CExpansionTile(
-                    avatarTxt: space == 'inventory' &&
-                            invController.foundInventoryItems.isNotEmpty
-                        ? invController.foundInventoryItems[index].name[0]
-                            .toUpperCase()
-                        : space == 'inventory' &&
-                                invController.foundInventoryItems.isEmpty
-                            ? invController.inventoryItems[index].name[0]
-                                .toUpperCase()
-                            : space == 'sales' &&
-                                    salesController.foundSales.isNotEmpty
-                                ? salesController
-                                    .foundSales[index].productName[0]
-                                    .toUpperCase()
-                                : salesController.sales[index].productName[0]
-                                    .toUpperCase(),
-                    titleTxt: pName,
-                    subTitleTxt1Item1: '$amount ',
-                    subTitleTxt1Item2: qty,
-                    subTitleTxt2Item1: usp,
+                    avatarTxt: avatarTxt,
+                    // avatarTxt: space == 'inventory' &&
+                    //         invController.foundInventoryItems.isNotEmpty
+                    //     ? invController.foundInventoryItems[index].name[0]
+                    //         .toUpperCase()
+                    //     : space == 'inventory' &&
+                    //             invController.foundInventoryItems.isEmpty
+                    //         ? invController.inventoryItems[index].name[0]
+                    //             .toUpperCase()
+                    //         : space == 'sales' &&
+                    //                 salesController.foundSales.isNotEmpty
+                    //             ? salesController
+                    //                 .foundSales[index].productName[0]
+                    //                 .toUpperCase()
+                    //             : salesController.sales[index].productName[0]
+                    //                 .toUpperCase(),
+                    includeRefundBtn: space == 'sales' ? true : false,
+                    titleTxt: itemName.toUpperCase(),
+                    subTitleTxt1Item1:
+                        't.Amount: $userCurrencyCode.$txnAmount ',
+                    subTitleTxt1Item2: '($qtySold sold, $qtyRefunded refunded)',
+                    subTitleTxt2Item1:
+                        'usp: $userCurrencyCode.$unitSellingPrice',
                     subTitleTxt2Item2: '',
-                    subTitleTxt3Item1: date,
-                    subTitleTxt3Item2: itemId,
+                    subTitleTxt3Item1: txnDate,
+                    subTitleTxt3Item2: 'product id: $itemProductId',
                     btn1Txt: 'info',
                     btn2Txt: space == 'inventory' ? 'sell' : 'update',
                     btn2Icon: space == 'inventory'
@@ -250,6 +278,13 @@ class CItemsListView extends StatelessWidget {
                                 invController.foundInventoryItems[index]);
                           }
                         : null,
+                    refundBtnAction: () {
+                      salesController.refundItemActionModal(
+                          context,
+                          salesController.foundSales.isNotEmpty
+                              ? salesController.foundSales[index]
+                              : salesController.sales[index]);
+                    },
                   ),
                 );
               },

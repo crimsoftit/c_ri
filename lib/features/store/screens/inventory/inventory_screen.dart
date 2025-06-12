@@ -101,6 +101,7 @@ class CInventoryScreen extends StatelessWidget {
                                                   0,
                                                   0,
                                                   0,
+                                                  0,
                                                   0.0,
                                                   0.0,
                                                   0.0,
@@ -348,17 +349,6 @@ class CInventoryScreen extends StatelessWidget {
                                           //fontStyle: FontStyle.italic,
                                         ),
                                   ),
-                                  // Text(
-                                  //   'total refunds:${invController.inventoryItems[index].qtySold} (in stock:${invController.inventoryItems[index].quantity})',
-                                  //   style: Theme.of(context)
-                                  //       .textTheme
-                                  //       .labelSmall!
-                                  //       .apply(
-                                  //         color: CColors.rBrown
-                                  //             .withValues(alpha: 0.7),
-                                  //         //fontStyle: FontStyle.italic,
-                                  //       ),
-                                  // ),
                                   Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -378,38 +368,6 @@ class CInventoryScreen extends StatelessWidget {
                                         SizedBox(
                                           width: 5.0,
                                         ),
-                                      // TextButton.icon(
-                                      //   iconAlignment: IconAlignment.start,
-                                      //   label: Text(
-                                      //     'sell',
-                                      //     style: Theme.of(context)
-                                      //         .textTheme
-                                      //         .labelMedium!
-                                      //         .apply(
-                                      //           color: CColors.rBrown,
-                                      //         ),
-                                      //   ),
-                                      //   icon: const Icon(
-                                      //     Iconsax.card_pos,
-                                      //     color: CColors.rBrown,
-                                      //     size: CSizes.iconSm,
-                                      //   ),
-                                      //   style: TextButton.styleFrom(
-                                      //     padding: EdgeInsets.zero,
-                                      //     minimumSize: Size(
-                                      //       30,
-                                      //       20,
-                                      //     ),
-                                      //     alignment: Alignment.centerLeft,
-                                      //   ),
-                                      //   onPressed: () {
-                                      //     txnsController.showAmountIssuedField
-                                      //         .value = true;
-                                      //     txnsController.onSellItemBtnAction(
-                                      //         invController
-                                      //             .inventoryItems[index]);
-                                      //   },
-                                      // ),
                                       SizedBox(
                                         width: 5.0,
                                       ),
@@ -464,6 +422,9 @@ class CInventoryScreen extends StatelessWidget {
                                                   invController
                                                       .inventoryItems[index]
                                                       .name,
+                                                  invController
+                                                      .inventoryItems[index]
+                                                      .markedAsFavorite,
                                                   invController
                                                       .inventoryItems[index]
                                                       .quantity,
@@ -586,8 +547,8 @@ class CInventoryScreen extends StatelessWidget {
                       useRootNavigator: false,
                       builder: (BuildContext context) => dialog.buildDialog(
                         context,
-                        CInventoryModel('', '', '', '', '', 0, 0, 0, 0.0, 0.0,
-                            0.0, 0, '', '', '', 0, ''),
+                        CInventoryModel('', '', '', '', '', 0, 0, 0, 0, 0.0,
+                            0.0, 0.0, 0, '', '', '', 0, ''),
                         true,
                       ),
                     );

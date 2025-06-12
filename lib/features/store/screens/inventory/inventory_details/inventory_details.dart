@@ -401,6 +401,7 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                           userController.user.value.fullName,
                           invItem.pCode,
                           invItem.name,
+                          invItem.markedAsFavorite,
                           invItem.quantity,
                           invItem.qtySold,
                           invItem.qtyRefunded,

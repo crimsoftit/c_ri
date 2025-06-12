@@ -389,6 +389,22 @@ class CTxnsController extends GetxController {
         .toList();
     foundSales.assignAll(salesFound);
 
+    // var refundsFound = refunds
+    //     .where((refundedItem) =>
+    //         refundedItem.productName
+    //             .toLowerCase()
+    //             .contains(value.toLowerCase()) ||
+    //         refundedItem.txnId
+    //             .toString()
+    //             .toLowerCase()
+    //             .contains(value.toLowerCase()))
+    //     .toList();
+    // foundRefunds.assignAll(refundsFound);
+  }
+
+  searchRefunds(String value) {
+    fetchSoldItems();
+
     var refundsFound = refunds
         .where((refundedItem) =>
             refundedItem.productName
@@ -812,7 +828,9 @@ class CTxnsController extends GetxController {
                               ? soldItem.quantity.toString()
                               : refundQty.value.toString(),
                           style: Theme.of(context).textTheme.titleSmall!.apply(
-                                color: CColors.white,
+                                color: isDarkTheme
+                                    ? CColors.white
+                                    : CColors.rBrown,
                               ),
                         ),
                         const SizedBox(
