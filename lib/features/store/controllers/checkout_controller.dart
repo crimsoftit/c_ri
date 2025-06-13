@@ -11,8 +11,8 @@ import 'package:c_ri/features/store/models/cart_item_model.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/models/payment_method_model.dart';
 import 'package:c_ri/features/store/models/txns_model.dart';
-import 'package:c_ri/features/store/screens/checkout/checkout_screen.dart';
-import 'package:c_ri/features/store/screens/checkout/widgets/payment_methods/payment_methods_tile.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/checkout/checkout_screen.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/checkout/widgets/payment_methods/payment_methods_tile.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/inventory/inventory_details/widgets/add_to_cart_bottom_nav_bar.dart';
 import 'package:c_ri/nav_menu.dart';
 import 'package:c_ri/services/location_services.dart';
@@ -513,7 +513,6 @@ class CCheckoutController extends GetxController {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     customerNameFocusNode.value.dispose();
     super.dispose();
   }

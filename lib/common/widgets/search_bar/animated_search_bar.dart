@@ -42,7 +42,6 @@ class CAnimatedSearchBar extends StatelessWidget {
           ),
           child: searchController.showSearchField.value
               ? CExpandedSearchField(
-                  hintTxt: hintTxt,
                   txtColor: CColors.rBrown,
                   controller: controller,
                 )

@@ -10,12 +10,10 @@ import 'package:iconsax/iconsax.dart';
 class CExpandedSearchField extends StatelessWidget {
   const CExpandedSearchField({
     super.key,
-    required this.hintTxt,
     required this.txtColor,
     required this.controller,
   });
 
-  final String hintTxt;
   final Color txtColor;
   final TextEditingController controller;
 
@@ -37,27 +35,14 @@ class CExpandedSearchField extends StatelessWidget {
               controller: controller,
               autofocus: true,
               onChanged: (value) {
-                // if (hintTxt == 'inventory') {
-                //   invController.onSearchInventory(value);
-                // } else if (hintTxt == 'inventory, transactions') {
-                //   invController.onSearchInventory(value);
-                //   salesController.onSearchSalesAction(value);
-                // }
                 invController.searchInventory(value);
                 salesController.searchSales(value);
-                salesController.searchRefunds(value);
+                //salesController.searchRefunds(value);
               },
               onFieldSubmitted: (value) {
-                //searchController.onSearchBtnPressed();
-                // if (hintTxt == 'inventory') {
-                //   invController.searchInventory(value);
-                // } else if (hintTxt == 'inventory, transactions') {
-                //   invController.searchInventory(value);
-                //   salesController.onSearchSalesAction(value);
-                // }
                 invController.searchInventory(value);
                 salesController.searchSales(value);
-                salesController.searchRefunds(value);
+                //salesController.searchRefunds(value);
               },
               style: TextStyle(
                 //color: CColors.rBrown.withOpacity(0.6),
@@ -70,12 +55,13 @@ class CExpandedSearchField extends StatelessWidget {
                     top: 7,
                   ),
                   child: Icon(
-                    Iconsax.search_favorite,
+                    Iconsax.search_normal,
                     color: CColors.rBrown.withValues(alpha: 0.6),
                     size: CSizes.iconSm,
                   ),
                 ),
-                hintText: 'search $hintTxt',
+                // hintText: 'search $hintTxt',
+                hintText: 'search store',
                 hintStyle: TextStyle(
                   color: CColors.rBrown.withValues(alpha: 0.6),
                 ),

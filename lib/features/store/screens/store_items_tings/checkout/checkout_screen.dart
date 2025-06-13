@@ -13,16 +13,16 @@ import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/nav_menu_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
-import 'package:c_ri/features/store/screens/checkout/widgets/billing_amount_section.dart';
-import 'package:c_ri/features/store/screens/checkout/widgets/payment_methods/payment_method_section.dart';
 import 'package:c_ri/features/store/screens/search/widgets/c_typeahead_field.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/checkout/widgets/billing_amount_section.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/checkout/widgets/checkout_scan_fab.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/checkout/widgets/payment_methods/payment_method_section.dart';
 import 'package:c_ri/nav_menu.dart';
 import 'package:c_ri/services/location_services.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
-import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,7 +37,6 @@ class CCheckoutScreen extends StatelessWidget {
     final cartController = Get.put(CCartController());
     final checkoutController = Get.put(CCheckoutController());
     final invController = Get.put(CInventoryController());
-    final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final navController = Get.put(CNavMenuController());
     final userController = Get.put(CUserController());
@@ -771,24 +770,7 @@ class CCheckoutScreen extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          checkoutController.scanItemForCheckout();
-        },
-        label: Text(
-          'scan',
-        ),
-        icon: const Icon(
-          // Iconsax.scan_barcode,
-          Iconsax.scan,
-        ),
-        backgroundColor: isConnectedToInternet
-            ? Colors.brown
-            : CColors.rBrown.withValues(
-                alpha: 0.3,
-              ),
-        foregroundColor: Colors.white,
-      ),
+      floatingActionButton: CCheckoutScanFAB(),
       bottomNavigationBar: Obx(
         () {
           if (cartController.cartItems.isNotEmpty) {

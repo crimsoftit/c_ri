@@ -378,28 +378,37 @@ class CTxnsController extends GetxController {
   }
 
   searchSales(String value) {
-    fetchSoldItems();
-    var salesFound = sales
-        .where((soldItem) =>
-            soldItem.productName.toLowerCase().contains(value.toLowerCase()) ||
-            soldItem.txnId
-                .toString()
-                .toLowerCase()
-                .contains(value.toLowerCase()))
-        .toList();
-    foundSales.assignAll(salesFound);
-
-    // var refundsFound = refunds
-    //     .where((refundedItem) =>
-    //         refundedItem.productName
-    //             .toLowerCase()
-    //             .contains(value.toLowerCase()) ||
-    //         refundedItem.txnId
-    //             .toString()
-    //             .toLowerCase()
-    //             .contains(value.toLowerCase()))
-    //     .toList();
-    // foundRefunds.assignAll(refundsFound);
+    try {
+      fetchSoldItems();
+      var salesFound = sales
+          .where((soldItem) =>
+              soldItem.productName
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) ||
+              soldItem.txnId
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()))
+          .toList();
+      foundSales.assignAll(salesFound);
+      var refundsFound = refunds
+          .where((refundedItem) =>
+              refundedItem.productName
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) ||
+              refundedItem.txnId
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()))
+          .toList();
+      foundRefunds.assignAll(refundsFound);
+    } catch (e) {
+      CPopupSnackBar.errorSnackBar(
+        title: 'error searching sales',
+        message: '$e',
+      );
+      throw e.toString();
+    }
   }
 
   searchRefunds(String value) {

@@ -8,6 +8,7 @@ import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/checkout/widgets/checkout_scan_fab.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/inventory/widgets/inv_dialog.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
@@ -186,6 +187,7 @@ class CStoreItemsScreen extends StatelessWidget {
                   height: CSizes.spaceBtnSections / 8,
                 ),
                 FloatingActionButton(
+                  elevation: 0,
                   onPressed: () {
                     invController.runInvScanner();
                     showDialog(
@@ -199,15 +201,20 @@ class CStoreItemsScreen extends StatelessWidget {
                       ),
                     );
                   },
-                  backgroundColor:
-                      isConnectedToInternet ? Colors.brown : CColors.black,
-                  foregroundColor: Colors.white,
-                  heroTag: 'scan',
+                  // backgroundColor:
+                  //     isConnectedToInternet ? Colors.brown : CColors.black,
+                  backgroundColor: CColors.transparent,
+                  foregroundColor: isDarkTheme ? CColors.white : CColors.rBrown,
+                  heroTag: 'add',
                   child: Icon(
                     // Iconsax.scan_barcode,
                     Iconsax.add,
                   ),
                 ),
+                const SizedBox(
+                  height: CSizes.spaceBtnSections / 8,
+                ),
+                CCheckoutScanFAB(),
               ],
             );
           },
