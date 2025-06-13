@@ -411,22 +411,6 @@ class CTxnsController extends GetxController {
     }
   }
 
-  searchRefunds(String value) {
-    fetchSoldItems();
-
-    var refundsFound = refunds
-        .where((refundedItem) =>
-            refundedItem.productName
-                .toLowerCase()
-                .contains(value.toLowerCase()) ||
-            refundedItem.txnId
-                .toString()
-                .toLowerCase()
-                .contains(value.toLowerCase()))
-        .toList();
-    foundRefunds.assignAll(refundsFound);
-  }
-
   /// -- when search result item is selected --
   onSellItemBtnAction(CInventoryModel foundItem) {
     //onInit();

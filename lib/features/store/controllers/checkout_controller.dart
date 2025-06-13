@@ -14,6 +14,7 @@ import 'package:c_ri/features/store/models/txns_model.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/checkout/checkout_screen.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/checkout/widgets/payment_methods/payment_methods_tile.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/inventory/inventory_details/widgets/add_to_cart_bottom_nav_bar.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/inventory/widgets/inv_dialog.dart';
 import 'package:c_ri/nav_menu.dart';
 import 'package:c_ri/services/location_services.dart';
 import 'package:c_ri/services/pdf_services.dart';
@@ -49,6 +50,8 @@ class CCheckoutController extends GetxController {
   }
 
   /// -- variables --
+  AddUpdateItemDialog dialog = AddUpdateItemDialog();
+
   final Rx<CPaymentMethodModel> selectedPaymentMethod = CPaymentMethodModel(
     platformLogo: CImages.cash6,
     platformName: 'cash',
@@ -334,6 +337,17 @@ class CCheckoutController extends GetxController {
         await fetchForSaleItemByCode(barcodeScanRes);
         if (itemExists.value) {
           nextActionAfterScanModal(Get.overlayContext!);
+        } else {
+          showDialog(
+            context: Get.overlayContext!,
+            useRootNavigator: false,
+            builder: (BuildContext context) => dialog.buildDialog(
+              context,
+              CInventoryModel('', '', '', '', '', 0, 0, 0, 0, 0.0, 0.0, 0.0, 0,
+                  '', '', '', 0, ''),
+              true,
+            ),
+          );
         }
       }
     } on PlatformException catch (platformException) {

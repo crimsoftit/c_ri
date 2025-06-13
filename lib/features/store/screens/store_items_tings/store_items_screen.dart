@@ -189,7 +189,7 @@ class CStoreItemsScreen extends StatelessWidget {
                 FloatingActionButton(
                   elevation: 0,
                   onPressed: () {
-                    invController.runInvScanner();
+                    //invController.runInvScanner();
                     showDialog(
                       context: context,
                       useRootNavigator: false,
