@@ -1,9 +1,10 @@
+import 'package:c_ri/features/store/controllers/tabbar_controller.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/widgets/inv_gridview_screen.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/widgets/items_listview.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
-import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CStoreItemsTabs extends StatelessWidget {
   const CStoreItemsTabs({
@@ -17,39 +18,38 @@ class CStoreItemsTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tabBarController = Get.put(CTabBarController());
+
     return Column(
       children: [
         /// -- tabs --
         SizedBox(
-          child: TabBar(
-            dividerColor: CColors.rBrown.withValues(
-              alpha: 0.5,
-            ),
-            isScrollable: true,
-            labelColor: CColors.rBrown,
-            // labelPadding: const EdgeInsets.only(
-            //   left: 10.0,
-            //   right: 10.0,
-            // ),
-            onTap: (value) {
-              CPopupSnackBar.customToast(
-                message: '$value',
-                forInternetConnectivityStatus: false,
-              );
-            },
-            unselectedLabelColor: CColors.darkGrey,
-            tabs: [
-              Tab(
-                text: tab1Title,
+          child:  TabBar(
+                dividerColor: CColors.rBrown.withValues(
+                  alpha: 0.5,
+                ),
+                isScrollable: true,
+                labelColor: CColors.rBrown,
+                // labelPadding: const EdgeInsets.only(
+                //   left: 10.0,
+                //   right: 10.0,
+                // ),
+                onTap: (value) {
+                  tabBarController.onTabItemTap(value);
+                },
+                unselectedLabelColor: CColors.darkGrey,
+                tabs: [
+                  Tab(
+                    text: tab1Title,
+                  ),
+                  Tab(
+                    text: tab2Title,
+                  ),
+                  Tab(
+                    text: tab3Title,
+                  ),
+                ],
               ),
-              Tab(
-                text: tab2Title,
-              ),
-              Tab(
-                text: tab3Title,
-              ),
-            ],
-          ),
         ),
 
         /// -- tab bar views

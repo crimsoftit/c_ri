@@ -10,6 +10,7 @@ import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
+import 'package:c_ri/features/store/controllers/nav_menu_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/screens/checkout/widgets/billing_amount_section.dart';
@@ -38,7 +39,7 @@ class CCheckoutScreen extends StatelessWidget {
     final invController = Get.put(CInventoryController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    final navController = Get.put(NavMenuController());
+    final navController = Get.put(CNavMenuController());
     final userController = Get.put(CUserController());
     final scrollController = ScrollController();
     final searchBarController = Get.put(CSearchBarController());

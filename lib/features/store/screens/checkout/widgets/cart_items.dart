@@ -6,6 +6,7 @@ import 'package:c_ri/common/widgets/txt_widgets/product_price_txt.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
+import 'package:c_ri/features/store/controllers/nav_menu_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/nav_menu.dart';
 import 'package:c_ri/utils/constants/colors.dart';
@@ -26,7 +27,7 @@ class CCartItems extends StatelessWidget {
     final cartController = Get.put(CCartController());
     final invController = Get.put(CInventoryController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    final navController = Get.put(NavMenuController());
+    final navController = Get.put(CNavMenuController());
     final scrollController = ScrollController();
 
     final txnsController = Get.put(CTxnsController());

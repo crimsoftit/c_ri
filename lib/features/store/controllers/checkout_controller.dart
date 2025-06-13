@@ -5,6 +5,7 @@ import 'package:c_ri/features/personalization/controllers/location_controller.da
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
+import 'package:c_ri/features/store/controllers/nav_menu_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/models/cart_item_model.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
@@ -12,7 +13,7 @@ import 'package:c_ri/features/store/models/payment_method_model.dart';
 import 'package:c_ri/features/store/models/txns_model.dart';
 import 'package:c_ri/features/store/screens/checkout/checkout_screen.dart';
 import 'package:c_ri/features/store/screens/checkout/widgets/payment_methods/payment_methods_tile.dart';
-import 'package:c_ri/features/store/screens/inventory/inventory_details/widgets/add_to_cart_bottom_nav_bar.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/inventory/inventory_details/widgets/add_to_cart_bottom_nav_bar.dart';
 import 'package:c_ri/nav_menu.dart';
 import 'package:c_ri/services/location_services.dart';
 import 'package:c_ri/services/pdf_services.dart';
@@ -65,7 +66,7 @@ class CCheckoutController extends GetxController {
   final RxBool setFocusOnAmtIssuedField = false.obs;
 
   final invController = Get.put(CInventoryController());
-  final navController = Get.put(NavMenuController());
+  final navController = Get.put(CNavMenuController());
   final txnsController = Get.put(CTxnsController());
   final userController = Get.put(CUserController());
 

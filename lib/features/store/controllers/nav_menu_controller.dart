@@ -1,0 +1,24 @@
+import 'package:c_ri/features/personalization/screens/profile/profile.dart';
+import 'package:c_ri/features/personalization/screens/settings/user_settings.dart';
+import 'package:c_ri/features/store/screens/home/home.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/inventory/inventory_screen.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/store_items_screen.dart';
+import 'package:get/get.dart';
+
+class CNavMenuController extends GetxController {
+  static CNavMenuController get instance => Get.find();
+
+  final Rx<int> selectedIndex = 0.obs;
+
+  final screens = [
+    const HomeScreen(),
+    const CStoreItemsScreen(),
+    const CInventoryScreen(),
+
+    // const CSalesScreen(),
+    // const CSalesScreenRaw(),
+    // const CTxnsScreen(),
+    const SettingsScreen(),
+    const ProfileScreen(),
+  ];
+}

@@ -8,6 +8,7 @@ import 'package:c_ri/features/personalization/screens/profile/widgets/update_biz
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
+import 'package:c_ri/features/store/controllers/nav_menu_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/nav_menu.dart';
 import 'package:c_ri/utils/exceptions/exceptions.dart';
@@ -68,7 +69,7 @@ class AuthRepo extends GetxController {
         } else {
           //DbHelper dbHelper = DbHelper.instance;
           final invController = Get.put(CInventoryController());
-          final navController = Get.put(NavMenuController());
+          final navController = Get.put(CNavMenuController());
           final txnsController = Get.put(CTxnsController());
           // check data sync status
           deviceStorage.writeIfNull('SyncInvDataWithCloud', true);

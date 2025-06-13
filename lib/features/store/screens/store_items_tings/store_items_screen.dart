@@ -8,7 +8,7 @@ import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
-import 'package:c_ri/features/store/screens/inventory/widgets/inv_dialog.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/inventory/widgets/inv_dialog.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
@@ -203,9 +203,9 @@ class CStoreItemsScreen extends StatelessWidget {
                       isConnectedToInternet ? Colors.brown : CColors.black,
                   foregroundColor: Colors.white,
                   heroTag: 'scan',
-                  child: const Icon(
+                  child: Icon(
                     // Iconsax.scan_barcode,
-                    Iconsax.scan,
+                    Iconsax.add,
                   ),
                 ),
               ],

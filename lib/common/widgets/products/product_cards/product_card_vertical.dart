@@ -60,7 +60,7 @@ class CProductCardVertical extends StatelessWidget {
                   ? CColors.rBrown.withValues(alpha: 0.3)
                   : CColors.lightGrey,
               borderRadius: CSizes.pImgRadius - 4,
-              height: 156.0,
+              height: 157.5,
               padding: const EdgeInsets.only(
                 left: CSizes.sm,
               ),
@@ -159,7 +159,7 @@ class CProductCardVertical extends StatelessWidget {
                                         color: isDarkTheme
                                             ? CColors.grey
                                             : CColors.darkGrey,
-                                        fontSizeFactor: 0.8,
+                                        fontSizeFactor: 0.9,
                                       ),
                                 ),
                               ],
@@ -189,7 +189,7 @@ class CProductCardVertical extends StatelessWidget {
                                 color: isDarkTheme
                                     ? CColors.white
                                     : CColors.darkGrey,
-                                fontSizeFactor: 1.3,
+                                fontSizeFactor: 1,
                               ),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,

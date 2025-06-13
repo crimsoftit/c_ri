@@ -1,6 +1,6 @@
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
-import 'package:c_ri/features/store/screens/inventory/widgets/inv_dialog_form.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/inventory/widgets/inv_dialog_form.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

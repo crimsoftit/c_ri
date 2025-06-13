@@ -9,6 +9,7 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -131,6 +132,11 @@ class CItemsListView extends StatelessWidget {
 
                 switch (space) {
                   case "refunds":
+                    avatarTxt = salesController.foundRefunds.isNotEmpty
+                        ? salesController.foundRefunds[index].productName[0]
+                            .toUpperCase()
+                        : salesController.refunds[index].productName[0]
+                            .toUpperCase();
                     itemProductId = salesController.foundRefunds.isNotEmpty
                         ? salesController.foundRefunds[index].productId
                         : salesController.refunds[index].productId;
@@ -207,85 +213,103 @@ class CItemsListView extends StatelessWidget {
                     );
                 }
 
-                return Card(
-                  color: isDarkTheme
-                      ? CColors.rBrown.withValues(alpha: 0.3)
-                      : CColors.lightGrey,
-                  elevation: 0.3,
-                  child: CExpansionTile(
-                    avatarTxt: avatarTxt,
-                    // avatarTxt: space == 'inventory' &&
-                    //         invController.foundInventoryItems.isNotEmpty
-                    //     ? invController.foundInventoryItems[index].name[0]
-                    //         .toUpperCase()
-                    //     : space == 'inventory' &&
-                    //             invController.foundInventoryItems.isEmpty
-                    //         ? invController.inventoryItems[index].name[0]
-                    //             .toUpperCase()
-                    //         : space == 'sales' &&
-                    //                 salesController.foundSales.isNotEmpty
-                    //             ? salesController
-                    //                 .foundSales[index].productName[0]
-                    //                 .toUpperCase()
-                    //             : salesController.sales[index].productName[0]
-                    //                 .toUpperCase(),
-                    includeRefundBtn: space == 'sales' ? true : false,
-                    titleTxt: itemName.toUpperCase(),
-                    subTitleTxt1Item1:
-                        't.Amount: $userCurrencyCode.$txnAmount ',
-                    subTitleTxt1Item2: '($qtySold sold, $qtyRefunded refunded)',
-                    subTitleTxt2Item1:
-                        'usp: $userCurrencyCode.$unitSellingPrice',
-                    subTitleTxt2Item2: '',
-                    subTitleTxt3Item1: txnDate,
-                    subTitleTxt3Item2: 'product id: $itemProductId',
-                    btn1Txt: 'info',
-                    btn2Txt: space == 'inventory' ? 'sell' : 'update',
-                    btn2Icon: space == 'inventory'
-                        ? const Icon(
-                            Iconsax.card_pos,
-                            color: CColors.rBrown,
-                            size: CSizes.iconSm,
-                          )
-                        : const Icon(
-                            Iconsax.edit,
-                            color: CColors.rBrown,
-                            size: CSizes.iconSm,
-                          ),
-                    btn1NavAction: () {
-                      if (space == 'inventory') {
-                        Get.toNamed(
-                          '/inventory/item_details/',
-                          arguments: invController
-                                  .foundInventoryItems.isNotEmpty
-                              ? invController
-                                  .foundInventoryItems[index].productId
-                              : invController.inventoryItems[index].productId,
-                        );
-                      }
-                      if (space == 'sales') {
-                        Get.toNamed(
-                          '/sales/txn_details',
-                          arguments: salesController.foundSales.isNotEmpty
-                              ? salesController.foundSales[index].soldItemId
-                              : salesController.sales[index].soldItemId,
-                        );
-                      }
-                    },
-                    btn2NavAction: space == 'inventory'
-                        ? () {
-                            salesController.onSellItemBtnAction(
-                                invController.foundInventoryItems[index]);
+                return Column(
+                  children: [
+                    SizedBox(
+                      child: salesController.unsyncedTxnAppends.isEmpty &&
+                              salesController.unsyncedTxnUpdates.isEmpty
+                          ? const Icon(
+                              Iconsax.cloud_add,
+                            )
+                          : IconButton(
+                              onPressed: () async {
+                                // -- check internet connectivity --
+                                final internetIsConnected =
+                                    await CNetworkManager.instance
+                                        .isConnected();
+                                if (internetIsConnected) {
+                                  await salesController.addSalesDataToCloud();
+                                } else {
+                                  CPopupSnackBar.customToast(
+                                    message:
+                                        'internet connection required for cloud sync!',
+                                    forInternetConnectivityStatus: true,
+                                  );
+                                }
+                              },
+                              icon: const Icon(
+                                Iconsax.cloud_change,
+                              ),
+                            ),
+                    ),
+                    Card(
+                      color: isDarkTheme
+                          ? CColors.rBrown.withValues(alpha: 0.3)
+                          : CColors.lightGrey,
+                      elevation: 0.3,
+                      child: CExpansionTile(
+                        avatarTxt: avatarTxt,
+                        includeRefundBtn: space == 'sales' ? true : false,
+                        titleTxt: itemName.toUpperCase(),
+                        subTitleTxt1Item1:
+                            't.Amount: $userCurrencyCode.$txnAmount ',
+                        subTitleTxt1Item2:
+                            '($qtySold sold, $qtyRefunded refunded)',
+                        subTitleTxt2Item1:
+                            'usp: $userCurrencyCode.$unitSellingPrice',
+                        subTitleTxt2Item2: '',
+                        subTitleTxt3Item1: txnDate,
+                        subTitleTxt3Item2: 'product id: $itemProductId',
+                        btn1Txt: 'info',
+                        btn2Txt: space == 'inventory' ? 'sell' : 'update',
+                        btn2Icon: space == 'inventory'
+                            ? const Icon(
+                                Iconsax.card_pos,
+                                color: CColors.rBrown,
+                                size: CSizes.iconSm,
+                              )
+                            : const Icon(
+                                Iconsax.edit,
+                                color: CColors.rBrown,
+                                size: CSizes.iconSm,
+                              ),
+                        btn1NavAction: () {
+                          if (space == 'inventory') {
+                            Get.toNamed(
+                              '/inventory/item_details/',
+                              arguments:
+                                  invController.foundInventoryItems.isNotEmpty
+                                      ? invController
+                                          .foundInventoryItems[index].productId
+                                      : invController
+                                          .inventoryItems[index].productId,
+                            );
                           }
-                        : null,
-                    refundBtnAction: () {
-                      salesController.refundItemActionModal(
-                          context,
-                          salesController.foundSales.isNotEmpty
-                              ? salesController.foundSales[index]
-                              : salesController.sales[index]);
-                    },
-                  ),
+                          if (space == 'sales') {
+                            Get.toNamed(
+                              '/sales/txn_details',
+                              arguments: salesController.foundSales.isNotEmpty
+                                  ? salesController.foundSales[index].soldItemId
+                                  : salesController.sales[index].soldItemId,
+                            );
+                          }
+                        },
+                        btn2NavAction: space == 'inventory'
+                            ? () {
+                                salesController.onSellItemBtnAction(
+                                    invController.foundInventoryItems[index]);
+                              }
+                            : null,
+                        refundBtnAction: () {
+                          salesController.refundItemActionModal(
+                              context,
+                              salesController.foundSales.isNotEmpty
+                                  ? salesController.foundSales[index]
+                                  : salesController.sales[index]);
+                        },
+                      ),
+                    ),
+                  ],
                 );
               },
             ),

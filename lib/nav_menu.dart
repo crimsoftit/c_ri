@@ -1,10 +1,6 @@
-import 'package:c_ri/features/personalization/screens/profile/profile.dart';
-import 'package:c_ri/features/personalization/screens/settings/user_settings.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
-import 'package:c_ri/features/store/screens/home/home.dart';
-import 'package:c_ri/features/store/screens/inventory/inventory_screen.dart';
-import 'package:c_ri/features/store/screens/store_items_tings/store_items_screen.dart';
+import 'package:c_ri/features/store/controllers/nav_menu_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:c_ri/utils/helpers/network_manager.dart';
@@ -21,7 +17,7 @@ class NavMenu extends StatelessWidget {
     final isDark = CHelperFunctions.isDarkMode(context);
     final invController = Get.put(CInventoryController());
 
-    final navController = Get.put(NavMenuController());
+    final navController = Get.put(CNavMenuController());
 
     Get.put(CCartController());
     Get.put(CInventoryController());
@@ -97,22 +93,4 @@ class NavMenu extends StatelessWidget {
       ),
     );
   }
-}
-
-class NavMenuController extends GetxController {
-  static NavMenuController get instance => Get.find();
-
-  final Rx<int> selectedIndex = 0.obs;
-
-  final screens = [
-    const HomeScreen(),
-    const CStoreItemsScreen(),
-    const CInventoryScreen(),
-
-    // const CSalesScreen(),
-    // const CSalesScreenRaw(),
-    // const CTxnsScreen(),
-    const SettingsScreen(),
-    const ProfileScreen(),
-  ];
 }

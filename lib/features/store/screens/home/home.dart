@@ -10,6 +10,7 @@ import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/dashboard_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
+import 'package:c_ri/features/store/controllers/nav_menu_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/screens/home/widgets/home_appbar.dart';
 import 'package:c_ri/features/store/screens/txns/txns_for_updates.dart';
@@ -34,7 +35,7 @@ class HomeScreen extends StatelessWidget {
     final invController = Get.put(CInventoryController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
 
-    final navController = Get.put(NavMenuController());
+    final navController = Get.put(CNavMenuController());
     final txnsController = Get.put(CTxnsController());
 
     Get.put(CDashboardController());

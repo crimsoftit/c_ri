@@ -62,22 +62,6 @@ class AddUpdateInventoryForm extends StatelessWidget {
                 ),
               ),
               TextFormField(
-                controller: invController.txtName,
-                decoration: InputDecoration(
-                  labelText: 'product name',
-                  labelStyle: textStyle,
-                ),
-                style: const TextStyle(
-                  fontWeight: FontWeight.normal,
-                ),
-                validator: (value) {
-                  return CValidator.validateEmptyText('product name', value);
-                },
-              ),
-              const SizedBox(
-                height: CSizes.spaceBtnInputFields / 2,
-              ),
-              TextFormField(
                 controller: invController.txtCode,
                 //readOnly: true,
                 decoration: InputDecoration(
@@ -106,6 +90,23 @@ class AddUpdateInventoryForm extends StatelessWidget {
               const SizedBox(
                 height: CSizes.spaceBtnInputFields / 2,
               ),
+              TextFormField(
+                controller: invController.txtName,
+                decoration: InputDecoration(
+                  labelText: 'product name',
+                  labelStyle: textStyle,
+                ),
+                style: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                ),
+                validator: (value) {
+                  return CValidator.validateEmptyText('product name', value);
+                },
+              ),
+              const SizedBox(
+                height: CSizes.spaceBtnInputFields / 2,
+              ),
+
               TextFormField(
                 controller: invController.txtQty,
                 keyboardType: const TextInputType.numberWithOptions(
