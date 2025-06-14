@@ -60,7 +60,7 @@ class CProductCardVertical extends StatelessWidget {
                   ? CColors.rBrown.withValues(alpha: 0.3)
                   : CColors.lightGrey,
               borderRadius: CSizes.pImgRadius - 4,
-              height: 157.5,
+              height: 155.0,
               padding: const EdgeInsets.only(
                 left: CSizes.sm,
               ),

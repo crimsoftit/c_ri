@@ -338,6 +338,7 @@ class CCheckoutController extends GetxController {
         if (itemExists.value) {
           nextActionAfterScanModal(Get.overlayContext!);
         } else {
+          invController.runInvScanner();
           showDialog(
             context: Get.overlayContext!,
             useRootNavigator: false,

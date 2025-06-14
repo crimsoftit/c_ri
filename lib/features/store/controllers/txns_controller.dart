@@ -597,19 +597,19 @@ class CTxnsController extends GetxController {
               isLoading.value = false;
               if (kDebugMode) {
                 print('***** ALL TXNS RADA SAFI *****');
+                CPopupSnackBar.customToast(
+                  message: '***** ALL TXNS RADA SAFI *****',
+                  forInternetConnectivityStatus: false,
+                );
               }
-              CPopupSnackBar.customToast(
-                message: '***** ALL TXNS RADA SAFI *****',
-                forInternetConnectivityStatus: false,
-              );
             }
           } else {
             txnsSyncIsLoading.value = false;
             isLoading.value = false;
-            CPopupSnackBar.customToast(
-              message: 'NO SALES/TXNS FOUND!',
-              forInternetConnectivityStatus: false,
-            );
+            // CPopupSnackBar.customToast(
+            //   message: 'NO SALES/TXNS FOUND!',
+            //   forInternetConnectivityStatus: false,
+            // );
           }
         },
       );

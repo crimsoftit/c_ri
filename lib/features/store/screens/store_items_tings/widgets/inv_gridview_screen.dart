@@ -124,7 +124,7 @@ class CInvGridviewScreen extends StatelessWidget {
                                   CColors.white, // foreground (text) color
                               backgroundColor: isDarkTheme
                                   ? CColors.rBrown.withValues(alpha: 0.25)
-                                  : CColors.rBrown, // background color
+                                  : CColors.transparent, // background color
                             ),
                             onPressed: () async {
                               // -- check internet connectivity --

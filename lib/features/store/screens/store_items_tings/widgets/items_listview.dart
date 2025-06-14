@@ -1,6 +1,5 @@
 import 'package:c_ri/common/widgets/layouts/c_expansion_tile.dart';
 import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
-import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
@@ -39,11 +38,11 @@ class CItemsListView extends StatelessWidget {
     return Obx(
       () {
         // run loader --
-        if (invController.isLoading.value || salesController.isLoading.value) {
-          return const CVerticalProductShimmer(
-            itemCount: 7,
-          );
-        }
+        // if (invController.isLoading.value || salesController.isLoading.value) {
+        //   return const CVerticalProductShimmer(
+        //     itemCount: 7,
+        //   );
+        // }
 
         if (searchController.txtSearchField.text.isNotEmpty &&
             salesController.foundSales.isEmpty &&
