@@ -60,7 +60,7 @@ class CProductCardVertical extends StatelessWidget {
                   ? CColors.rBrown.withValues(alpha: 0.3)
                   : CColors.lightGrey,
               borderRadius: CSizes.pImgRadius - 4,
-              height: 155.0,
+              height: 153.0,
               padding: const EdgeInsets.only(
                 left: CSizes.sm,
               ),
@@ -174,6 +174,7 @@ class CProductCardVertical extends StatelessWidget {
                       left: 2.5,
                     ),
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         CProductTitleText(
@@ -183,6 +184,7 @@ class CProductCardVertical extends StatelessWidget {
                               isDarkTheme ? CColors.white : CColors.rBrown,
                           maxLines: 1,
                         ),
+
                         Text(
                           '($qtyAvailable stocked, $qtySold sold)',
                           style: Theme.of(context).textTheme.labelSmall!.apply(

@@ -55,18 +55,20 @@ class NavMenu extends StatelessWidget {
               label: 'home',
             ),
             NavigationDestination(
-              icon: Icon(Iconsax.shop),
+              icon: Icon(
+                Iconsax.shop,
+              ),
               label: 'store',
+            ),
+            NavigationDestination(
+              icon: Icon(Iconsax.shop),
+              label: 'store items',
             ),
             NavigationDestination(
               icon: Icon(Iconsax.card_tick),
               label: 'inventory',
             ),
 
-            // NavigationDestination(
-            //   icon: Icon(Iconsax.empty_wallet_time),
-            //   label: 'sales',
-            // ),
             // NavigationDestination(
             //   icon: Icon(Iconsax.empty_wallet_time),
             //   label: 'sales_raw',

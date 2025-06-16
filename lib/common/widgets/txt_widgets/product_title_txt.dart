@@ -19,18 +19,20 @@ class CProductTitleText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      title,
-      style: smallSize
-          ? Theme.of(context).textTheme.labelSmall!.apply(
-                color: txtColor,
-              )
-          : Theme.of(context).textTheme.titleSmall!.apply(
-                color: txtColor,
-              ),
-      overflow: TextOverflow.ellipsis,
-      maxLines: maxLines,
-      textAlign: txtAlign,
+    return Flexible(
+      child: Text(
+        title,
+        style: smallSize
+            ? Theme.of(context).textTheme.labelSmall!.apply(
+                  color: txtColor,
+                )
+            : Theme.of(context).textTheme.titleSmall!.apply(
+                  color: txtColor,
+                ),
+        overflow: TextOverflow.ellipsis,
+        maxLines: maxLines,
+        textAlign: txtAlign,
+      ),
     );
   }
 }

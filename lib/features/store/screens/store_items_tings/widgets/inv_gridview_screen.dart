@@ -22,7 +22,7 @@ import 'package:iconsax/iconsax.dart';
 class CInvGridviewScreen extends StatelessWidget {
   const CInvGridviewScreen({
     super.key,
-    this.mainAxisExtent = 176,
+    this.mainAxisExtent = 160.0,
   });
 
   final double? mainAxisExtent;
@@ -88,162 +88,159 @@ class CInvGridviewScreen extends StatelessWidget {
           // );
         }
 
-        return SizedBox(
-          height: CHelperFunctions.screenHeight() * 0.72,
-          child: Column(
-            children: [
-              SizedBox(
-                child: invController.syncIsLoading.value ||
-                        txnsController.txnsSyncIsLoading.value
-                    ? const CShimmerEffect(
-                        width: 40.0,
-                        height: 40.0,
-                        radius: 40.0,
-                      )
-                    : invController.unSyncedAppends.isEmpty &&
-                            invController.unSyncedUpdates.isEmpty
-                        ? null
-                        : TextButton.icon(
-                            icon: const Icon(
-                              Iconsax.cloud_change,
-                              size: CSizes.iconSm,
-                              color: CColors.white,
-                            ),
-                            label: Text(
-                              'sync to cloud',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelMedium!
-                                  .apply(
-                                    color: CColors.white,
-                                  ),
-                            ),
-                            style: ElevatedButton.styleFrom(
-                              elevation: 0.2,
-                              foregroundColor:
-                                  CColors.white, // foreground (text) color
-                              backgroundColor: isDarkTheme
-                                  ? CColors.rBrown.withValues(alpha: 0.25)
-                                  : CColors.transparent, // background color
-                            ),
-                            onPressed: () async {
-                              // -- check internet connectivity --
-                              final internetIsConnected =
-                                  await CNetworkManager.instance.isConnected();
-
-                              if (internetIsConnected) {
-                                syncController.processSync();
-                              } else {
-                                CPopupSnackBar.customToast(
-                                  message:
-                                      'internet connection required for cloud sync!',
-                                  forInternetConnectivityStatus: true,
-                                );
-                              }
-                            },
-                          ),
-              ),
-              GridView.builder(
-                itemCount: searchController.showSearchField.value
-                    ? invController.foundInventoryItems.length
-                    : invController.inventoryItems.length,
-                shrinkWrap: true,
-                padding: EdgeInsets.zero,
-                physics: const AlwaysScrollableScrollPhysics(),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: CSizes.gridViewSpacing / 12,
-                  crossAxisSpacing: CSizes.gridViewSpacing / 12,
-                  mainAxisExtent: mainAxisExtent,
-                ),
-                itemBuilder: (context, index) {
-                  var avatarTxt = searchController.showSearchField.value &&
-                          invController.foundInventoryItems.isNotEmpty
-                      ? invController.foundInventoryItems[index].name[0]
-                          .toUpperCase()
-                      : invController.inventoryItems[index].name[0]
-                          .toUpperCase();
-
-                  var bp = searchController.showSearchField.value &&
-                          invController.foundInventoryItems.isNotEmpty
-                      ? invController.foundInventoryItems[index].buyingPrice
-                      : invController.inventoryItems[index].buyingPrice;
-
-                  var date = searchController.showSearchField.value &&
-                          invController.foundInventoryItems.isNotEmpty
-                      ? invController.foundInventoryItems[index].date
-                      : invController.inventoryItems[index].date;
-
-                  var lowStockNotifierLimit =
-                      searchController.showSearchField.value &&
-                              invController.foundInventoryItems.isNotEmpty
-                          ? invController
-                              .foundInventoryItems[index].lowStockNotifierLimit
-                          : invController
-                              .inventoryItems[index].lowStockNotifierLimit;
-
-                  var productId = searchController.showSearchField.value &&
-                          invController.foundInventoryItems.isNotEmpty
-                      ? invController.foundInventoryItems[index].productId
-                      : invController.inventoryItems[index].productId;
-
-                  var pName = searchController.showSearchField.value &&
-                          invController.foundInventoryItems.isNotEmpty
-                      ? invController.foundInventoryItems[index].name
-                      : invController.inventoryItems[index].name;
-
-                  var qtyAvailable = searchController.showSearchField.value &&
-                          invController.foundInventoryItems.isNotEmpty
-                      ? invController.foundInventoryItems[index].quantity
-                      : invController.inventoryItems[index].quantity;
-
-                  var qtyRefunded = searchController.showSearchField.value &&
-                          invController.foundInventoryItems.isNotEmpty
-                      ? invController.foundInventoryItems[index].qtyRefunded
-                      : invController.inventoryItems[index].qtyRefunded;
-
-                  var qtySold = searchController.showSearchField.value &&
-                          invController.foundInventoryItems.isNotEmpty
-                      ? invController.foundInventoryItems[index].qtySold
-                      : invController.inventoryItems[index].qtySold;
-
-                  var sku = searchController.showSearchField.value &&
-                          invController.foundInventoryItems.isNotEmpty
-                      ? invController.foundInventoryItems[index].pCode
-                      : invController.inventoryItems[index].pCode;
-
-                  var usp = searchController.showSearchField.value &&
-                          invController.foundInventoryItems.isNotEmpty
-                      ? invController
-                          .foundInventoryItems[index].unitSellingPrice
-                      : invController.inventoryItems[index].unitSellingPrice;
-
-                  return CProductCardVertical(
-                    date: date,
-                    bp: bp.toString(),
-                    deleteAction: () {
-                      CInventoryModel itemId;
-                      if (invController.foundInventoryItems.isNotEmpty) {
-                        itemId = invController.foundInventoryItems[index];
-                      } else {
-                        itemId = invController.inventoryItems[index];
-                      }
-                      invController.deleteInventoryWarningPopup(itemId);
-                    },
-                    itemAvatar: avatarTxt,
-                    itemName: pName,
-                    lowStockNotifierLimit: lowStockNotifierLimit,
-                    pCode: sku,
-                    pId: productId!,
-                    qtyAvailable: qtyAvailable.toString(),
-                    qtyRefunded: qtyRefunded.toString(),
-                    qtySold: qtySold.toString(),
-                    usp: usp.toString(),
-                  );
-                },
-              ),
-            ],
+        return ListView(
+          padding: const EdgeInsets.only(
+            left: 5.0,
+            right: 5.0,
           ),
+          shrinkWrap: true,
+          children: [
+            SizedBox(
+              child: invController.syncIsLoading.value ||
+                      txnsController.txnsSyncIsLoading.value
+                  ? const CShimmerEffect(
+                      width: 40.0,
+                      height: 40.0,
+                      radius: 40.0,
+                    )
+                  : invController.unSyncedAppends.isEmpty &&
+                          invController.unSyncedUpdates.isEmpty
+                      ? null
+                      : TextButton.icon(
+                          icon: const Icon(
+                            Iconsax.cloud_change,
+                            size: CSizes.iconSm,
+                            color: CColors.white,
+                          ),
+                          label: Text(
+                            'sync to cloud',
+                            style:
+                                Theme.of(context).textTheme.labelMedium!.apply(
+                                      color: CColors.white,
+                                    ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0.2,
+                            foregroundColor:
+                                CColors.white, // foreground (text) color
+                            backgroundColor: isDarkTheme
+                                ? CColors.rBrown.withValues(alpha: 0.25)
+                                : CColors.transparent, // background color
+                          ),
+                          onPressed: () async {
+                            // -- check internet connectivity --
+                            final internetIsConnected =
+                                await CNetworkManager.instance.isConnected();
+
+                            if (internetIsConnected) {
+                              syncController.processSync();
+                            } else {
+                              CPopupSnackBar.customToast(
+                                message:
+                                    'internet connection required for cloud sync!',
+                                forInternetConnectivityStatus: true,
+                              );
+                            }
+                          },
+                        ),
+            ),
+            GridView.builder(
+              itemCount: searchController.showSearchField.value
+                  ? invController.foundInventoryItems.length
+                  : invController.inventoryItems.length,
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: CSizes.gridViewSpacing / 12,
+                crossAxisSpacing: CSizes.gridViewSpacing / 12,
+                mainAxisExtent: mainAxisExtent,
+              ),
+              itemBuilder: (context, index) {
+                var avatarTxt = searchController.showSearchField.value &&
+                        invController.foundInventoryItems.isNotEmpty
+                    ? invController.foundInventoryItems[index].name[0]
+                        .toUpperCase()
+                    : invController.inventoryItems[index].name[0].toUpperCase();
+
+                var bp = searchController.showSearchField.value &&
+                        invController.foundInventoryItems.isNotEmpty
+                    ? invController.foundInventoryItems[index].buyingPrice
+                    : invController.inventoryItems[index].buyingPrice;
+
+                var date = searchController.showSearchField.value &&
+                        invController.foundInventoryItems.isNotEmpty
+                    ? invController.foundInventoryItems[index].date
+                    : invController.inventoryItems[index].date;
+
+                var lowStockNotifierLimit = searchController
+                            .showSearchField.value &&
+                        invController.foundInventoryItems.isNotEmpty
+                    ? invController
+                        .foundInventoryItems[index].lowStockNotifierLimit
+                    : invController.inventoryItems[index].lowStockNotifierLimit;
+
+                var productId = searchController.showSearchField.value &&
+                        invController.foundInventoryItems.isNotEmpty
+                    ? invController.foundInventoryItems[index].productId
+                    : invController.inventoryItems[index].productId;
+
+                var pName = searchController.showSearchField.value &&
+                        invController.foundInventoryItems.isNotEmpty
+                    ? invController.foundInventoryItems[index].name
+                    : invController.inventoryItems[index].name;
+
+                var qtyAvailable = searchController.showSearchField.value &&
+                        invController.foundInventoryItems.isNotEmpty
+                    ? invController.foundInventoryItems[index].quantity
+                    : invController.inventoryItems[index].quantity;
+
+                var qtyRefunded = searchController.showSearchField.value &&
+                        invController.foundInventoryItems.isNotEmpty
+                    ? invController.foundInventoryItems[index].qtyRefunded
+                    : invController.inventoryItems[index].qtyRefunded;
+
+                var qtySold = searchController.showSearchField.value &&
+                        invController.foundInventoryItems.isNotEmpty
+                    ? invController.foundInventoryItems[index].qtySold
+                    : invController.inventoryItems[index].qtySold;
+
+                var sku = searchController.showSearchField.value &&
+                        invController.foundInventoryItems.isNotEmpty
+                    ? invController.foundInventoryItems[index].pCode
+                    : invController.inventoryItems[index].pCode;
+
+                var usp = searchController.showSearchField.value &&
+                        invController.foundInventoryItems.isNotEmpty
+                    ? invController.foundInventoryItems[index].unitSellingPrice
+                    : invController.inventoryItems[index].unitSellingPrice;
+
+                return CProductCardVertical(
+                  date: date,
+                  bp: bp.toString(),
+                  deleteAction: () {
+                    CInventoryModel itemId;
+                    if (invController.foundInventoryItems.isNotEmpty) {
+                      itemId = invController.foundInventoryItems[index];
+                    } else {
+                      itemId = invController.inventoryItems[index];
+                    }
+                    invController.deleteInventoryWarningPopup(itemId);
+                  },
+                  itemAvatar: avatarTxt,
+                  itemName: pName,
+                  lowStockNotifierLimit: lowStockNotifierLimit,
+                  pCode: sku,
+                  pId: productId!,
+                  qtyAvailable: qtyAvailable.toString(),
+                  qtyRefunded: qtyRefunded.toString(),
+                  qtySold: qtySold.toString(),
+                  usp: usp.toString(),
+                );
+              },
+            ),
+          ],
         );
       },
     );

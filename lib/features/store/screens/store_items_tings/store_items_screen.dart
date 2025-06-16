@@ -63,7 +63,7 @@ class CStoreItemsScreen extends StatelessWidget {
                                   child: Row(
                                     children: [
                                       Icon(
-                                        Icons.menu,
+                                        Iconsax.menu,
                                         size: 30.0,
                                         color: CColors.rBrown,
                                       ),

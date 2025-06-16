@@ -3,6 +3,7 @@ import 'package:c_ri/features/personalization/screens/settings/user_settings.dar
 import 'package:c_ri/features/store/screens/home/home.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/inventory/inventory_screen.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/store_items_screen.dart';
+import 'package:c_ri/features/store/screens/store_items_tings/store_screen.dart';
 import 'package:get/get.dart';
 
 class CNavMenuController extends GetxController {
@@ -12,6 +13,7 @@ class CNavMenuController extends GetxController {
 
   final screens = [
     const HomeScreen(),
+    const CStoreScreen(),
     const CStoreItemsScreen(),
     const CInventoryScreen(),
 
