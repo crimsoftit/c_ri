@@ -2,6 +2,7 @@ import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -29,17 +30,14 @@ class CAddToCartBtn extends StatelessWidget {
                 item.productId.toString() == pId.toString().toLowerCase());
             final cartItem = cartController.convertInvToCartItem(invItem, 1);
             cartController.addSingleItemToCart(cartItem, false, null);
-
-            // int cartItemIndex = cartController.cartItems.indexWhere(
-            //     (cartItem) => cartItem.productId == invItem.productId);
-            // cartController.qtyFieldControllers[cartItemIndex].text =
-            //     cartController.cartItems[cartItemIndex].quantity.toString();
           },
           child: Container(
-            // width: 30.0,
-            // height: 30.0,
             decoration: BoxDecoration(
-              color: pQtyInCart > 0 ? Colors.orange : CColors.rBrown,
+              color: pQtyInCart > 0
+                  ? Colors.orange
+                  : CNetworkManager.instance.hasConnection.value
+                      ? CColors.rBrown
+                      : CColors.darkerGrey,
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(CSizes.cardRadiusMd - 4),
                 bottomRight: Radius.circular(CSizes.pImgRadius - 4),

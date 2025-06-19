@@ -1,5 +1,4 @@
 import 'package:c_ri/common/widgets/layouts/c_expansion_tile.dart';
-import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
@@ -10,7 +9,6 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
-import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -101,57 +99,57 @@ class CItemsListView extends StatelessWidget {
         return ListView(
           shrinkWrap: true,
           children: [
-            SizedBox(
-              child: salesController.isLoading.value ||
-                      salesController.txnsSyncIsLoading.value
-                  ? const CShimmerEffect(
-                      width: 40.0,
-                      height: 40.0,
-                      radius: 40.0,
-                    )
-                  : salesController.unsyncedTxnAppends.isEmpty &&
-                          salesController.unsyncedTxnUpdates.isEmpty
-                      ? null
-                      : TextButton.icon(
-                          icon: const Icon(
-                            Iconsax.cloud_change,
-                            size: CSizes.iconSm,
-                            color: CColors.white,
-                          ),
-                          label: Text(
-                            'sync to cloud',
-                            style:
-                                Theme.of(context).textTheme.labelMedium!.apply(
-                                      color: CColors.white,
-                                    ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0.2,
-                            foregroundColor:
-                                CColors.white, // foreground (text) color
-                            backgroundColor: isDarkTheme
-                                ? CColors.rBrown.withValues(
-                                    alpha: 0.25,
-                                  )
-                                : CColors.rBrown, // background color
-                          ),
-                          onPressed: () async {
-                            // -- check internet connectivity --
-                            final internetIsConnected =
-                                await CNetworkManager.instance.isConnected();
-                            if (internetIsConnected) {
-                              await salesController.addSalesDataToCloud();
-                              await salesController.addSalesDataToCloud();
-                            } else {
-                              CPopupSnackBar.customToast(
-                                message:
-                                    'internet connection required for cloud sync!',
-                                forInternetConnectivityStatus: true,
-                              );
-                            }
-                          },
-                        ),
-            ),
+            // SizedBox(
+            //   child: salesController.isLoading.value ||
+            //           salesController.txnsSyncIsLoading.value
+            //       ? const CShimmerEffect(
+            //           width: 40.0,
+            //           height: 40.0,
+            //           radius: 40.0,
+            //         )
+            //       : salesController.unsyncedTxnAppends.isEmpty &&
+            //               salesController.unsyncedTxnUpdates.isEmpty
+            //           ? null
+            //           : TextButton.icon(
+            //               icon: const Icon(
+            //                 Iconsax.cloud_change,
+            //                 size: CSizes.iconSm,
+            //                 color: CColors.white,
+            //               ),
+            //               label: Text(
+            //                 'sync to cloud',
+            //                 style:
+            //                     Theme.of(context).textTheme.labelMedium!.apply(
+            //                           color: CColors.white,
+            //                         ),
+            //               ),
+            //               style: ElevatedButton.styleFrom(
+            //                 elevation: 0.2,
+            //                 foregroundColor:
+            //                     CColors.white, // foreground (text) color
+            //                 backgroundColor: isDarkTheme
+            //                     ? CColors.rBrown.withValues(
+            //                         alpha: 0.25,
+            //                       )
+            //                     : CColors.rBrown, // background color
+            //               ),
+            //               onPressed: () async {
+            //                 // -- check internet connectivity --
+            //                 final internetIsConnected =
+            //                     await CNetworkManager.instance.isConnected();
+            //                 if (internetIsConnected) {
+            //                   await salesController.addSalesDataToCloud();
+            //                   await salesController.addSalesDataToCloud();
+            //                 } else {
+            //                   CPopupSnackBar.customToast(
+            //                     message:
+            //                         'internet connection required for cloud sync!',
+            //                     forInternetConnectivityStatus: true,
+            //                   );
+            //                 }
+            //               },
+            //             ),
+            // ),
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.all(2.0),

@@ -6,12 +6,14 @@ import 'package:c_ri/common/widgets/icon_buttons/circular_icon_btn.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
+import 'package:c_ri/features/store/controllers/sync_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/models/txns_model.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
@@ -932,7 +934,22 @@ class CTxnsController extends GetxController {
   }
 
   /// -- reset refundQty to 0 when bottomSheetModal dismisses --
-  void onBottomSheetClosed() {
+  void onBottomSheetClosed() async {
+    final syncController = Get.put(CSyncController());
+
+    final internetIsConnected = await CNetworkManager.instance.isConnected();
+
+    if (internetIsConnected) {
+      syncController.processSync();
+    } else {
+      if (kDebugMode) {
+        print('internet connection required for cloud sync!');
+        CPopupSnackBar.customToast(
+          message: 'internet connection required for cloud sync!',
+          forInternetConnectivityStatus: true,
+        );
+      }
+    }
     refundQty.value = 0;
     updatesOnRefundDone.value = false;
     if (kDebugMode) {

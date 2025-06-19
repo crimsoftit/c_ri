@@ -921,4 +921,18 @@ class CInventoryController extends GetxController {
       includeSupplierDetails.value = true;
     }
   }
+
+  /// -- reset fields --
+  resetInvFields() {
+    txtId.text = "";
+    txtName.text = "";
+    txtCode.text = "";
+    txtQty.text = "";
+    txtBP.text = "";
+    unitBP.value = 0.0;
+    txtUnitSP.text = "";
+    txtStockNotifierLimit.text = "";
+    txtSupplierName.text = "";
+    txtSupplierContacts.text = '';
+  }
 }

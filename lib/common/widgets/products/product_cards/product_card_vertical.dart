@@ -25,20 +25,21 @@ class CProductCardVertical extends StatelessWidget {
     this.qtyRefunded,
     this.qtySold,
     this.deleteAction,
+    this.onTapAction,
   });
 
   final String? bp, date, itemAvatar, usp, qtyAvailable, qtyRefunded, qtySold;
   final String itemName, pCode;
   final int pId;
   final int? lowStockNotifierLimit;
-  final VoidCallback? deleteAction;
+  final VoidCallback? onTapAction, deleteAction;
 
   @override
   Widget build(BuildContext context) {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     return GestureDetector(
-      onTap: () {},
+      onTap: onTapAction,
       child: Container(
         width: 170,
         //height: 200.0,
@@ -60,7 +61,7 @@ class CProductCardVertical extends StatelessWidget {
                   ? CColors.rBrown.withValues(alpha: 0.3)
                   : CColors.lightGrey,
               borderRadius: CSizes.pImgRadius - 4,
-              height: 153.0,
+              height: 152.8,
               padding: const EdgeInsets.only(
                 left: CSizes.sm,
               ),
@@ -75,7 +76,7 @@ class CProductCardVertical extends StatelessWidget {
                     boxShadow: [],
                     child: Stack(
                       children: [
-                        /// -- sale tag --
+                        /// -- favorite item tag --
                         Positioned(
                           top: 0,
                           left: 0,

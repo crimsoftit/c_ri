@@ -6,6 +6,7 @@ import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/nav_menu_controller.dart';
+import 'package:c_ri/features/store/controllers/sync_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/models/cart_item_model.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
@@ -23,6 +24,7 @@ import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/db/sqflite/db_helper.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/full_screen_loader.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:clock/clock.dart';
@@ -202,7 +204,9 @@ class CCheckoutController extends GetxController {
                 final pdfData = await pdfServices.generateReceipt(itemsInCart);
                 pdfServices.savePdfFile('rI-$receiptId', pdfData);
               },
-              onContinueBtnPressed: () {
+              onContinueBtnPressed: () async {
+                final syncController = Get.put(CSyncController());
+
                 // clear cart
                 cartController.clearCart();
                 itemsInCart.clear();
@@ -212,7 +216,21 @@ class CCheckoutController extends GetxController {
                 txnsController.fetchSoldItems();
                 customerBal.value = 0.0;
 
-                navController.selectedIndex.value = 2;
+                navController.selectedIndex.value = 1;
+                final internetIsConnected =
+                    await CNetworkManager.instance.isConnected();
+
+                if (internetIsConnected) {
+                  syncController.processSync();
+                } else {
+                  if (kDebugMode) {
+                    print('internet connection required for cloud sync!');
+                    CPopupSnackBar.customToast(
+                      message: 'internet connection required for cloud sync!',
+                      forInternetConnectivityStatus: true,
+                    );
+                  }
+                }
 
                 Get.offAll(() => NavMenu());
               },
@@ -338,7 +356,7 @@ class CCheckoutController extends GetxController {
         if (itemExists.value) {
           nextActionAfterScanModal(Get.overlayContext!);
         } else {
-          invController.runInvScanner();
+          invController.resetInvFields();
           showDialog(
             context: Get.overlayContext!,
             useRootNavigator: false,
@@ -485,10 +503,14 @@ class CCheckoutController extends GetxController {
     } catch (e) {
       isLoading.value = false;
       itemExists.value = false;
-      return CPopupSnackBar.errorSnackBar(
-        title: 'Oh Snap!',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print(e.toString());
+        throw CPopupSnackBar.errorSnackBar(
+          title: 'Oh Snap! error fetching for sale item by code!',
+          message: e.toString(),
+        );
+      }
+      return [];
     }
   }
 

@@ -154,7 +154,7 @@ class CExpansionTile extends StatelessWidget {
                         icon: Icon(
                           CAppIcons.refundIcon,
                           size: CSizes.iconSm,
-                          color: CColors.rBrown,
+                          color: Colors.red,
                         ),
                         label: Text(
                           'refund',

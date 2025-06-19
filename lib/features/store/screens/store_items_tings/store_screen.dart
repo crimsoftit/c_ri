@@ -35,7 +35,6 @@ class CStoreScreen extends StatelessWidget {
 
     invController.fetchUserInventoryItems();
 
-    final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final searchController = Get.put(CSearchBarController());
     return DefaultTabController(
       length: 3,
@@ -108,7 +107,10 @@ class CStoreScreen extends StatelessWidget {
                             'Store',
                             style:
                                 Theme.of(context).textTheme.labelLarge!.apply(
-                                      color: CColors.rBrown,
+                                      color: CNetworkManager
+                                              .instance.hasConnection.value
+                                          ? CColors.rBrown
+                                          : CColors.black,
                                       fontSizeFactor: 2.5,
                                       fontWeightDelta: -7,
                                     ),
@@ -180,9 +182,10 @@ class CStoreScreen extends StatelessWidget {
                               onPressed: () {
                                 checkoutController.handleNavToCheckout();
                               },
-                              backgroundColor: isConnectedToInternet
-                                  ? Colors.brown
-                                  : CColors.black,
+                              backgroundColor:
+                                  CNetworkManager.instance.hasConnection.value
+                                      ? Colors.brown
+                                      : CColors.black,
                               foregroundColor: Colors.white,
                               heroTag: 'checkout',
                               child: const Icon(
@@ -202,9 +205,9 @@ class CStoreScreen extends StatelessWidget {
                     height: CSizes.spaceBtnSections / 8,
                   ),
                   FloatingActionButton(
-                    elevation: 0,
+                    //elevation: 0, // -- removes shadow
                     onPressed: () {
-                      //invController.runInvScanner();
+                      invController.resetInvFields();
                       showDialog(
                         context: context,
                         useRootNavigator: false,
@@ -216,11 +219,12 @@ class CStoreScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    // backgroundColor:
-                    //     isConnectedToInternet ? Colors.brown : CColors.black,
-                    backgroundColor: CColors.transparent,
-                    foregroundColor:
-                        isDarkTheme ? CColors.white : CColors.rBrown,
+                    backgroundColor:
+                        CNetworkManager.instance.hasConnection.value
+                            ? Colors.brown
+                            : CColors.black,
+                    //backgroundColor: CColors.transparent,
+                    foregroundColor: CColors.white,
                     heroTag: 'add',
                     child: Icon(
                       // Iconsax.scan_barcode,

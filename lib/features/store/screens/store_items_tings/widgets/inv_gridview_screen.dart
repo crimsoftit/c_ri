@@ -96,6 +96,10 @@ class CInvGridviewScreen extends StatelessWidget {
           shrinkWrap: true,
           children: [
             SizedBox(
+              width: invController.syncIsLoading.value ||
+                      txnsController.txnsSyncIsLoading.value
+                  ? 40.0
+                  : 150.0,
               child: invController.syncIsLoading.value ||
                       txnsController.txnsSyncIsLoading.value
                   ? const CShimmerEffect(
@@ -231,6 +235,12 @@ class CInvGridviewScreen extends StatelessWidget {
                   itemAvatar: avatarTxt,
                   itemName: pName,
                   lowStockNotifierLimit: lowStockNotifierLimit,
+                  onTapAction: () {
+                    Get.toNamed(
+                      '/inventory/item_details/',
+                      arguments: invController.inventoryItems[index].productId,
+                    );
+                  },
                   pCode: sku,
                   pId: productId!,
                   qtyAvailable: qtyAvailable.toString(),
