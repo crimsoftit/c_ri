@@ -8,7 +8,6 @@ import 'package:c_ri/features/personalization/screens/settings/user_settings.dar
 import 'package:c_ri/features/store/screens/home/home.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/checkout/checkout_screen.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/inventory/inventory_details/inventory_details.dart';
-import 'package:c_ri/features/store/screens/store_items_tings/inventory/inventory_screen.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/store_items_screen.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/store_screen.dart';
 import 'package:c_ri/features/store/screens/txns/sales_screen.dart';
@@ -36,10 +35,10 @@ class CAppRoutes {
       name: CRoutes.storeItems,
       page: () => const CStoreItemsScreen(),
     ),
-    GetPage(
-      name: CRoutes.inventory,
-      page: () => const CInventoryScreen(),
-    ),
+    // GetPage(
+    //   name: CRoutes.inventory,
+    //   page: () => const CInventoryScreen(),
+    // ),
     GetPage(
       name: CRoutes.inventoryDetails,
       page: () => const CInventoryDetailsScreen(),

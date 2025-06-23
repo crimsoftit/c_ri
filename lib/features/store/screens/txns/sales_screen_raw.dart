@@ -279,7 +279,7 @@ class CSalesScreenRaw extends StatelessWidget {
                                       ),
                                 ),
                                 Text(
-                                  'modified: ${txnsController.sales[index].date} (txn id: #${txnsController.sales[index].txnId})',
+                                  'modified: ${txnsController.sales[index].lastModified} (txn id: #${txnsController.sales[index].txnId})',
                                   style: Theme.of(context)
                                       .textTheme
                                       .labelSmall!

@@ -111,16 +111,6 @@ class CItemsListViewRaw extends StatelessWidget {
               padding: const EdgeInsets.all(2.0),
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
-              // itemCount:
-              //     space == 'inventory' && searchController.showSearchField.value
-              //         ? invController.foundInventoryItems.length
-              //         : space == 'inventory' &&
-              //                 invController.foundInventoryItems.isEmpty
-              //             ? invController.inventoryItems.length
-              //             : space == 'sales' &&
-              //                     salesController.foundSales.isNotEmpty
-              //                 ? salesController.foundSales.length
-              //                 : salesController.sales.length,
               itemCount: itemsCount,
               itemBuilder: (context, index) {
                 var id = space == 'inventory' &&
@@ -178,16 +168,16 @@ class CItemsListViewRaw extends StatelessWidget {
                             ? 'usp: ${salesController.foundSales[index].unitSellingPrice}'
                             : 'usp: ${salesController.sales[index].unitSellingPrice}';
 
-                var date = space == 'inventory' &&
+                var lastModified = space == 'inventory' &&
                         invController.foundInventoryItems.isNotEmpty
-                    ? invController.foundInventoryItems[index].date
+                    ? invController.foundInventoryItems[index].lastModified
                     : space == 'inventory' &&
                             invController.foundInventoryItems.isEmpty
-                        ? invController.inventoryItems[index].date
+                        ? invController.inventoryItems[index].lastModified
                         : space == 'sales' &&
                                 salesController.foundSales.isNotEmpty
-                            ? salesController.foundSales[index].date
-                            : salesController.sales[index].date;
+                            ? salesController.foundSales[index].lastModified
+                            : salesController.sales[index].lastModified;
 
                 return Card(
                   color: isDarkTheme
@@ -215,7 +205,7 @@ class CItemsListViewRaw extends StatelessWidget {
                     subTitleTxt1Item2: qty,
                     subTitleTxt2Item1: usp,
                     subTitleTxt2Item2: '',
-                    subTitleTxt3Item1: date,
+                    subTitleTxt3Item1: lastModified,
                     subTitleTxt3Item2: id,
                     btn1Txt: 'info',
                     btn2Txt: space == 'inventory' ? 'sell' : 'update',

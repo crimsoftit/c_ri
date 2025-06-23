@@ -78,7 +78,7 @@ class _CSoldItemDetailsScreenState extends State<CSoldItemDetailsScreen> {
                           ),
                     ),
                     subtitle: Text(
-                      saleItem.date,
+                      saleItem.lastModified,
                       style: Theme.of(context).textTheme.headlineSmall!.apply(
                             color: CColors.white,
                             fontSizeFactor: 0.6,

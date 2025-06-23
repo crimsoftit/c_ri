@@ -110,7 +110,7 @@ class CStoreScreen extends StatelessWidget {
                                       color: CNetworkManager
                                               .instance.hasConnection.value
                                           ? CColors.rBrown
-                                          : CColors.black,
+                                          : CColors.darkGrey,
                                       fontSizeFactor: 2.5,
                                       fontWeightDelta: -7,
                                     ),
@@ -153,7 +153,9 @@ class CStoreScreen extends StatelessWidget {
               physics: BouncingScrollPhysics(),
               children: [
                 /// -- inventory list items --
-                CInvGridviewScreen(),
+                CInvGridviewScreen(
+                  mainAxisExtent: 176.0,
+                ),
 
                 /// -- transactions list view --
                 CItemsListView(
@@ -214,7 +216,7 @@ class CStoreScreen extends StatelessWidget {
                         builder: (BuildContext context) => dialog.buildDialog(
                           context,
                           CInventoryModel('', '', '', '', '', 0, 0, 0, 0, 0.0,
-                              0.0, 0.0, 0, '', '', '', 0, ''),
+                              0.0, 0.0, 0, '', '', '', '', 0, ''),
                           true,
                         ),
                       );

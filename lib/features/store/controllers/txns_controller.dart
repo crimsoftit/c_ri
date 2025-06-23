@@ -565,7 +565,7 @@ class CTxnsController extends GetxController {
                       'customerContacts': sale.customerContacts,
                       'txnAddress': sale.txnAddress,
                       'txnAddressCoordinates': sale.txnAddressCoordinates,
-                      'date': sale.date,
+                      'lastModified': sale.lastModified,
                       'isSynced': 1,
                       'syncAction': 'none',
                       'txnStatus': sale.txnStatus,
@@ -708,7 +708,7 @@ class CTxnsController extends GetxController {
               element.customerContacts,
               element.txnAddress,
               element.txnAddressCoordinates,
-              element.date,
+              element.lastModified,
               element.isSynced,
               element.syncAction,
               element.txnStatus,
@@ -958,6 +958,7 @@ class CTxnsController extends GetxController {
   }
 
   /// -- update stock count and qtySold on refund --
+  KUNA NOMA YA DOUBLE ENTRY IN CLOUD DATA
   Future<bool> updateDataOnRefund(
       CInventoryModel inventoryItem, CTxnsModel receiptItem) async {
     final currency =
@@ -968,7 +969,7 @@ class CTxnsController extends GetxController {
         inventoryItem.quantity += refundQty.value;
         inventoryItem.qtyRefunded += refundQty.value;
         inventoryItem.qtySold -= refundQty.value;
-        inventoryItem.date =
+        inventoryItem.lastModified =
             DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
 
         dbHelper.updateInventoryItem(inventoryItem, inventoryItem.productId!);
@@ -982,7 +983,8 @@ class CTxnsController extends GetxController {
         receiptItem.qtyRefunded += refundQty.value;
         receiptItem.totalAmount -=
             refundQty.value * receiptItem.unitSellingPrice;
-        receiptItem.date = DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
+        receiptItem.lastModified =
+            DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
         receiptItem.syncAction =
             receiptItem.isSynced == 0 ? 'append' : 'update';
 

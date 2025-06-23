@@ -19,7 +19,7 @@ class TxnsSheetFields {
   static const String customerContacts = 'customerContacts';
   static const String txnAddress = 'txnAddress';
   static const String txnAddressCoordinates = 'txnAddressCoordinates';
-  static const String date = 'date';
+  static const String lastModified = 'lastModified';
   static const String isSynced = 'isSynced';
   static const String syncAction = 'syncAction';
   static const String txnStatus = 'txnStatus';

@@ -95,7 +95,7 @@ class CCheckoutController extends GetxController {
   final RxDouble totalAmount = 0.0.obs;
 
   final RxString checkoutItemCode = ''.obs;
-  final RxString checkoutItemDateAdded = ''.obs;
+  final RxString checkoutItemLastModified = ''.obs;
   final RxString checkoutItemName = ''.obs;
 
   final Rx<FocusNode> customerNameFocusNode = FocusNode().obs;
@@ -357,13 +357,14 @@ class CCheckoutController extends GetxController {
           nextActionAfterScanModal(Get.overlayContext!);
         } else {
           invController.resetInvFields();
+          invController.txtCode.text = checkoutItemScanResults.value;
           showDialog(
             context: Get.overlayContext!,
             useRootNavigator: false,
             builder: (BuildContext context) => dialog.buildDialog(
               context,
               CInventoryModel('', '', '', '', '', 0, 0, 0, 0, 0.0, 0.0, 0.0, 0,
-                  '', '', '', 0, ''),
+                  '', '', '', '', 0, ''),
               true,
             ),
           );
@@ -412,7 +413,7 @@ class CCheckoutController extends GetxController {
                   TextSpan(
                     children: [
                       TextSpan(
-                        text: '${checkoutItemDateAdded.value} ',
+                        text: '${checkoutItemLastModified.value} ',
                         style: Theme.of(context).textTheme.labelSmall!.apply(),
                       ),
                       TextSpan(
@@ -494,7 +495,7 @@ class CCheckoutController extends GetxController {
         checkoutItemCode.value = fetchedItem.first.pCode;
         checkoutItemSales.value = fetchedItem.first.qtySold;
         itemStockCount.value = fetchedItem.first.quantity;
-        checkoutItemDateAdded.value = fetchedItem.first.date;
+        checkoutItemLastModified.value = fetchedItem.first.lastModified;
       } else {
         resetSalesFields();
         itemExists.value = false;

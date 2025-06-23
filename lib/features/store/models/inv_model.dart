@@ -23,7 +23,8 @@ class CInventoryModel {
   int _lowStockNotifierLimit = 0;
   String _supplierName = "";
   String _supplierContacts = "";
-  String _date = "";
+  String _dateAdded = "";
+  String _lastModified = "";
   int _isSynced = 0;
   String _syncAction = "";
 
@@ -44,7 +45,8 @@ class CInventoryModel {
     this._lowStockNotifierLimit,
     this._supplierName,
     this._supplierContacts,
-    this._date,
+    this._dateAdded,
+    this._lastModified,
     this._isSynced,
     this._syncAction,
   );
@@ -66,14 +68,15 @@ class CInventoryModel {
     this._lowStockNotifierLimit,
     this._supplierName,
     this._supplierContacts,
-    this._date,
+    this._dateAdded,
+    this._lastModified,
     this._isSynced,
     this._syncAction,
   );
 
   CInventoryModel empty() {
-    return CInventoryModel(
-        '', '', '', '', '', 0, 0, 0, 0, 0.0, 0.0, 0.0, 0, '', '', '', 0, '');
+    return CInventoryModel('', '', '', '', '', 0, 0, 0, 0, 0.0, 0.0, 0.0, 0, '',
+        '', '', '', 0, '');
   }
 
   int? get productId => _productId;
@@ -98,7 +101,8 @@ class CInventoryModel {
 
   String get supplierName => _supplierName;
   String get supplierContacts => _supplierContacts;
-  String get date => _date;
+  String get dateAdded => _dateAdded;
+  String get lastModified => _lastModified;
   int get isSynced => _isSynced;
   String get syncAction => _syncAction;
 
@@ -131,10 +135,9 @@ class CInventoryModel {
   }
 
   set quantity(int newQty) {
-    _quantity = newQty;
-    // if (newQty > 0) {
-    //   _quantity = newQty;
-    // }
+    if (newQty >= 0) {
+      _quantity = newQty;
+    }
   }
 
   set qtySold(int newQtySold) {
@@ -169,8 +172,12 @@ class CInventoryModel {
     _supplierContacts = supContacts;
   }
 
-  set date(String newDate) {
-    _date = newDate;
+  set dateAdded(String newDateAdded) {
+    _dateAdded = newDateAdded;
+  }
+
+  set lastModified(String newLastModified) {
+    _lastModified = newLastModified;
   }
 
   set isSynced(int syncState) {
@@ -206,7 +213,9 @@ class CInventoryModel {
 
     map['supplierName'] = _supplierName;
     map['supplierContacts'] = _supplierContacts;
-    map['date'] = _date;
+
+    map['dateAdded'] = _dateAdded;
+    map['lastModified'] = _lastModified;
 
     map['isSynced'] = _isSynced;
     map['syncAction'] = _syncAction;
@@ -234,7 +243,10 @@ class CInventoryModel {
     _lowStockNotifierLimit = map['lowStockNotifierLimit'];
     _supplierName = map['supplierName'];
     _supplierContacts = map['supplierContacts'];
-    _date = map['date'];
+
+    _dateAdded = map['dateAdded'];
+    _lastModified = map['lastModified'];
+
     _isSynced = map['isSynced'];
     _syncAction = map['syncAction'];
   }
@@ -258,7 +270,8 @@ class CInventoryModel {
       jsonDecode(json[InvSheetFields.lowStockNotifierLimit]),
       json[InvSheetFields.supplierName],
       json[InvSheetFields.supplierContacts],
-      json[InvSheetFields.date],
+      json[InvSheetFields.dateAdded],
+      json[InvSheetFields.lastModified],
       jsonDecode(json[InvSheetFields.isSynced]),
       json[InvSheetFields.syncAction],
     );

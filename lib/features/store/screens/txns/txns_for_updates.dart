@@ -76,7 +76,7 @@ class CTxnsForUpdates extends StatelessWidget {
                                   ),
                                   Text(
                                     txnsController
-                                        .unsyncedTxnUpdates[index].date,
+                                        .unsyncedTxnUpdates[index].lastModified,
                                   ),
                                   Row(
                                     children: [

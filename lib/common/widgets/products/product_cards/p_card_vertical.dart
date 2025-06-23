@@ -17,22 +17,33 @@ class CProductCardVertical extends StatelessWidget {
     required this.pCode,
     required this.pId,
     this.bp,
-    this.date,
+    this.lastModified,
+    this.deleteAction,
+    this.isSynced,
     this.itemAvatar,
     this.lowStockNotifierLimit,
-    this.usp,
+    this.onAvatarIconTap,
+    this.onTapAction,
     this.qtyAvailable,
     this.qtyRefunded,
     this.qtySold,
-    this.deleteAction,
-    this.onTapAction,
+    this.syncAction,
+    this.usp,
   });
 
-  final String? bp, date, itemAvatar, usp, qtyAvailable, qtyRefunded, qtySold;
+  final String? bp,
+      lastModified,
+      isSynced,
+      itemAvatar,
+      qtyAvailable,
+      qtyRefunded,
+      qtySold,
+      syncAction,
+      usp;
   final String itemName, pCode;
   final int pId;
   final int? lowStockNotifierLimit;
-  final VoidCallback? onTapAction, deleteAction;
+  final VoidCallback? onTapAction, deleteAction, onAvatarIconTap;
 
   @override
   Widget build(BuildContext context) {
@@ -61,17 +72,18 @@ class CProductCardVertical extends StatelessWidget {
                   ? CColors.rBrown.withValues(alpha: 0.3)
                   : CColors.lightGrey,
               borderRadius: CSizes.pImgRadius - 4,
-              height: 152.8,
+              height: 169.0,
               padding: const EdgeInsets.only(
                 left: CSizes.sm,
               ),
               width: CHelperFunctions.screenWidth() * 0.46,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   CRoundedContainer(
                     width: CHelperFunctions.screenWidth() * 0.45,
-                    height: 50.0,
+                    height: 55.0,
                     bgColor: Colors.transparent,
                     boxShadow: [],
                     child: Stack(
@@ -90,24 +102,6 @@ class CProductCardVertical extends StatelessWidget {
                             height: 33.0,
                             width: 33.0,
                           ),
-                          // CRoundedContainer(
-                          //   borderRadius: CSizes.sm,
-                          //   bgColor: CColors.secondary.withValues(
-                          //     alpha: 0.6,
-                          //   ),
-                          //   padding: const EdgeInsets.symmetric(
-                          //     horizontal: CSizes.sm,
-                          //     vertical: CSizes.xs,
-                          //   ),
-                          //   boxShadow: [],
-                          //   child: Text(
-                          //     '20%',
-                          //     style:
-                          //         Theme.of(context).textTheme.labelLarge!.apply(
-                          //               color: CColors.black,
-                          //             ),
-                          //   ),
-                          // ),
                         ),
 
                         /// -- delete item iconButton --
@@ -127,7 +121,7 @@ class CProductCardVertical extends StatelessWidget {
                           ),
                         ),
 
-                        /// -- avatar and date --
+                        /// -- avatar, date, and(or) edit iconButton --
                         Positioned(
                           top: 2,
                           left: 40.0,
@@ -145,12 +139,17 @@ class CProductCardVertical extends StatelessWidget {
                                           lowStockNotifierLimit!
                                       ? Colors.red
                                       : CColors.transparent,
+                                  includeEditBtn: true,
+                                  onEdit: onAvatarIconTap,
                                   txtColor: isDarkTheme
                                       ? CColors.white
                                       : CColors.rBrown,
                                 ),
+                                const SizedBox(
+                                  height: CSizes.spaceBtnInputFields / 2.0,
+                                ),
                                 Text(
-                                  date!,
+                                  lastModified!,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
                                   style: Theme.of(context)
@@ -172,7 +171,7 @@ class CProductCardVertical extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
-                      left: 2.5,
+                      left: 2.0,
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -185,7 +184,6 @@ class CProductCardVertical extends StatelessWidget {
                               isDarkTheme ? CColors.white : CColors.rBrown,
                           maxLines: 1,
                         ),
-
                         Text(
                           '($qtyAvailable stocked, $qtySold sold)',
                           style: Theme.of(context).textTheme.labelSmall!.apply(
@@ -213,9 +211,18 @@ class CProductCardVertical extends StatelessWidget {
                                     : CColors.darkGrey,
                               ),
                         ),
-                        // SizedBox(
-                        //   height: CSizes.spaceBtnInputFields,
-                        // ),
+                        Visibility(
+                          visible: false,
+                          child: Text(
+                            'isSynced: $isSynced, syncAction: $syncAction',
+                            style:
+                                Theme.of(context).textTheme.labelSmall!.apply(
+                                      color: isDarkTheme
+                                          ? CColors.white
+                                          : CColors.darkGrey,
+                                    ),
+                          ),
+                        ),
                         CProductPriceTxt(
                           priceCategory: 'bp: ',
                           price: bp!,
@@ -227,12 +234,12 @@ class CProductCardVertical extends StatelessWidget {
                         ),
 
                         SizedBox(
-                          width: 170,
-                          height: 30,
+                          width: 170.0,
+                          height: 40.0,
                           child: Stack(
                             children: [
                               Positioned(
-                                bottom: 2,
+                                bottom: 0,
                                 child: CProductPriceTxt(
                                   // priceCategory: 'price: ',
                                   priceCategory: '@',
@@ -246,6 +253,16 @@ class CProductCardVertical extends StatelessWidget {
                                 ),
                               ),
 
+                              /// -- button to edit inventory item's details --
+                              // Positioned(
+                              //   right: 0,
+                              //   bottom: 30.0,
+                              //   child: CSquareIconBtn(
+                              //     bgColor: CColors.transparent,
+                              //     onBtnTap: onEditBtnTapped,
+                              //   ),
+                              // ),
+
                               /// -- add item to cart button --
                               Positioned(
                                 right: 0,
@@ -257,28 +274,7 @@ class CProductCardVertical extends StatelessWidget {
                             ],
                           ),
                         ),
-                        // Row(
-                        //   spacing: 0,
-                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //   mainAxisSize: MainAxisSize.min,
-                        //   children: [
-                        //     /// -- prices (usp)--
 
-                        // CProductPriceTxt(
-                        //   priceCategory: 'usp: ',
-                        //   price: usp!,
-                        //   maxLines: 1,
-                        //   isLarge: true,
-                        //   txtColor:
-                        //       isDarkTheme ? CColors.white : CColors.rBrown,
-                        //   fSizeFactor: 0.7,
-                        // ),
-
-                        /// -- add item to cart button --
-                        // CAddToCartBtn(
-                        //   pId: pId,
-                        // ),
-                        //   ],
                         // ),
                       ],
                     ),

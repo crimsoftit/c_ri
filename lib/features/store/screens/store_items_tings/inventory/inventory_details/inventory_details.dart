@@ -107,8 +107,7 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                             ),
                       ),
                       subtitle: Text(
-                        // DateFormat('yyyy-MM-dd kk:mm').format(invItem.date),
-                        invItem.date,
+                        invItem.lastModified,
                         style: Theme.of(context).textTheme.headlineSmall!.apply(
                               color: CColors.white,
                               fontSizeFactor: 0.6,
@@ -172,6 +171,13 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                       ),
 
                       CMenuTile(
+                        icon: Iconsax.barcode,
+                        title: invItem.dateAdded,
+                        subTitle: 'date added',
+                        onTap: () {},
+                      ),
+
+                      CMenuTile(
                         icon: Iconsax.shopping_cart,
                         title: '${(invItem.quantity)}',
                         subTitle: 'Qty/units available',
@@ -225,7 +231,7 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
 
                       CMenuTile(
                         icon: Iconsax.calendar,
-                        title: invItem.date,
+                        title: invItem.lastModified,
                         subTitle: 'last modified',
                         onTap: () {},
                       ),
@@ -411,7 +417,8 @@ class _CInventoryDetailsScreenState extends State<CInventoryDetailsScreen> {
                           invItem.lowStockNotifierLimit,
                           invItem.supplierName,
                           invItem.supplierContacts,
-                          invItem.date,
+                          invItem.dateAdded,
+                          invItem.lastModified,
                           invItem.isSynced,
                           invItem.syncAction,
                         ),

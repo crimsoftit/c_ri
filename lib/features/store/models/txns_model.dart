@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:c_ri/features/store/models/gsheet_models/txns_sheet_fields.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
+import 'package:flutter/foundation.dart';
 
 class CTxnsModel {
   int? _soldItemId;
@@ -29,7 +30,7 @@ class CTxnsModel {
   String _customerContacts = "";
   String _txnAddress = "";
   String _txnAddressCoordinates = "";
-  String _date = "";
+  String _lastModified = "";
   int _isSynced = 0;
 
   String _syncAction = "";
@@ -55,7 +56,7 @@ class CTxnsModel {
     this._customerContacts,
     this._txnAddress,
     this._txnAddressCoordinates,
-    this._date,
+    this._lastModified,
     this._isSynced,
     this._syncAction,
     this._txnStatus,
@@ -82,7 +83,7 @@ class CTxnsModel {
     this._customerContacts,
     this._txnAddress,
     this._txnAddressCoordinates,
-    this._date,
+    this._lastModified,
     this._isSynced,
     this._syncAction,
     this._txnStatus,
@@ -110,7 +111,7 @@ class CTxnsModel {
       'customerContacts',
       'txnAddress',
       'txnAddressCoordinates',
-      'date',
+      'lastModified',
       'isSynced',
       'syncAction',
       'txnStatus',
@@ -140,7 +141,7 @@ class CTxnsModel {
   String get customerContacts => _customerContacts;
   String get txnAddress => _txnAddress;
   String get txnAddressCoordinates => _txnAddressCoordinates;
-  String get date => _date;
+  String get lastModified => _lastModified;
   int get isSynced => _isSynced;
   String get syncAction => _syncAction;
   String get txnStatus => _txnStatus;
@@ -153,10 +154,13 @@ class CTxnsModel {
     if (newTxnId > 1000) {
       _txnId = newTxnId;
     } else {
-      CPopupSnackBar.errorSnackBar(
-        title: 'invalid value',
-        message: 'invalid value for txn ID!!!',
-      );
+      if (kDebugMode) {
+        print('invalid value for txn ID!!!');
+        CPopupSnackBar.errorSnackBar(
+          title: 'invalid value',
+          message: 'invalid value for txn ID!!!',
+        );
+      }
     }
   }
 
@@ -185,7 +189,7 @@ class CTxnsModel {
   }
 
   set quantity(int newQty) {
-    if (newQty >= 1) {
+    if (newQty >= 0) {
       _quantity = newQty;
     }
   }
@@ -244,8 +248,8 @@ class CTxnsModel {
     _txnAddressCoordinates = newTxnAddressCoordinates;
   }
 
-  set date(String newDate) {
-    _date = newDate;
+  set lastModified(String newLastModified) {
+    _lastModified = newLastModified;
   }
 
   set isSynced(int syncStatus) {
@@ -287,7 +291,7 @@ class CTxnsModel {
     map['customerContacts'] = _customerContacts;
     map['txnAddress'] = _txnAddress;
     map['txnAddressCoordinates'] = _txnAddressCoordinates;
-    map['date'] = _date;
+    map['lastModified'] = _lastModified;
     map['isSynced'] = _isSynced;
     map['syncAction'] = _syncAction;
     map['txnStatus'] = _txnStatus;
@@ -317,7 +321,7 @@ class CTxnsModel {
     _customerContacts = map['customerContacts'];
     _txnAddress = map['txnAddress'];
     _txnAddressCoordinates = map['txnAddressCoordinates'];
-    _date = map['date'];
+    _lastModified = map['lastModified'];
     _isSynced = map['isSynced'];
     _syncAction = map['syncAction'];
     _txnStatus = map['txnStatus'];
@@ -346,7 +350,7 @@ class CTxnsModel {
       json[TxnsSheetFields.customerContacts],
       json[TxnsSheetFields.txnAddress],
       json[TxnsSheetFields.txnAddressCoordinates],
-      json[TxnsSheetFields.date],
+      json[TxnsSheetFields.lastModified],
       jsonDecode(json[TxnsSheetFields.isSynced]),
       json[TxnsSheetFields.syncAction],
       json[TxnsSheetFields.txnStatus],

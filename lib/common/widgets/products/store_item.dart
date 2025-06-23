@@ -46,7 +46,7 @@ class CStoreItemWidget extends StatelessWidget {
             children: [
               // -- item title, price, and stock count --
               CProductTitleText(
-                title: invItem.date,
+                title: invItem.lastModified,
                 smallSize: true,
                 txtColor: isDarkTheme ? CColors.white : CColors.rBrown,
               ),

@@ -115,7 +115,7 @@ class CTextTheme {
       color: Colors.white,
     ),
     labelLarge: const TextStyle().copyWith(
-      fontSize: 13.0,
+      fontSize: 14.0,
       fontWeight: FontWeight.normal,
       color: Colors.white,
     ),

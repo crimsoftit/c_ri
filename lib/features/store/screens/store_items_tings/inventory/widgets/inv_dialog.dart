@@ -37,7 +37,7 @@ class AddUpdateItemDialog {
                     child: Text(
                       (invController.itemExists.value)
                           ? 'update ${invController.txtName.text}'
-                          : 'new entry...',
+                          : 'new inventory entry...',
                       style: Theme.of(context).textTheme.labelLarge,
                       overflow: TextOverflow.ellipsis,
                     ),

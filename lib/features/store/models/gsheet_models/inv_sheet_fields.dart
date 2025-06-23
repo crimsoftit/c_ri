@@ -15,7 +15,8 @@ class InvSheetFields {
   static const String lowStockNotifierLimit = 'lowStockNotifierLimit';
   static const String supplierName = 'supplierName';
   static const String supplierContacts = 'supplierContacts';
-  static const String date = 'date';
+  static const String dateAdded = 'dateAdded';
+  static const String lastModified = 'lastModified';
   static const String isSynced = 'isSynced';
   static const String syncAction = 'syncAction';
 
@@ -37,7 +38,8 @@ class InvSheetFields {
       lowStockNotifierLimit,
       supplierName,
       supplierContacts,
-      date,
+      dateAdded,
+      lastModified,
       isSynced,
       syncAction,
     ];

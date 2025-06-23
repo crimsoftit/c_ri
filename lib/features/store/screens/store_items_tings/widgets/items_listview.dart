@@ -99,57 +99,6 @@ class CItemsListView extends StatelessWidget {
         return ListView(
           shrinkWrap: true,
           children: [
-            // SizedBox(
-            //   child: salesController.isLoading.value ||
-            //           salesController.txnsSyncIsLoading.value
-            //       ? const CShimmerEffect(
-            //           width: 40.0,
-            //           height: 40.0,
-            //           radius: 40.0,
-            //         )
-            //       : salesController.unsyncedTxnAppends.isEmpty &&
-            //               salesController.unsyncedTxnUpdates.isEmpty
-            //           ? null
-            //           : TextButton.icon(
-            //               icon: const Icon(
-            //                 Iconsax.cloud_change,
-            //                 size: CSizes.iconSm,
-            //                 color: CColors.white,
-            //               ),
-            //               label: Text(
-            //                 'sync to cloud',
-            //                 style:
-            //                     Theme.of(context).textTheme.labelMedium!.apply(
-            //                           color: CColors.white,
-            //                         ),
-            //               ),
-            //               style: ElevatedButton.styleFrom(
-            //                 elevation: 0.2,
-            //                 foregroundColor:
-            //                     CColors.white, // foreground (text) color
-            //                 backgroundColor: isDarkTheme
-            //                     ? CColors.rBrown.withValues(
-            //                         alpha: 0.25,
-            //                       )
-            //                     : CColors.rBrown, // background color
-            //               ),
-            //               onPressed: () async {
-            //                 // -- check internet connectivity --
-            //                 final internetIsConnected =
-            //                     await CNetworkManager.instance.isConnected();
-            //                 if (internetIsConnected) {
-            //                   await salesController.addSalesDataToCloud();
-            //                   await salesController.addSalesDataToCloud();
-            //                 } else {
-            //                   CPopupSnackBar.customToast(
-            //                     message:
-            //                         'internet connection required for cloud sync!',
-            //                     forInternetConnectivityStatus: true,
-            //                   );
-            //                 }
-            //               },
-            //             ),
-            // ),
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.all(2.0),
@@ -163,7 +112,7 @@ class CItemsListView extends StatelessWidget {
                 var qtyRefunded = 0;
                 var qtySold = 0;
                 var txnAmount = 0.0;
-                var txnDate = '';
+                var txnModifiedDate = '';
                 var unitSellingPrice = 0.0;
 
                 switch (space) {
@@ -193,9 +142,9 @@ class CItemsListView extends StatelessWidget {
                         ? salesController.foundRefunds[index].totalAmount
                         : salesController.refunds[index].totalAmount;
 
-                    txnDate = salesController.foundRefunds.isNotEmpty
-                        ? salesController.foundRefunds[index].date
-                        : salesController.refunds[index].date;
+                    txnModifiedDate = salesController.foundRefunds.isNotEmpty
+                        ? salesController.foundRefunds[index].lastModified
+                        : salesController.refunds[index].lastModified;
 
                     unitSellingPrice = salesController.foundRefunds.isNotEmpty
                         ? salesController.foundRefunds[index].unitSellingPrice
@@ -228,9 +177,9 @@ class CItemsListView extends StatelessWidget {
                         ? salesController.foundSales[index].totalAmount
                         : salesController.sales[index].totalAmount;
 
-                    txnDate = salesController.foundSales.isNotEmpty
-                        ? salesController.foundSales[index].date
-                        : salesController.sales[index].date;
+                    txnModifiedDate = salesController.foundSales.isNotEmpty
+                        ? salesController.foundSales[index].lastModified
+                        : salesController.sales[index].lastModified;
 
                     unitSellingPrice = salesController.foundSales.isNotEmpty
                         ? salesController.foundSales[index].unitSellingPrice
@@ -242,7 +191,7 @@ class CItemsListView extends StatelessWidget {
                     qtyRefunded = 0;
                     qtySold = 0;
                     txnAmount = 0.0;
-                    txnDate = '';
+                    txnModifiedDate = '';
                     unitSellingPrice = 0.0;
                     CPopupSnackBar.errorSnackBar(
                       title: 'invalid tab space',
@@ -267,7 +216,7 @@ class CItemsListView extends StatelessWidget {
                         subTitleTxt2Item1:
                             'usp: $userCurrencyCode.$unitSellingPrice',
                         subTitleTxt2Item2: '',
-                        subTitleTxt3Item1: txnDate,
+                        subTitleTxt3Item1: txnModifiedDate,
                         subTitleTxt3Item2: 'product id: $itemProductId',
                         btn1Txt: 'info',
                         btn2Txt: space == 'inventory' ? 'sell' : 'update',

@@ -65,7 +65,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                 controller: invController.txtCode,
                 //readOnly: true,
                 decoration: InputDecoration(
-                  labelText: 'barcode value',
+                  labelText: 'barcode/sku',
                   labelStyle: textStyle,
                   suffixIcon: IconButton(
                     icon: const Icon(

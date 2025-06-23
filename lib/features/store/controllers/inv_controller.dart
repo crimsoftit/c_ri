@@ -174,6 +174,7 @@ class CInventoryController extends GetxController {
           txtSupplierName.text.trim(),
           txtSupplierContacts.text.trim(),
           DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
+          DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
           1,
           'none',
         );
@@ -239,7 +240,8 @@ class CInventoryController extends GetxController {
                 'lowStockNotifierLimit': e.lowStockNotifierLimit,
                 'supplierName': e.supplierName,
                 'supplierContacts': e.supplierContacts,
-                'date': e.date,
+                'dateAdded': e.dateAdded,
+                'lastModified': e.lastModified,
                 'isSynced': 1,
                 'syncAction': 'none',
               })
@@ -291,7 +293,8 @@ class CInventoryController extends GetxController {
               element.lowStockNotifierLimit,
               element.supplierName,
               element.supplierContacts,
-              element.date,
+              element.dateAdded,
+              element.lastModified,
               1,
               'none',
             );
@@ -481,7 +484,8 @@ class CInventoryController extends GetxController {
           : (int.parse(txtQty.text.trim()) / 5).toInt();
       inventoryItem.supplierName = txtSupplierName.text.trim();
       inventoryItem.supplierContacts = txtSupplierContacts.text.trim();
-      inventoryItem.date = DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
+      inventoryItem.lastModified =
+          DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
 
       inventoryItem.syncAction = txtSyncAction.text.trim();
 
@@ -515,6 +519,8 @@ class CInventoryController extends GetxController {
         }
         updateInventoryItem(inventoryItem);
       } else {
+        inventoryItem.dateAdded =
+            DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
         addInventoryItem(inventoryItem);
       }
     }
@@ -548,7 +554,7 @@ class CInventoryController extends GetxController {
   void deleteInventoryWarningPopup(CInventoryModel inventoryItem) {
     Get.defaultDialog(
       contentPadding: const EdgeInsets.all(CSizes.md),
-      title: 'Delete ${inventoryItem.name}?',
+      title: 'permanently delete ${inventoryItem.name}?',
       middleText:
           'Are you certain you want to permanently delete this item? This action can\'t be undone!',
       confirm: ElevatedButton(
@@ -698,12 +704,16 @@ class CInventoryController extends GetxController {
               element.lowStockNotifierLimit,
               element.supplierName,
               element.supplierContacts,
-              element.date,
+              element.dateAdded,
+              element.lastModified,
               element.isSynced,
               element.syncAction,
             );
 
+            // -- save imported data to local sqflite database --
             dbHelper.addInventoryItem(dbData);
+
+            // -- fetch inventory items --
             fetchUserInventoryItems();
 
             isLoading.value = false;
@@ -717,7 +727,7 @@ class CInventoryController extends GetxController {
     } catch (e) {
       isLoading.value = false;
       return CPopupSnackBar.errorSnackBar(
-        title: 'ERROR IMPORTING USER DATA FROM CLOUD!',
+        title: 'ERROR IMPORTING inventory DATA FROM CLOUD!',
         message: e.toString(),
       );
     }
@@ -737,10 +747,14 @@ class CInventoryController extends GetxController {
       // }
       return dItems.toList();
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'DELS ERROR',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'DELS ERROR',
+          message: e.toString(),
+        );
+      }
+
       throw e.toString();
     }
   }
@@ -781,10 +795,14 @@ class CInventoryController extends GetxController {
 
       return pendingUpdates;
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'DELS ERROR',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'DELS ERROR',
+          message: e.toString(),
+        );
+      }
+
       throw e.toString();
     }
   }
@@ -818,7 +836,8 @@ class CInventoryController extends GetxController {
             element.lowStockNotifierLimit,
             element.supplierName,
             element.supplierContacts,
-            element.date,
+            element.dateAdded,
+            element.lastModified,
             0,
             'append',
           );
@@ -872,10 +891,15 @@ class CInventoryController extends GetxController {
       // stop loader
       syncIsLoading.value = false;
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'inventory cloud sync ERROR!',
-        message: 'inventory sync error: $e',
-      );
+      // stop loader
+      syncIsLoading.value = false;
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'inventory cloud sync ERROR!',
+          message: 'inventory sync error: $e',
+        );
+      }
     } finally {
       // stop loader
       syncIsLoading.value = false;
@@ -902,10 +926,14 @@ class CInventoryController extends GetxController {
       return topSellers;
     } catch (e) {
       isLoading.value = false;
-      return CPopupSnackBar.errorSnackBar(
-        title: 'Oh Snap!',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'Oh Snap!',
+          message: e.toString(),
+        );
+      }
+      return [];
     }
   }
 

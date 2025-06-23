@@ -13,6 +13,5 @@ class CSyncController extends GetxController {
     await invController.cloudSyncInventory();
     await invController.cloudSyncInventory();
     await txnsController.addSalesDataToCloud();
-    //await txnsController.addSalesDataToCloud();
   }
 }

@@ -67,7 +67,8 @@ class DbHelper extends GetxController {
             lowStockNotifierLimit INTEGER NOT NULL,
             supplierName TEXT NOT NULL,
             supplierContacts TEXT NOT NULL,
-            date CHAR(30) NOT NULL,
+            dateAdded CHAR(30) NOT NULL,
+            lastModified CHAR(30) NOT NULL,
             isSynced INTEGER NOT NULL,
             syncAction TEXT NOT NULL
             )
@@ -95,7 +96,7 @@ class DbHelper extends GetxController {
             customerContacts TEXT,
             txnAddress LONGTEXT,
             txnAddressCoordinates LONGTEXT,
-            date TEXT NOT NULL,
+            lastModified TEXT NOT NULL,
             isSynced INTEGER NOT NULL,
             syncAction TEXT NOT NULL,
             txnStatus TEXT NOT NULL,
@@ -147,6 +148,7 @@ class DbHelper extends GetxController {
       10,
       'pabari',
       '0114 567 890',
+      'added: 03/03/2025',
       clock.now().toString(),
       1,
       'none',
@@ -219,7 +221,8 @@ class DbHelper extends GetxController {
         maps[i]['lowStockNotifierLimit'],
         maps[i]['supplierName'],
         maps[i]['supplierContacts'],
-        maps[i]['date'],
+        maps[i]['dateAdded'],
+        maps[i]['lastModified'],
         maps[i]['isSynced'],
         maps[i]['syncAction'],
       );
@@ -239,10 +242,14 @@ class DbHelper extends GetxController {
           whereArgs: [pID]);
       return updateResult;
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'Oh Snap!',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'Oh Snap!',
+          message: e.toString(),
+        );
+      }
+
       return 0;
     }
   }
@@ -297,10 +304,14 @@ class DbHelper extends GetxController {
       // );
       return updateResult;
     } catch (e) {
-      return CPopupSnackBar.errorSnackBar(
-        title: 'stock count sync error!',
-        message: 'error updating stock count SYNC ACTION: $e',
-      );
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'stock count sync error!',
+          message: 'error updating stock count SYNC ACTION: $e',
+        );
+      }
+      return 0;
     }
   }
 
@@ -377,7 +388,7 @@ class DbHelper extends GetxController {
       final db = _db;
 
       final topSellers = await db!.rawQuery(
-          'SELECT * FROM $invTable WHERE userEmail = ? ORDER BY qtySold DESC LIMIT 10',
+          'SELECT * FROM $invTable WHERE userEmail = ? AND qtySold >= 1 ORDER BY qtySold DESC LIMIT 10',
           [email]);
 
       // convert the List<Map<String, dynamic> into a List<CInventoryModel>.
@@ -432,7 +443,7 @@ class DbHelper extends GetxController {
     final db = _db;
 
     final transactions = await db!.rawQuery(
-        'SELECT * from $txnsTable where userEmail = ? GROUP BY txnId ORDER BY date DESC',
+        'SELECT * from $txnsTable where userEmail = ? GROUP BY txnId ORDER BY lastModified DESC',
         [email]);
 
     // Convert the List<Map<String, dynamic> into a List<Note>.
@@ -468,10 +479,14 @@ class DbHelper extends GetxController {
 
       return txnUpdateResult;
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'Oh Snap! error updating txn details!',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'Oh Snap! error updating txn details!',
+          message: e.toString(),
+        );
+      }
+
       return 0;
     }
   }
@@ -491,19 +506,23 @@ class DbHelper extends GetxController {
         [syncStatus, sAction, soldItemId],
       );
 
-      // if (kDebugMode) {
-      //   CPopupSnackBar.customToast(
-      //     message: '$updateResult',
-      //     forInternetConnectivityStatus: false,
-      //   );
-      // }
+      if (kDebugMode) {
+        CPopupSnackBar.customToast(
+          message: '$updateResult',
+          forInternetConnectivityStatus: false,
+        );
+      }
 
       return updateResult;
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'txn sync error!',
-        message: 'error updating txns SYNC LOCALLY: $e',
-      );
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'txn sync error!',
+          message: 'error updating txns SYNC LOCALLY: $e',
+        );
+      }
+
       throw e.toString();
     }
   }

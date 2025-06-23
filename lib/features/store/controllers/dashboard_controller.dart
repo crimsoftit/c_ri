@@ -12,7 +12,6 @@ class CDashboardController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     calculateWeeklySales();
     super.onInit();
   }
@@ -24,7 +23,7 @@ class CDashboardController extends GetxController {
 
     txnsController.fetchSoldItems().then((_) {
       for (var sale in txnsController.sales) {
-        final String rawSaleDate = sale.date.trim();
+        final String rawSaleDate = sale.lastModified.trim();
         var formattedDate = rawSaleDate.replaceAll(' @', '');
         final DateTime salesWeekStart =
             CHelperFunctions.getStartOfWeek(DateTime.parse(formattedDate));
