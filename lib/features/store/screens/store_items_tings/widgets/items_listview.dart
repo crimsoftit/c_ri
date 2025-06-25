@@ -1,4 +1,5 @@
 import 'package:c_ri/common/widgets/layouts/c_expansion_tile.dart';
+import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/personalization/screens/no_data/no_data_screen.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
@@ -35,13 +36,6 @@ class CItemsListView extends StatelessWidget {
 
     return Obx(
       () {
-        // run loader --
-        // if (invController.isLoading.value || salesController.isLoading.value) {
-        //   return const CVerticalProductShimmer(
-        //     itemCount: 7,
-        //   );
-        // }
-
         if (searchController.txtSearchField.text.isNotEmpty &&
             salesController.foundSales.isEmpty &&
             space == 'sales' &&
@@ -96,6 +90,14 @@ class CItemsListView extends StatelessWidget {
             );
         }
 
+        // -- run loader --
+        if (salesController.txnsSyncIsLoading.value ||
+            invController.syncIsLoading.value) {
+          return const CVerticalProductShimmer(
+            itemCount: 5,
+          );
+        }
+
         return ListView(
           shrinkWrap: true,
           children: [
@@ -114,6 +116,8 @@ class CItemsListView extends StatelessWidget {
                 var txnAmount = 0.0;
                 var txnModifiedDate = '';
                 var unitSellingPrice = 0.0;
+                var itemIsSynced = 0;
+                var syncAction = '';
 
                 switch (space) {
                   case "refunds":
@@ -122,6 +126,11 @@ class CItemsListView extends StatelessWidget {
                             .toUpperCase()
                         : salesController.refunds[index].productName[0]
                             .toUpperCase();
+
+                    itemIsSynced = salesController.foundRefunds.isNotEmpty
+                        ? salesController.foundRefunds[index].isSynced
+                        : salesController.refunds[index].isSynced;
+
                     itemProductId = salesController.foundRefunds.isNotEmpty
                         ? salesController.foundRefunds[index].productId
                         : salesController.refunds[index].productId;
@@ -137,6 +146,10 @@ class CItemsListView extends StatelessWidget {
                     qtySold = salesController.foundRefunds.isNotEmpty
                         ? salesController.foundRefunds[index].quantity
                         : salesController.refunds[index].quantity;
+
+                    syncAction = salesController.foundRefunds.isNotEmpty
+                        ? salesController.foundRefunds[index].syncAction
+                        : salesController.refunds[index].syncAction;
 
                     txnAmount = salesController.foundRefunds.isNotEmpty
                         ? salesController.foundRefunds[index].totalAmount
@@ -157,6 +170,10 @@ class CItemsListView extends StatelessWidget {
                         : salesController.sales[index].productName[0]
                             .toUpperCase();
 
+                    itemIsSynced = salesController.foundSales.isNotEmpty
+                        ? salesController.foundSales[index].isSynced
+                        : salesController.sales[index].isSynced;
+
                     itemProductId = salesController.foundSales.isNotEmpty
                         ? salesController.foundSales[index].productId
                         : salesController.sales[index].productId;
@@ -173,6 +190,10 @@ class CItemsListView extends StatelessWidget {
                         ? salesController.foundSales[index].quantity
                         : salesController.sales[index].quantity;
 
+                    syncAction = salesController.foundSales.isNotEmpty
+                        ? salesController.foundSales[index].syncAction
+                        : salesController.sales[index].syncAction;
+
                     txnAmount = salesController.foundSales.isNotEmpty
                         ? salesController.foundSales[index].totalAmount
                         : salesController.sales[index].totalAmount;
@@ -186,10 +207,12 @@ class CItemsListView extends StatelessWidget {
                         : salesController.sales[index].unitSellingPrice;
                   default:
                     avatarTxt = '';
+                    itemIsSynced = 0;
                     itemsCount = 0;
                     itemName = '';
                     qtyRefunded = 0;
                     qtySold = 0;
+                    syncAction = '';
                     txnAmount = 0.0;
                     txnModifiedDate = '';
                     unitSellingPrice = 0.0;
@@ -208,6 +231,8 @@ class CItemsListView extends StatelessWidget {
                       child: CExpansionTile(
                         avatarTxt: avatarTxt,
                         includeRefundBtn: space == 'sales' ? true : false,
+                        isSynced: 'isSynced: $itemIsSynced',
+                        syncAction: 'syncAction: $syncAction',
                         titleTxt: itemName.toUpperCase(),
                         subTitleTxt1Item1:
                             't.Amount: $userCurrencyCode.$txnAmount ',

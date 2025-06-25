@@ -863,7 +863,7 @@ class CInventoryController extends GetxController {
     }
   }
 
-  Future cloudSyncInventory() async {
+  Future<bool> cloudSyncInventory() async {
     try {
       // start loader
       syncIsLoading.value = true;
@@ -880,16 +880,18 @@ class CInventoryController extends GetxController {
         await syncInvDels();
         await addUnsyncedInvToCloud();
         await syncInvUpdates();
-        //isLoading.value = false;
+        // stop loader
+        syncIsLoading.value = false;
+        return true;
       } else {
+        // stop loader
+        syncIsLoading.value = false;
         CPopupSnackBar.warningSnackBar(
           title: 'cloud sync requires internet',
           message: 'an internet connection is required for cloud sync...',
         );
+        return false;
       }
-
-      // stop loader
-      syncIsLoading.value = false;
     } catch (e) {
       // stop loader
       syncIsLoading.value = false;
@@ -900,6 +902,7 @@ class CInventoryController extends GetxController {
           message: 'inventory sync error: $e',
         );
       }
+      return false;
     } finally {
       // stop loader
       syncIsLoading.value = false;

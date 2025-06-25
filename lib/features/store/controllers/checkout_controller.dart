@@ -192,7 +192,6 @@ class CCheckoutController extends GetxController {
             }
           });
         }
-
         Get.offAll(
           () {
             return CSuccessScreen(
@@ -205,24 +204,25 @@ class CCheckoutController extends GetxController {
                 pdfServices.savePdfFile('rI-$receiptId', pdfData);
               },
               onContinueBtnPressed: () async {
+                txnsController.fetchSoldItems();
                 final syncController = Get.put(CSyncController());
 
-                // clear cart
-                cartController.clearCart();
-                itemsInCart.clear();
-
-                resetSalesFields();
-
-                txnsController.fetchSoldItems();
-                customerBal.value = 0.0;
-
-                navController.selectedIndex.value = 1;
                 final internetIsConnected =
                     await CNetworkManager.instance.isConnected();
 
                 if (internetIsConnected) {
-                  syncController.processSync();
+                  await syncController.processSync();
+                  if (await syncController.processSync()) {
+                    if (txnsController.unsyncedTxnAppends.isEmpty) {
+                      processContinueBtnActions();
+                      await syncController.processSync();
+                    } else {
+                      await syncController.processSync();
+                      processContinueBtnActions();
+                    }
+                  }
                 } else {
+                  processContinueBtnActions();
                   if (kDebugMode) {
                     print('internet connection required for cloud sync!');
                     CPopupSnackBar.customToast(
@@ -231,8 +231,6 @@ class CCheckoutController extends GetxController {
                     );
                   }
                 }
-
-                Get.offAll(() => NavMenu());
               },
             );
           },
@@ -250,6 +248,22 @@ class CCheckoutController extends GetxController {
       );
       throw e.toString();
     }
+  }
+
+  processContinueBtnActions() {
+    final cartController = Get.put(CCartController());
+    txnsController.fetchSoldItems();
+    customerBal.value = 0.0;
+
+    // clear cart
+    cartController.clearCart();
+    itemsInCart.clear();
+
+    resetSalesFields();
+
+    navController.selectedIndex.value = 1;
+
+    Get.offAll(() => NavMenu());
   }
 
   /// -- method to select payment method --
@@ -549,9 +563,9 @@ class CCheckoutController extends GetxController {
     });
   }
 
-  @override
-  void dispose() {
-    customerNameFocusNode.value.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   customerNameFocusNode.value.dispose();
+  //   super.dispose();
+  // }
 }

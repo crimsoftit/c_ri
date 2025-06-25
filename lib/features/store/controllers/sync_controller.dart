@@ -1,17 +1,47 @@
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
+import 'package:c_ri/utils/popups/snackbars.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 class CSyncController extends GetxController {
   static CSyncController get instance => Get.find();
 
   /// -- variables --
-  final txnsController = Get.put(CTxnsController());
   final invController = Get.put(CInventoryController());
+  final RxBool processingSync = false.obs;
+  final txnsController = Get.put(CTxnsController());
 
-  void processSync() async {
-    await invController.cloudSyncInventory();
-    await invController.cloudSyncInventory();
-    await txnsController.addSalesDataToCloud();
+  @override
+  void onInit() {
+    processingSync.value = false;
+    super.onInit();
+  }
+
+  Future<bool> processSync() async {
+    try {
+      processingSync.value = true;
+      await invController.cloudSyncInventory();
+      await invController.cloudSyncInventory();
+      await txnsController.addSalesDataToCloud();
+      //await txnsController.addSalesDataToCloud();
+
+      if (!invController.syncIsLoading.value &&
+          !txnsController.txnsSyncIsLoading.value) {
+        processingSync.value = false;
+      } else {
+        processingSync.value = true;
+      }
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'error processing sync',
+          message: e.toString(),
+        );
+      }
+      return false;
+    }
   }
 }

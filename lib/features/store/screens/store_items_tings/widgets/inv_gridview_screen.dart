@@ -262,56 +262,60 @@ class CInvGridviewScreen extends StatelessWidget {
                 return CProductCardVertical(
                   lastModified: lastModified,
                   bp: bp.toString(),
-                  deleteAction: () {
-                    CInventoryModel itemId;
-                    if (invController.foundInventoryItems.isNotEmpty &&
-                        searchController.showSearchField.value) {
-                      itemId = invController.foundInventoryItems[index];
-                    } else {
-                      itemId = invController.inventoryItems[index];
-                    }
-                    invController.deleteInventoryWarningPopup(itemId);
-                  },
+                  deleteAction: syncController.processingSync.value
+                      ? null
+                      : () {
+                          CInventoryModel itemId;
+                          if (invController.foundInventoryItems.isNotEmpty &&
+                              searchController.showSearchField.value) {
+                            itemId = invController.foundInventoryItems[index];
+                          } else {
+                            itemId = invController.inventoryItems[index];
+                          }
+                          invController.deleteInventoryWarningPopup(itemId);
+                        },
                   isSynced: isSynced.toString(),
                   itemAvatar: avatarTxt,
                   itemName: pName,
                   lowStockNotifierLimit: lowStockNotifierLimit,
-                  onAvatarIconTap: () {
-                    invController.itemExists.value = true;
-                    showDialog(
-                      context: context,
-                      useRootNavigator: true,
-                      builder: (BuildContext context) {
-                        invController.currentItemId.value = productId;
-                        return dialog.buildDialog(
-                          context,
-                          CInventoryModel.withID(
-                            invController.currentItemId.value,
-                            userController.user.value.id,
-                            userController.user.value.email,
-                            userController.user.value.fullName,
-                            sku,
-                            pName,
-                            isFavorite,
-                            qtyAvailable,
-                            qtySold,
-                            qtyRefunded,
-                            bp,
-                            unitBp,
-                            usp,
-                            lowStockNotifierLimit,
-                            supplierName,
-                            supplierContacts,
-                            dateAdded,
-                            lastModified,
-                            isSynced,
-                            syncAction,
-                          ),
-                          false,
-                        );
-                      },
-                    );
-                  },
+                  onAvatarIconTap: syncController.processingSync.value
+                      ? null
+                      : () {
+                          invController.itemExists.value = true;
+                          showDialog(
+                            context: context,
+                            useRootNavigator: true,
+                            builder: (BuildContext context) {
+                              invController.currentItemId.value = productId!;
+                              return dialog.buildDialog(
+                                context,
+                                CInventoryModel.withID(
+                                  invController.currentItemId.value,
+                                  userController.user.value.id,
+                                  userController.user.value.email,
+                                  userController.user.value.fullName,
+                                  sku,
+                                  pName,
+                                  isFavorite,
+                                  qtyAvailable,
+                                  qtySold,
+                                  qtyRefunded,
+                                  bp,
+                                  unitBp,
+                                  usp,
+                                  lowStockNotifierLimit,
+                                  supplierName,
+                                  supplierContacts,
+                                  dateAdded,
+                                  lastModified,
+                                  isSynced,
+                                  syncAction,
+                                ),
+                                false,
+                              );
+                            },
+                          );
+                        },
                   // onEditBtnTapped: () {
                   //   invController.itemExists.value = true;
                   //   showDialog(

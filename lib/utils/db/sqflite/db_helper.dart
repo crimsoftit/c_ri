@@ -506,12 +506,12 @@ class DbHelper extends GetxController {
         [syncStatus, sAction, soldItemId],
       );
 
-      if (kDebugMode) {
-        CPopupSnackBar.customToast(
-          message: '$updateResult',
-          forInternetConnectivityStatus: false,
-        );
-      }
+      // if (kDebugMode) {
+      //   CPopupSnackBar.customToast(
+      //     message: '$updateResult',
+      //     forInternetConnectivityStatus: false,
+      //   );
+      // }
 
       return updateResult;
     } catch (e) {

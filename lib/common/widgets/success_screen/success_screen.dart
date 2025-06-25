@@ -1,5 +1,6 @@
 import 'package:c_ri/common/styles/spacing_styles.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
+import 'package:c_ri/features/store/controllers/sync_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,8 @@ class CSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userController = Get.put(CUserController());
+
+    final syncController = Get.put(CSyncController());
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -99,11 +102,20 @@ class CSuccessScreen extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: onContinueBtnPressed,
-                        child: Text(
-                          'CONTINUE',
-                          style: Theme.of(context).textTheme.labelMedium?.apply(
-                                color: CColors.white,
-                              ),
+                        child: Obx(
+                          () {
+                            return Text(
+                              syncController.processingSync.value
+                                  ? 'processing cloud sync'
+                                  : 'CONTINUE',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelMedium
+                                  ?.apply(
+                                    color: CColors.white,
+                                  ),
+                            );
+                          },
                         ),
                       ),
                     ),

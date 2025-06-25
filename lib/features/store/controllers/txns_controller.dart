@@ -579,7 +579,7 @@ class CTxnsController extends GetxController {
                   .then((result) async {
                 if (result) {
                   // -- update txns status locally --
-
+                  fetchSoldItems();
                   for (var forSyncItem in unsyncedTxnsForAppends) {
                     await dbHelper.updateTxnItemsSyncStatus(
                         1, 'none', forSyncItem.soldItemId!);
@@ -615,6 +615,7 @@ class CTxnsController extends GetxController {
           }
         },
       );
+      fetchSoldItems();
     } catch (e) {
       txnsSyncIsLoading.value = false;
       isLoading.value = false;
@@ -958,7 +959,6 @@ class CTxnsController extends GetxController {
   }
 
   /// -- update stock count and qtySold on refund --
-  KUNA NOMA YA DOUBLE ENTRY IN CLOUD DATA
   Future<bool> updateDataOnRefund(
       CInventoryModel inventoryItem, CTxnsModel receiptItem) async {
     final currency =

@@ -199,7 +199,8 @@ class StoreSheetsApi {
           message: '$e',
         );
       }
-      throw 'ERROR SYNCING TXNS: $e';
+      // throw 'ERROR SYNCING TXNS: $e';
+      return false;
     }
   }
 
