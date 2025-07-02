@@ -27,6 +27,7 @@ class CStoreScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final checkoutController = Get.put(CCheckoutController());
     final invController = Get.put(CInventoryController());
+    final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final txnsController = Get.put(CTxnsController());
 
@@ -103,10 +104,15 @@ class CStoreScreen extends StatelessWidget {
                         Container(
                           // padding: const EdgeInsets.only(left: 2.0),
                           padding: EdgeInsets.zero,
-                          child: Text(
-                            'Store',
-                            style:
-                                Theme.of(context).textTheme.labelLarge!.apply(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Store',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge!
+                                    .apply(
                                       color: CNetworkManager
                                               .instance.hasConnection.value
                                           ? CColors.rBrown
@@ -114,6 +120,65 @@ class CStoreScreen extends StatelessWidget {
                                       fontSizeFactor: 2.5,
                                       fontWeightDelta: -7,
                                     ),
+                              ),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CCheckoutScanFAB(
+                                    elevation: 0.0,
+                                    bgColor: CColors.transparent,
+                                    foregroundColor: CNetworkManager
+                                            .instance.hasConnection.value
+                                        ? CColors.rBrown
+                                        : CColors.darkGrey,
+                                  ),
+                                  FloatingActionButton(
+                                    elevation: 0, // -- removes shadow
+                                    onPressed: () {
+                                      invController.resetInvFields();
+                                      showDialog(
+                                        context: context,
+                                        useRootNavigator: false,
+                                        builder: (BuildContext context) =>
+                                            dialog.buildDialog(
+                                          context,
+                                          CInventoryModel(
+                                              '',
+                                              '',
+                                              '',
+                                              '',
+                                              '',
+                                              0,
+                                              0,
+                                              0,
+                                              0,
+                                              0.0,
+                                              0.0,
+                                              0.0,
+                                              0,
+                                              '',
+                                              '',
+                                              '',
+                                              '',
+                                              0,
+                                              ''),
+                                          true,
+                                        ),
+                                      );
+                                    },
+                                    backgroundColor: CColors.transparent,
+                                    foregroundColor: isConnectedToInternet
+                                        ? CColors.rBrown
+                                        : CColors.black,
+                                    heroTag: 'add',
+                                    child: Icon(
+                                      // Iconsax.scan_barcode,
+                                      Iconsax.add,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(
@@ -137,15 +202,6 @@ class CStoreScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-
-                  // TabBar(
-                  //   indicatorColor: CColors.rBrown,
-                  //   isScrollable: true,
-                  //   labelColor: CColors.rBrown,
-                  //   tabs: [
-
-                  //   ],
-                  // ),
                 ),
               ];
             },
@@ -206,37 +262,36 @@ class CStoreScreen extends StatelessWidget {
                   const SizedBox(
                     height: CSizes.spaceBtnSections / 8,
                   ),
-                  FloatingActionButton(
-                    //elevation: 0, // -- removes shadow
-                    onPressed: () {
-                      invController.resetInvFields();
-                      showDialog(
-                        context: context,
-                        useRootNavigator: false,
-                        builder: (BuildContext context) => dialog.buildDialog(
-                          context,
-                          CInventoryModel('', '', '', '', '', 0, 0, 0, 0, 0.0,
-                              0.0, 0.0, 0, '', '', '', '', 0, ''),
-                          true,
-                        ),
-                      );
-                    },
-                    backgroundColor:
-                        CNetworkManager.instance.hasConnection.value
-                            ? Colors.brown
-                            : CColors.black,
-                    //backgroundColor: CColors.transparent,
-                    foregroundColor: CColors.white,
-                    heroTag: 'add',
-                    child: Icon(
-                      // Iconsax.scan_barcode,
-                      Iconsax.add,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: CSizes.spaceBtnSections / 8,
-                  ),
-                  CCheckoutScanFAB(),
+                  // FloatingActionButton(
+                  //   //elevation: 0, // -- removes shadow
+                  //   onPressed: () {
+                  //     invController.resetInvFields();
+                  //     showDialog(
+                  //       context: context,
+                  //       useRootNavigator: false,
+                  //       builder: (BuildContext context) => dialog.buildDialog(
+                  //         context,
+                  //         CInventoryModel('', '', '', '', '', 0, 0, 0, 0, 0.0,
+                  //             0.0, 0.0, 0, '', '', '', '', 0, ''),
+                  //         true,
+                  //       ),
+                  //     );
+                  //   },
+                  //   backgroundColor:
+                  //       CNetworkManager.instance.hasConnection.value
+                  //           ? Colors.brown
+                  //           : CColors.black,
+                  //   //backgroundColor: CColors.transparent,
+                  //   foregroundColor: CColors.white,
+                  //   heroTag: 'add',
+                  //   child: Icon(
+                  //     // Iconsax.scan_barcode,
+                  //     Iconsax.add,
+                  //   ),
+                  // ),
+                  // const SizedBox(
+                  //   height: CSizes.spaceBtnSections / 8,
+                  // ),
                 ],
               );
             },

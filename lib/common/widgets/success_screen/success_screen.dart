@@ -24,9 +24,8 @@ class CSuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userController = Get.put(CUserController());
-
     final syncController = Get.put(CSyncController());
+    final userController = Get.put(CUserController());
 
     return Scaffold(
       body: SingleChildScrollView(

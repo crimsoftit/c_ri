@@ -47,11 +47,16 @@ class CAppBar extends StatelessWidget implements PreferredSizeWidget {
         backgroundColor: bgColor,
 
         leading: showBackArrow
-            ? IconButton(
-                onPressed: backIconAction,
-                icon: Icon(
-                  Iconsax.arrow_left,
-                  color: backIconColor,
+            ? Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: CSizes.md,
+                ),
+                child: IconButton(
+                  onPressed: backIconAction,
+                  icon: Icon(
+                    Iconsax.arrow_left,
+                    color: backIconColor,
+                  ),
                 ),
               )
             : leadingIcon != null

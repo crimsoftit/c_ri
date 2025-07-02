@@ -1,5 +1,5 @@
 import 'package:barcode_scan2/barcode_scan2.dart';
-import 'package:c_ri/common/widgets/success_screen/success_screen.dart';
+import 'package:c_ri/common/widgets/success_screen/txn_success.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/personalization/controllers/location_controller.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
@@ -194,15 +194,10 @@ class CCheckoutController extends GetxController {
         }
         Get.offAll(
           () {
-            return CSuccessScreen(
+            return CTxnSuccessScreen(
               title: 'txn success',
               subTitle: 'transaction successful',
               image: CImages.paymentSuccessfulAnimation,
-              onGenerateRecieptBtnPressed: () async {
-                final receiptId = txnId.value;
-                final pdfData = await pdfServices.generateReceipt(itemsInCart);
-                pdfServices.savePdfFile('rI-$receiptId', pdfData);
-              },
               onContinueBtnPressed: () async {
                 txnsController.fetchSoldItems();
                 final syncController = Get.put(CSyncController());
@@ -233,6 +228,45 @@ class CCheckoutController extends GetxController {
                 }
               },
             );
+            // CSuccessScreen(
+            //   title: 'txn success',
+            //   subTitle: 'transaction successful',
+            //   image: CImages.paymentSuccessfulAnimation,
+            //   onGenerateRecieptBtnPressed: () async {
+            //     final receiptId = txnId.value;
+            //     final pdfData = await pdfServices.generateReceipt(itemsInCart);
+            //     pdfServices.savePdfFile('rI-$receiptId', pdfData);
+            //   },
+            //   onContinueBtnPressed: () async {
+            //     txnsController.fetchSoldItems();
+            //     final syncController = Get.put(CSyncController());
+
+            //     final internetIsConnected =
+            //         await CNetworkManager.instance.isConnected();
+
+            //     if (internetIsConnected) {
+            //       await syncController.processSync();
+            //       if (await syncController.processSync()) {
+            //         if (txnsController.unsyncedTxnAppends.isEmpty) {
+            //           processContinueBtnActions();
+            //           await syncController.processSync();
+            //         } else {
+            //           await syncController.processSync();
+            //           processContinueBtnActions();
+            //         }
+            //       }
+            //     } else {
+            //       processContinueBtnActions();
+            //       if (kDebugMode) {
+            //         print('internet connection required for cloud sync!');
+            //         CPopupSnackBar.customToast(
+            //           message: 'internet connection required for cloud sync!',
+            //           forInternetConnectivityStatus: true,
+            //         );
+            //       }
+            //     }
+            //   },
+            // );
           },
         );
       } else {

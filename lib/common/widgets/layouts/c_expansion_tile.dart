@@ -78,6 +78,7 @@ class CExpansionTile extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               '$subTitleTxt1Item1 $subTitleTxt1Item2',
@@ -118,6 +119,7 @@ class CExpansionTile extends StatelessWidget {
           ],
         ),
       ),
+      tilePadding: const EdgeInsets.all(5.0),
       children: [
         Padding(
           padding: const EdgeInsets.only(

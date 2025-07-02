@@ -23,6 +23,7 @@ import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -770,7 +771,15 @@ class CCheckoutScreen extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: CCheckoutScanFAB(),
+      floatingActionButton: Obx(
+        () {
+          return CCheckoutScanFAB(
+            bgColor: CNetworkManager.instance.hasConnection.value
+                ? CColors.rBrown
+                : CColors.black,
+          );
+        },
+      ),
       bottomNavigationBar: Obx(
         () {
           if (cartController.cartItems.isNotEmpty) {

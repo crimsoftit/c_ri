@@ -75,12 +75,12 @@ class CTextTheme {
       color: Colors.white,
     ),
     headlineMedium: const TextStyle().copyWith(
-      fontSize: 24.0,
+      fontSize: 18.0,
       fontWeight: FontWeight.w500,
       color: Colors.white,
     ),
     headlineSmall: const TextStyle().copyWith(
-      fontSize: 18.0,
+      fontSize: 14.0,
       fontWeight: FontWeight.w500,
       color: Colors.white,
     ),

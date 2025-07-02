@@ -4,6 +4,7 @@ import 'package:c_ri/features/authentication/screens/signup/signup.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/constants/txt_strings.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:c_ri/utils/validators/validation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -117,19 +118,30 @@ class LoginForm extends StatelessWidget {
             ),
 
             // -- sign in button --
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  loginController.emailAndPasswdSignIn();
-                },
-                child: Text(
-                  CTexts.signIn.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelMedium?.apply(
-                        color: CColors.white,
+            Obx(
+              () {
+                return SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      loginController.emailAndPasswdSignIn();
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all(
+                        CNetworkManager.instance.hasConnection.value
+                            ? CColors.rBrown
+                            : CColors.black,
                       ),
-                ),
-              ),
+                    ),
+                    child: Text(
+                      CTexts.signIn.toUpperCase(),
+                      style: Theme.of(context).textTheme.labelMedium?.apply(
+                            color: CColors.white,
+                          ),
+                    ),
+                  ),
+                );
+              },
             ),
 
             const SizedBox(
