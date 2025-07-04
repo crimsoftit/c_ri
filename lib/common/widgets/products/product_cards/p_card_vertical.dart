@@ -72,7 +72,7 @@ class CProductCardVertical extends StatelessWidget {
                   ? CColors.rBrown.withValues(alpha: 0.3)
                   : CColors.lightGrey,
               borderRadius: CSizes.pImgRadius - 4,
-              height: 168.0,
+              height: 169.0,
               padding: const EdgeInsets.only(
                 left: CSizes.sm,
               ),
@@ -179,22 +179,23 @@ class CProductCardVertical extends StatelessWidget {
                       children: [
                         CProductTitleText(
                           //smallSize: true,
-                          title: itemName.toUpperCase(),
+                          title:
+                              "${itemName.toUpperCase()} ($qtyAvailable stocked, $qtySold sold)",
                           txtColor:
                               isDarkTheme ? CColors.white : CColors.rBrown,
-                          maxLines: 1,
+                          maxLines: 2,
                         ),
-                        Text(
-                          '($qtyAvailable stocked, $qtySold sold)',
-                          style: Theme.of(context).textTheme.labelSmall!.apply(
-                                color: isDarkTheme
-                                    ? CColors.white
-                                    : CColors.darkGrey,
-                                fontSizeFactor: 1,
-                              ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
+                        // Text(
+                        //   '($qtyAvailable stocked, $qtySold sold)',
+                        //   style: Theme.of(context).textTheme.labelSmall!.apply(
+                        //         color: isDarkTheme
+                        //             ? CColors.white
+                        //             : CColors.darkGrey,
+                        //         fontSizeFactor: 1,
+                        //       ),
+                        //   overflow: TextOverflow.ellipsis,
+                        //   maxLines: 1,
+                        // ),
                         Text(
                           '($qtyRefunded unit(s) refunded)',
                           style: Theme.of(context).textTheme.labelSmall!.apply(
@@ -235,7 +236,7 @@ class CProductCardVertical extends StatelessWidget {
 
                         SizedBox(
                           width: 170.0,
-                          height: 40.0,
+                          height: 38.0,
                           child: Stack(
                             children: [
                               Positioned(

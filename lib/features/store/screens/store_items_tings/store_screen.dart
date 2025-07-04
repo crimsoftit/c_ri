@@ -124,14 +124,6 @@ class CStoreScreen extends StatelessWidget {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  CCheckoutScanFAB(
-                                    elevation: 0.0,
-                                    bgColor: CColors.transparent,
-                                    foregroundColor: CNetworkManager
-                                            .instance.hasConnection.value
-                                        ? CColors.rBrown
-                                        : CColors.darkGrey,
-                                  ),
                                   FloatingActionButton(
                                     elevation: 0, // -- removes shadow
                                     onPressed: () {
@@ -169,12 +161,20 @@ class CStoreScreen extends StatelessWidget {
                                     backgroundColor: CColors.transparent,
                                     foregroundColor: isConnectedToInternet
                                         ? CColors.rBrown
-                                        : CColors.black,
+                                        : CColors.darkGrey,
                                     heroTag: 'add',
                                     child: Icon(
                                       // Iconsax.scan_barcode,
                                       Iconsax.add,
                                     ),
+                                  ),
+                                  CCheckoutScanFAB(
+                                    elevation: 0.0,
+                                    bgColor: CColors.transparent,
+                                    foregroundColor: CNetworkManager
+                                            .instance.hasConnection.value
+                                        ? CColors.rBrown
+                                        : CColors.darkGrey,
                                   ),
                                 ],
                               ),
