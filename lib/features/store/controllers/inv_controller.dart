@@ -396,7 +396,12 @@ class CInventoryController extends GetxController {
 
     var invSearchItems = inventoryItems
         .where((element) =>
-            element.name.toLowerCase().contains(value.toLowerCase()))
+            element.name.toLowerCase().contains(value.toLowerCase()) ||
+            element.productId
+                .toString()
+                .toLowerCase()
+                .contains(value.toLowerCase()) ||
+            element.pCode.toLowerCase().contains(value.toLowerCase()))
         .toList();
 
     foundInventoryItems.assignAll(invSearchItems);

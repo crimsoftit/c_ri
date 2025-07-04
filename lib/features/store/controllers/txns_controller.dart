@@ -390,6 +390,13 @@ class CTxnsController extends GetxController {
               soldItem.txnId
                   .toString()
                   .toLowerCase()
+                  .contains(value.toLowerCase()) ||
+              soldItem.productCode
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) ||
+              soldItem.productId
+                  .toString()
+                  .toLowerCase()
                   .contains(value.toLowerCase()))
           .toList();
       foundSales.assignAll(salesFound);
@@ -399,6 +406,13 @@ class CTxnsController extends GetxController {
                   .toLowerCase()
                   .contains(value.toLowerCase()) ||
               refundedItem.txnId
+                  .toString()
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) ||
+              refundedItem.productCode
+                  .toLowerCase()
+                  .contains(value.toLowerCase()) ||
+              refundedItem.productId
                   .toString()
                   .toLowerCase()
                   .contains(value.toLowerCase()))

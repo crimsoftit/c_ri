@@ -28,8 +28,8 @@ class CExpandedSearchField extends StatelessWidget {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.only(
-              left: 10.0,
-              bottom: 12.0,
+              left: 0.0,
+              bottom: 6.0,
             ),
             child: TextFormField(
               controller: controller,
@@ -37,22 +37,20 @@ class CExpandedSearchField extends StatelessWidget {
               onChanged: (value) {
                 invController.searchInventory(value);
                 salesController.searchSales(value);
-                //salesController.searchRefunds(value);
               },
               onFieldSubmitted: (value) {
                 invController.searchInventory(value);
                 salesController.searchSales(value);
-                //salesController.searchRefunds(value);
               },
               style: TextStyle(
-                //color: CColors.rBrown.withOpacity(0.6),
                 color: txtColor,
-                fontSize: 10.0,
+                fontSize: 14.0,
+                fontWeight: FontWeight.normal,
               ),
               decoration: InputDecoration(
                 prefixIcon: Padding(
                   padding: const EdgeInsets.only(
-                    top: 7,
+                    top: 9.0,
                   ),
                   child: Icon(
                     Iconsax.search_normal,
@@ -60,6 +58,7 @@ class CExpandedSearchField extends StatelessWidget {
                     size: CSizes.iconSm,
                   ),
                 ),
+
                 // hintText: 'search $hintTxt',
                 hintText: 'search store',
                 hintStyle: TextStyle(

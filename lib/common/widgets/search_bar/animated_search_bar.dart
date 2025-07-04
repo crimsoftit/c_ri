@@ -35,7 +35,7 @@ class CAnimatedSearchBar extends StatelessWidget {
           height: 40.0,
           decoration: BoxDecoration(
             borderRadius: searchController.showSearchField.value
-                ? BorderRadius.circular(5.0)
+                ? BorderRadius.circular(10.0)
                 : BorderRadius.circular(20.0),
             color: boxColor,
             //boxShadow: kElevationToShadow[2],
