@@ -221,32 +221,32 @@ class StoreSheetsApi {
   }
 
   /// -- delete txn data from cloud by it's id --
-  static Future<bool> deleteReceiptIte(int id) async {
-    try {
-      // ignore: prefer_typing_uninitialized_variables
-      var returnCmd;
+  // static Future<bool> deleteReceiptItem(int id) async {
+  //   try {
+  //     // ignore: prefer_typing_uninitialized_variables
+  //     var returnCmd;
 
-      if (txnsSheet == null) return false;
+  //     if (txnsSheet == null) return false;
 
-      final receiptItemIndex =
-          await txnsSheet!.values.rowIndexOf(id.toString().toLowerCase());
+  //     final receiptItemIndex =
+  //         await txnsSheet!.values.rowIndexOf(id.toString().toLowerCase());
 
-      if (receiptItemIndex.isNegative) {
-        returnCmd = false;
-        return returnCmd;
-      } else {
-        returnCmd = txnsSheet!.deleteRow(receiptItemIndex);
-      }
+  //     if (receiptItemIndex.isNegative) {
+  //       returnCmd = false;
+  //       return returnCmd;
+  //     } else {
+  //       returnCmd = txnsSheet!.deleteRow(receiptItemIndex);
+  //     }
 
-      return returnCmd;
-    } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'error deleting data in google sheet',
-        message: e.toString(),
-      );
-      throw e.toString();
-    }
-  }
+  //     return returnCmd;
+  //   } catch (e) {
+  //     CPopupSnackBar.errorSnackBar(
+  //       title: 'error deleting data in google sheet',
+  //       message: e.toString(),
+  //     );
+  //     throw e.toString();
+  //   }
+  // }
 
   /// -- update receipt item --
   static Future<bool> updateReceiptItem(

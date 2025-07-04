@@ -20,9 +20,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class CStoreScreen extends StatelessWidget {
+class CStoreScreen extends StatefulWidget {
   const CStoreScreen({super.key});
 
+  @override
+  State<CStoreScreen> createState() => _CStoreScreenState();
+}
+
+class _CStoreScreenState extends State<CStoreScreen> {
   @override
   Widget build(BuildContext context) {
     final checkoutController = Get.put(CCheckoutController());

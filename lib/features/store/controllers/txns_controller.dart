@@ -93,10 +93,11 @@ class CTxnsController extends GetxController {
   final RxBool soldItemsFetched = false.obs;
   final RxBool updatesOnRefundDone = false.obs;
 
-  final txtSaleItemQty = TextEditingController();
   final txtAmountIssued = TextEditingController();
   final txtCustomerName = TextEditingController();
   final txtCustomerContacts = TextEditingController();
+  final txtRefundReason = TextEditingController();
+  final txtSaleItemQty = TextEditingController();
   final txtTxnAddress = TextEditingController();
 
   final RxInt sellItemId = 0.obs;
@@ -569,6 +570,7 @@ class CTxnsController extends GetxController {
                       'productName': sale.productName,
                       'quantity': sale.quantity,
                       'qtyRefunded': sale.qtyRefunded,
+                      'refundReason': sale.refundReason,
                       'totalAmount': sale.totalAmount,
                       'amountIssued': sale.amountIssued,
                       'customerBalance': sale.customerBalance,
@@ -713,6 +715,7 @@ class CTxnsController extends GetxController {
               element.productName,
               element.quantity,
               element.qtyRefunded,
+              element.refundReason,
               element.totalAmount,
               element.amountIssued,
               element.customerBalance,
@@ -784,9 +787,14 @@ class CTxnsController extends GetxController {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     return showModalBottomSheet(
       context: context,
-      builder: (_) {
-        return SingleChildScrollView(
+      isDismissible: false,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) {
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
           child: CRoundedContainer(
+            height: CHelperFunctions.screenHeight() * 0.35,
             padding: const EdgeInsets.all(
               CSizes.lg / 3,
             ),
@@ -795,16 +803,19 @@ class CTxnsController extends GetxController {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  'refund ${soldItem.productName}',
+                  'refund ${soldItem.productName.toUpperCase()}?',
                   style: Theme.of(context).textTheme.labelMedium!.apply(
                         color: isDarkTheme ? CColors.white : CColors.rBrown,
                       ),
                 ),
                 Divider(
                   color: isDarkTheme ? CColors.white : CColors.rBrown,
+                  endIndent: 100.0,
+                  indent: 100.0,
+                  thickness: 0.2,
                 ),
                 const SizedBox(
-                  height: CSizes.spaceBtnInputFields,
+                  height: CSizes.spaceBtnInputFields / 4,
                 ),
                 Obx(
                   () {
@@ -870,8 +881,27 @@ class CTxnsController extends GetxController {
                 const SizedBox(
                   height: CSizes.spaceBtnInputFields,
                 ),
-                Divider(
-                  color: isDarkTheme ? CColors.white : CColors.rBrown,
+
+                // -- textarea for reason of refund --
+                TextFormField(
+                  controller: txtRefundReason,
+                  decoration: InputDecoration(
+                    labelText: 'reason for refund(optional)',
+                    //labelStyle: textStyle,
+                    suffixIcon: const Icon(
+                      Iconsax.message,
+                    ),
+                  ),
+                  maxLines: 1, // marked for observation - could be a textarea
+                  style: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                // Divider(
+                //   color: isDarkTheme ? CColors.white : CColors.rBrown,
+                // ),
+                const SizedBox(
+                  height: CSizes.spaceBtnInputFields,
                 ),
                 Row(
                   children: [
@@ -888,6 +918,8 @@ class CTxnsController extends GetxController {
 
                           var txnItem = sales.firstWhere((txnItem) =>
                               txnItem.productId == soldItem.productId);
+
+                          txnItem.refundReason = txtRefundReason.text.trim();
                           await updateDataOnRefund(invItem, txnItem);
                           if (updatesOnRefundDone.value) {
                             if (kDebugMode) {
@@ -945,7 +977,9 @@ class CTxnsController extends GetxController {
           ),
         );
       },
-    ).whenComplete(onBottomSheetClosed);
+    ).whenComplete(() {
+      onBottomSheetClosed();
+    });
   }
 
   /// -- reset refundQty to 0 when bottomSheetModal dismisses --
@@ -955,7 +989,7 @@ class CTxnsController extends GetxController {
     final internetIsConnected = await CNetworkManager.instance.isConnected();
 
     if (internetIsConnected) {
-      syncController.processSync();
+      await syncController.processSync();
     } else {
       if (kDebugMode) {
         print('internet connection required for cloud sync!');
@@ -967,6 +1001,7 @@ class CTxnsController extends GetxController {
     }
     refundQty.value = 0;
     updatesOnRefundDone.value = false;
+
     if (kDebugMode) {
       print('bottomSheet closed');
     }

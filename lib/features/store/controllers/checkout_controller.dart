@@ -137,6 +137,7 @@ class CCheckoutController extends GetxController {
             cartItem.pName,
             cartItem.quantity,
             0,
+            '',
             cartController.totalCartPrice.value,
             selectedPaymentMethod.value.platformName == 'cash'
                 ? double.parse(amtIssuedFieldController.text.trim())
@@ -228,45 +229,6 @@ class CCheckoutController extends GetxController {
                 }
               },
             );
-            // CSuccessScreen(
-            //   title: 'txn success',
-            //   subTitle: 'transaction successful',
-            //   image: CImages.paymentSuccessfulAnimation,
-            //   onGenerateRecieptBtnPressed: () async {
-            //     final receiptId = txnId.value;
-            //     final pdfData = await pdfServices.generateReceipt(itemsInCart);
-            //     pdfServices.savePdfFile('rI-$receiptId', pdfData);
-            //   },
-            //   onContinueBtnPressed: () async {
-            //     txnsController.fetchSoldItems();
-            //     final syncController = Get.put(CSyncController());
-
-            //     final internetIsConnected =
-            //         await CNetworkManager.instance.isConnected();
-
-            //     if (internetIsConnected) {
-            //       await syncController.processSync();
-            //       if (await syncController.processSync()) {
-            //         if (txnsController.unsyncedTxnAppends.isEmpty) {
-            //           processContinueBtnActions();
-            //           await syncController.processSync();
-            //         } else {
-            //           await syncController.processSync();
-            //           processContinueBtnActions();
-            //         }
-            //       }
-            //     } else {
-            //       processContinueBtnActions();
-            //       if (kDebugMode) {
-            //         print('internet connection required for cloud sync!');
-            //         CPopupSnackBar.customToast(
-            //           message: 'internet connection required for cloud sync!',
-            //           forInternetConnectivityStatus: true,
-            //         );
-            //       }
-            //     }
-            //   },
-            // );
           },
         );
       } else {
@@ -597,9 +559,9 @@ class CCheckoutController extends GetxController {
     });
   }
 
-  // @override
-  // void dispose() {
-  //   customerNameFocusNode.value.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    customerNameFocusNode.value.dispose();
+    super.dispose();
+  }
 }
