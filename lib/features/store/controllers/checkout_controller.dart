@@ -195,13 +195,17 @@ class CCheckoutController extends GetxController {
         }
         Get.offAll(
           () {
+            final syncController = Get.put(CSyncController());
             return CTxnSuccessScreen(
               title: 'txn success',
-              subTitle: 'transaction successful',
-              image: CImages.paymentSuccessfulAnimation,
+              subTitle: syncController.processingSync.value
+                  ? 'processing cloud sync...'
+                  : 'transaction successful',
+              image: syncController.processingSync.value
+                  ? CImages.loadingAnime
+                  : CImages.paymentSuccessfulAnimation,
               onContinueBtnPressed: () async {
                 txnsController.fetchSoldItems();
-                final syncController = Get.put(CSyncController());
 
                 final internetIsConnected =
                     await CNetworkManager.instance.isConnected();
@@ -209,16 +213,19 @@ class CCheckoutController extends GetxController {
                 if (internetIsConnected) {
                   await syncController.processSync();
                   if (await syncController.processSync()) {
-                    if (txnsController.unsyncedTxnAppends.isEmpty) {
-                      processContinueBtnActions();
+                    if (txnsController.unsyncedTxnAppends.isNotEmpty) {
                       await syncController.processSync();
-                    } else {
-                      await syncController.processSync();
-                      processContinueBtnActions();
+                    }
+                  } else {
+                    if (kDebugMode) {
+                      print('error processing cloud sync');
+                      CPopupSnackBar.errorSnackBar(
+                        title: 'error processing cloud sync',
+                        message: 'error processing cloud sync',
+                      );
                     }
                   }
                 } else {
-                  processContinueBtnActions();
                   if (kDebugMode) {
                     print('internet connection required for cloud sync!');
                     CPopupSnackBar.customToast(
@@ -227,6 +234,7 @@ class CCheckoutController extends GetxController {
                     );
                   }
                 }
+                processContinueBtnActions();
               },
             );
           },

@@ -1,5 +1,6 @@
 import 'package:c_ri/common/widgets/loaders/animated_loader.dart';
 import 'package:c_ri/common/widgets/products/product_cards/p_card_vertical.dart';
+import 'package:c_ri/common/widgets/shimmers/grid_layout_shimmer.dart';
 import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
@@ -77,6 +78,10 @@ class CInvGridviewScreen extends StatelessWidget {
             searchController.showSearchField.value &&
             !invController.isLoading.value) {
           return const NoSearchResultsScreen();
+        }
+
+        if (syncController.processingSync.value) {
+          return CGridLayoutShimmer(itemCount: 5);
         }
 
         if (invController.inventoryItems.isEmpty &&

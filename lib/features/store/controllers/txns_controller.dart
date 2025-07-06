@@ -790,6 +790,7 @@ class CTxnsController extends GetxController {
       isDismissible: false,
       isScrollControlled: true,
       useSafeArea: true,
+      //transitionAnimationController: ,
       builder: (context) {
         return Padding(
           padding: MediaQuery.of(context).viewInsets,
@@ -990,6 +991,20 @@ class CTxnsController extends GetxController {
 
     if (internetIsConnected) {
       await syncController.processSync();
+      if (await syncController.processSync()) {
+        if (unsyncedTxnAppends.isNotEmpty) {
+          //processContinueBtnActions();
+          await syncController.processSync();
+        }
+      } else {
+        if (kDebugMode) {
+          print('error processing cloud sync');
+          CPopupSnackBar.errorSnackBar(
+            title: 'error processing cloud sync',
+            message: 'error processing cloud sync',
+          );
+        }
+      }
     } else {
       if (kDebugMode) {
         print('internet connection required for cloud sync!');
