@@ -51,7 +51,7 @@ class CInventoryController extends GetxController {
   final RxDouble unitBP = 0.0.obs;
 
   final txtId = TextEditingController();
-  final txtName = TextEditingController();
+  final txtNameController = TextEditingController();
   final txtCode = TextEditingController();
   final txtQty = TextEditingController();
   final txtBP = TextEditingController();
@@ -79,7 +79,16 @@ class CInventoryController extends GetxController {
     await initInvSync();
     fetchTopSellers();
 
+    //txtNameController.addListener(printLatestFieldValue);
+
     super.onInit();
+  }
+
+  @override
+  void dispose() {
+    // -- clean up the controller when the widget is removed from the widget tree --
+    txtNameController.dispose();
+    super.dispose();
   }
 
   /// -- initialize cloud sync --
@@ -91,6 +100,18 @@ class CInventoryController extends GetxController {
       localStorage.write('SyncInvDataWithCloud', false);
 
       fetchUserInventoryItems();
+    }
+  }
+
+  void printLatestFieldValue() {
+    final text = txtNameController.text;
+    if (kDebugMode) {
+      final output = '2nd txt: $text (${text.characters.length})';
+      print(output);
+      CPopupSnackBar.customToast(
+        message: output,
+        forInternetConnectivityStatus: false,
+      );
     }
   }
 
@@ -160,7 +181,7 @@ class CInventoryController extends GetxController {
           userController.user.value.email,
           userController.user.value.fullName,
           txtCode.text,
-          txtName.text,
+          txtNameController.text,
           0,
           int.parse(txtQty.text),
           0,
@@ -332,7 +353,7 @@ class CInventoryController extends GetxController {
         itemExists.value = true;
 
         txtId.text = currentItemId.value.toString();
-        txtName.text = fetchedItem.first.name;
+        txtNameController.text = fetchedItem.first.name;
         txtQty.text = (fetchedItem.first.quantity).toString();
         txtBP.text = (fetchedItem.first.buyingPrice).toString();
         unitBP.value = fetchedItem.first.unitBp;
@@ -355,7 +376,7 @@ class CInventoryController extends GetxController {
         itemExists.value = false;
         supplierDetailsExist.value = false;
         txtId.text = '';
-        txtName.text = '';
+        txtNameController.text = '';
         txtQty.text = '';
         txtBP.text = '';
         unitBP.value = 0.0;
@@ -378,7 +399,7 @@ class CInventoryController extends GetxController {
 
   void runInvScanner() {
     txtId.text = "";
-    txtName.text = "";
+    txtNameController.text = "";
     txtCode.text = "";
     txtQty.text = "";
     txtBP.text = "";
@@ -471,63 +492,74 @@ class CInventoryController extends GetxController {
   }
 
   /// -- add or update inventory item using sqflite
-  Future<void> addOrUpdateInventoryItem(CInventoryModel inventoryItem) async {
-    // Validate returns true if the form is valid, or false otherwise.
-    if (addInvItemFormKey.currentState!.validate()) {
-      inventoryItem.userId = userController.user.value.id;
-      inventoryItem.userEmail = userController.user.value.email;
-      inventoryItem.userName = userController.user.value.fullName;
+  Future<bool> addOrUpdateInventoryItem(CInventoryModel inventoryItem) async {
+    try {
+      // Validate returns true if the form is valid, or false otherwise.
+      if (addInvItemFormKey.currentState!.validate()) {
+        inventoryItem.userId = userController.user.value.id;
+        inventoryItem.userEmail = userController.user.value.email;
+        inventoryItem.userName = userController.user.value.fullName;
 
-      inventoryItem.name = txtName.text;
-      inventoryItem.pCode = txtCode.text.trim();
-      inventoryItem.quantity = int.parse(txtQty.text.trim());
-      inventoryItem.buyingPrice = double.parse(txtBP.text.trim());
-      inventoryItem.unitBp = unitBP.value;
-      inventoryItem.unitSellingPrice = double.parse(txtUnitSP.text);
-      inventoryItem.lowStockNotifierLimit = txtStockNotifierLimit.text != ''
-          ? int.parse(txtStockNotifierLimit.text.trim())
-          : (int.parse(txtQty.text.trim()) / 5).toInt();
-      inventoryItem.supplierName = txtSupplierName.text.trim();
-      inventoryItem.supplierContacts = txtSupplierContacts.text.trim();
-      inventoryItem.lastModified =
-          DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
-
-      inventoryItem.syncAction = txtSyncAction.text.trim();
-
-      if (itemExists.value) {
-        // -- check internet connectivity
-        final isConnected = await CNetworkManager.instance.isConnected();
-
-        if (isConnected) {
-          //fetchInvSheetItemById(int.parse(txtId.text));
-          inventoryItem.isSynced = 1;
-          inventoryItem.syncAction = 'none';
-          updateInvSheetItem(int.parse(txtId.text.trim()), inventoryItem);
-        } else {
-          //inventoryItem.isSynced = 0;
-          inventoryItem.syncAction =
-              inventoryItem.isSynced == 1 ? 'update' : 'append';
-
-          final updateItem = CInvDelsModel(
-            inventoryItem.productId!,
-            inventoryItem.name,
-            'inventory',
-            inventoryItem.isSynced,
-            inventoryItem.syncAction,
-          );
-          await dbHelper.saveInvDelsForSync(updateItem);
-          CPopupSnackBar.customToast(
-            message:
-                'while this works offline, consider using an internet connection to back up your data online!',
-            forInternetConnectivityStatus: true,
-          );
-        }
-        updateInventoryItem(inventoryItem);
-      } else {
-        inventoryItem.dateAdded =
+        inventoryItem.name = txtNameController.text.trim();
+        inventoryItem.pCode = txtCode.text.trim();
+        inventoryItem.quantity = int.parse(txtQty.text.trim());
+        inventoryItem.buyingPrice = double.parse(txtBP.text.trim());
+        inventoryItem.unitBp = unitBP.value;
+        inventoryItem.unitSellingPrice = double.parse(txtUnitSP.text);
+        inventoryItem.lowStockNotifierLimit = txtStockNotifierLimit.text != ''
+            ? int.parse(txtStockNotifierLimit.text.trim())
+            : (int.parse(txtQty.text.trim()) / 5).toInt();
+        inventoryItem.supplierName = txtSupplierName.text.trim();
+        inventoryItem.supplierContacts = txtSupplierContacts.text.trim();
+        inventoryItem.lastModified =
             DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
-        addInventoryItem(inventoryItem);
+
+        inventoryItem.syncAction = txtSyncAction.text.trim();
+
+        if (itemExists.value) {
+          // -- check internet connectivity
+          final isConnectedToInternet =
+              await CNetworkManager.instance.isConnected();
+
+          if (isConnectedToInternet) {
+            inventoryItem.isSynced = 1;
+            inventoryItem.syncAction = 'none';
+            updateInvSheetItem(int.parse(txtId.text.trim()), inventoryItem);
+          } else {
+            inventoryItem.syncAction =
+                inventoryItem.isSynced == 1 ? 'update' : 'append';
+
+            final updateItem = CInvDelsModel(
+              inventoryItem.productId!,
+              inventoryItem.name,
+              'inventory',
+              inventoryItem.isSynced,
+              inventoryItem.syncAction,
+            );
+            await dbHelper.saveInvDelsForSync(updateItem);
+            CPopupSnackBar.customToast(
+              message:
+                  'while this works offline, consider using an internet connection to back up your data online!',
+              forInternetConnectivityStatus: true,
+            );
+          }
+          updateInventoryItem(inventoryItem);
+        } else {
+          inventoryItem.dateAdded =
+              DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
+          addInventoryItem(inventoryItem);
+        }
       }
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'error adding/updating inventory item',
+          message: e.toString(),
+        );
+      }
+      return false;
     }
   }
 
@@ -960,8 +992,9 @@ class CInventoryController extends GetxController {
 
   /// -- reset fields --
   resetInvFields() {
+    itemExists.value = false;
     txtId.text = "";
-    txtName.text = "";
+    txtNameController.text = "";
     txtCode.text = "";
     txtQty.text = "";
     txtBP.text = "";

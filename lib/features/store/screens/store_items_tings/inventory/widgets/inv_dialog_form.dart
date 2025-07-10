@@ -24,7 +24,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //String formattedBp;
+    //AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
     return Column(
       children: <Widget>[
@@ -67,9 +67,38 @@ class AddUpdateInventoryForm extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: 'barcode/sku',
                   labelStyle: textStyle,
+                  prefixIcon: invController.txtCode.text.isNotEmpty
+                      ? null
+                      : TextButton.icon(
+                          onPressed: () {
+                            invController.txtCode.text =
+                                invController.txtCode.text.isNotEmpty
+                                    ? invController.txtCode.text = ''
+                                    : CHelperFunctions.generateProductCode()
+                                        .toString();
+                          },
+                          icon: Icon(
+                            invController.txtCode.text.isEmpty
+                                ? Iconsax.flash
+                                : Iconsax.close_circle,
+                            size: CSizes.iconSm,
+                            color: CColors.rBrown,
+                          ),
+                          label: Text(
+                            invController.txtCode.text.isEmpty
+                                ? 'auto'
+                                : 'clear',
+                            style:
+                                Theme.of(context).textTheme.labelSmall!.apply(
+                                      color: CColors.rBrown,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                          ),
+                        ),
                   suffixIcon: IconButton(
                     icon: const Icon(
                       Iconsax.scan,
+                      size: CSizes.iconSm,
                     ),
                     color: CColors.rBrown,
                     onPressed: () {
@@ -91,10 +120,15 @@ class AddUpdateInventoryForm extends StatelessWidget {
                 height: CSizes.spaceBtnInputFields / 2,
               ),
               TextFormField(
-                controller: invController.txtName,
+                controller: invController.txtNameController,
                 decoration: InputDecoration(
                   labelText: 'product name',
                   labelStyle: textStyle,
+                  prefixIcon: Icon(
+                    Iconsax.tag,
+                    color: CColors.rBrown,
+                    size: CSizes.iconSm,
+                  ),
                 ),
                 style: const TextStyle(
                   fontWeight: FontWeight.normal,
@@ -120,8 +154,13 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   fontWeight: FontWeight.normal,
                 ),
                 decoration: InputDecoration(
-                  labelText: 'quantity/no. of units',
                   labelStyle: textStyle,
+                  labelText: 'quantity/no. of units',
+                  prefixIcon: Icon(
+                    Iconsax.quote_up,
+                    color: CColors.rBrown,
+                    size: CSizes.iconSm,
+                  ),
                 ),
                 validator: (value) {
                   return CValidator.validateNumber(
@@ -149,8 +188,13 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   FilteringTextInputFormatter.allow(RegExp(r'^\d+(\.\d*)?')),
                 ],
                 decoration: InputDecoration(
-                  labelText: 'buying price',
                   labelStyle: textStyle,
+                  labelText: 'buying price',
+                  prefixIcon: Icon(
+                    Iconsax.bitcoin_card,
+                    color: CColors.rBrown,
+                    size: CSizes.iconSm,
+                  ),
                 ),
                 style: const TextStyle(
                   fontWeight: FontWeight.normal,
@@ -198,8 +242,13 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   FilteringTextInputFormatter.allow(RegExp(r'^\d+(\.\d*)?')),
                 ],
                 decoration: InputDecoration(
-                  labelText: 'unit selling price',
                   labelStyle: textStyle,
+                  labelText: 'unit selling price',
+                  prefixIcon: Icon(
+                    Iconsax.card_pos,
+                    color: CColors.rBrown,
+                    size: CSizes.iconSm,
+                  ),
                 ),
                 style: const TextStyle(
                   fontWeight: FontWeight.normal,
@@ -276,33 +325,41 @@ class AddUpdateInventoryForm extends StatelessWidget {
                 children: [
                   Expanded(
                     flex: 4,
-                    child: TextButton.icon(
-                      icon: const Icon(
-                        Iconsax.save_add,
-                        size: CSizes.iconSm,
-                        color: CColors.white,
-                      ),
-                      label: Obx(
-                        () => Text(
-                          invController.itemExists.value ? 'update' : 'add',
-                          style: Theme.of(context).textTheme.labelMedium!.apply(
-                                color: CColors.white,
-                              ),
-                        ),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor:
-                            CColors.white, // foreground (text) color
-                        backgroundColor: CColors.rBrown, // background color
-                      ),
-                      onPressed: () {
-                        // -- form validation
-                        if (!invController.addInvItemFormKey.currentState!
-                            .validate()) {
-                          return;
-                        }
-                        invController.addOrUpdateInventoryItem(inventoryItem);
-                        Navigator.pop(context, true);
+                    child: Obx(
+                      () {
+                        return TextButton.icon(
+                          icon: const Icon(
+                            Iconsax.save_add,
+                            size: CSizes.iconSm,
+                            color: CColors.white,
+                          ),
+                          label: Text(
+                            invController.itemExists.value ? 'update' : 'add',
+                            style:
+                                Theme.of(context).textTheme.labelMedium!.apply(
+                                      color: CColors.white,
+                                    ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor:
+                                CColors.white, // foreground (text) color
+                            backgroundColor: CColors.rBrown, // background color
+                          ),
+                          onPressed: () async {
+                            // -- form validation
+                            if (!invController.addInvItemFormKey.currentState!
+                                .validate()) {
+                              return;
+                            }
+                            invController
+                                .addOrUpdateInventoryItem(inventoryItem);
+
+                            if (await invController
+                                .addOrUpdateInventoryItem(inventoryItem)) {
+                              Navigator.pop(Get.overlayContext!, true);
+                            }
+                          },
+                        );
                       },
                     ),
                   ),
@@ -330,7 +387,9 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       ),
                       onPressed: () {
                         invController.fetchUserInventoryItems();
+
                         Navigator.pop(context, true);
+                        invController.resetInvFields();
                       },
                     ),
                   ),

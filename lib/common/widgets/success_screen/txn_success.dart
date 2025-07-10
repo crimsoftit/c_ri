@@ -2,7 +2,6 @@ import 'package:c_ri/common/styles/spacing_styles.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/sync_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
-import 'package:c_ri/utils/constants/img_strings.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
@@ -12,14 +11,14 @@ import 'package:lottie/lottie.dart';
 class CTxnSuccessScreen extends StatelessWidget {
   const CTxnSuccessScreen({
     super.key,
-    required this.image,
+    required this.lottieImage,
     required this.title,
     required this.subTitle,
     this.onGenerateRecieptBtnPressed,
     required this.onContinueBtnPressed,
   });
 
-  final String image, title, subTitle;
+  final String lottieImage, title, subTitle;
   final VoidCallback? onGenerateRecieptBtnPressed;
   final VoidCallback onContinueBtnPressed;
 
@@ -38,7 +37,8 @@ class CTxnSuccessScreen extends StatelessWidget {
                 children: [
                   // -- header image --
                   Lottie.asset(
-                    CImages.paymentSuccessfulAnimation,
+                    // CImages.paymentSuccessfulAnimation,
+                    lottieImage,
                     width: MediaQuery.of(context).size.width * 0.8,
                   ),
 

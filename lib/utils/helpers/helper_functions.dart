@@ -127,4 +127,9 @@ class CHelperFunctions {
     final now = DateTime.now();
     return now.millisecondsSinceEpoch + generateRandom4DigitNumber();
   }
+
+  static int generateProductCode() {
+    final now = DateTime.now();
+    return now.microsecondsSinceEpoch - generateRandom4DigitNumber();
+  }
 }

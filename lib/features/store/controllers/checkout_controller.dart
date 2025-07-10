@@ -197,13 +197,13 @@ class CCheckoutController extends GetxController {
           () {
             final syncController = Get.put(CSyncController());
             return CTxnSuccessScreen(
+              lottieImage: syncController.processingSync.value
+                  ? CImages.loadingAnime
+                  : CImages.paymentSuccessfulAnimation,
               title: 'txn success',
               subTitle: syncController.processingSync.value
                   ? 'processing cloud sync...'
                   : 'transaction successful',
-              image: syncController.processingSync.value
-                  ? CImages.loadingAnime
-                  : CImages.paymentSuccessfulAnimation,
               onContinueBtnPressed: () async {
                 txnsController.fetchSoldItems();
 

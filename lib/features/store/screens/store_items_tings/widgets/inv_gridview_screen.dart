@@ -1,13 +1,10 @@
 import 'package:c_ri/common/widgets/loaders/animated_loader.dart';
 import 'package:c_ri/common/widgets/products/product_cards/p_card_vertical.dart';
-import 'package:c_ri/common/widgets/shimmers/grid_layout_shimmer.dart';
-import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:c_ri/common/widgets/shimmers/vert_items_shimmer.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/controllers/sync_controller.dart';
-import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/screens/search/widgets/no_results_screen.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/inventory/widgets/inv_dialog.dart';
@@ -35,7 +32,7 @@ class CInvGridviewScreen extends StatelessWidget {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final searchController = Get.put(CSearchBarController());
     final syncController = Get.put(CSyncController());
-    final txnsController = Get.put(CTxnsController());
+    //final txnsController = Get.put(CTxnsController());
     final userController = Get.put(CUserController());
 
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
@@ -80,9 +77,9 @@ class CInvGridviewScreen extends StatelessWidget {
           return const NoSearchResultsScreen();
         }
 
-        if (syncController.processingSync.value) {
-          return CGridLayoutShimmer(itemCount: 5);
-        }
+        // if (syncController.processingSync.value) {
+        //   return CGridLayoutShimmer(itemCount: 5);
+        // }
 
         if (invController.inventoryItems.isEmpty &&
             !searchController.showSearchField.value &&
@@ -106,56 +103,47 @@ class CInvGridviewScreen extends StatelessWidget {
           shrinkWrap: true,
           children: [
             SizedBox(
-              width: 45.0,
-              child: invController.syncIsLoading.value ||
-                      txnsController.txnsSyncIsLoading.value
-                  ? const CShimmerEffect(
-                      width: 40.0,
-                      height: 40.0,
-                      radius: 40.0,
-                    )
-                  : invController.unSyncedAppends.isEmpty &&
-                          invController.unSyncedUpdates.isEmpty
-                      ? null
-                      : TextButton.icon(
-                          icon: const Icon(
-                            Iconsax.cloud_change,
-                            size: CSizes.iconSm,
-                            color: CColors.white,
-                          ),
-                          label: Text(
-                            'sync to cloud',
-                            style:
-                                Theme.of(context).textTheme.labelMedium!.apply(
-                                      color: isDarkTheme
-                                          ? CColors.white
-                                          : CColors.rBrown,
-                                    ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0.2,
-                            foregroundColor:
-                                CColors.white, // foreground (text) color
-                            backgroundColor: isDarkTheme
-                                ? CColors.rBrown.withValues(alpha: 0.25)
-                                : CColors.transparent, // background color
-                          ),
-                          onPressed: () async {
-                            // -- check internet connectivity --
-                            final internetIsConnected =
-                                await CNetworkManager.instance.isConnected();
+              //width: 45.0,
+              child: invController.unSyncedAppends.isEmpty &&
+                      invController.unSyncedUpdates.isEmpty
+                  ? null
+                  : TextButton.icon(
+                      icon: const Icon(
+                        Iconsax.cloud_change,
+                        size: CSizes.iconSm,
+                        color: CColors.white,
+                      ),
+                      label: Text(
+                        'sync to cloud',
+                        style: Theme.of(context).textTheme.labelMedium!.apply(
+                              color:
+                                  isDarkTheme ? CColors.white : CColors.rBrown,
+                            ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        elevation: 0.2,
+                        foregroundColor:
+                            CColors.white, // foreground (text) color
+                        backgroundColor: isDarkTheme
+                            ? CColors.rBrown.withValues(alpha: 0.25)
+                            : CColors.transparent, // background color
+                      ),
+                      onPressed: () async {
+                        // -- check internet connectivity --
+                        final internetIsConnected =
+                            await CNetworkManager.instance.isConnected();
 
-                            if (internetIsConnected) {
-                              syncController.processSync();
-                            } else {
-                              CPopupSnackBar.customToast(
-                                message:
-                                    'internet connection required for cloud sync!',
-                                forInternetConnectivityStatus: true,
-                              );
-                            }
-                          },
-                        ),
+                        if (internetIsConnected) {
+                          syncController.processSync();
+                        } else {
+                          CPopupSnackBar.customToast(
+                            message:
+                                'internet connection required for cloud sync!',
+                            forInternetConnectivityStatus: true,
+                          );
+                        }
+                      },
+                    ),
             ),
             GridView.builder(
               itemCount: searchController.showSearchField.value

@@ -14,71 +14,76 @@ class AddUpdateItemDialog {
 
     if (!isNew) {
       invController.txtId.text = invModel.productId.toString();
-      invController.txtName.text = invModel.name;
-      invController.txtCode.text = invModel.pCode.toString();
-      invController.txtQty.text = invModel.quantity.toString();
-      invController.txtBP.text = invModel.buyingPrice.toString();
+      invController.txtNameController.text =
+          invController.txtNameController.text.isEmpty
+              ? invModel.name
+              : invController.txtNameController.text.trim();
+      invController.txtCode.text = invController.txtCode.text.isEmpty
+          ? invModel.pCode.toString()
+          : invController.txtCode.text.trim();
+      invController.txtQty.text = invController.txtQty.text.isEmpty
+          ? invModel.quantity.toString()
+          : invController.txtQty.text.trim();
+      invController.txtBP.text = invController.txtBP.text.isEmpty
+          ? invModel.buyingPrice.toString()
+          : invController.txtBP.text.trim();
       invController.unitBP.value = invModel.unitBp;
-      invController.txtUnitSP.text = invModel.unitSellingPrice.toString();
-    } else {
-      //invController.scanBarcodeNormal();
+      invController.txtUnitSP.text = invController.txtUnitSP.text.isEmpty
+          ? invModel.unitSellingPrice.toString()
+          : invController.txtUnitSP.text.trim();
     }
 
     return PopScope(
-      canPop: true,
-      child: StatefulBuilder(
-        builder: (BuildContext context, setState) {
-          return AlertDialog(
-            insetPadding: const EdgeInsets.all(10.0),
-            title: Obx(
-              () => Row(
-                children: [
-                  Expanded(
+      canPop: false,
+      child: AlertDialog(
+        insetPadding: const EdgeInsets.all(10.0),
+        title: Obx(
+          () => Row(
+            children: [
+              Expanded(
+                child: Text(
+                  (invController.itemExists.value)
+                      ? 'update ${invController.txtNameController.text.trim()}'
+                      : 'add inventory...',
+                  style: Theme.of(context).textTheme.labelLarge,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              // const SizedBox(
+              //   width: CSizes.spaceBtnInputFields / 2,
+              // ),
+              Visibility(
+                visible:
+                    invController.supplierDetailsExist.value ? false : true,
+                child: Expanded(
+                  child: TextButton(
+                    onPressed: () {
+                      invController.toggleSupplierDetsFieldsVisibility();
+                    },
                     child: Text(
-                      (invController.itemExists.value)
-                          ? 'update ${invController.txtName.text}'
-                          : 'new inventory entry...',
-                      style: Theme.of(context).textTheme.labelLarge,
-                      overflow: TextOverflow.ellipsis,
+                      invController.includeSupplierDetails.value
+                          ? 'exclude supplier details?'
+                          : 'include supplier details?',
+                      style: Theme.of(context)
+                          .textTheme
+                          .labelMedium!
+                          .apply(color: CColors.rBrown),
                     ),
                   ),
-                  // const SizedBox(
-                  //   width: CSizes.spaceBtnInputFields / 2,
-                  // ),
-                  Visibility(
-                    visible:
-                        invController.supplierDetailsExist.value ? false : true,
-                    child: Expanded(
-                      child: TextButton(
-                        onPressed: () {
-                          invController.toggleSupplierDetsFieldsVisibility();
-                        },
-                        child: Text(
-                          invController.includeSupplierDetails.value
-                              ? 'exclude supplier details?'
-                              : 'include supplier details?',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .apply(color: CColors.rBrown),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)),
-            content: SingleChildScrollView(
-              child: AddUpdateInventoryForm(
-                invController: invController,
-                textStyle: textStyle,
-                inventoryItem: invModel,
-              ),
-            ),
-          );
-        },
+            ],
+          ),
+        ),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        content: SingleChildScrollView(
+          child: AddUpdateInventoryForm(
+            invController: invController,
+            textStyle: textStyle,
+            inventoryItem: invModel,
+          ),
+        ),
       ),
     );
   }
