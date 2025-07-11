@@ -80,8 +80,10 @@ class AddUpdateInventoryForm extends StatelessWidget {
                           icon: Icon(
                             invController.txtCode.text.isEmpty
                                 ? Iconsax.flash
-                                : Iconsax.close_circle,
-                            size: CSizes.iconSm,
+                                : Iconsax.barcode,
+                            size: invController.txtCode.text.isEmpty
+                                ? CSizes.iconSm
+                                : CSizes.iconXs,
                             color: CColors.rBrown,
                           ),
                           label: Text(
@@ -126,8 +128,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   labelStyle: textStyle,
                   prefixIcon: Icon(
                     Iconsax.tag,
-                    color: CColors.rBrown,
-                    size: CSizes.iconSm,
+                    color: CColors.darkGrey,
+                    size: CSizes.iconXs,
                   ),
                 ),
                 style: const TextStyle(
@@ -158,8 +160,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   labelText: 'quantity/no. of units',
                   prefixIcon: Icon(
                     Iconsax.quote_up,
-                    color: CColors.rBrown,
-                    size: CSizes.iconSm,
+                    color: CColors.darkGrey,
+                    size: CSizes.iconXs,
                   ),
                 ),
                 validator: (value) {
@@ -192,8 +194,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   labelText: 'buying price',
                   prefixIcon: Icon(
                     Iconsax.bitcoin_card,
-                    color: CColors.rBrown,
-                    size: CSizes.iconSm,
+                    color: CColors.darkGrey,
+                    size: CSizes.iconXs,
                   ),
                 ),
                 style: const TextStyle(
@@ -246,8 +248,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   labelText: 'unit selling price',
                   prefixIcon: Icon(
                     Iconsax.card_pos,
-                    color: CColors.rBrown,
-                    size: CSizes.iconSm,
+                    color: CColors.grey,
+                    size: CSizes.iconXs,
                   ),
                 ),
                 style: const TextStyle(
