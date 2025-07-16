@@ -56,6 +56,7 @@ class CCartItemsRaw extends StatelessWidget {
                 children: [
                   CStoreItemWidget(
                     cartItem: cartController.cartItems[index],
+                    includeDate: true,
                   ),
                   SizedBox(
                     height: CSizes.spaceBtnItems / 4,

@@ -12,9 +12,11 @@ class CStoreItemWidget extends StatelessWidget {
   const CStoreItemWidget({
     super.key,
     required this.cartItem,
+    required this.includeDate,
   });
 
   final CCartItemModel cartItem;
+  final bool includeDate;
 
   @override
   Widget build(BuildContext context) {
@@ -45,43 +47,45 @@ class CStoreItemWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // -- item title, price, and stock count --
+              includeDate
+                  ? CProductTitleText(
+                      title: invItem.lastModified,
+                      smallSize: true,
+                      txtColor: isDarkTheme ? CColors.white : CColors.rBrown,
+                    )
+                  : SizedBox(),
+
               CProductTitleText(
-                title: invItem.lastModified,
-                smallSize: true,
-                txtColor: isDarkTheme ? CColors.white : CColors.rBrown,
-              ),
-              Flexible(
-                fit: FlexFit.loose,
-                child: CProductTitleText(
-                  title: cartItem.pName.toUpperCase(),
-                  smallSize: false,
-                  txtColor: invItem.quantity < 5
-                      ? Colors.red
-                      : isDarkTheme
-                          ? CColors.white
-                          : CColors.rBrown,
-                ),
+                title:
+                    '${cartItem.pName.toUpperCase()} (${cartItem.availableStockQty} stocked)',
+                maxLines: 2,
+                smallSize: false,
+                txtColor: invItem.quantity < 5
+                    ? Colors.red
+                    : isDarkTheme
+                        ? CColors.white
+                        : CColors.rBrown,
               ),
 
               // -- item attributes --
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '${cartItem.availableStockQty} stocked ',
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
-                    TextSpan(
-                      text: 'usp:${invItem.unitSellingPrice} ',
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
-                    TextSpan(
-                      text: 'code:${invItem.pCode}',
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
-                  ],
-                ),
-              ),
+              // Text.rich(
+              //   TextSpan(
+              //     children: [
+              //       TextSpan(
+              //         text: '${cartItem.availableStockQty} stocked ',
+              //         style: Theme.of(context).textTheme.labelSmall,
+              //       ),
+              //       TextSpan(
+              //         text: 'usp:${invItem.unitSellingPrice} ',
+              //         style: Theme.of(context).textTheme.labelSmall,
+              //       ),
+              //       TextSpan(
+              //         text: 'code:${invItem.pCode}',
+              //         style: Theme.of(context).textTheme.labelSmall,
+              //       ),
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         ),

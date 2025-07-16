@@ -20,23 +20,23 @@ class CBillingAmountSection extends StatelessWidget {
     return Column(
       children: [
         /// -- sub total --
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'subtotal',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            CProductPriceTxt(
-              price: cartController.totalCartPrice.value.toStringAsFixed(2),
-              isLarge: false,
-              txtColor: isDarkTheme ? CColors.white : CColors.rBrown,
-            ),
-          ],
-        ),
-        SizedBox(
-          height: CSizes.spaceBtnItems / 4,
-        ),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: [
+        //     Text(
+        //       'subtotal',
+        //       style: Theme.of(context).textTheme.bodyMedium,
+        //     ),
+        //     CProductPriceTxt(
+        //       price: cartController.totalCartPrice.value.toStringAsFixed(2),
+        //       isLarge: false,
+        //       txtColor: isDarkTheme ? CColors.white : CColors.rBrown,
+        //     ),
+        //   ],
+        // ),
+        // SizedBox(
+        //   height: CSizes.spaceBtnItems / 4,
+        // ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -60,37 +60,37 @@ class CBillingAmountSection extends StatelessWidget {
                   ),
           ],
         ),
-        SizedBox(
-          height: CSizes.spaceBtnItems / 10,
-        ),
+        // SizedBox(
+        //   height: CSizes.spaceBtnItems / 10,
+        // ),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //   children: [
+        //     Text(
+        //       'tax fee',
+        //       style: Theme.of(context).textTheme.bodyMedium,
+        //     ),
+        //     cartController.taxFee.value == 0
+        //         ? IconButton(
+        //             icon: Icon(
+        //               Iconsax.add,
+        //               color: isDarkTheme ? CColors.white : CColors.rBrown,
+        //               size: CSizes.iconMd,
+        //             ),
+        //             onPressed: () {},
+        //           )
+        //         : CProductPriceTxt(
+        //             price: cartController.taxFee.value.toStringAsFixed(2),
+        //             isLarge: false,
+        //             txtColor: CColors.rBrown,
+        //           ),
+        //   ],
+        // ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'tax fee',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            cartController.taxFee.value == 0
-                ? IconButton(
-                    icon: Icon(
-                      Iconsax.add,
-                      color: isDarkTheme ? CColors.white : CColors.rBrown,
-                      size: CSizes.iconMd,
-                    ),
-                    onPressed: () {},
-                  )
-                : CProductPriceTxt(
-                    price: cartController.taxFee.value.toStringAsFixed(2),
-                    isLarge: false,
-                    txtColor: CColors.rBrown,
-                  ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'total amount',
+              'total amount (vatable)',
               style: Theme.of(context).textTheme.bodyMedium!.apply(
                     fontWeightDelta: 2,
                   ),

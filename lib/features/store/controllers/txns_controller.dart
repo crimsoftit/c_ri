@@ -884,18 +884,21 @@ class CTxnsController extends GetxController {
                 ),
 
                 // -- textarea for reason of refund --
-                TextFormField(
-                  controller: txtRefundReason,
-                  decoration: InputDecoration(
-                    labelText: 'reason for refund(optional)',
-                    //labelStyle: textStyle,
-                    suffixIcon: const Icon(
-                      Iconsax.message,
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: TextFormField(
+                    controller: txtRefundReason,
+                    decoration: InputDecoration(
+                      labelText: 'reason for refund(optional)',
+                      //labelStyle: textStyle,
+                      suffixIcon: const Icon(
+                        Iconsax.message,
+                      ),
                     ),
-                  ),
-                  maxLines: 1, // marked for observation - could be a textarea
-                  style: const TextStyle(
-                    fontWeight: FontWeight.normal,
+                    maxLines: 1, // marked for observation - could be a textarea
+                    style: const TextStyle(
+                      fontWeight: FontWeight.normal,
+                    ),
                   ),
                 ),
                 // Divider(

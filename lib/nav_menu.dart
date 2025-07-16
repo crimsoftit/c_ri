@@ -22,77 +22,89 @@ class NavMenu extends StatelessWidget {
     Get.put(CCartController());
     Get.put(CInventoryController());
 
-    invController.onInit();
-    cartController.fetchCartItems();
+    // invController.onInit();
+    // cartController.fetchCartItems();
 
     GlobalKey navBarGlobalKey = GlobalKey(debugLabel: 'bottomAppBar');
 
-    return Scaffold(
-      bottomNavigationBar: Obx(
-        () => NavigationBar(
-          key: navBarGlobalKey,
-          height: 80.0,
-          elevation: 0,
-          selectedIndex: navController.selectedIndex.value,
-          onDestinationSelected: (index) {
-            navController.selectedIndex.value = index;
-          },
-          backgroundColor: isDark
-              ? CNetworkManager.instance.hasConnection.value
-                  ? CColors.rBrown
-                  : CColors.black
-              : CNetworkManager.instance.hasConnection.value
-                  ? CColors.rBrown.withValues(alpha: 0.1)
-                  : CColors.black.withValues(alpha: 0.1),
-          indicatorColor: isDark
-              ? CColors.white.withValues(alpha: 0.3)
-              : CNetworkManager.instance.hasConnection.value
-                  ? CColors.rBrown.withValues(alpha: 0.3)
-                  : CColors.black.withValues(alpha: 0.3),
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Iconsax.home),
-              label: 'home',
-            ),
-            NavigationDestination(
-              icon: Icon(
-                Iconsax.shop,
-              ),
-              label: 'store',
-            ),
-            // NavigationDestination(
-            //   icon: Icon(Iconsax.shop),
-            //   label: 'store items',
-            // ),
-            // NavigationDestination(
-            //   icon: Icon(Iconsax.card_tick),
-            //   label: 'inventory',
-            // ),
+    return Obx(
+      () {
+        if (invController.inventoryItems.isEmpty &&
+            !invController.isLoading.value) {
+          invController.onInit();
+        }
 
-            // NavigationDestination(
-            //   icon: Icon(Iconsax.empty_wallet_time),
-            //   label: 'sales_raw',
-            // ),
-            NavigationDestination(
-              icon: Icon(Iconsax.wallet_check),
-              label: 'txns',
-            ),
-            NavigationDestination(
-              icon: Icon(Iconsax.setting),
-              label: 'account',
-            ),
-            NavigationDestination(
-              icon: Icon(Iconsax.user),
-              label: 'profile',
-            ),
-          ],
-        ),
-      ),
-      body: Obx(
-        () {
-          return navController.screens[navController.selectedIndex.value];
-        },
-      ),
+        if (cartController.cartItems.isEmpty &&
+            !cartController.cartItemsLoading.value) {
+          cartController.fetchCartItems();
+        }
+
+        return Scaffold(
+          bottomNavigationBar: NavigationBar(
+            key: navBarGlobalKey,
+            height: 80.0,
+            elevation: 0,
+            selectedIndex: navController.selectedIndex.value,
+            onDestinationSelected: (index) {
+              navController.selectedIndex.value = index;
+            },
+            backgroundColor: isDark
+                ? CNetworkManager.instance.hasConnection.value
+                    ? CColors.rBrown
+                    : CColors.black
+                : CNetworkManager.instance.hasConnection.value
+                    ? CColors.rBrown.withValues(alpha: 0.1)
+                    : CColors.black.withValues(alpha: 0.1),
+            indicatorColor: isDark
+                ? CColors.white.withValues(alpha: 0.3)
+                : CNetworkManager.instance.hasConnection.value
+                    ? CColors.rBrown.withValues(alpha: 0.3)
+                    : CColors.black.withValues(alpha: 0.3),
+            destinations: const [
+              NavigationDestination(
+                icon: Icon(Iconsax.home),
+                label: 'home',
+              ),
+              NavigationDestination(
+                icon: Icon(
+                  Iconsax.shop,
+                ),
+                label: 'store',
+              ),
+              // NavigationDestination(
+              //   icon: Icon(Iconsax.shop),
+              //   label: 'store items',
+              // ),
+              // NavigationDestination(
+              //   icon: Icon(Iconsax.card_tick),
+              //   label: 'inventory',
+              // ),
+
+              // NavigationDestination(
+              //   icon: Icon(Iconsax.empty_wallet_time),
+              //   label: 'sales_raw',
+              // ),
+              NavigationDestination(
+                icon: Icon(Iconsax.wallet_check),
+                label: 'txns',
+              ),
+              // NavigationDestination(
+              //   icon: Icon(Iconsax.wallet_check),
+              //   label: 'checkout',
+              // ),
+              NavigationDestination(
+                icon: Icon(Iconsax.setting),
+                label: 'account',
+              ),
+              NavigationDestination(
+                icon: Icon(Iconsax.user),
+                label: 'profile',
+              ),
+            ],
+          ),
+          body: navController.screens[navController.selectedIndex.value],
+        );
+      },
     );
   }
 }

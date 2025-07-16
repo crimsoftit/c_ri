@@ -86,6 +86,7 @@ class CCartItems extends StatelessWidget {
               return Column(
                 children: [
                   CStoreItemWidget(
+                    includeDate: true,
                     cartItem: cartController.cartItems[index],
                   ),
                   SizedBox(

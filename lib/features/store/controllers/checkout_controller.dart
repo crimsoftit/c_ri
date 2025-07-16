@@ -126,6 +126,17 @@ class CCheckoutController extends GetxController {
 
       if (itemsInCart.isNotEmpty) {
         txnId.value = CHelperFunctions.generateTxnId();
+
+        var userCoordinates = '';
+
+        if (locationController.userLocation.value!.latitude == null ||
+            locationController.userLocation.value!.longitude == null) {
+          userCoordinates = userController.user.value.locationCoordinates;
+        } else {
+          userCoordinates =
+              'lat: ${locationController.userLocation.value!.latitude} long: ${locationController.userLocation.value!.longitude}';
+        }
+
         for (var cartItem in itemsInCart) {
           var newTxnData = CTxnsModel(
             txnId.value,
@@ -153,7 +164,8 @@ class CCheckoutController extends GetxController {
             locationController.uAddress.value != ''
                 ? locationController.uAddress.value
                 : userController.user.value.userAddress,
-            'lat: ${locationController.userLocation.value!.latitude ?? ''} long: ${locationController.userLocation.value!.longitude ?? ''}',
+            userCoordinates,
+            //'lat: ${locationController.userLocation.value!.latitude ?? ''} long: ${locationController.userLocation.value!.longitude ?? ''}',
             DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now()),
             0,
             'append',
@@ -246,10 +258,14 @@ class CCheckoutController extends GetxController {
         );
       }
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'error processing txn..',
-        message: '$e',
-      );
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'error processing txn..',
+          message: '$e',
+        );
+      }
+
       throw e.toString();
     }
   }

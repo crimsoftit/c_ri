@@ -41,10 +41,7 @@ class HomeScreen extends StatelessWidget {
     Get.put(CDashboardController());
     Get.put(CTxnsController());
 
-    invController.fetchUserInventoryItems();
-    invController.fetchTopSellers();
-    txnsController.fetchSoldItems();
-
+    //invController.onInit();
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(

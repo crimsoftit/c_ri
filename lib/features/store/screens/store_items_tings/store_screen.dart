@@ -6,7 +6,6 @@ import 'package:c_ri/features/store/controllers/cart_controller.dart';
 import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
-import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/checkout/widgets/checkout_scan_fab.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/inventory/widgets/inv_dialog.dart';
@@ -34,12 +33,12 @@ class _CStoreScreenState extends State<CStoreScreen> {
     final invController = Get.put(CInventoryController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    final txnsController = Get.put(CTxnsController());
+    //final txnsController = Get.put(CTxnsController());
 
-    txnsController.fetchTxns();
+    //txnsController.fetchTxns();
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
-    invController.fetchUserInventoryItems();
+    //invController.fetchUserInventoryItems();
 
     final searchController = Get.put(CSearchBarController());
     return DefaultTabController(

@@ -41,7 +41,7 @@ class CPaymentMethodSection extends StatelessWidget {
           height: CSizes.spaceBtnItems / 8,
         ),
         Row(
-          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             CRoundedContainer(
               width: 60.0,
@@ -58,13 +58,15 @@ class CPaymentMethodSection extends StatelessWidget {
                 fit: BoxFit.contain,
               ),
             ),
-            const SizedBox(
-              width: CSizes.spaceBtnItems / 4,
-            ),
-            Text(
-              //checkoutController.selectedPaymentMethod.value.platformName,
-              platformName,
-              style: Theme.of(context).textTheme.bodyLarge,
+            // const SizedBox(
+            //   width: CSizes.spaceBtnItems / 4,
+            // ),
+            Expanded(
+              child: Text(
+                //checkoutController.selectedPaymentMethod.value.platformName,
+                platformName,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
             ),
             txtFieldSpace,
           ],

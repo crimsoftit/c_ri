@@ -248,7 +248,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   labelText: 'unit selling price',
                   prefixIcon: Icon(
                     Iconsax.card_pos,
-                    color: CColors.grey,
+                    color: CColors.darkGrey,
                     size: CSizes.iconXs,
                   ),
                 ),

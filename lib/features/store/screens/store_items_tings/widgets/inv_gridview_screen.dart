@@ -39,9 +39,11 @@ class CInvGridviewScreen extends StatelessWidget {
 
     return Obx(
       () {
+        //invController.onInit();
+
         /// -- empty data widget --
         final noDataWidget = SizedBox(
-          height: 400.0,
+          height: 200.0,
           child: CAnimatedLoaderWidget(
             actionBtnWidth: 180.0,
             actionBtnText: 'let\'s fill it!',
@@ -64,13 +66,6 @@ class CInvGridviewScreen extends StatelessWidget {
           ),
         );
 
-        // run loader --
-        if (invController.isLoading.value) {
-          return const CVerticalProductShimmer(
-            itemCount: 7,
-          );
-        }
-
         if (invController.foundInventoryItems.isEmpty &&
             searchController.showSearchField.value &&
             !invController.isLoading.value) {
@@ -81,18 +76,15 @@ class CInvGridviewScreen extends StatelessWidget {
         //   return CGridLayoutShimmer(itemCount: 5);
         // }
 
-        if (invController.inventoryItems.isEmpty &&
-            !searchController.showSearchField.value &&
-            invController.foundInventoryItems.isEmpty &&
-            !invController.isLoading.value) {
+        if (invController.inventoryItems.isEmpty) {
           return noDataWidget;
-
-          // const Center(
-          //   child: NoDataScreen(
-          //     lottieImage: CImages.noDataLottie,
-          //     txt: 'No data found!',
-          //   ),
-          // );
+        }
+        // run loader --
+        if (invController.isLoading.value &&
+            invController.inventoryItems.isNotEmpty) {
+          return const CVerticalProductShimmer(
+            itemCount: 7,
+          );
         }
 
         return ListView(

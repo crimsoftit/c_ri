@@ -27,12 +27,13 @@ class CAnimatedTypeaheadField extends StatelessWidget {
     return Obx(
       () {
         return AnimatedContainer(
-          padding: const EdgeInsets.all(CSizes.defaultSpace / 4),
+          padding: const EdgeInsets.all(1.0),
           duration: const Duration(milliseconds: 200),
           width: searchBarController.showAnimatedTypeAheadField.value
               ? screenWidth * .93
-              : 50.0,
-          height: 50.0,
+              : 30.0,
+          height:
+              searchBarController.showAnimatedTypeAheadField.value ? 30 : 40.0,
           decoration: BoxDecoration(
             borderRadius: searchBarController.showAnimatedTypeAheadField.value
                 ? BorderRadius.circular(5.0)
@@ -45,7 +46,7 @@ class CAnimatedTypeaheadField extends StatelessWidget {
                   child: CRoundedContainer(
                     width: screenWidth * .88,
                     showBorder: false,
-                    borderRadius: 5.0,
+                    borderRadius: 15.0,
                     child: const CTypeAheadSearchField(),
                   ),
                 )
@@ -64,11 +65,23 @@ class CAnimatedTypeaheadField extends StatelessWidget {
                     },
                     child: const Icon(
                       Iconsax.search_normal,
-                      color: CColors.white,
+                      color: CColors.rBrown,
                       size: CSizes.iconMd,
                     ),
                   ),
                 ),
+
+          // IconButton(
+          //     onPressed: () {
+          //       searchBarController.onTypeAheadSearchIconTap();
+          //       invController.fetchUserInventoryItems();
+          //     },
+          //     icon: const Icon(
+          //       Iconsax.search_normal,
+          //       color: CColors.rBrown,
+          //       size: CSizes.iconMd,
+          //     ),
+          //   ),
         );
       },
     );

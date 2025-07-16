@@ -17,8 +17,9 @@ class CNavMenuController extends GetxController {
     //const CInventoryScreen(),
 
     // const CSalesScreen(),
-    // const CSalesScreenRaw(),
+
     const CTxnsScreen(),
+    //const CCheckoutScreenRaw(),
     const SettingsScreen(),
     const ProfileScreen(),
   ];
