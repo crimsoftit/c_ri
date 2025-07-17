@@ -33,12 +33,8 @@ class _CStoreScreenState extends State<CStoreScreen> {
     final invController = Get.put(CInventoryController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-    //final txnsController = Get.put(CTxnsController());
 
-    //txnsController.fetchTxns();
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
-
-    //invController.fetchUserInventoryItems();
 
     final searchController = Get.put(CSearchBarController());
     return DefaultTabController(

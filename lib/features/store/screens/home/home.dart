@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
     final txnsController = Get.put(CTxnsController());
 
     Get.put(CDashboardController());
-    Get.put(CTxnsController());
+    //Get.put(CTxnsController());
 
     //invController.onInit();
     return Scaffold(

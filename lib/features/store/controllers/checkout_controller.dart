@@ -578,9 +578,13 @@ class CCheckoutController extends GetxController {
   Future handleNavToCheckout() async {
     final cartController = Get.put(CCartController());
     Get.put(CCheckoutController());
-    cartController.fetchCartItems().then((_) {
-      Get.to(() => const CCheckoutScreen());
-    });
+    cartController.fetchCartItems().then(
+      (_) async {
+        if (await cartController.fetchCartItems()) {
+          Get.to(() => const CCheckoutScreen());
+        }
+      },
+    );
   }
 
   @override

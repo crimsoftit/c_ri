@@ -36,6 +36,7 @@ class CInvDetails extends StatelessWidget {
           final currency = CHelperFunctions.formatCurrency(
               userController.user.value.currencyCode);
           var itemId = Get.arguments;
+
           var invItem = invController.inventoryItems
               .firstWhere((item) => item.productId == itemId);
 
@@ -274,8 +275,16 @@ class CInvDetails extends StatelessWidget {
                 ],
               ),
             ),
-            bottomNavigationBar: CAddToCartBottomNavBar(
-              inventoryItem: invItem,
+            bottomNavigationBar: Obx(
+              () {
+                if (invController.inventoryItems.isEmpty &&
+                    !invController.isLoading.value) {
+                  invController.fetchUserInventoryItems();
+                }
+                return CAddToCartBottomNavBar(
+                  inventoryItem: invItem,
+                );
+              },
             ),
             floatingActionButton: Obx(
               () {

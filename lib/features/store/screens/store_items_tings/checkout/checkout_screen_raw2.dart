@@ -27,8 +27,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class CCheckoutScreen extends StatelessWidget {
-  const CCheckoutScreen({super.key});
+class CCheckoutScreenRaw2 extends StatelessWidget {
+  const CCheckoutScreenRaw2({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,78 +52,47 @@ class CCheckoutScreen extends StatelessWidget {
         /// -- app bar --
         appBar: AppBar(
           automaticallyImplyLeading: true,
-          iconTheme: IconThemeData(
-            color: CColors.rBrown,
+          leading: IconButton(
+            icon: Icon(
+              Iconsax.arrow_left,
+              size: CSizes.iconMd,
+              color: CColors.rBrown,
+            ),
+            onPressed: () {
+              //Get.back();
+              Navigator.pop(context);
+            },
           ),
-          leadingWidth: 10.0,
           title: Padding(
             padding: const EdgeInsets.only(
               top: 10.0,
               left: 0,
             ),
+            //child: const CTypeAheadSearchField(),
             child: Obx(
               () {
+                //final screenWidth = CHelperFunctions.screenWidth();
                 return searchBarController.showAnimatedTypeAheadField.value
                     ? CAnimatedTypeaheadField(
                         boxColor: CColors.white,
-                        searchBarWidth: CHelperFunctions.screenWidth() * .84,
+                        searchBarWidth: CHelperFunctions.screenWidth() * .96,
                       )
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          // IconButton(
-                          //   icon: Icon(
-                          //     Iconsax.arrow_left,
-                          //     size: CSizes.iconMd,
-                          //     color: CColors.rBrown,
-                          //   ),
-                          //   onPressed: () {
-                          //     searchBarController
-                          //         .showAnimatedTypeAheadField.value = false;
-                          //     //Get.back();
-                          //     Navigator.pop(context);
-                          //   },
-                          // ),
                           SizedBox(
-                            width: CHelperFunctions.screenWidth() * 0.72,
+                            width: CHelperFunctions.screenWidth() * 0.62,
                           ),
                           CAnimatedTypeaheadField(
                             boxColor: CColors.transparent,
-                            searchBarWidth: 30.0,
+                            searchBarWidth:
+                                CHelperFunctions.screenWidth() * .96,
                           ),
                         ],
                       );
               },
             ),
           ),
-          // title: Padding(
-          //   // padding: const EdgeInsets.only(top: 10.0, bottom: 8.0, left: 0,),
-          //   padding: const EdgeInsets.only(
-          //     top: 10.0,
-          //     left: 0,
-          //   ),
-          //   //child: const CTypeAheadSearchField(),
-          //   child: Obx(
-          //     () {
-          //       //final screenWidth = CHelperFunctions.screenWidth();
-          //       return searchBarController.showAnimatedTypeAheadField.value
-          //           ? CAnimatedTypeaheadField(
-          //               boxColor: CColors.white,
-          //             )
-          //           : Row(
-          //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //               children: [
-          //                 SizedBox(
-          //                   width: CHelperFunctions.screenWidth() * 0.62,
-          //                 ),
-          //                 CAnimatedTypeaheadField(
-          //                   boxColor: CColors.transparent,
-          //                 ),
-          //               ],
-          //             );
-          //     },
-          //   ),
-          // ),
         ),
         backgroundColor: CColors.rBrown.withValues(alpha: 0.2),
         body: SingleChildScrollView(

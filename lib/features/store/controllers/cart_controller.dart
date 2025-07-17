@@ -32,8 +32,16 @@ class CCartController extends GetxController {
     fetchCartItems();
   }
 
+  @override
+  void onInit() async {
+    cartItemsLoading.value = false;
+    await fetchCartItems();
+
+    super.onInit();
+  }
+
   /// -- fetch cart items from device storage --
-  Future fetchCartItems() async {
+  Future<bool> fetchCartItems() async {
     try {
       cartItemsLoading.value = true;
 
@@ -45,9 +53,9 @@ class CCartController extends GetxController {
             (item) => CCartItemModel.fromJson(item as Map<String, dynamic>)));
 
         updateCartTotals();
-
-        //cartItemsLoading.value = false;
       }
+      cartItemsLoading.value = false;
+      return true;
     } catch (e) {
       final cartItemsStrings =
           CLocalStorage.instance().readData<List<dynamic>>('cartItems');
@@ -56,9 +64,10 @@ class CCartController extends GetxController {
             (item) => CCartItemModel.fromJson(item as Map<String, dynamic>)));
 
         updateCartTotals();
-        //cartItemsLoading.value = false;
-      } else {
         cartItemsLoading.value = false;
+        return true;
+      } else {
+        //cartItemsLoading.value = false;
         if (kDebugMode) {
           print('$e');
           CPopupSnackBar.errorSnackBar(
@@ -66,11 +75,14 @@ class CCartController extends GetxController {
             message: 'an unknown error occurred while fetching cart items: $e',
           );
         }
-        throw e.toString();
+        //throw e.toString();
+        cartItemsLoading.value = false;
+        return false;
       }
-    } finally {
-      cartItemsLoading.value = false;
     }
+    // finally {
+    //   cartItemsLoading.value = false;
+    // }
   }
 
   /// -- add items to cart --

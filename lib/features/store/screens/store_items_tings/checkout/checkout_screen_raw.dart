@@ -145,6 +145,7 @@ class CCheckoutScreenRaw extends StatelessWidget {
                         ),
                         CAnimatedTypeaheadField(
                           boxColor: Colors.transparent,
+                          searchBarWidth: CHelperFunctions.screenWidth() * .35,
                         ),
                       ],
                     );

@@ -4,16 +4,25 @@ import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/models/txns_model.dart';
 import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:gsheets/gsheets.dart';
 
 //CHECK OUT THE GOOGLE APPS SCRIPT APPROACH -- FROM A PUBLISHED SHEET
-class StoreSheetsApi {
+class StoreSheetsApi extends GetxController {
+  /// -- variables --
   static const gsheetCredentials = GsheetsCreds.credentials;
   static const spreadsheetId = '1iUtgSjdyP3Q3cpdyhOftTAZI8_Bujv69QZpg06oMK_E';
-
   static final gsheets = GSheets(gsheetCredentials);
-
   static Worksheet? invSheet, txnsSheet;
+
+  static final RxBool deletingInvItems = false.obs;
+
+  @override
+  void onInit() {
+    deletingInvItems.value = false;
+
+    super.onInit();
+  }
 
   static Future initSpreadSheets() async {
     try {
@@ -40,12 +49,12 @@ class StoreSheetsApi {
         );
       }
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'error initializing gsheets!!',
-        message: '$e',
-      );
       if (kDebugMode) {
         print('gsheet api init error: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'error initializing gsheets!!',
+          message: '$e',
+        );
       }
     }
   }
@@ -98,10 +107,14 @@ class StoreSheetsApi {
       if (invSheet == null) return false;
       return invSheet!.values.map.insertRowByKey(id, itemModel);
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'error updating cloud inventory data',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'error updating cloud inventory data',
+          message: e.toString(),
+        );
+      }
+
       throw e.toString();
     }
   }
@@ -120,10 +133,14 @@ class StoreSheetsApi {
         rowKey: id,
       );
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'error updating stockCount data in cloud',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'error updating stockCount data in cloud',
+          message: e.toString(),
+        );
+      }
+
       throw e.toString();
     }
   }
@@ -142,10 +159,14 @@ class StoreSheetsApi {
         rowKey: id,
       );
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'error updating sales count data in cloud',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'error updating sales count data in cloud',
+          message: e.toString(),
+        );
+      }
+
       throw e.toString();
     }
   }
@@ -153,9 +174,10 @@ class StoreSheetsApi {
   /// -- delete inventory data in google sheets by its id --
   static Future<bool> deleteInvItemById(int id) async {
     try {
-      //initializeSpreadSheets();
+      //initSpreadSheets();
       // ignore: prefer_typing_uninitialized_variables
       var returnCmd;
+      deletingInvItems.value = true;
 
       if (invSheet == null) return false;
 
@@ -164,18 +186,26 @@ class StoreSheetsApi {
 
       if (invItemIndex.isNegative) {
         returnCmd = false;
+        //deletingInvItems.value = false;
         return false;
       } else {
         returnCmd = invSheet!.deleteRow(invItemIndex);
+        //deletingInvItems.value = false;
       }
-
+      deletingInvItems.value = false;
       return returnCmd;
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'error deleting INVENTORY data from cloud!',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'error deleting INVENTORY data from cloud!',
+          message: e.toString(),
+        );
+      }
+      deletingInvItems.value = false;
       throw e.toString();
+    } finally {
+      deletingInvItems.value = false;
     }
   }
 
@@ -188,10 +218,10 @@ class StoreSheetsApi {
       txnsSheet!.values.map.appendRows(rowItems);
       return true;
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'error syncing txns'.toUpperCase(),
-        message: 'an error occurred while uploading txns to cloud',
-      );
+      // CPopupSnackBar.errorSnackBar(
+      //   title: 'error syncing txns'.toUpperCase(),
+      //   message: 'an error occurred while uploading txns to cloud',
+      // );
       if (kDebugMode) {
         print(e.toString());
         CPopupSnackBar.errorSnackBar(
@@ -255,10 +285,14 @@ class StoreSheetsApi {
       if (txnsSheet == null) return false;
       return txnsSheet!.values.map.insertRowByKey(soldItemId, receiptItemModel);
     } catch (e) {
-      CPopupSnackBar.errorSnackBar(
-        title: 'error updating receipt item\'s cloud data',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print(e.toString());
+        CPopupSnackBar.errorSnackBar(
+          title: 'error updating receipt item\'s cloud data',
+          message: e.toString(),
+        );
+      }
+
       throw e.toString();
     }
   }

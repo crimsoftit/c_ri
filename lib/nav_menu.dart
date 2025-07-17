@@ -19,8 +19,8 @@ class NavMenu extends StatelessWidget {
 
     final navController = Get.put(CNavMenuController());
 
-    Get.put(CCartController());
     Get.put(CInventoryController());
+    Get.put(CCartController());
 
     // invController.onInit();
     // cartController.fetchCartItems();

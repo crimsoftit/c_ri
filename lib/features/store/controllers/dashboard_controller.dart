@@ -1,3 +1,4 @@
+import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/foundation.dart';
@@ -7,17 +8,23 @@ class CDashboardController extends GetxController {
   static CDashboardController get instance => Get.find();
 
   /// -- variables --
-  final RxList<double> weeklySales = <double>[].obs;
+  final invController = Get.put(CInventoryController());
   final txnsController = Get.put(CTxnsController());
+  final RxList<double> weeklySales = <double>[].obs;
 
   @override
-  void onInit() {
-    calculateWeeklySales();
+  void onInit() async {
+    await invController.fetchUserInventoryItems().then(
+      (_) async {
+        await calculateWeeklySales();
+      },
+    );
+
     super.onInit();
   }
 
   /// -- calculate weekly sales --
-  void calculateWeeklySales() {
+  Future calculateWeeklySales() async {
     // reset weeklySales values to zero
     weeklySales.value = List<double>.filled(7, 0.0);
 
