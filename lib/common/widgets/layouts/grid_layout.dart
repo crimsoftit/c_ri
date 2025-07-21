@@ -29,6 +29,7 @@ class CGridLayout extends StatelessWidget {
       ),
       itemBuilder: (context, index) {
         return CProductCardVertical(
+          containerHeight: 182.0,
           itemName: '',
           pId: 0,
           pCode: '',

@@ -49,7 +49,9 @@ class CTxnsController extends GetxController {
   Future initTxnsSync() async {
     if (localStorage.read('SyncTxnsDataWithCloud') == true) {
       await importTxnsFromCloud();
-      localStorage.write('SyncTxnsDataWithCloud', false);
+      if (await importTxnsFromCloud()) {
+        localStorage.write('SyncTxnsDataWithCloud', false);
+      }
 
       await fetchSoldItems();
     }
@@ -82,6 +84,7 @@ class CTxnsController extends GetxController {
   final RxString customerBalErrorMsg = ''.obs;
   final RxString amtIssuedFieldError = ''.obs;
 
+  final RxBool isImportingTxnsFromCloud = false.obs;
   final RxBool itemExists = false.obs;
   final RxBool showAmountIssuedField = true.obs;
   final RxBool isLoading = false.obs;
@@ -693,9 +696,9 @@ class CTxnsController extends GetxController {
   }
 
   /// -- import transactions from cloud --
-  Future importTxnsFromCloud() async {
+  Future<bool> importTxnsFromCloud() async {
     try {
-      isLoading.value = true;
+      isImportingTxnsFromCloud.value = true;
 
       await fetchSoldItems();
 
@@ -734,6 +737,7 @@ class CTxnsController extends GetxController {
 
             await dbHelper.addSoldItem(dbTxnImports);
             await fetchSoldItems();
+            isImportingTxnsFromCloud.value = false;
             isLoading.value = false;
 
             if (kDebugMode) {
@@ -743,12 +747,18 @@ class CTxnsController extends GetxController {
           }
         }
       }
+      isImportingTxnsFromCloud.value = false;
+      return true;
     } catch (e) {
       isLoading.value = false;
-      return CPopupSnackBar.errorSnackBar(
-        title: 'ERROR IMPORTING USER DATA FROM CLOUD!',
-        message: e.toString(),
-      );
+      if (kDebugMode) {
+        print('ERROR IMPORTING USER TXNS DATA FROM CLOUD!: $e');
+        CPopupSnackBar.errorSnackBar(
+          title: 'ERROR IMPORTING USER DATA FROM CLOUD!',
+          message: e.toString(),
+        );
+      }
+      return false;
     }
   }
 

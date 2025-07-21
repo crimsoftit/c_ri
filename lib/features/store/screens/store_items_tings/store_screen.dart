@@ -210,7 +210,7 @@ class _CStoreScreenState extends State<CStoreScreen> {
               children: [
                 /// -- inventory list items --
                 CInvGridviewScreen(
-                  mainAxisExtent: 176.0,
+                  mainAxisExtent: 182.0,
                 ),
 
                 /// -- transactions list view --

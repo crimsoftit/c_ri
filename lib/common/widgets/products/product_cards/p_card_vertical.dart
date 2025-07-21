@@ -29,8 +29,12 @@ class CProductCardVertical extends StatelessWidget {
     this.qtySold,
     this.syncAction,
     this.usp,
+    required this.containerHeight,
   });
 
+  final double containerHeight;
+  final int? lowStockNotifierLimit;
+  final int pId;
   final String? bp,
       lastModified,
       isSynced,
@@ -41,8 +45,7 @@ class CProductCardVertical extends StatelessWidget {
       syncAction,
       usp;
   final String itemName, pCode;
-  final int pId;
-  final int? lowStockNotifierLimit;
+
   final VoidCallback? onTapAction, deleteAction, onAvatarIconTap;
 
   @override
@@ -72,7 +75,8 @@ class CProductCardVertical extends StatelessWidget {
                   ? CColors.rBrown.withValues(alpha: 0.3)
                   : CColors.lightGrey,
               borderRadius: CSizes.pImgRadius - 4,
-              height: 169.0,
+              //height: 182.0,
+              height: containerHeight,
               padding: const EdgeInsets.only(
                 left: CSizes.sm,
               ),
@@ -83,7 +87,7 @@ class CProductCardVertical extends StatelessWidget {
                 children: [
                   CRoundedContainer(
                     width: CHelperFunctions.screenWidth() * 0.45,
-                    height: 55.0,
+                    height: 52.0,
                     bgColor: Colors.transparent,
                     boxShadow: [],
                     child: Stack(
@@ -185,17 +189,7 @@ class CProductCardVertical extends StatelessWidget {
                               isDarkTheme ? CColors.white : CColors.rBrown,
                           maxLines: 2,
                         ),
-                        // Text(
-                        //   '($qtyAvailable stocked, $qtySold sold)',
-                        //   style: Theme.of(context).textTheme.labelSmall!.apply(
-                        //         color: isDarkTheme
-                        //             ? CColors.white
-                        //             : CColors.darkGrey,
-                        //         fontSizeFactor: 1,
-                        //       ),
-                        //   overflow: TextOverflow.ellipsis,
-                        //   maxLines: 1,
-                        // ),
+
                         Text(
                           '($qtyRefunded unit(s) refunded)',
                           style: Theme.of(context).textTheme.labelSmall!.apply(
@@ -213,7 +207,7 @@ class CProductCardVertical extends StatelessWidget {
                               ),
                         ),
                         Visibility(
-                          visible: false,
+                          visible: true,
                           child: Text(
                             'isSynced: $isSynced, syncAction: $syncAction',
                             style:
@@ -235,8 +229,8 @@ class CProductCardVertical extends StatelessWidget {
                         ),
 
                         SizedBox(
-                          width: 170.0,
-                          height: 38.0,
+                          width: CHelperFunctions.screenWidth(),
+                          height: 35.0,
                           child: Stack(
                             children: [
                               Positioned(

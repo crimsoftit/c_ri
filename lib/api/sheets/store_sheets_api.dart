@@ -11,7 +11,7 @@ import 'package:gsheets/gsheets.dart';
 class StoreSheetsApi extends GetxController {
   /// -- variables --
   static const gsheetCredentials = GsheetsCreds.credentials;
-  static const spreadsheetId = '1iUtgSjdyP3Q3cpdyhOftTAZI8_Bujv69QZpg06oMK_E';
+  static const spreadsheetId = GsheetsCreds.spreadSheetId;
   static final gsheets = GSheets(gsheetCredentials);
   static Worksheet? invSheet, txnsSheet;
 
@@ -101,7 +101,7 @@ class StoreSheetsApi extends GetxController {
   }
 
   /// -- update data (entire row) in google sheets --
-  static Future<bool> updateInvData(
+  static Future<bool> updateInvDataNoDeletions(
       int id, Map<String, dynamic> itemModel) async {
     try {
       if (invSheet == null) return false;
@@ -172,7 +172,7 @@ class StoreSheetsApi extends GetxController {
   }
 
   /// -- delete inventory data in google sheets by its id --
-  static Future<bool> deleteInvItemById(int id) async {
+  static Future<bool> deleteInvItemByIdAndNotForUpdates(int id) async {
     try {
       //initSpreadSheets();
       // ignore: prefer_typing_uninitialized_variables

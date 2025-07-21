@@ -4,6 +4,7 @@ import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
+import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:c_ri/utils/validators/validation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -353,6 +354,17 @@ class AddUpdateInventoryForm extends StatelessWidget {
                                 .validate()) {
                               return;
                             }
+                            if (invController.txtUnitSP.text.isNotEmpty &&
+                                invController.unitBP.value > 0) {
+                              if (invController.unitBP.value >
+                                  double.parse(invController.txtUnitSP.text)) {
+                                CPopupSnackBar.warningSnackBar(
+                                  title:
+                                      'is this the right unit selling price?',
+                                );
+                              }
+                            }
+
                             invController
                                 .addOrUpdateInventoryItem(inventoryItem);
 

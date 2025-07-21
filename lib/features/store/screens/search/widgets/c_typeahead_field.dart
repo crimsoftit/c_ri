@@ -34,7 +34,7 @@ class CTypeAheadSearchField extends StatelessWidget {
       height: 40.0,
       width: screenWidth,
       padding: const EdgeInsets.only(
-        top: 2.0,
+        top: 4.0,
       ),
       child: TypeAheadField<CInventoryModel>(
         builder: (context, controller, focusNode) {
@@ -45,7 +45,7 @@ class CTypeAheadSearchField extends StatelessWidget {
               border: InputBorder.none,
               prefixIcon: Padding(
                 padding: const EdgeInsets.only(
-                  bottom: 4.0,
+                  bottom: 3.0,
                 ),
                 child: Icon(
                   Iconsax.search_normal,
@@ -121,12 +121,18 @@ class CTypeAheadSearchField extends StatelessWidget {
             collapsedBackgroundColor: CColors.grey,
             expandedCrossAxisAlignment: CrossAxisAlignment.start,
             tilePadding: const EdgeInsets.all(
-              1.0,
+              5.0,
             ),
             title: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(
+                  suggestion.lastModified,
+                  style: Theme.of(context).textTheme.labelSmall!.apply(
+                        color: CColors.darkGrey,
+                      ),
+                ),
                 Text(
                   // '${suggestion.name.toUpperCase()} (#${suggestion.productId})',
                   '${suggestion.name.toUpperCase()} (@ $currencySymbol.${suggestion.unitSellingPrice})',
@@ -138,9 +144,9 @@ class CTypeAheadSearchField extends StatelessWidget {
                   maxLines: 2,
                 ),
                 Text(
-                  '(${suggestion.quantity} stocked)',
+                  '#${suggestion.pCode}; (${suggestion.quantity} stocked)',
                   style: Theme.of(context).textTheme.labelSmall!.apply(
-                        color: CColors.darkGrey,
+                        color: CColors.rBrown,
                       ),
                 ),
                 // Text(
@@ -170,8 +176,9 @@ class CTypeAheadSearchField extends StatelessWidget {
                         // );
                         return CRoundedContainer(
                           bgColor: CColors.rBrown,
-                          width: 100.0,
                           height: 30.0,
+                          showBorder: false,
+                          width: 100.0,
                           child: Center(
                             child: CircularProgressIndicator(
                               color: CColors.white,
@@ -222,9 +229,12 @@ class CTypeAheadSearchField extends StatelessWidget {
                             horizontalSpacing: CSizes.spaceBtnItems / 2.0,
                             btnsLeftPadding: 0,
                             btnsRightPadding: 0,
-                            iconWidth: 31.2,
-                            iconHeight: 31.2,
-                            add2CartActionBtnTxt: 'add',
+                            iconWidth: 32.0,
+                            iconHeight: 32.0,
+                            add2CartActionBtnTxt:
+                                cartController.itemQtyInCart.value >= 1
+                                    ? 'added'
+                                    : 'add',
                             add2CartBtnTxtColor:
                                 cartController.itemQtyInCart.value < 1
                                     ? CColors.grey
@@ -233,13 +243,14 @@ class CTypeAheadSearchField extends StatelessWidget {
                                 cartController.itemQtyInCart.value < 1
                                     ? CColors.grey
                                     : CColors.rBrown,
-                            addToCartBtnAction:
-                                cartController.itemQtyInCart.value < 1
-                                    ? null
-                                    : () {
-                                        // cartController.addToCart(suggestion);
-                                        // cartController.fetchCartItems();
-                                      },
+                            // addToCartBtnAction:
+                            //     cartController.itemQtyInCart.value < 1
+                            //         ? null
+                            //         : () {
+                            //             // cartController.addToCart(suggestion);
+                            //             // cartController.fetchCartItems();
+                            //           },
+                            addToCartBtnAction: null,
 
                             removeItemBtnAction: () {
                               invController.fetchUserInventoryItems();

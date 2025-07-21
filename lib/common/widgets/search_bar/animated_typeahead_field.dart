@@ -27,7 +27,7 @@ class CAnimatedTypeaheadField extends StatelessWidget {
     return Obx(
       () {
         return AnimatedContainer(
-          padding: const EdgeInsets.all(1.0),
+          padding: const EdgeInsets.only(right: 0.0),
           duration: const Duration(milliseconds: 200),
           width: searchBarWidth,
           // width: searchBarController.showAnimatedTypeAheadField.value

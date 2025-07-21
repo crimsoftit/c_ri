@@ -55,10 +55,21 @@ class CCheckoutScreen extends StatelessWidget {
           iconTheme: IconThemeData(
             color: CColors.rBrown,
           ),
-          leadingWidth: 10.0,
+          leading: IconButton(
+            icon: Icon(
+              Iconsax.arrow_left,
+              size: CSizes.iconMd,
+              color: CColors.rBrown,
+            ),
+            onPressed: () {
+              //Get.back();
+              Navigator.pop(context);
+            },
+          ),
+          leadingWidth: 20.0,
           title: Padding(
             padding: const EdgeInsets.only(
-              top: 10.0,
+              top: 1.0,
               left: 0,
             ),
             child: Obx(
@@ -66,7 +77,7 @@ class CCheckoutScreen extends StatelessWidget {
                 return searchBarController.showAnimatedTypeAheadField.value
                     ? CAnimatedTypeaheadField(
                         boxColor: CColors.white,
-                        searchBarWidth: CHelperFunctions.screenWidth() * .84,
+                        searchBarWidth: CHelperFunctions.screenWidth() * .87,
                       )
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

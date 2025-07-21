@@ -1,9 +1,6 @@
 import 'package:c_ri/common/widgets/list_tiles/menu_tile.dart';
-import 'package:c_ri/common/widgets/products/cart/positioned_cart_counter_widget.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
-import 'package:c_ri/features/store/controllers/cart_controller.dart';
-import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/inventory/inventory_details/widgets/add_to_cart_bottom_nav_bar.dart';
@@ -11,7 +8,6 @@ import 'package:c_ri/features/store/screens/store_items_tings/inventory/widgets/
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
-import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
@@ -22,9 +18,9 @@ class CInvDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
-    final cartController = Get.put(CCartController());
+    //final cartController = Get.put(CCartController());
     final invController = Get.put(CInventoryController());
-    final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
+    //final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     final userController = Get.put(CUserController());
@@ -277,103 +273,100 @@ class CInvDetails extends StatelessWidget {
             ),
             bottomNavigationBar: Obx(
               () {
-                if (invController.inventoryItems.isEmpty &&
-                    !invController.isLoading.value) {
+                if (!invController.isLoading.value &&
+                    invController.inventoryItems.isEmpty) {
                   invController.fetchUserInventoryItems();
                 }
+                var thisItem = invController.inventoryItems
+                    .firstWhere((item) => item.productId == itemId);
                 return CAddToCartBottomNavBar(
-                  inventoryItem: invItem,
+                  inventoryItem: thisItem,
                 );
               },
             ),
-            floatingActionButton: Obx(
-              () {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    cartController.countOfCartItems.value >= 1
-                        ? Stack(
-                            alignment: Alignment.centerRight,
-                            children: [
-                              FloatingActionButton(
-                                onPressed: () {
-                                  //Get.to(() => const CCheckoutScreen());
-                                  final checkoutController =
-                                      Get.put(CCheckoutController());
-                                  checkoutController.handleNavToCheckout();
-                                },
-                                backgroundColor: isConnectedToInternet
-                                    ? Colors.brown
-                                    : CColors.black,
-                                foregroundColor: Colors.white,
-                                heroTag: 'checkout',
-                                child: const Icon(
-                                  Iconsax.wallet_check,
-                                ),
-                              ),
-                              CPositionedCartCounterWidget(
-                                counterBgColor: CColors.white,
-                                counterTxtColor: CColors.rBrown,
-                                rightPosition: 10.0,
-                                topPosition: 8.0,
-                              ),
-                            ],
-                          )
-                        : SizedBox(),
-                    const SizedBox(
-                      height: CSizes.spaceBtnSections / 8,
-                    ),
-                    FloatingActionButton(
-                      onPressed: () {
-                        invController.itemExists.value = true;
+            floatingActionButton: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                // cartController.countOfCartItems.value >= 1
+                //     ? Stack(
+                //         alignment: Alignment.centerRight,
+                //         children: [
+                //           FloatingActionButton(
+                //             onPressed: () {
+                //               //Get.to(() => const CCheckoutScreen());
+                //               final checkoutController =
+                //                   Get.put(CCheckoutController());
+                //               checkoutController.handleNavToCheckout();
+                //             },
+                //             backgroundColor: isConnectedToInternet
+                //                 ? Colors.brown
+                //                 : CColors.black,
+                //             foregroundColor: Colors.white,
+                //             heroTag: 'checkout',
+                //             child: const Icon(
+                //               Iconsax.wallet_check,
+                //             ),
+                //           ),
+                //           CPositionedCartCounterWidget(
+                //             counterBgColor: CColors.white,
+                //             counterTxtColor: CColors.rBrown,
+                //             rightPosition: 10.0,
+                //             topPosition: 8.0,
+                //           ),
+                //         ],
+                //       )
+                //     : SizedBox(),
+                // const SizedBox(
+                //   height: CSizes.spaceBtnSections / 8,
+                // ),
+                FloatingActionButton(
+                  onPressed: () {
+                    invController.itemExists.value = true;
 
-                        showDialog(
-                          context: context,
-                          useRootNavigator: false,
-                          builder: (BuildContext context) {
-                            invController.currentItemId.value = itemId;
+                    showDialog(
+                      context: context,
+                      useRootNavigator: false,
+                      builder: (BuildContext context) {
+                        invController.currentItemId.value = itemId;
 
-                            return dialog.buildDialog(
-                              context,
-                              CInventoryModel.withID(
-                                itemId,
-                                userController.user.value.id,
-                                userController.user.value.email,
-                                userController.user.value.fullName,
-                                invItem.pCode,
-                                invItem.name,
-                                invItem.markedAsFavorite,
-                                invItem.quantity,
-                                invItem.qtySold,
-                                invItem.qtyRefunded,
-                                invItem.buyingPrice,
-                                invItem.unitBp,
-                                invItem.unitSellingPrice,
-                                invItem.lowStockNotifierLimit,
-                                invItem.supplierName,
-                                invItem.supplierContacts,
-                                invItem.dateAdded,
-                                invItem.lastModified,
-                                invItem.isSynced,
-                                invItem.syncAction,
-                              ),
-                              false,
-                            );
-                          },
+                        return dialog.buildDialog(
+                          context,
+                          CInventoryModel.withID(
+                            itemId,
+                            userController.user.value.id,
+                            userController.user.value.email,
+                            userController.user.value.fullName,
+                            invItem.pCode,
+                            invItem.name,
+                            invItem.markedAsFavorite,
+                            invItem.quantity,
+                            invItem.qtySold,
+                            invItem.qtyRefunded,
+                            invItem.buyingPrice,
+                            invItem.unitBp,
+                            invItem.unitSellingPrice,
+                            invItem.lowStockNotifierLimit,
+                            invItem.supplierName,
+                            invItem.supplierContacts,
+                            invItem.dateAdded,
+                            invItem.lastModified,
+                            invItem.isSynced,
+                            invItem.syncAction,
+                          ),
+                          false,
                         );
-                        invController.txtId.text =
-                            (invItem.productId).toString();
                       },
-                      backgroundColor: Colors.brown,
-                      foregroundColor: Colors.white,
-                      child: const Icon(
-                        Iconsax.edit,
-                        color: CColors.white,
-                      ),
-                    ),
-                  ],
-                );
-              },
+                    );
+                    invController.txtId.text = (invItem.productId).toString();
+                  },
+                  backgroundColor: Colors.brown,
+                  foregroundColor: Colors.white,
+                  child: const Icon(
+                    Iconsax.edit,
+                    color: CColors.white,
+                  ),
+                ),
+              ],
             ),
           );
         },

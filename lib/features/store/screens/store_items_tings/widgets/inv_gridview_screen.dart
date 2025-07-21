@@ -245,8 +245,8 @@ class CInvGridviewScreen extends StatelessWidget {
                     : invController.inventoryItems[index].unitSellingPrice;
 
                 return CProductCardVertical(
-                  lastModified: lastModified,
                   bp: bp.toString(),
+                  containerHeight: 176.0,
                   deleteAction: syncController.processingSync.value
                       ? null
                       : () {
@@ -262,6 +262,7 @@ class CInvGridviewScreen extends StatelessWidget {
                   isSynced: isSynced.toString(),
                   itemAvatar: avatarTxt,
                   itemName: pName,
+                  lastModified: lastModified,
                   lowStockNotifierLimit: lowStockNotifierLimit,
                   onAvatarIconTap: syncController.processingSync.value
                       ? null

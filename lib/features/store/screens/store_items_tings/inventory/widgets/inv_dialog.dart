@@ -36,7 +36,7 @@ class AddUpdateItemDialog {
     return PopScope(
       canPop: false,
       child: AlertDialog(
-        insetPadding: const EdgeInsets.all(10.0),
+        insetPadding: const EdgeInsets.all(5.0),
         title: Obx(
           () => Row(
             children: [
