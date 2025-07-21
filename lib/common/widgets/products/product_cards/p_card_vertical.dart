@@ -78,7 +78,7 @@ class CProductCardVertical extends StatelessWidget {
               //height: 182.0,
               height: containerHeight,
               padding: const EdgeInsets.only(
-                left: CSizes.sm,
+                left: CSizes.sm / 4,
               ),
               width: CHelperFunctions.screenWidth() * 0.46,
               child: Column(
@@ -88,7 +88,7 @@ class CProductCardVertical extends StatelessWidget {
                   CRoundedContainer(
                     width: CHelperFunctions.screenWidth() * 0.45,
                     height: 52.0,
-                    bgColor: Colors.transparent,
+                    bgColor: const Color.fromRGBO(0, 0, 0, 0),
                     boxShadow: [],
                     child: Stack(
                       children: [
@@ -229,6 +229,7 @@ class CProductCardVertical extends StatelessWidget {
                         ),
 
                         SizedBox(
+                          chora cart item usp * qtyInCart
                           width: CHelperFunctions.screenWidth(),
                           height: 35.0,
                           child: Stack(

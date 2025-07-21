@@ -1,4 +1,5 @@
 import 'package:c_ri/api/sheets/store_sheets_api.dart';
+import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/models/inv_dels_model.dart';
@@ -1102,5 +1103,34 @@ class CInventoryController extends GetxController {
     txtStockNotifierLimit.text = "";
     txtSupplierName.text = "";
     txtSupplierContacts.text = '';
+  }
+
+  /// -- bottomSheetModal for when usp is less than ubp --
+  Future<dynamic> confirmUspUbpModal(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(
+              CSizes.lg / 3,
+            ),
+            child: Column(
+              children: [
+                const CSectionHeading(
+                  showActionBtn: false,
+                  title: 'select payment method...',
+                  btnTitle: '',
+                  editFontSize: true,
+                ),
+                const SizedBox(
+                  height: CSizes.spaceBtnSections / 4,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
