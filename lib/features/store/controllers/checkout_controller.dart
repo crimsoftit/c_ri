@@ -198,8 +198,11 @@ class CCheckoutController extends GetxController {
               }
 
               // -- update sync status/action for this inventory item --
+              var sAction = invItem.isSynced == 1 ? 'update' : 'append';
               dbHelper.updateInvOfflineSyncAfterStockUpdate(
-                  'update', cartItem.productId);
+                  sAction, cartItem.productId);
+
+              invController.fetchUserInventoryItems();
             } else {
               result = 'ERROR ADDING SALE ITEM';
             }
@@ -246,7 +249,7 @@ class CCheckoutController extends GetxController {
                     );
                   }
                 }
-                processContinueBtnActions();
+                refreshData();
               },
             );
           },
@@ -270,7 +273,7 @@ class CCheckoutController extends GetxController {
     }
   }
 
-  processContinueBtnActions() {
+  refreshData() {
     final cartController = Get.put(CCartController());
     txnsController.fetchSoldItems();
     customerBal.value = 0.0;

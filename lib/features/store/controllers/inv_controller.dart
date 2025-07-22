@@ -923,15 +923,19 @@ class CInventoryController extends GetxController {
           );
 
           await StoreSheetsApi.updateInvDataNoDeletions(
-              invUpdateItem.productId!, invUpdateItem.toMap());
+                  invUpdateItem.productId!, invUpdateItem.toMap())
+              .then((result) {
+            if (result) {
+              dbHelper.updateInventoryItem(invUpdateItem, element.productId!);
+              fetchUserInventoryItems();
+            }
+          });
 
-          if (await StoreSheetsApi.updateInvDataNoDeletions(
-              invUpdateItem.productId!, invUpdateItem.toMap())) {
-            await dbHelper.updateInventoryItem(
-                invUpdateItem, element.productId!);
-          }
-
-          await fetchUserInventoryItems();
+          // if (await StoreSheetsApi.updateInvDataNoDeletions(
+          //     invUpdateItem.productId!, invUpdateItem.toMap())) {
+          //   await dbHelper.updateInventoryItem(
+          //       invUpdateItem, element.productId!);
+          // }
         }
       } else {
         if (kDebugMode) {
