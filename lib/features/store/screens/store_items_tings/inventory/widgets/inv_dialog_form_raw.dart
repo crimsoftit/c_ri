@@ -10,8 +10,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class AddUpdateInventoryForm extends StatelessWidget {
-  const AddUpdateInventoryForm({
+class AddUpdateInventoryFormRaw extends StatelessWidget {
+  const AddUpdateInventoryFormRaw({
     super.key,
     required this.invController,
     required this.textStyle,
@@ -25,7 +25,6 @@ class AddUpdateInventoryForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //AddUpdateItemDialog dialog = AddUpdateItemDialog();
-    final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     return Column(
       children: <Widget>[
@@ -63,13 +62,9 @@ class AddUpdateInventoryForm extends StatelessWidget {
                 ),
               ),
               TextFormField(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: invController.txtCode,
                 //readOnly: true,
                 decoration: InputDecoration(
-                  filled: true,
-                  fillColor:
-                      isDarkTheme ? CColors.transparent : CColors.lightGrey,
                   labelText: 'barcode/sku',
                   labelStyle: textStyle,
                   prefixIcon: invController.txtCode.text.isNotEmpty
@@ -123,16 +118,13 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   return CValidator.validateBarcode('barcode value', value);
                 },
               ),
+
               const SizedBox(
-                height: CSizes.spaceBtnInputFields / 1.5,
+                height: CSizes.spaceBtnInputFields / 2,
               ),
               TextFormField(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: invController.txtNameController,
                 decoration: InputDecoration(
-                  filled: true,
-                  fillColor:
-                      isDarkTheme ? CColors.transparent : CColors.lightGrey,
                   labelText: 'product name',
                   labelStyle: textStyle,
                   prefixIcon: Icon(
@@ -149,13 +141,14 @@ class AddUpdateInventoryForm extends StatelessWidget {
                 },
               ),
               const SizedBox(
-                height: CSizes.spaceBtnInputFields / 1.5,
+                height: CSizes.spaceBtnInputFields / 2,
               ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
-                    width: CHelperFunctions.screenWidth() * .38,
+                    width: CHelperFunctions.screenWidth() * .40,
                     height: 60.0,
                     child: TextFormField(
                       controller: invController.txtQty,
@@ -176,10 +169,6 @@ class AddUpdateInventoryForm extends StatelessWidget {
                         contentPadding: const EdgeInsets.only(
                           left: 2.0,
                         ),
-                        filled: true,
-                        fillColor: isDarkTheme
-                            ? CColors.transparent
-                            : CColors.lightGrey,
                         labelStyle: textStyle,
                         labelText: 'qty/no. of units',
                         maintainHintHeight: true,
@@ -195,7 +184,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
                         ),
                       ),
                       validator: (value) {
-                        return CValidator.validateNumber('qty', value);
+                        return CValidator.validateNumber(
+                            'qty/no. of units', value);
                       },
                       onChanged: (value) {
                         if (invController.txtBP.text.isNotEmpty &&
@@ -208,12 +198,15 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       },
                     ),
                   ),
+
+                  /// -- TODO: validator text should not affect textfield height
+
                   SizedBox(
-                    width: CHelperFunctions.screenWidth() * .44,
+                    width: CHelperFunctions.screenWidth() * .42,
                     height: 60.0,
                     child: TextFormField(
                       autovalidateMode: AutovalidateMode.onUserInteraction,
-                      controller: invController.txtUnitSP,
+                      controller: invController.txtBP,
                       decoration: InputDecoration(
                         constraints: BoxConstraints(
                           minHeight: 60.0,
@@ -221,12 +214,8 @@ class AddUpdateInventoryForm extends StatelessWidget {
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 2.0,
                         ),
-                        filled: true,
-                        fillColor: isDarkTheme
-                            ? CColors.transparent
-                            : CColors.lightGrey,
                         labelStyle: textStyle,
-                        labelText: 'unit selling price',
+                        labelText: 'buying price',
                         maintainHintHeight: true,
                         prefixIcon: Icon(
                           Iconsax.bitcoin_card,
@@ -247,53 +236,20 @@ class AddUpdateInventoryForm extends StatelessWidget {
                         height: 1.5,
                       ),
                       validator: (value) {
-                        return CValidator.validateNumber('usp', value);
+                        return CValidator.validateNumber('buying price', value);
+                      },
+                      onChanged: (value) {
+                        if (invController.txtQty.text.isNotEmpty &&
+                            value.isNotEmpty) {
+                          invController.computeUnitBP(
+                            double.parse(value),
+                            int.parse(invController.txtQty.text),
+                          );
+                        }
                       },
                     ),
                   ),
                 ],
-              ),
-              const SizedBox(
-                height: CSizes.spaceBtnInputFields / 1.5,
-              ),
-              TextFormField(
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                controller: invController.txtBP,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                  signed: false,
-                ),
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d+(\.\d*)?')),
-                ],
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor:
-                      isDarkTheme ? CColors.transparent : CColors.lightGrey,
-                  labelStyle: textStyle,
-                  labelText: 'buying price',
-                  prefixIcon: Icon(
-                    // Iconsax.card_pos,
-                    Iconsax.bitcoin_card,
-                    color: CColors.darkGrey,
-                    size: CSizes.iconXs,
-                  ),
-                ),
-                onChanged: (value) {
-                  if (invController.txtQty.text.isNotEmpty &&
-                      value.isNotEmpty) {
-                    invController.computeUnitBP(
-                      double.parse(value),
-                      int.parse(invController.txtQty.text),
-                    );
-                  }
-                },
-                style: const TextStyle(
-                  fontWeight: FontWeight.normal,
-                ),
-                validator: (value) {
-                  return CValidator.validateNumber('buying price', value);
-                },
               ),
               Obx(
                 () {
@@ -309,11 +265,11 @@ class AddUpdateInventoryForm extends StatelessWidget {
                       padding: const EdgeInsets.all(
                         0.0,
                       ),
-                      width: CHelperFunctions.screenWidth() * .95,
+                      width: CHelperFunctions.screenWidth() * .91,
                       height: invController.txtBP.text.isEmpty &&
                               invController.txtQty.text.isEmpty
                           ? 0
-                          : 15.0,
+                          : 10.0,
                       alignment: Alignment.topRight,
                       child: Text(
                         'unit BP: ~$currency.${invController.unitBP.value.toStringAsFixed(2)}',
@@ -325,23 +281,69 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   );
                 },
               ),
+
+              const SizedBox(
+                height: CSizes.spaceBtnInputFields / 2,
+              ),
+              TextFormField(
+                controller: invController.txtUnitSP,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                  signed: false,
+                ),
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d+(\.\d*)?')),
+                ],
+                decoration: InputDecoration(
+                  labelStyle: textStyle,
+                  labelText: 'unit selling price',
+                  prefixIcon: Icon(
+                    Iconsax.card_pos,
+                    color: CColors.darkGrey,
+                    size: CSizes.iconXs,
+                  ),
+                ),
+                style: const TextStyle(
+                  fontWeight: FontWeight.normal,
+                ),
+                validator: (value) {
+                  return CValidator.validateNumber('unit selling price', value);
+                },
+              ),
+              const SizedBox(
+                height: CSizes.spaceBtnInputFields / 2,
+              ),
+              // TextFormField(
+              //   controller: invController.txtStockNotifierLimit,
+              //   keyboardType: const TextInputType.numberWithOptions(
+              //     decimal: false,
+              //     signed: false,
+              //   ),
+              //   inputFormatters: <TextInputFormatter>[
+              //     FilteringTextInputFormatter.allow(RegExp(r'^\d+(\.\d*)?')),
+              //   ],
+              //   decoration: InputDecoration(
+              //     labelText: 'notify if stock count falls below:',
+              //     labelStyle: textStyle,
+              //   ),
+              //   style: const TextStyle(
+              //     fontWeight: FontWeight.normal,
+              //   ),
+              //   validator: (value) {
+              //     return CValidator.validateNumber(
+              //         'low stock notification limit', value);
+              //   },
+              // ),
+
               Obx(
                 () {
                   return Visibility(
                     visible: invController.includeSupplierDetails.value,
                     child: Column(
                       children: [
-                        const SizedBox(
-                          height: CSizes.spaceBtnInputFields,
-                        ),
                         TextFormField(
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           controller: invController.txtSupplierName,
                           decoration: InputDecoration(
-                            filled: true,
-                            fillColor: isDarkTheme
-                                ? CColors.transparent
-                                : CColors.lightGrey,
                             labelText: 'supplier name (optional)',
                             labelStyle: textStyle,
                           ),
@@ -355,10 +357,6 @@ class AddUpdateInventoryForm extends StatelessWidget {
                         TextFormField(
                           controller: invController.txtSupplierContacts,
                           decoration: InputDecoration(
-                            filled: true,
-                            fillColor: isDarkTheme
-                                ? CColors.transparent
-                                : CColors.lightGrey,
                             labelText: 'supplier contacts (optional)',
                             labelStyle: textStyle,
                           ),
@@ -371,6 +369,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   );
                 },
               ),
+
               const SizedBox(
                 height: CSizes.spaceBtnInputFields,
               ),

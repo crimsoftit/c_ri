@@ -24,13 +24,13 @@ class CValidator {
     if (value == null || value.isEmpty) {
       return '$fieldName field is required!';
     }
-    if (fieldName == 'buying price' || fieldName == 'unit selling price') {
+    if (fieldName == 'buying price' || fieldName == 'usp') {
       if (double.parse(value) < 1.0) {
         return 'invalid value for $fieldName';
       }
     } else {
       if (int.parse(value) < 1) {
-        return 'invalid value for $fieldName';
+        return 'invalid value';
       }
     }
 

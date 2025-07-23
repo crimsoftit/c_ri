@@ -2,12 +2,16 @@ import 'package:c_ri/common/widgets/custom_shapes/containers/rounded_container.d
 import 'package:c_ri/common/widgets/icon_buttons/circular_icon_btn.dart';
 import 'package:c_ri/common/widgets/products/cart/add_to_cart_btn.dart';
 import 'package:c_ri/common/widgets/products/circle_avatar.dart';
+import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:c_ri/common/widgets/txt_widgets/product_price_txt.dart';
 import 'package:c_ri/common/widgets/txt_widgets/product_title_txt.dart';
+import 'package:c_ri/features/store/controllers/inv_controller.dart';
+import 'package:c_ri/features/store/controllers/sync_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
 import 'package:c_ri/utils/constants/sizes.dart';
 import 'package:c_ri/utils/helpers/helper_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 class CProductCardVertical extends StatelessWidget {
@@ -50,10 +54,12 @@ class CProductCardVertical extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final invController = Get.put(CInventoryController());
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
+    final syncController = Get.put(CSyncController());
 
     return GestureDetector(
-      onTap: onTapAction,
+      onDoubleTap: onTapAction,
       child: Container(
         width: 170,
         //height: 200.0,
@@ -109,66 +115,101 @@ class CProductCardVertical extends StatelessWidget {
                         ),
 
                         /// -- delete item iconButton --
-                        Positioned(
-                          top: 0,
-                          right: 0,
-                          child: CCircularIconBtn(
-                            color: isDarkTheme ? CColors.white : Colors.red,
-                            icon: Icons.delete,
-                            iconSize: CSizes.md,
-                            height: 33.0,
-                            width: 33.0,
-                            bgColor: isDarkTheme
-                                ? CColors.transparent
-                                : CColors.white,
-                            onPressed: deleteAction,
-                          ),
+                        Obx(
+                          () {
+                            return Positioned(
+                              top: 0,
+                              right: 0,
+                              child: (invController.isLoading.value ||
+                                          syncController
+                                              .processingSync.value) &&
+                                      invController.inventoryItems.isNotEmpty
+                                  ? CShimmerEffect(
+                                      width: 30,
+                                      height: 30.0,
+                                      radius: 30.0,
+                                    )
+                                  : CCircularIconBtn(
+                                      color: isDarkTheme
+                                          ? CColors.white
+                                          : Colors.red,
+                                      icon: Icons.delete,
+                                      iconSize: CSizes.md,
+                                      height: 33.0,
+                                      width: 33.0,
+                                      bgColor: isDarkTheme
+                                          ? CColors.transparent
+                                          : CColors.white,
+                                      onPressed: deleteAction,
+                                    ),
+                            );
+                          },
                         ),
 
                         /// -- avatar, date, and(or) edit iconButton --
-                        Positioned(
-                          top: 2,
-                          left: 40.0,
-                          child: Center(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                CCircleAvatar(
-                                  avatarInitial: itemAvatar!,
-                                  // bgColor: int.parse(qtyAvailable!) <
-                                  //         lowStockNotifierLimit!
-                                  //     ? Colors.red
-                                  //     : CColors.rBrown,
-                                  bgColor: int.parse(qtyAvailable!) <
-                                          lowStockNotifierLimit!
-                                      ? Colors.red
-                                      : CColors.transparent,
-                                  includeEditBtn: true,
-                                  onEdit: onAvatarIconTap,
-                                  txtColor: isDarkTheme
-                                      ? CColors.white
-                                      : CColors.rBrown,
-                                ),
-                                const SizedBox(
-                                  height: CSizes.spaceBtnInputFields / 2.0,
-                                ),
-                                Text(
-                                  lastModified!,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelSmall!
-                                      .apply(
-                                        color: isDarkTheme
-                                            ? CColors.grey
-                                            : CColors.darkGrey,
-                                        fontSizeFactor: 0.9,
+                        Obx(
+                          () {
+                            return Positioned(
+                              top: 2,
+                              left: (invController.isLoading.value ||
+                                          syncController
+                                              .processingSync.value) &&
+                                      invController.inventoryItems.isNotEmpty
+                                  ? 60.0
+                                  : 40.0,
+                              child: (invController.isLoading.value ||
+                                          syncController
+                                              .processingSync.value) &&
+                                      invController.inventoryItems.isNotEmpty
+                                  ? CShimmerEffect(
+                                      width: 40,
+                                      height: 40.0,
+                                      radius: 40.0,
+                                    )
+                                  : Center(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          CCircleAvatar(
+                                            avatarInitial: itemAvatar!,
+                                            // bgColor: int.parse(qtyAvailable!) <
+                                            //         lowStockNotifierLimit!
+                                            //     ? Colors.red
+                                            //     : CColors.rBrown,
+                                            bgColor: int.parse(qtyAvailable!) <
+                                                    lowStockNotifierLimit!
+                                                ? Colors.red
+                                                : CColors.transparent,
+                                            includeEditBtn: true,
+                                            onEdit: onAvatarIconTap,
+                                            txtColor: isDarkTheme
+                                                ? CColors.white
+                                                : CColors.rBrown,
+                                          ),
+                                          const SizedBox(
+                                            height: CSizes.spaceBtnInputFields /
+                                                2.0,
+                                          ),
+                                          Text(
+                                            lastModified!,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .labelSmall!
+                                                .apply(
+                                                  color: isDarkTheme
+                                                      ? CColors.grey
+                                                      : CColors.darkGrey,
+                                                  fontSizeFactor: 0.9,
+                                                ),
+                                          ),
+                                        ],
                                       ),
-                                ),
-                              ],
-                            ),
-                          ),
+                                    ),
+                            );
+                          },
                         ),
                       ],
                     ),

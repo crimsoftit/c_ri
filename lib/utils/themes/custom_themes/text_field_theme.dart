@@ -6,7 +6,8 @@ class CTextFormFieldTheme {
 
   // -- light theme (mode) settings
   static InputDecorationTheme lightInputDecorationTheme = InputDecorationTheme(
-    errorMaxLines: 3,
+    // errorMaxLines: 3,
+    errorMaxLines: 1,
     prefixIconColor: CColors.grey,
     suffixIconColor: CColors.grey,
     labelStyle: const TextStyle().copyWith(
@@ -32,7 +33,7 @@ class CTextFormFieldTheme {
       borderRadius: BorderRadius.circular(5.0),
       borderSide: const BorderSide(
         width: 1.0,
-        color: CColors.grey,
+        color: CColors.darkerGrey,
       ),
     ),
     enabledBorder: const OutlineInputBorder().copyWith(
@@ -67,7 +68,7 @@ class CTextFormFieldTheme {
 
   // -- dark theme (mode) settings
   static InputDecorationTheme darkInputDecorationTheme = InputDecorationTheme(
-    errorMaxLines: 3,
+    errorMaxLines: 1,
     prefixIconColor: CColors.grey,
     suffixIconColor: CColors.grey,
     labelStyle: const TextStyle().copyWith(
@@ -120,7 +121,7 @@ class CTextFormFieldTheme {
       borderRadius: BorderRadius.circular(2.0),
       borderSide: const BorderSide(
         width: 2.0,
-        color: rOrange,
+        color: CColors.rBrown,
       ),
     ),
   );

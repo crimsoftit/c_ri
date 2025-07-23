@@ -223,6 +223,7 @@ class CTypeAheadSearchField extends StatelessWidget {
 
                           // -- buttons to increment, decrement qty --
                           CItemQtyWithAddRemoveBtns(
+                            displayBorder: false,
                             includeAddToCartActionBtn: true,
                             useSmallIcons: true,
                             useTxtFieldForQty: false,

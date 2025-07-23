@@ -230,10 +230,10 @@ class CInventoryController extends GetxController {
 
       isLoading.value = false;
 
-      CPopupSnackBar.successSnackBar(
-        title: 'item added successfully',
-        message: '${inventoryItem.name} added successfully...',
-      );
+      // CPopupSnackBar.successSnackBar(
+      //   title: 'item added successfully',
+      //   message: '${inventoryItem.name} added successfully...',
+      // );
     } catch (e) {
       isLoading.value = false;
       CPopupSnackBar.errorSnackBar(
@@ -460,10 +460,10 @@ class CInventoryController extends GetxController {
       isLoading.value = false;
 
       // -- success message
-      CPopupSnackBar.successSnackBar(
-        title: 'update success',
-        message: '${inventoryItem.name} updated successfully...',
-      );
+      // CPopupSnackBar.successSnackBar(
+      //   title: 'update success',
+      //   message: '${inventoryItem.name} updated successfully...',
+      // );
 
       // -- stop loader
       //isLoading.value = false;

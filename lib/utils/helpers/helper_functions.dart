@@ -128,8 +128,12 @@ class CHelperFunctions {
     return now.millisecondsSinceEpoch + generateRandom4DigitNumber();
   }
 
-  static int generateProductCode() {
+  static String generateProductCode() {
     final now = DateTime.now();
-    return now.microsecondsSinceEpoch - generateRandom4DigitNumber();
+
+    var codeString = now.microsecondsSinceEpoch.toString();
+    var pCode = codeString.substring(codeString.length - 7);
+    var productCode = 'rI-$pCode';
+    return productCode;
   }
 }

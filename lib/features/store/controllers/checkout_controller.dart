@@ -273,22 +273,6 @@ class CCheckoutController extends GetxController {
     }
   }
 
-  refreshData() {
-    final cartController = Get.put(CCartController());
-    txnsController.fetchSoldItems();
-    customerBal.value = 0.0;
-
-    // clear cart
-    cartController.clearCart();
-    itemsInCart.clear();
-
-    resetSalesFields();
-
-    navController.selectedIndex.value = 1;
-
-    Get.offAll(() => NavMenu());
-  }
-
   /// -- method to select payment method --
   Future<dynamic> selectPaymentMethod(BuildContext context) {
     return showModalBottomSheet(
@@ -588,6 +572,22 @@ class CCheckoutController extends GetxController {
         }
       },
     );
+  }
+
+  refreshData() {
+    final cartController = Get.put(CCartController());
+    txnsController.fetchSoldItems();
+    customerBal.value = 0.0;
+
+    // clear cart
+    cartController.clearCart();
+    itemsInCart.clear();
+
+    resetSalesFields();
+
+    navController.selectedIndex.value = 1;
+
+    Get.offAll(() => NavMenu());
   }
 
   @override

@@ -11,9 +11,14 @@ class CItemQtyWithAddRemoveBtns extends StatelessWidget {
   const CItemQtyWithAddRemoveBtns({
     super.key,
     this.addItemBtnAction,
+    this.addToCartBtnAction,
+    this.add2CartActionBtnTxt,
+    this.add2CartBtnTxtColor,
+    this.add2CartIconColor,
     this.bgColor,
     this.btnsLeftPadding = CSizes.sm,
     this.btnsRightPadding = CSizes.sm,
+    this.displayBorder = true,
     this.horizontalSpacing,
     required this.qtyField,
     this.useSmallIcons = false,
@@ -24,10 +29,6 @@ class CItemQtyWithAddRemoveBtns extends StatelessWidget {
     this.removeItemBtnAction,
     this.useTxtFieldForQty = true,
     required this.includeAddToCartActionBtn,
-    this.addToCartBtnAction,
-    this.add2CartActionBtnTxt,
-    this.add2CartBtnTxtColor,
-    this.add2CartIconColor,
   });
 
   final Widget? qtyField, qtyWidget;
@@ -39,7 +40,10 @@ class CItemQtyWithAddRemoveBtns extends StatelessWidget {
       btnsLeftPadding,
       horizontalSpacing;
   final Color? bgColor, add2CartBtnTxtColor, add2CartIconColor;
-  final bool useTxtFieldForQty, useSmallIcons, includeAddToCartActionBtn;
+  final bool useTxtFieldForQty,
+      useSmallIcons,
+      includeAddToCartActionBtn,
+      displayBorder;
   final String? add2CartActionBtnTxt;
 
   @override
@@ -47,7 +51,7 @@ class CItemQtyWithAddRemoveBtns extends StatelessWidget {
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
 
     return CRoundedContainer(
-      showBorder: true,
+      showBorder: displayBorder,
       bgColor: bgColor.isBlank ?? isDarkTheme ? CColors.dark : CColors.white,
       padding: EdgeInsets.only(
         top: 0,

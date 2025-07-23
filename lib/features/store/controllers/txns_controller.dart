@@ -40,8 +40,7 @@ class CTxnsController extends GetxController {
     await initTxnsSync();
 
     showAmountIssuedField.value = true;
-    updatesOnRefundDone.value = false;
-
+    refundQty.value = 0;
     super.onInit();
   }
 
@@ -533,7 +532,7 @@ class CTxnsController extends GetxController {
   }
 
   /// -- add unsynced txns to the cloud --
-  Future<void> addSalesDataToCloud() async {
+  Future<bool> addSalesDataToCloud() async {
     try {
       isLoading.value = true;
       txnsSyncIsLoading.value = true;
@@ -635,6 +634,7 @@ class CTxnsController extends GetxController {
         },
       );
       fetchSoldItems();
+      return true;
     } catch (e) {
       txnsSyncIsLoading.value = false;
       isLoading.value = false;
@@ -648,7 +648,8 @@ class CTxnsController extends GetxController {
         );
       }
 
-      throw e.toString();
+      //throw e.toString();
+      return false;
     }
     // finally {
     //   txnsSyncIsLoading.value = false;
@@ -924,25 +925,83 @@ class CTxnsController extends GetxController {
                       child: ElevatedButton.icon(
                         onPressed: () async {
                           // refund item actions - inventory & txn item updates;
-                          invController.fetchUserInventoryItems();
-                          var invItem = invController.inventoryItems.firstWhere(
-                              (item) => item.productId == soldItem.productId);
 
-                          fetchSoldItems();
+                          await fetchSoldItems().then((result) async {
+                            if (result.isNotEmpty) {
+                              invController.fetchUserInventoryItems();
+                              var inventoryItem = invController.inventoryItems
+                                  .firstWhere((item) =>
+                                      item.productId == soldItem.productId);
 
-                          var txnItem = sales.firstWhere((txnItem) =>
-                              txnItem.productId == soldItem.productId);
+                              // -- update stock count & total sales for this inventory item --
+                              if (inventoryItem.productId! > 100) {
+                                inventoryItem.quantity += refundQty.value;
+                                inventoryItem.qtyRefunded += refundQty.value;
+                                inventoryItem.qtySold -= refundQty.value;
+                                inventoryItem.lastModified =
+                                    DateFormat('yyyy-MM-dd @ kk:mm')
+                                        .format(clock.now());
+                                inventoryItem.syncAction =
+                                    inventoryItem.isSynced == 1
+                                        ? 'update'
+                                        : 'append';
 
-                          txnItem.refundReason = txtRefundReason.text.trim();
-                          await updateDataOnRefund(invItem, txnItem);
-                          if (updatesOnRefundDone.value) {
-                            if (kDebugMode) {
-                              print("** ========== **\n");
-                              print(
-                                  "*** inventory refund updates successful ***");
-                              print("** ========== **\n");
+                                await dbHelper
+                                    .updateInventoryItem(
+                                        inventoryItem, inventoryItem.productId!)
+                                    .then((result) async {
+                                  /// -- update receipt item --
+                                  var txnItem = sales.firstWhere((txnItem) =>
+                                      txnItem.productId == soldItem.productId);
+
+                                  txnItem.refundReason =
+                                      txtRefundReason.text.trim();
+                                  txnItem.quantity -= refundQty.value;
+                                  txnItem.qtyRefunded += refundQty.value;
+                                  txnItem.totalAmount -= refundQty.value *
+                                      txnItem.unitSellingPrice;
+                                  txnItem.lastModified =
+                                      DateFormat('yyyy-MM-dd @ kk:mm')
+                                          .format(clock.now());
+                                  txnItem.syncAction = txnItem.isSynced == 0
+                                      ? 'append'
+                                      : 'update';
+
+                                  dbHelper
+                                      .updateReceiptItem(
+                                          txnItem, txnItem.soldItemId!)
+                                      .then((_) {
+                                    fetchSoldItems();
+                                  });
+                                  // updateTxnDataOnRefund(txnItem);
+                                  // if (await updateTxnDataOnRefund(txnItem)) {
+                                  //   if (kDebugMode) {
+                                  //     print("** ========== **\n");
+                                  //     print(
+                                  //         "*** inventory refund updates successful ***");
+                                  //     print("** ========== **\n");
+                                  //   }
+                                  // }
+                                  Navigator.of(Get.overlayContext!).pop(true);
+                                });
+                              } else {
+                                if (kDebugMode) {
+                                  print('ERROR: INVENTORY ITEM IS NULL');
+                                  CPopupSnackBar.errorSnackBar(
+                                    title: 'inv item error!!',
+                                    message:
+                                        'ERROR: INVENTORY ITEM productId IS NULL!!',
+                                  );
+                                }
+                              }
+                            } else {
+                              if (kDebugMode) {
+                                print("** ========== **\n");
+                                print("ERROR UPDATING DATA AFTER REFUND");
+                                print("** ========== **\n");
+                              }
                             }
-                          }
+                          });
                         },
                         label: Text(
                           'REFUND',
@@ -1006,7 +1065,6 @@ class CTxnsController extends GetxController {
       await syncController.processSync();
       if (await syncController.processSync()) {
         if (unsyncedTxnAppends.isNotEmpty) {
-          //processContinueBtnActions();
           await syncController.processSync();
         }
       } else {
@@ -1029,60 +1087,59 @@ class CTxnsController extends GetxController {
     }
     refundQty.value = 0;
     updatesOnRefundDone.value = false;
-
     if (kDebugMode) {
+      print('------------------\n');
+      print('refundQty: ${refundQty.value} \n');
+      print('------------------\n');
       print('bottomSheet closed');
     }
   }
 
   /// -- update stock count and qtySold on refund --
-  Future<bool> updateDataOnRefund(
-      CInventoryModel inventoryItem, CTxnsModel receiptItem) async {
-    final currency =
-        CHelperFunctions.formatCurrency(userController.user.value.currencyCode);
+  Future<bool> updateTxnDataOnRefundMaybeObsolete(
+      CTxnsModel receiptItem) async {
     try {
-      if (inventoryItem.productId != null) {
-        // -- update stock count & total sales for this inventory item --
-        inventoryItem.quantity += refundQty.value;
-        inventoryItem.qtyRefunded += refundQty.value;
-        inventoryItem.qtySold -= refundQty.value;
-        inventoryItem.lastModified =
-            DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
+      final currency = CHelperFunctions.formatCurrency(
+          userController.user.value.currencyCode);
 
-        dbHelper.updateInventoryItem(inventoryItem, inventoryItem.productId!);
+      // -- update stock count & total sales for this inventory item --
+      // inventoryItem.quantity += refundQty.value;
+      // inventoryItem.qtyRefunded += refundQty.value;
+      // inventoryItem.qtySold -= refundQty.value;
+      // inventoryItem.lastModified =
+      //     DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
+      // inventoryItem.syncAction =
+      //     inventoryItem.isSynced == 1 ? 'update' : 'append';
 
-        // -- update sync status/action for this inventory item --
-        dbHelper.updateInvOfflineSyncAfterStockUpdate(
-            'update', inventoryItem.productId!);
+      //dbHelper.updateInventoryItem(inventoryItem, inventoryItem.productId!);
 
-        // -- update txn data for this receipt item --
-        receiptItem.quantity -= refundQty.value;
-        receiptItem.qtyRefunded += refundQty.value;
-        receiptItem.totalAmount -=
-            refundQty.value * receiptItem.unitSellingPrice;
-        receiptItem.lastModified =
-            DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
-        receiptItem.syncAction =
-            receiptItem.isSynced == 0 ? 'append' : 'update';
+      // -- update sync status/action for this inventory item --
 
-        fetchTxns();
-        fetchSoldItems();
+      // await dbHelper.updateInvOfflineSyncAfterStockUpdate(
+      //     sAction, inventoryItem.productId!);
 
-        dbHelper.updateReceiptItem(receiptItem, receiptItem.soldItemId!);
+      // -- update txn data for this receipt item --
+      // receiptItem.quantity -= refundQty.value;
+      // receiptItem.qtyRefunded += refundQty.value;
+      // receiptItem.totalAmount -= refundQty.value * receiptItem.unitSellingPrice;
+      // receiptItem.lastModified =
+      //     DateFormat('yyyy-MM-dd @ kk:mm').format(clock.now());
+      // receiptItem.syncAction = receiptItem.isSynced == 0 ? 'append' : 'update';
 
-        updatesOnRefundDone.value = true;
-        CPopupSnackBar.successSnackBar(
-          title: 'success',
-          message:
-              'refund of ${inventoryItem.name} (${refundQty.value} item(s)@$currency.${(inventoryItem.unitSellingPrice * refundQty.value)}) SUCCESSFUL!!',
-        );
+      // dbHelper
+      //     .updateReceiptItem(receiptItem, receiptItem.soldItemId!)
+      //     .then((_) {
+      //   fetchSoldItems();
+      // });
 
-        Navigator.of(Get.overlayContext!).pop(true);
-      } else {
-        updatesOnRefundDone.value = false;
-      }
+      updatesOnRefundDone.value = true;
+      CPopupSnackBar.successSnackBar(
+        title: 'success',
+        message:
+            'refund of ${receiptItem.productName} (${refundQty.value} item(s)@$currency.${(receiptItem.unitSellingPrice * refundQty.value)}) SUCCESSFUL!!',
+      );
 
-      return updatesOnRefundDone.value;
+      return true;
     } catch (e) {
       updatesOnRefundDone.value = false;
       CPopupSnackBar.errorSnackBar(
