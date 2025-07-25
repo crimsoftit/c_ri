@@ -96,28 +96,39 @@ class CProductCardVertical extends StatelessWidget {
                     height: 52.0,
                     bgColor: const Color.fromRGBO(0, 0, 0, 0),
                     boxShadow: [],
-                    child: Stack(
-                      children: [
-                        /// -- favorite item tag --
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          child: CCircularIconBtn(
-                            bgColor: isDarkTheme
-                                ? CColors.transparent
-                                : CColors.white,
-                            color: isDarkTheme ? CColors.white : CColors.rBrown,
-                            icon: Iconsax.heart_add,
-                            iconSize: CSizes.md,
-                            height: 33.0,
-                            width: 33.0,
-                          ),
-                        ),
+                    child: Obx(
+                      () {
+                        return Stack(
+                          children: [
+                            /// -- favorite item tag --
+                            Positioned(
+                              top: 0,
+                              left: 0,
+                              child: (invController.isLoading.value ||
+                                          syncController
+                                              .processingSync.value) &&
+                                      invController.inventoryItems.isNotEmpty
+                                  ? CShimmerEffect(
+                                      width: 30,
+                                      height: 30.0,
+                                      radius: 30.0,
+                                    )
+                                  : CCircularIconBtn(
+                                      bgColor: isDarkTheme
+                                          ? CColors.transparent
+                                          : CColors.white,
+                                      color: isDarkTheme
+                                          ? CColors.white
+                                          : CColors.rBrown,
+                                      icon: Iconsax.heart_add,
+                                      iconSize: CSizes.md,
+                                      height: 33.0,
+                                      width: 33.0,
+                                    ),
+                            ),
 
-                        /// -- delete item iconButton --
-                        Obx(
-                          () {
-                            return Positioned(
+                            /// -- delete item iconButton --
+                            Positioned(
                               top: 0,
                               right: 0,
                               child: (invController.isLoading.value ||
@@ -142,14 +153,10 @@ class CProductCardVertical extends StatelessWidget {
                                           : CColors.white,
                                       onPressed: deleteAction,
                                     ),
-                            );
-                          },
-                        ),
+                            ),
 
-                        /// -- avatar, date, and(or) edit iconButton --
-                        Obx(
-                          () {
-                            return Positioned(
+                            /// -- avatar, date, and(or) edit iconButton --
+                            Positioned(
                               top: 2,
                               left: (invController.isLoading.value ||
                                           syncController
@@ -208,10 +215,10 @@ class CProductCardVertical extends StatelessWidget {
                                         ],
                                       ),
                                     ),
-                            );
-                          },
-                        ),
-                      ],
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                   Padding(
@@ -275,42 +282,56 @@ class CProductCardVertical extends StatelessWidget {
                           // also catch socketexcption when syncing data
                           width: CHelperFunctions.screenWidth(),
                           height: 35.0,
-                          child: Stack(
-                            children: [
-                              Positioned(
-                                bottom: 0,
-                                child: CProductPriceTxt(
-                                  // priceCategory: 'price: ',
-                                  priceCategory: '@',
-                                  price: usp!,
-                                  maxLines: 1,
-                                  isLarge: true,
-                                  txtColor: isDarkTheme
-                                      ? CColors.white
-                                      : CColors.rBrown,
-                                  fSizeFactor: 0.9,
-                                ),
-                              ),
+                          child: Obx(
+                            () {
+                              return Stack(
+                                children: [
+                                  Positioned(
+                                    bottom: 0,
+                                    child: CProductPriceTxt(
+                                      // priceCategory: 'price: ',
+                                      priceCategory: '@',
+                                      price: usp!,
+                                      maxLines: 1,
+                                      isLarge: true,
+                                      txtColor: isDarkTheme
+                                          ? CColors.white
+                                          : CColors.rBrown,
+                                      fSizeFactor: 0.9,
+                                    ),
+                                  ),
 
-                              /// -- button to edit inventory item's details --
-                              // Positioned(
-                              //   right: 0,
-                              //   bottom: 30.0,
-                              //   child: CSquareIconBtn(
-                              //     bgColor: CColors.transparent,
-                              //     onBtnTap: onEditBtnTapped,
-                              //   ),
-                              // ),
+                                  /// -- button to edit inventory item's details --
+                                  // Positioned(
+                                  //   right: 0,
+                                  //   bottom: 30.0,
+                                  //   child: CSquareIconBtn(
+                                  //     bgColor: CColors.transparent,
+                                  //     onBtnTap: onEditBtnTapped,
+                                  //   ),
+                                  // ),
 
-                              /// -- add item to cart button --
-                              Positioned(
-                                right: 0,
-                                bottom: 0,
-                                child: CAddToCartBtn(
-                                  pId: pId,
-                                ),
-                              ),
-                            ],
+                                  /// -- add item to cart button --
+                                  Positioned(
+                                    right: 0,
+                                    bottom: 0,
+                                    child: (invController.isLoading.value ||
+                                                syncController
+                                                    .processingSync.value) &&
+                                            invController
+                                                .inventoryItems.isNotEmpty
+                                        ? CShimmerEffect(
+                                            width: 32.0,
+                                            height: 32.0,
+                                            radius: 8.0,
+                                          )
+                                        : CAddToCartBtn(
+                                            pId: pId,
+                                          ),
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                         ),
 
