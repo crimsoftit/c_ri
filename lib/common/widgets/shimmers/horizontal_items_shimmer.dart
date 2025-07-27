@@ -9,6 +9,7 @@ class CHorizontalProductShimmer extends StatelessWidget {
   });
 
   final int itemCount;
+  //final
 
   @override
   Widget build(BuildContext context) {
@@ -28,16 +29,13 @@ class CHorizontalProductShimmer extends StatelessWidget {
         },
         itemBuilder: (_, __) {
           return const Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // -- product initials section --
               CShimmerEffect(
                 width: 40.0,
                 height: 40.0,
                 radius: 40.0,
-              ),
-              SizedBox(
-                width: CSizes.spaceBtnItems,
               ),
 
               // -- text section --
@@ -49,22 +47,18 @@ class CHorizontalProductShimmer extends StatelessWidget {
                     height: CSizes.spaceBtnItems / 2,
                   ),
                   CShimmerEffect(
-                    width: 200.0,
+                    width: 150.0,
                     height: 15.0,
                   ),
                   SizedBox(
                     height: CSizes.spaceBtnItems / 2,
                   ),
                   CShimmerEffect(
-                    width: 180.0,
+                    width: 120.0,
                     height: 15.0,
                   ),
                   Spacer(),
                 ],
-              ),
-
-              SizedBox(
-                width: CSizes.spaceBtnItems,
               ),
 
               // -- trailing icon section

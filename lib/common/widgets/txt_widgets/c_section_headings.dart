@@ -23,6 +23,7 @@ class CSectionHeading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.min,
       children: [
         editFontSize
             ? Text(
@@ -30,7 +31,7 @@ class CSectionHeading extends StatelessWidget {
                 style: TextStyle(
                   color: txtColor,
                   fontSize: fSize,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w100,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -49,10 +50,10 @@ class CSectionHeading extends StatelessWidget {
             onPressed: onPressed,
             child: Text(
               btnTitle,
-              style: TextStyle(
-                color: btnTxtColor,
-                fontFamily: 'Poppins',
-              ),
+              style: Theme.of(context).textTheme.labelMedium!.apply(
+                    color: txtColor,
+                    //fontSizeFactor: 0.75,
+                  ),
             ),
           ),
       ],

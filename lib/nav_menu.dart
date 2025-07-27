@@ -62,8 +62,16 @@ class NavMenu extends StatelessWidget {
                     : CColors.black.withValues(alpha: 0.3),
             destinations: const [
               NavigationDestination(
-                icon: Icon(Iconsax.home),
+                icon: Icon(
+                  Iconsax.home,
+                ),
                 label: 'home',
+              ),
+              NavigationDestination(
+                icon: Icon(
+                  Iconsax.home,
+                ),
+                label: 'homeRaw',
               ),
               NavigationDestination(
                 icon: Icon(

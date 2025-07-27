@@ -1,4 +1,5 @@
 import 'package:c_ri/common/widgets/custom_shapes/containers/rounded_container.dart';
+import 'package:c_ri/common/widgets/divider/c_divider.dart';
 import 'package:c_ri/common/widgets/icon_buttons/circular_icon_btn.dart';
 import 'package:c_ri/common/widgets/loaders/animated_loader.dart';
 import 'package:c_ri/common/widgets/products/store_item.dart';
@@ -176,10 +177,7 @@ class CCheckoutScreen extends StatelessWidget {
                     );
                   },
                 ),
-                Divider(
-                  color: CColors.rBrown,
-                  thickness: 0.2,
-                ),
+                CDivider(),
                 Obx(
                   () {
                     /// -- empty data widget --

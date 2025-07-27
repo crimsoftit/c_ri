@@ -2,11 +2,12 @@ import 'package:c_ri/common/widgets/appbar/app_bar.dart';
 import 'package:c_ri/common/widgets/shimmers/shimmer_effects.dart';
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
+import 'package:c_ri/utils/helpers/network_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class CHomeAppBarWidget extends StatelessWidget {
-  const CHomeAppBarWidget({
+class DashboardHeaderWidget extends StatelessWidget {
+  const DashboardHeaderWidget({
     super.key,
     required this.actionsSection,
     required this.appBarTitle,
@@ -25,16 +26,22 @@ class CHomeAppBarWidget extends StatelessWidget {
 
     return CAppBar(
       showBackArrow: false,
-      horizontalPadding: 10.0,
+      horizontalPadding: 1.0,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            //CTexts.homeAppbarTitle,
-            appBarTitle,
-            style: Theme.of(context).textTheme.labelMedium!.apply(
-                  color: CColors.grey,
-                ),
+          Padding(
+            padding: const EdgeInsets.only(
+              top: 4.0,
+            ),
+            child: Text(
+              //CTexts.homeAppbarTitle,
+              appBarTitle,
+              style: Theme.of(context).textTheme.labelMedium!.apply(
+                    color: CColors.darkGrey,
+                  ),
+            ),
           ),
 
           Obx(
@@ -51,9 +58,12 @@ class CHomeAppBarWidget extends StatelessWidget {
                     userController.user.value.businessName == ''
                         ? userController.user.value.fullName
                         : userController.user.value.businessName,
-                    style: Theme.of(context).textTheme.headlineSmall!.apply(
-                          color: CColors.white,
-                          //fontSizeFactor: 0.7,
+                    style: Theme.of(context).textTheme.labelLarge!.apply(
+                          color: CNetworkManager.instance.hasConnection.value
+                              ? CColors.rBrown
+                              : CColors.darkGrey,
+                          fontSizeFactor: 2.5,
+                          fontWeightDelta: -7,
                         ),
                   );
                 }

@@ -1,5 +1,6 @@
 class CRoutes {
   static const home = '/';
+  static const homeRaw = '/home_raw/';
   static const inventory = '/inventory';
   static const inventoryDetails = '/inventory/item_details/';
   static const sales = '/sales';
