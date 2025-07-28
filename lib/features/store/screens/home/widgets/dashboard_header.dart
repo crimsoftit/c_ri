@@ -54,17 +54,22 @@ class DashboardHeaderWidget extends StatelessWidget {
                     height: 15.0,
                   );
                 } else {
-                  return Text(
-                    userController.user.value.businessName == ''
-                        ? userController.user.value.fullName
-                        : userController.user.value.businessName,
-                    style: Theme.of(context).textTheme.labelLarge!.apply(
-                          color: CNetworkManager.instance.hasConnection.value
-                              ? CColors.rBrown
-                              : CColors.darkGrey,
-                          fontSizeFactor: 2.5,
-                          fontWeightDelta: -7,
-                        ),
+                  return Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 3.0,
+                    ),
+                    child: Text(
+                      userController.user.value.businessName == ''
+                          ? userController.user.value.fullName
+                          : userController.user.value.businessName,
+                      style: Theme.of(context).textTheme.labelLarge!.apply(
+                            color: CNetworkManager.instance.hasConnection.value
+                                ? CColors.rBrown
+                                : CColors.darkGrey,
+                            fontSizeFactor: 2.5,
+                            fontWeightDelta: -7,
+                          ),
+                    ),
                   );
                 }
               }

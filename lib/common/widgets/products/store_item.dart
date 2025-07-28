@@ -68,24 +68,24 @@ class CStoreItemWidget extends StatelessWidget {
               ),
 
               // -- item attributes --
-              // Text.rich(
-              //   TextSpan(
-              //     children: [
-              //       TextSpan(
-              //         text: '${cartItem.availableStockQty} stocked ',
-              //         style: Theme.of(context).textTheme.labelSmall,
-              //       ),
-              //       TextSpan(
-              //         text: 'usp:${invItem.unitSellingPrice} ',
-              //         style: Theme.of(context).textTheme.labelSmall,
-              //       ),
-              //       TextSpan(
-              //         text: 'code:${invItem.pCode}',
-              //         style: Theme.of(context).textTheme.labelSmall,
-              //       ),
-              //     ],
-              //   ),
-              // ),
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '${cartItem.availableStockQty} stocked ',
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
+                    TextSpan(
+                      text: 'usp:${invItem.unitSellingPrice} ',
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
+                    TextSpan(
+                      text: 'code:${invItem.pCode}',
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

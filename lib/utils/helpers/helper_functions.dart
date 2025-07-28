@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:c_ri/utils/popups/snackbars.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -9,16 +11,42 @@ class CHelperFunctions {
     final int daysUntilMonday = date.weekday - 1;
     final DateTime startOfWeek = date.subtract(Duration(days: daysUntilMonday));
 
-    return DateTime(
+    // return DateTime(
+    //   startOfWeek.year,
+    //   startOfWeek.month,
+    //   startOfWeek.day,
+    //   0,
+    //   0,
+    //   0,
+    //   0,
+    //   0,
+    // );
+
+    var weekStart = DateTime(
       startOfWeek.year,
       startOfWeek.month,
       startOfWeek.day,
-      0,
-      0,
-      0,
+      startOfWeek.weekday,
+      startOfWeek.hour,
+      startOfWeek.minute,
       0,
       0,
     );
+
+    if (kDebugMode) {
+      print('----------\n');
+      print('weekStart: $weekStart \n');
+      print('----------\n');
+      print('----------\n');
+      print('week day: ${startOfWeek.weekday} \n');
+      print('----------\n');
+
+      CPopupSnackBar.customToast(
+        message: 'weekday: ${startOfWeek.weekday}',
+        forInternetConnectivityStatus: false,
+      );
+    }
+    return weekStart;
   }
 
   static void showSnackBar(String message) {
