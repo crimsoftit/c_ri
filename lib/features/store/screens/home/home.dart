@@ -43,8 +43,8 @@ class HomeScreen extends StatelessWidget {
           automaticallyImplyLeading: false,
           title: Padding(
             padding: const EdgeInsets.only(
-              left: 2.5,
-              right: 2.5,
+              left: 0.5,
+              right: 0.5,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -67,7 +67,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
-                height: CSizes.defaultSpace,
+                height: CSizes.defaultSpace / 2.0,
               ),
 
               /// -- dashboard header widget --
@@ -76,12 +76,16 @@ class HomeScreen extends StatelessWidget {
                 appBarTitle: CTexts.homeAppbarTitle,
                 isHomeScreen: true,
                 screenTitle: '',
+                showAppBarTitle: false,
               ),
-              CDivider(),
+              CDivider(
+                endIndent: 200.0,
+              ),
 
               Padding(
                 padding: const EdgeInsets.only(
-                  left: 20.0,
+                  left: 18.0,
+                  right: 18.0,
                   top: 2.0,
                 ),
                 child: Obx(
@@ -94,6 +98,7 @@ class HomeScreen extends StatelessWidget {
                       invController.fetchUserInventoryItems();
                     }
                     if (invController.inventoryItems.isNotEmpty &&
+                        invController.topSoldItems.isEmpty &&
                         !invController.isLoading.value) {
                       invController.fetchTopSellers();
                     }
@@ -115,8 +120,12 @@ class HomeScreen extends StatelessWidget {
                             Get.to(() => const NavMenu());
                           },
                         ),
+                        // CDivider(
+                        //   endIndent: 250.0,
+                        //   startIndent: 0.0,
+                        // ),
                         SizedBox(
-                          height: 60.0,
+                          height: 40.0,
                           child: ListView.separated(
                             itemCount: invController.topSoldItems.length,
                             shrinkWrap: true,
@@ -151,7 +160,7 @@ class HomeScreen extends StatelessWidget {
                                       width: CSizes.spaceBtnItems / 5,
                                     ),
                                     CRoundedContainer(
-                                      bgColor: Colors.transparent,
+                                      bgColor: CColors.transparent,
                                       showBorder: false,
                                       width: 90.0,
                                       child: Column(
@@ -194,7 +203,6 @@ class HomeScreen extends StatelessWidget {
                             },
                           ),
                         ),
-                        CDivider(),
 
                         const SizedBox(
                           height: CSizes.spaceBtnSections / 2,
@@ -202,22 +210,31 @@ class HomeScreen extends StatelessWidget {
 
                         /// -- weekly sales bar graph --
                         CRoundedContainer(
-                          bgColor: CColors.transparent,
+                          bgColor: CColors.grey,
                           child: Column(
-                            //crossAxisAlignment: CrossAxisAlignment.start,
+                            //crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                'weekly sales',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium!
-                                    .apply(
-                                      color: CColors.rBrown,
-                                    ),
+                              Container(
+                                alignment: Alignment.centerRight,
+                                padding: const EdgeInsets.only(
+                                  top: 10.0,
+                                  bottom: 15.0,
+                                ),
+                                width: CHelperFunctions.screenWidth() * .9,
+                                child: Text(
+                                  'weekly sales',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .apply(
+                                        color: isConnectedToInternet
+                                            ? CColors.rBrown
+                                            : CColors.darkGrey,
+                                        fontSizeFactor: 1.20,
+                                      ),
+                                ),
                               ),
-                              const SizedBox(
-                                height: CSizes.spaceBtnSections / 2,
-                              ),
+
                               // the graph
                               SizedBox(
                                 height: 200.0,

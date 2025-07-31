@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -41,10 +40,10 @@ class CHelperFunctions {
       print('week day: ${startOfWeek.weekday} \n');
       print('----------\n');
 
-      CPopupSnackBar.customToast(
-        message: 'weekday: ${startOfWeek.weekday}',
-        forInternetConnectivityStatus: false,
-      );
+      // CPopupSnackBar.customToast(
+      //   message: 'weekday: ${startOfWeek.weekday}',
+      //   forInternetConnectivityStatus: false,
+      // );
     }
     return weekStart;
   }

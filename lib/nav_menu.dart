@@ -67,12 +67,12 @@ class NavMenu extends StatelessWidget {
                 ),
                 label: 'home',
               ),
-              NavigationDestination(
-                icon: Icon(
-                  Iconsax.home,
-                ),
-                label: 'homeRaw',
-              ),
+              // NavigationDestination(
+              //   icon: Icon(
+              //     Iconsax.home,
+              //   ),
+              //   label: 'homeRaw',
+              // ),
               NavigationDestination(
                 icon: Icon(
                   Iconsax.shop,

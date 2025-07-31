@@ -13,11 +13,12 @@ class DashboardHeaderWidget extends StatelessWidget {
     required this.appBarTitle,
     required this.screenTitle,
     required this.isHomeScreen,
+    this.showAppBarTitle = true,
   });
 
   final Widget actionsSection;
   final String appBarTitle, screenTitle;
-  final bool isHomeScreen;
+  final bool isHomeScreen, showAppBarTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +32,20 @@ class DashboardHeaderWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 4.0,
-            ),
-            child: Text(
-              //CTexts.homeAppbarTitle,
-              appBarTitle,
-              style: Theme.of(context).textTheme.labelMedium!.apply(
-                    color: CColors.darkGrey,
+          showAppBarTitle
+              ? Padding(
+                  padding: const EdgeInsets.only(
+                    top: 4.0,
                   ),
-            ),
-          ),
+                  child: Text(
+                    //CTexts.homeAppbarTitle,
+                    appBarTitle,
+                    style: Theme.of(context).textTheme.labelMedium!.apply(
+                          color: CColors.darkGrey,
+                        ),
+                  ),
+                )
+              : SizedBox(),
 
           Obx(
             () {

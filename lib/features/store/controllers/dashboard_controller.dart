@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:c_ri/features/personalization/controllers/user_controller.dart';
 import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/utils/constants/colors.dart';
@@ -13,11 +15,13 @@ class CDashboardController extends GetxController {
   static CDashboardController get instance => Get.find();
 
   /// -- variables --
+  final RxDouble weeklySalesHighestAmount = 0.0.obs;
   final txnsController = Get.put(CTxnsController());
   final RxList<double> weeklySales = <double>[].obs;
 
   @override
   void onInit() async {
+    weeklySalesHighestAmount.value = 0.0;
     await txnsController.fetchSoldItems().then(
       (result) async {
         if (result.isNotEmpty) {
@@ -77,6 +81,8 @@ class CDashboardController extends GetxController {
           }
         }
 
+        weeklySalesHighestAmount.value = weeklySales.reduce(max);
+
         if (kDebugMode) {
           print('weekly sales: $weeklySales');
         }
@@ -126,7 +132,7 @@ class CDashboardController extends GetxController {
       leftTitles: AxisTitles(
         sideTitles: SideTitles(
           showTitles: true,
-          interval: 1000.0,
+          interval: weeklySalesHighestAmount.value,
           reservedSize: 70.0,
           getTitlesWidget: (value, meta) {
             final userController = Get.put(CUserController());
