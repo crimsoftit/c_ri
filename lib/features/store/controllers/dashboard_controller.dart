@@ -21,7 +21,7 @@ class CDashboardController extends GetxController {
 
   @override
   void onInit() async {
-    weeklySalesHighestAmount.value = 0.0;
+    weeklySalesHighestAmount.value = 1000.0;
     await txnsController.fetchSoldItems().then(
       (result) async {
         if (result.isNotEmpty) {

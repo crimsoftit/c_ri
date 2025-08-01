@@ -67,7 +67,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
-                height: CSizes.defaultSpace / 2.0,
+                height: CSizes.defaultSpace / 4.0,
               ),
 
               /// -- dashboard header widget --
@@ -79,14 +79,14 @@ class HomeScreen extends StatelessWidget {
                 showAppBarTitle: false,
               ),
               CDivider(
-                endIndent: 200.0,
+                endIndent: 0.0,
               ),
 
               Padding(
                 padding: const EdgeInsets.only(
                   left: 18.0,
                   right: 18.0,
-                  top: 2.0,
+                  top: 0,
                 ),
                 child: Obx(
                   () {
@@ -204,13 +204,14 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
 
-                        const SizedBox(
-                          height: CSizes.spaceBtnSections / 2,
+                        SizedBox(
+                          height: CSizes.spaceBtnSections,
                         ),
 
                         /// -- weekly sales bar graph --
                         CRoundedContainer(
                           bgColor: CColors.grey,
+                          borderRadius: CSizes.cardRadiusSm,
                           child: Column(
                             //crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -220,7 +221,7 @@ class HomeScreen extends StatelessWidget {
                                   top: 10.0,
                                   bottom: 15.0,
                                 ),
-                                width: CHelperFunctions.screenWidth() * .9,
+                                width: CHelperFunctions.screenWidth() * .85,
                                 child: Text(
                                   'weekly sales',
                                   style: Theme.of(context)
@@ -231,6 +232,7 @@ class HomeScreen extends StatelessWidget {
                                             ? CColors.rBrown
                                             : CColors.darkGrey,
                                         fontSizeFactor: 1.20,
+                                        fontStyle: FontStyle.italic,
                                       ),
                                 ),
                               ),

@@ -11,10 +11,10 @@ import 'package:iconsax/iconsax.dart';
 class CUserProfileTile extends StatelessWidget {
   const CUserProfileTile({
     super.key,
-    required this.onPressed,
+    required this.onEditBtnPressed,
   });
 
-  final VoidCallback onPressed;
+  final VoidCallback onEditBtnPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +26,10 @@ class CUserProfileTile extends StatelessWidget {
         showBorder: true,
         borderRadius: 120,
         borderColor: CColors.rBrown.withValues(alpha: 0.3),
+        padding: const EdgeInsets.only(
+          left: 5.0,
+          right: 5.0,
+        ),
         child: Stack(
           children: [
             Obx(
@@ -55,7 +59,7 @@ class CUserProfileTile extends StatelessWidget {
           );
         } else {
           return Text(
-            userController.user.value.fullName,
+            userController.user.value.email,
             style: Theme.of(context).textTheme.labelMedium!.apply(
                   color: CColors.grey,
                 ),
@@ -71,17 +75,22 @@ class CUserProfileTile extends StatelessWidget {
             );
           } else {
             return Text(
-              userController.user.value.email,
-              style: Theme.of(context).textTheme.headlineSmall!.apply(
-                    color: CColors.white,
-                    fontSizeFactor: 0.6,
+              userController.user.value.businessName.isNotEmpty
+                  ? userController.user.value.businessName
+                  : userController.user.value.fullName,
+              style: Theme.of(context).textTheme.labelLarge!.apply(
+                    // color: CNetworkManager.instance.hasConnection.value
+                    //     ? CColors.rBrown
+                    //     : CColors.darkGrey,
+                    fontSizeFactor: .8,
+                    fontWeightDelta: -7,
                   ),
             );
           }
         },
       ),
       trailing: IconButton(
-        onPressed: onPressed,
+        onPressed: onEditBtnPressed,
         icon: const Icon(
           Iconsax.edit,
           color: CColors.white,

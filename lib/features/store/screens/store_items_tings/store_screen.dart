@@ -8,7 +8,6 @@ import 'package:c_ri/features/store/controllers/checkout_controller.dart';
 import 'package:c_ri/features/store/controllers/inv_controller.dart';
 import 'package:c_ri/features/store/controllers/search_bar_controller.dart';
 import 'package:c_ri/features/store/controllers/sync_controller.dart';
-import 'package:c_ri/features/store/controllers/txns_controller.dart';
 import 'package:c_ri/features/store/models/inv_model.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/checkout/widgets/checkout_scan_fab.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/inventory/widgets/inv_dialog.dart';
@@ -33,19 +32,19 @@ class CStoreScreen extends StatelessWidget {
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
     final syncController = Get.put(CSyncController());
-    final txnsController = Get.put(CTxnsController());
+    //final txnsController = Get.put(CTxnsController());
 
     AddUpdateItemDialog dialog = AddUpdateItemDialog();
 
     final searchController = Get.put(CSearchBarController());
 
-    if (!invController.isLoading.value &&
-        !syncController.processingSync.value &&
-        !txnsController.isLoading.value &&
-        (invController.unSyncedAppends.isEmpty ||
-            invController.unSyncedUpdates.isEmpty)) {
-      invController.fetchUserInventoryItems();
-    }
+    // if (!invController.isLoading.value &&
+    //     !syncController.processingSync.value &&
+    //     !txnsController.isLoading.value &&
+    //     (invController.unSyncedAppends.isEmpty ||
+    //         invController.unSyncedUpdates.isEmpty)) {
+    //   invController.fetchUserInventoryItems();
+    // }
 
     return DefaultTabController(
       length: 3,

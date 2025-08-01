@@ -253,9 +253,9 @@ class AddUpdateInventoryForm extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(
-                height: CSizes.spaceBtnInputFields / 1.5,
-              ),
+              // const SizedBox(
+              //   height: CSizes.spaceBtnInputFields / 1.5,
+              // ),
               TextFormField(
                 autovalidateMode: AutovalidateMode.onUserInteraction,
                 controller: invController.txtBP,

@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-class SettingsScreen extends StatelessWidget {
-  const SettingsScreen({super.key});
+class SettingsScreenRaw extends StatelessWidget {
+  const SettingsScreenRaw({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class SettingsScreen extends StatelessWidget {
 
                   // user profile card
                   CUserProfileTile(
-                    onPressed: () {
+                    onEditBtnPressed: () {
                       Get.to(const ProfileScreen());
                     },
                   ),

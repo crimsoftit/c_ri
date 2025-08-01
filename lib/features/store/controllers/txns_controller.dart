@@ -94,6 +94,7 @@ class CTxnsController extends GetxController {
   final RxBool txnsFetched = false.obs;
   final RxBool soldItemsFetched = false.obs;
   final RxBool updatesOnRefundDone = false.obs;
+  final RxBool refundDataUpdated = false.obs;
 
   final txtAmountIssued = TextEditingController();
   final txtCustomerName = TextEditingController();
@@ -346,6 +347,7 @@ class CTxnsController extends GetxController {
 
       //fetchInventoryItems();
       updatesOnRefundDone.value = false;
+      refundDataUpdated.value = false;
 
       if (fetchedItem.isNotEmpty) {
         itemExists.value = true;
@@ -512,6 +514,7 @@ class CTxnsController extends GetxController {
     itemExists.value = false;
     showAmountIssuedField.value = true;
     updatesOnRefundDone.value = false;
+    refundDataUpdated.value = false;
     isLoading.value = false;
 
     saleItemName.value = '';
@@ -820,6 +823,12 @@ class CTxnsController extends GetxController {
                         color: isDarkTheme ? CColors.white : CColors.rBrown,
                       ),
                 ),
+                Text(
+                  '${soldItem.quantity} sold (${soldItem.qtyRefunded} refunded)',
+                  style: Theme.of(context).textTheme.labelMedium!.apply(
+                        color: isDarkTheme ? CColors.white : CColors.rBrown,
+                      ),
+                ),
                 Divider(
                   color: isDarkTheme ? CColors.white : CColors.rBrown,
                   endIndent: 100.0,
@@ -970,9 +979,12 @@ class CTxnsController extends GetxController {
                                   dbHelper
                                       .updateReceiptItem(
                                           txnItem, txnItem.soldItemId!)
-                                      .then((_) {
-                                    fetchSoldItems();
-                                  });
+                                      .then(
+                                    (_) {
+                                      fetchSoldItems();
+                                      refundDataUpdated.value = true;
+                                    },
+                                  );
                                   // updateTxnDataOnRefund(txnItem);
                                   // if (await updateTxnDataOnRefund(txnItem)) {
                                   //   if (kDebugMode) {
@@ -1061,32 +1073,37 @@ class CTxnsController extends GetxController {
 
     final internetIsConnected = await CNetworkManager.instance.isConnected();
 
-    if (internetIsConnected) {
-      await syncController.processSync();
-      if (await syncController.processSync()) {
-        if (unsyncedTxnAppends.isNotEmpty) {
-          await syncController.processSync();
+    if (refundDataUpdated.value) {
+      if (internetIsConnected) {
+        await syncController.processSync();
+        if (await syncController.processSync()) {
+          if (unsyncedTxnAppends.isNotEmpty) {
+            await syncController.processSync();
+          }
+        } else {
+          if (kDebugMode) {
+            print('error processing cloud sync');
+            CPopupSnackBar.errorSnackBar(
+              title: 'error processing cloud sync',
+              message: 'error processing cloud sync',
+            );
+          }
         }
       } else {
         if (kDebugMode) {
-          print('error processing cloud sync');
-          CPopupSnackBar.errorSnackBar(
-            title: 'error processing cloud sync',
-            message: 'error processing cloud sync',
+          print('internet connection required for cloud sync!');
+          CPopupSnackBar.customToast(
+            message: 'internet connection required for cloud sync!',
+            forInternetConnectivityStatus: true,
           );
         }
       }
-    } else {
-      if (kDebugMode) {
-        print('internet connection required for cloud sync!');
-        CPopupSnackBar.customToast(
-          message: 'internet connection required for cloud sync!',
-          forInternetConnectivityStatus: true,
-        );
-      }
     }
+
     refundQty.value = 0;
     updatesOnRefundDone.value = false;
+    resetSalesFields();
+
     if (kDebugMode) {
       print('------------------\n');
       print('refundQty: ${refundQty.value} \n');
@@ -1096,8 +1113,7 @@ class CTxnsController extends GetxController {
   }
 
   /// -- update stock count and qtySold on refund --
-  Future<bool> updateTxnDataOnRefundMaybeObsolete(
-      CTxnsModel receiptItem) async {
+  Future<bool> updateTxnDataOnRefundMaybeObsolet(CTxnsModel receiptItem) async {
     try {
       final currency = CHelperFunctions.formatCurrency(
           userController.user.value.currencyCode);

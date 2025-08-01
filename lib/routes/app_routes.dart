@@ -4,7 +4,8 @@ import 'package:c_ri/features/authentication/screens/pswd_config/forgot_password
 import 'package:c_ri/features/authentication/screens/signup/signup.dart';
 import 'package:c_ri/features/authentication/screens/signup/verify_email.dart';
 import 'package:c_ri/features/personalization/screens/profile/profile.dart';
-import 'package:c_ri/features/personalization/screens/settings/user_settings.dart';
+import 'package:c_ri/features/personalization/screens/settings/user_settings_screen.dart';
+import 'package:c_ri/features/personalization/screens/settings/user_settings_screen_raw.dart';
 import 'package:c_ri/features/store/screens/home/home.dart';
 import 'package:c_ri/features/store/screens/home/home_raw.dart';
 import 'package:c_ri/features/store/screens/store_items_tings/checkout/checkout_screen.dart';
@@ -74,7 +75,11 @@ class CAppRoutes {
     ),
     GetPage(
       name: CRoutes.settings,
-      page: () => const SettingsScreen(),
+      page: () => const CUserSettingsScreen(),
+    ),
+    GetPage(
+      name: CRoutes.settingsScreenRaw,
+      page: () => const SettingsScreenRaw(),
     ),
     GetPage(
       name: CRoutes.userProfile,

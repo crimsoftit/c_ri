@@ -13,6 +13,7 @@ class CRoutes {
   static const soldItemDetailsScreen = '/sales/sold_item_details';
   static const checkoutScreen = '/checkout';
   static const settings = '/settings';
+  static const settingsScreenRaw = '/settings_screens_raw';
   static const userProfile = '/user_profile';
   static const searchResults = '/search';
 

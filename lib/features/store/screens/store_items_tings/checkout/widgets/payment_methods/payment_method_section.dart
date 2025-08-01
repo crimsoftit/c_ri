@@ -34,6 +34,8 @@ class CPaymentMethodSection extends StatelessWidget {
           editFontSize: true,
           fSize: 13.0,
           onPressed: () {
+            checkoutController.amtIssuedFieldController.text = '';
+            checkoutController.customerBal.value = 0.0;
             checkoutController.selectPaymentMethod(context);
           },
         ),
