@@ -182,7 +182,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             : CColors.lightGrey,
                         labelStyle: textStyle,
                         labelText: 'qty/no. of units',
-                        maintainHintHeight: true,
+                        maintainHintSize: true,
                         prefixIcon: Padding(
                           padding: const EdgeInsets.only(
                             left: 2.0,
@@ -227,7 +227,7 @@ class AddUpdateInventoryForm extends StatelessWidget {
                             : CColors.lightGrey,
                         labelStyle: textStyle,
                         labelText: 'unit selling price',
-                        maintainHintHeight: true,
+                        maintainHintSize: true,
                         prefixIcon: Icon(
                           Iconsax.bitcoin_card,
                           color: CColors.darkGrey,

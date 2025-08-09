@@ -171,7 +171,7 @@ class AddUpdateInventoryFormRaw extends StatelessWidget {
                         ),
                         labelStyle: textStyle,
                         labelText: 'qty/no. of units',
-                        maintainHintHeight: true,
+                        maintainHintSize: true,
                         prefixIcon: Padding(
                           padding: const EdgeInsets.only(
                             left: 2.0,
@@ -216,7 +216,7 @@ class AddUpdateInventoryFormRaw extends StatelessWidget {
                         ),
                         labelStyle: textStyle,
                         labelText: 'buying price',
-                        maintainHintHeight: true,
+                        maintainHintSize: true,
                         prefixIcon: Icon(
                           Iconsax.bitcoin_card,
                           color: CColors.darkGrey,

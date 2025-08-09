@@ -81,7 +81,7 @@ class CDashboardController extends GetxController {
           }
         }
 
-        weeklySalesHighestAmount.value = weeklySales.reduce(max);
+        weeklySalesHighestAmount.value = weeklySales.reduce(max) > 0 ? weeklySales.reduce(max) : 10;
 
         if (kDebugMode) {
           print('weekly sales: $weeklySales');

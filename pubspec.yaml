@@ -92,8 +92,10 @@ dependencies:
   iconsax: any
 
   # -- scanners --
-  barcode_scan2: any
-  simple_barcode_scanner: any
+  # barcode_scan2: any
+  #barcode_scan2: ^4.3.3
+  # simple_barcode_scanner: any
+  simple_barcode_scanner: ^0.3.0
 
   # -- internet connectivity --
   connectivity_plus: any
@@ -142,7 +144,7 @@ dependencies:
   #currency_pickers: any
   country_code_picker: any
   #flutter_sim_country_code: any
-  country_codes: any
+  # country_codes: any
   
 
 dev_dependencies:

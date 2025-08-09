@@ -24,15 +24,11 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final cartController = Get.put(CCartController());
     final dashboardController = Get.put(CDashboardController());
-
     final invController = Get.put(CInventoryController());
     final isConnectedToInternet = CNetworkManager.instance.hasConnection.value;
     final isDarkTheme = CHelperFunctions.isDarkMode(context);
-
     final navController = Get.put(CNavMenuController());
-    //final txnsController = Get.put(CTxnsController());
 
     Get.put(CDashboardController());
 
@@ -120,10 +116,9 @@ class HomeScreen extends StatelessWidget {
                             Get.to(() => const NavMenu());
                           },
                         ),
-                        // CDivider(
-                        //   endIndent: 250.0,
-                        //   startIndent: 0.0,
-                        // ),
+                        const SizedBox(
+                          height: CSizes.spaceBtnItems,
+                        ),
                         SizedBox(
                           height: 40.0,
                           child: ListView.separated(
@@ -170,7 +165,8 @@ class HomeScreen extends StatelessWidget {
                                         children: [
                                           Text(
                                             invController
-                                                .topSoldItems[index].name,
+                                                .topSoldItems[index].name
+                                                .toUpperCase(),
                                             style: Theme.of(context)
                                                 .textTheme
                                                 .labelMedium!

@@ -1,4 +1,3 @@
-import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:c_ri/common/widgets/success_screen/txn_success.dart';
 import 'package:c_ri/common/widgets/txt_widgets/c_section_headings.dart';
 import 'package:c_ri/features/personalization/controllers/location_controller.dart';
@@ -30,7 +29,6 @@ import 'package:c_ri/utils/popups/snackbars.dart';
 import 'package:clock/clock.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:simple_barcode_scanner/flutter_barcode_scanner.dart';
@@ -391,18 +389,20 @@ class CCheckoutController extends GetxController {
           );
         }
       }
-    } on PlatformException catch (platformException) {
-      if (platformException.code == BarcodeScanner.cameraAccessDenied) {
-        CPopupSnackBar.warningSnackBar(
-            title: 'camera access denied',
-            message: 'permission to use your camera is denied!!!');
-      } else {
-        CPopupSnackBar.errorSnackBar(
-          title: 'platform exception error!',
-          message: platformException.message,
-        );
-      }
-    } on FormatException catch (formatException) {
+    }
+    // on PlatformException catch (platformException) {
+    //   if (platformException.code == BarcodeScanner.cameraAccessDenied) {
+    //     CPopupSnackBar.warningSnackBar(
+    //         title: 'camera access denied',
+    //         message: 'permission to use your camera is denied!!!');
+    //   } else {
+    //     CPopupSnackBar.errorSnackBar(
+    //       title: 'platform exception error!',
+    //       message: platformException.message,
+    //     );
+    //   }
+    // }
+    on FormatException catch (formatException) {
       CPopupSnackBar.errorSnackBar(
         title: 'format exception error!!',
         message: formatException.message,
